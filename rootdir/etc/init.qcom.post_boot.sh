@@ -222,8 +222,9 @@ case "$target" in
     "msm7627a")
         soc_id=`cat /sys/devices/system/soc/soc0/id`
         case "$soc_id" in
-            "127" | "128" | "129")
+            "127" | "128" | "129" | "137")
                 start mpdecision
+		start thermald
         ;;
         esac
     ;;
