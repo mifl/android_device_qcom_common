@@ -221,10 +221,14 @@ case "$target" in
     ;;
     "msm7627a")
         soc_id=`cat /sys/devices/system/soc/soc0/id`
+        plat_ver=`cat /sys/devices/system/soc/soc0/platform_version`
+        ver=`cat /sys/devices/system/soc/soc0/version`
         case "$soc_id" in
             "127" | "128" | "129" | "137")
                 start mpdecision
-		start thermald
+		if ([ "$plat_ver" = "196608" ] && [ "$ver" = "2.0" ]); then
+			start thermald
+		fi
         ;;
         esac
     ;;
