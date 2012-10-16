@@ -139,6 +139,8 @@ config_bt ()
        then
            setprop ro.bluetooth.hfp.ver 1.6
            setprop ro.qualcomm.bt.hci_transport smd
+       else
+           setprop ro.bluetooth.le.disable true
        fi
        ;;
     *)
