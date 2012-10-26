@@ -268,3 +268,9 @@ case "$target" in
         echo 5120 > /proc/sys/vm/min_free_kbytes
      ;;
 esac
+#start qosmgrd
+case "$target" in
+     "msm7630_surf")
+	start qosmgrd
+     ;;
+esac
