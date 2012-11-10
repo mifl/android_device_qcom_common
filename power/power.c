@@ -234,6 +234,10 @@ void set_interactive(struct power_module *module, int on)
         /* Display off. */
         if ((strncmp(governor, ONDEMAND_GOVERNOR, strlen(ONDEMAND_GOVERNOR)) == 0) &&
                 (strlen(governor) == strlen(ONDEMAND_GOVERNOR))) {
+            int resource_values[] = {MS_500};
+
+            perform_hint_action(DISPLAY_STATE_HINT_ID,
+                    resource_values, sizeof(resource_values)/sizeof(resource_values[0]));
         } else if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
                 (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) {
             int resource_values[] = {TR_MS_500};
@@ -340,6 +344,7 @@ void set_interactive(struct power_module *module, int on)
         /* Display on. */
         if ((strncmp(governor, ONDEMAND_GOVERNOR, strlen(ONDEMAND_GOVERNOR)) == 0) &&
                 (strlen(governor) == strlen(ONDEMAND_GOVERNOR))) {
+            undo_hint_action(DISPLAY_STATE_HINT_ID);
         } else if ((strncmp(governor, INTERACTIVE_GOVERNOR, strlen(INTERACTIVE_GOVERNOR)) == 0) &&
                 (strlen(governor) == strlen(INTERACTIVE_GOVERNOR))) {
             undo_hint_action(DISPLAY_STATE_HINT_ID);
