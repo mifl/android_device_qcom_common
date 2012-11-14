@@ -1,5 +1,6 @@
 LOCAL_PATH := $(call my-dir)
 
+ifeq ($(call is-vendor-board-platform,QCOM),true)
 ifneq ($(call is-android-codename,JELLY_BEAN),true)
 
 # HAL module implemenation stored in
@@ -12,4 +13,6 @@ LOCAL_SRC_FILES := power.c metadata-parser.c utils.c list.c hint-data.c
 LOCAL_MODULE := power.qcom
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_SHARED_LIBRARY)
+
+endif
 endif
