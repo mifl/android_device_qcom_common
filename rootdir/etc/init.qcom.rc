@@ -35,6 +35,7 @@ on init
 on early-boot
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
+    start unicorn-dpi-set
 
 on early-init
     # for backwards compatibility
@@ -480,6 +481,12 @@ on property:drmdiag.load=1
 
 on property:drmdiag.load=0
     stop drmdiag
+
+service unicorn-dpi-set /init.qcom.unicorn-dpi.sh ${ro.board.platform}
+   class core
+   user root
+   disabled
+   oneshot
 
 service qcom-post-fs /system/bin/sh /system/etc/init.qcom.post_fs.sh
     class core
