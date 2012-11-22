@@ -203,8 +203,6 @@ LE_POWER_CLASS=`getprop qcom.bt.le_dev_pwr_class`
 TRANSPORT=`getprop ro.qualcomm.bt.hci_transport`
 logi "Transport : $TRANSPORT"
 
-setprop bluetooth.status off
-
 case $POWER_CLASS in
   1) PWR_CLASS="-p 0" ;
      logi "Power Class: 1";;
@@ -233,9 +231,7 @@ eval $(/system/bin/hci_qcomm_init -e $PWR_CLASS $LE_PWR_CLASS && echo "exit_code
 
 case $exit_code_hci_qcomm_init in
   0) logi "Bluetooth QSoC firmware download succeeded, $BTS_DEVICE $BTS_TYPE $BTS_BAUD $BTS_ADDRESS";;
-  *) failed "Bluetooth QSoC firmware download failed" $exit_code_hci_qcomm_init;
-     setprop bluetooth.status off;
-     exit $exit_code_hci_qcomm_init;;
+  *) failed "Bluetooth QSoC firmware download failed" $exit_code_hci_qcomm_init;;
 esac
 
 # init does SIGTERM on ctl.stop for service
@@ -243,13 +239,11 @@ trap "kill_hciattach" TERM INT
 
 case $TRANSPORT in
     "smd")
-        #echo 1 > /sys/module/hci_smd/parameters/hcismd_set
-        setprop bluetooth.status on
+        echo 1 > /sys/module/hci_smd/parameters/hcismd_set
      ;;
      *)
         logi "start hciattach"
         start_hciattach
-        setprop bluetooth.status on
 
         wait $hciattach_pid
         logi "Bluetooth stopped"
