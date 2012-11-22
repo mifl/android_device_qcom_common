@@ -36,7 +36,76 @@
 # This script will get called after post bootup.
 target=`getprop ro.board.platform`
 case "$target" in
+    msm8974*)
+
+      # At first boot move cfg80211.ko module to pronto location;
+      # the default cfg80211.ko is for wcnss solution
+      if [ ! -L /system/lib/modules/cfg80211.ko ]; then
+          mv /system/lib/modules/cfg80211.ko /system/lib/modules/pronto/
+      fi
+
+      # link pronto modules
+      rm /system/lib/modules/wlan.ko
+      rm /system/lib/modules/cfg80211.ko
+      ln -s /system/lib/modules/pronto/pronto_wlan.ko /system/lib/modules/wlan.ko
+      ln -s /system/lib/modules/pronto/cfg80211.ko /system/lib/modules/cfg80211.ko
+
+      # The property below is used in Qcom SDK for softap to determine
+      # the wifi driver config file
+      setprop wlan.driver.config /data/misc/wifi/WCNSS_qcom_cfg.ini
+
+      # Load kernel module in a separate process
+      load_wifiKM &
+      ;;
+
     msm8960*)
+
+      # Move cfg80211.ko to prima directory, the default cfg80211.ko is
+      # for wcnss solution
+      if [ ! -L /system/lib/modules/cfg80211.ko ]; then
+          mv /system/lib/modules/cfg80211.ko /system/lib/modules/prima/
+      fi
+
+      wlanchip=""
+
+      if [ -f /system/etc/firmware/ath6k/AR6004/ar6004_wlan.conf ]; then
+          wlanchip=`cat /system/etc/firmware/ath6k/AR6004/ar6004_wlan.conf`
+      fi
+
+      if [ "$wlanchip" == "" ]; then
+          # auto detect ar6004-usb card
+          # for ar6004-usb card, the vendor id and device id is as the following
+          # vendor id  product id
+          #    0x0cf3     0x9374
+          #    0x0cf3     0x9372
+          usb_vendors=`echo \`cat /sys/bus/usb/devices/*/*/idVendor\``
+          usb_products=`echo \`cat /sys/bus/usb/devices/*/*/idProduct\``
+          ven_idx=0
+
+          for vendor in $usb_vendors; do
+              case "$vendor" in
+              "0cf3")
+                  dev_idx=0
+                  for product in $usb_products; do
+                      if [ $ven_idx -eq $dev_idx ]; then
+                          case "$product" in
+                          "9374" | "9372")
+                              wlanchip="AR6004-USB"
+                              ;;
+                          *)
+                              ;;
+                          esac
+                      fi
+                      dev_idx=$(( $dev_idx + 1))
+                  done
+                  ;;
+              *)
+                  ;;
+              esac
+              ven_idx=$(( $ven_idx + 1))
+          done
+          # auto detect ar6004-usb card end
+      fi
 
 # auto detect ar6004-sdio card
 # for ar6004-sdio card, the vendor id and device id is as the following
@@ -195,6 +264,12 @@ case "$target" in
     exit 0
     ;;
     msm7627a*)
+
+        # The default cfg80211 module is for volans
+        if [ ! -L /system/lib/modules/cfg80211.ko ]; then
+            mv /system/lib/modules/cfg80211.ko /system/lib/modules/volans/
+        fi
+
         wlanchip=`cat /persist/wlan_chip_id`
         echo "The WLAN Chip ID is $wlanchip"
         case "$wlanchip" in
