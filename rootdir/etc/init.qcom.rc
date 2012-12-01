@@ -66,6 +66,7 @@ on boot
     chmod 0660 /dev/ttyHS0
     chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
+    start dbus
 
     chmod 0660 /dev/ttyHS2
     chown bluetooth bluetooth /dev/ttyHS2
@@ -270,18 +271,27 @@ service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     user root
     oneshot
 
+service dbus /system/bin/dbus-daemon --system --nofork
+    class main
+    socket dbus stream 660 bluetooth bluetooth
+    user bluetooth
+    group bluetooth net_bt_admin
+
+service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -n
+    class main
+    socket bluetooth stream 660 bluetooth bluetooth
+    socket dbus_bluetooth stream 660 bluetooth bluetooth
+    # init.rc does not yet support applying capabilities, so run as root and
+    # let bluetoothd drop uid to bluetooth with the right linux capabilities
+    group bluetooth net_bt_admin misc
+    disabled
+
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
     class late_start
     user bluetooth
     group qcom_oncrpc bluetooth net_bt_admin
     disabled
     oneshot
-
-on property:bluetooth.hciattach=true
-    start hciattach
-
-on property:bluetooth.hciattach=false
-    setprop bluetooth.status off
 
 service hciattach_ath3k /system/bin/sh /system/etc/init.ath3k.bt.sh
      class late_start
