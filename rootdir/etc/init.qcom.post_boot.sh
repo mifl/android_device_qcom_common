@@ -252,9 +252,9 @@ case "$target" in
 	echo 1 > /sys/module/pm2/modes/cpu2/standalone_power_collapse/suspend_enabled
 	echo 1 > /sys/module/pm2/modes/cpu3/standalone_power_collapse/suspend_enabled
 	#SuspendPC:
-	echo 0 > /sys/module/pm2/modes/cpu0/power_collapse/suspend_enabled
+	echo 1 > /sys/module/pm2/modes/cpu0/power_collapse/suspend_enabled
 	#IdlePC:
-	echo 0 > /sys/module/pm2/modes/cpu0/power_collapse/idle_enabled
+	echo 1 > /sys/module/pm2/modes/cpu0/power_collapse/idle_enabled
 	echo 25000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
     ;;
 esac
