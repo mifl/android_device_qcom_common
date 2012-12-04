@@ -147,7 +147,8 @@ static void process_video_encode_hint(void *metadata)
     if (video_encode_metadata.state == 1) {
         if ((strncmp(governor, ONDEMAND_GOVERNOR, strlen(ONDEMAND_GOVERNOR)) == 0) &&
                 (strlen(governor) == strlen(ONDEMAND_GOVERNOR))) {
-            int resource_values[] = {IO_BUSY_OFF, SAMPLING_DOWN_FACTOR_1, THREAD_MIGRATION_SYNC_OFF};
+            int resource_values[] = {IO_BUSY_OFF, SAMPLING_DOWN_FACTOR_1,THREAD_MIGRATION_SYNC_OFF,
+                OPTIMAL_FREQ_384, SYNC_FREQ_384};
 
             perform_hint_action(video_encode_metadata.hint_id,
                 resource_values, sizeof(resource_values)/sizeof(resource_values[0]));
