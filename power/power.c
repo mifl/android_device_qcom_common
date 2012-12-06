@@ -152,7 +152,8 @@ static void process_video_encode_hint(void *metadata)
     if (video_encode_metadata.state == 1) {
         if ((strlen(governor) == strlen("ondemand")) &&
                 (strncmp(governor, "ondemand", strlen("ondemand")) == 0)) {
-            int resource_values[] = {IO_BUSY_OFF, SAMPLING_DOWN_FACTOR_1};
+            int resource_values[] = {IO_BUSY_OFF, SAMPLING_DOWN_FACTOR_1,
+                OPTIMAL_FREQ_384, SYNC_FREQ_384};
 
             perform_hint_action(video_encode_metadata.hint_id,
                 resource_values, sizeof(resource_values)/sizeof(resource_values[0]));
