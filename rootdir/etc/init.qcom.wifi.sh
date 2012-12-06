@@ -110,6 +110,13 @@ case "$target" in
       ln -s /system/lib/modules/pronto/pronto_wlan.ko /system/lib/modules/wlan.ko
       ln -s /system/lib/modules/pronto/cfg80211.ko /system/lib/modules/cfg80211.ko
 
+      # config files
+      rm /system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini
+      ln -s /data/misc/wifi/WCNSS_qcom_cfg.ini /system/etc/firmware/wlan/prima/WCNSS_qcom_cfg.ini
+
+      rm /system/etc/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
+      ln -s /persist/WCNSS_qcom_wlan_nv.bin /system/etc/firmware/wlan/prima/WCNSS_qcom_wlan_nv.bin
+
       # The property below is used in Qcom SDK for softap to determine
       # the wifi driver config file
       setprop wlan.driver.config /data/misc/wifi/WCNSS_qcom_cfg.ini
