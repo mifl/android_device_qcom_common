@@ -97,6 +97,32 @@ case "$btsoc" in
         rm /etc/snd_soc_msm/snd_soc_msm_Sitar_auxpcm 2>/dev/null
         ;;
 esac
+
+case "$target" in
+    msm8974*)
+
+        rm -f /system/etc/firmware/wcd9320/wcd9320_anc.bin
+        rm -f /system/etc/firmware/wcd9320/wcd9320_mbhc.bin
+        mkdir -p /system/etc/firmware/wcd9320
+        ln -s /data/misc/audio/wcd9310_anc.bin /system/etc/firmware/wcd9320/wcd9320_anc.bin
+        ln -s /data/misc/audio/mbhc.bin /system/etc/firmware/wcd9320/wcd9320_mbhc.bin
+        ;;
+
+    msm8960*)
+        ;&
+    msm8660*)
+
+        rm -f /system/etc/firmware/wcd9310/wcd9310_anc.bin
+        rm -f /system/etc/firmware/wcd9310/wcd9310_mbhc.bin
+        mkdir -p /system/etc/firmware/wcd9310
+        ln -s /data/misc/audio/wcd9310_anc.bin /system/etc/firmware/wcd9310/wcd9310_anc.bin
+        ln -s /data/misc/audio/mbhc.bin /system/etc/firmware/wcd9310/wcd9310_mbhc.bin
+        ;;
+
+    *)
+        ;;
+esac
+
 setprop qcom.audio.init complete
 exit 0
 
