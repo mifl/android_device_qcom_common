@@ -252,7 +252,7 @@ esac
 # Change adj level and min_free_kbytes setting for lowmemory killer to kick in
 case "$target" in
      "msm7627a")
-	echo 0,1,2,4,9,12 > /sys/module/lowmemorykiller/parameters/adj
+	echo 0,1,2,4,6,7 > /sys/module/lowmemorykiller/parameters/adj
 	echo 5120 > /proc/sys/vm/min_free_kbytes
      ;;
 esac
