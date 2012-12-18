@@ -111,6 +111,7 @@
 /dev/dvb/adapter0/demux*  0444   media       media
 /dev/dvb/adapter0/dvr*    0664   media       media
 /dev/dvb/adapter0/video*  0664   media       media
+/dev/avtimer              0644   media       media
 
 /sys/devices/i2c-12/12-*  pollrate_ms 0664 system system
 
