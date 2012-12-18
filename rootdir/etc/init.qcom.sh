@@ -76,7 +76,7 @@ done
 # Start gpsone_daemon for SVLTE Type I & II devices
 #
 case "$target" in
-        "msm7630_fusion" | "msm8960")
+        "msm7630_fusion" | "msm8960" | "msm7627a")
         start gpsone_daemon
 esac
 case "$baseband" in
