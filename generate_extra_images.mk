@@ -19,6 +19,7 @@ recovery_ramdisk := $(PRODUCT_OUT)/ramdisk-recovery.img
 #----------------------------------------------------------------------
 ifeq ($(TARGET_BOOTIMG_SIGNED),true)
 INSTALLED_SEC_BOOTIMAGE_TARGET := $(PRODUCT_OUT)/boot.img.secure
+INSTALLED_SEC_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img.secure
 
 ifneq ($(BUILD_TINY_ANDROID),true)
 intermediates := $(call intermediates-dir-for,PACKAGING,recovery_patch)
@@ -30,6 +31,7 @@ ifndef TARGET_SHA_TYPE
 endif
 
 define build-boot-image
+	$(call pretty,"Building secure image from: $(1)")
 	$(hide) mv -f $(1) $(1).nonsecure
 	$(hide) openssl dgst -$(TARGET_SHA_TYPE) -binary $(1).nonsecure > $(1).$(TARGET_SHA_TYPE)
 	$(hide) openssl rsautl -sign -in $(1).$(TARGET_SHA_TYPE) -inkey $(PRODUCT_PRIVATE_KEY) -out $(1).sig
@@ -45,6 +47,15 @@ $(INSTALLED_SEC_BOOTIMAGE_TARGET): $(INSTALLED_BOOTIMAGE_TARGET) $(RECOVERY_FROM
 
 ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_SEC_BOOTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_SEC_BOOTIMAGE_TARGET)
+
+
+ifneq ($(BUILD_TINY_ANDROID),true)
+$(INSTALLED_SEC_RECOVERYIMAGE_TARGET): $(RECOVERY_FROM_BOOT_PATCH)
+	$(call build-boot-image,$(INSTALLED_RECOVERYIMAGE_TARGET))
+
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_SEC_RECOVERYIMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_SEC_RECOVERYIMAGE_TARGET)
+endif
 endif
 
 #----------------------------------------------------------------------
@@ -277,4 +288,4 @@ aboot: $(INSTALLED_BOOTLOADER_MODULE)
 kernel: $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_SEC_BOOTIMAGE_TARGET) $(INSTALLED_4K_BOOTIMAGE_TARGET)
 
 .PHONY: recoveryimage
-recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(INSTALLED_4K_RECOVERYIMAGE_TARGET)
+recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(INSTALLED_SEC_RECOVERYIMAGE_TARGET) $(INSTALLED_4K_RECOVERYIMAGE_TARGET)
