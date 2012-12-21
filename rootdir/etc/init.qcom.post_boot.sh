@@ -190,47 +190,6 @@ case "$target" in
 		 chmod 664 /sys/module/msm_mpdecision/slack_time_max_us
 		 chmod 664 /sys/module/msm_mpdecision/slack_time_min_us
          start qosmgrd
-         soc_id=`cat /sys/devices/system/soc/soc0/id`
-         case "$soc_id" in
-             "130")
-                 echo 230 > /sys/class/gpio/export
-                 echo 228 > /sys/class/gpio/export
-                 echo 229 > /sys/class/gpio/export
-                 echo "in" > /sys/class/gpio/gpio230/direction
-                 echo "rising" > /sys/class/gpio/gpio230/edge
-                 echo "in" > /sys/class/gpio/gpio228/direction
-                 echo "rising" > /sys/class/gpio/gpio228/edge
-                 echo "in" > /sys/class/gpio/gpio229/direction
-                 echo "rising" > /sys/class/gpio/gpio229/edge
-                 echo 77 > /sys/class/gpio/export
-                 echo 253 > /sys/class/gpio/export
-                 echo 254 > /sys/class/gpio/export
-                 echo 257 > /sys/class/gpio/export
-                 echo 258 > /sys/class/gpio/export
-                 echo 259 > /sys/class/gpio/export
-                 echo "out" > /sys/class/gpio/gpio77/direction
-                 echo "out" > /sys/class/gpio/gpio253/direction
-                 echo "out" > /sys/class/gpio/gpio254/direction
-                 echo "out" > /sys/class/gpio/gpio257/direction
-                 echo "out" > /sys/class/gpio/gpio258/direction
-                 echo "out" > /sys/class/gpio/gpio259/direction
-                 chown root.system /sys/class/gpio/gpio77/value
-                 chown media /sys/class/gpio/gpio253/value
-                 chown media /sys/class/gpio/gpio254/value
-                 chown media /sys/class/gpio/gpio257/value
-                 chown media /sys/class/gpio/gpio258/value
-                 chown media /sys/class/gpio/gpio259/value
-                 chown root.system /sys/class/gpio/gpio77/direction
-                 chown media /sys/class/gpio/gpio253/direction
-                 chown media /sys/class/gpio/gpio254/direction
-                 chown media /sys/class/gpio/gpio257/direction
-                 chown media /sys/class/gpio/gpio258/direction
-                 chown media /sys/class/gpio/gpio259/direction
-                 echo 0 > /sys/module/rpm_resources/enable_low_power/vdd_dig
-                 echo 0 > /sys/module/rpm_resources/enable_low_power/vdd_mem
-                 #start mpq_standby_app
-                 ;;
-         esac
          ;;
 esac
 
