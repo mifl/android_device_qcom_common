@@ -230,6 +230,27 @@ case "$target" in
         rm  /system/lib/modules/cfg80211.ko
         ln -s /system/lib/modules/prima/prima_wlan.ko /system/lib/modules/wlan.ko
         ln -s /system/lib/modules/prima/cfg80211.ko /system/lib/modules/cfg80211.ko
+        # Populate the writable driver configuration file
+        if [ ! -e /data/misc/wifi/WCNSS_qcom_cfg.ini ]; then
+            if [ -f /persist/WCNSS_qcom_cfg.ini ]; then
+                cp /persist/WCNSS_qcom_cfg.ini /data/misc/wifi/WCNSS_qcom_cfg.ini
+            else
+                cp /system/etc/wifi/WCNSS_qcom_cfg.ini /data/misc/wifi/WCNSS_qcom_cfg.ini
+            fi
+            chown system:wifi /data/misc/wifi/WCNSS_qcom_cfg.ini
+            chmod 660 /data/misc/wifi/WCNSS_qcom_cfg.ini
+        fi
+
+        # Populate the NV configuration file
+        #  from factory file in /persist if it exists
+        #  from template file if factory file does not exist
+        if [ ! -f /data/misc/wifi/WCNSS_qcom_wlan_nv.bin ]; then
+            if [ -f /persist/WCNSS_qcom_wlan_nv.bin ]; then
+                cp /persist/WCNSS_qcom_wlan_nv.bin /data/misc/wifi/WCNSS_qcom_wlan_nv.bin
+            else
+                cp /system/etc/wifi/WCNSS_qcom_wlan_nv.bin /data/misc/wifi/WCNSS_qcom_wlan_nv.bin
+            fi
+        fi
 
         # The property below is used in Qcom SDK for softap to determine
         # the wifi driver config file
