@@ -52,6 +52,7 @@ AUDIO_HARDWARE += audio.primary.msm7627a
 #AUDIO_HARDWARE += audio.primary.msm7630_fusion
 #AUDIO_HARDWARE += audio.primary.default
 AUDIO_HARDWARE += audio.a2dp.default
+AUDIO_HARDWARE += audio.usb.default
 #
 AUDIO_POLICY := audio_policy.mpq8064
 AUDIO_POLICY += audio_policy.msm8960
@@ -125,6 +126,7 @@ INIT += init.target.8x25.sh
 INIT += init.qcom.mdm_links.sh
 INIT += init.qcom.modem_links.sh
 INIT += init.qcom.thermald_conf.sh
+INIT += init.qcom.sensor.sh
 INIT += init.target.rc
 INIT += init.qcom.bt.sh
 INIT += init.qcom.coex.sh
