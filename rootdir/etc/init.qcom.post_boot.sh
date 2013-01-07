@@ -223,7 +223,7 @@ case "$target" in
         soc_id=`cat /sys/devices/system/soc/soc0/id`
         ver=`cat /sys/devices/system/soc/soc0/version`
         case "$soc_id" in
-            "127" | "128" | "129" | "137")
+            "127" | "128" | "129" | "137" | "167" | "168" | "169" | "170" )
                 start mpdecision
                 if [ "$ver" = "2.0" ]; then
                         start thermald
