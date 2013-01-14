@@ -707,3 +707,5 @@ service config_rps_p2p /system/bin/sh /system/etc/init.qcom.wifi.rps.sh "p2p"
 on property:wlan.interface.p2p.group=*
     start config_rps_p2p
 
+on property:wlan.driver.status=unloaded
+    exec /system/bin/sh /system/etc/init.wifi.unload.sh ${ro.board.platform} ${wlan.driver.ath.wlanchip}
