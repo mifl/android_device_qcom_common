@@ -138,31 +138,21 @@ case "$target" in
           # vendor id  product id
           #    0x0cf3     0x9374
           #    0x0cf3     0x9372
-          usb_vendors=`echo \`cat /sys/bus/usb/devices/*/*/idVendor\``
-          usb_products=`echo \`cat /sys/bus/usb/devices/*/*/idProduct\``
-          ven_idx=0
-
-          for vendor in $usb_vendors; do
-              case "$vendor" in
-              "0cf3")
-                  dev_idx=0
-                  for product in $usb_products; do
-                      if [ $ven_idx -eq $dev_idx ]; then
-                          case "$product" in
-                          "9374" | "9372")
-                              wlanchip="AR6004-USB"
-                              ;;
-                          *)
-                              ;;
-                          esac
+          device_ids=`ls /sys/bus/usb/devices/`
+          for id in $device_ids; do
+              if [ -f /sys/bus/usb/devices/$id/idVendor ]; then
+                  vendor=`cat /sys/bus/usb/devices/$id/idVendor`
+                  if [ $vendor = "0cf3" ]; then
+                      if [ -f /sys/bus/usb/devices/$id/idProduct ]; then
+                          product=`cat /sys/bus/usb/devices/$id/idProduct`
+                          if [ $product = "9374" ] || [ $product = "9372" ]; then
+                              echo "auto" > /sys/bus/usb/devices/$id/power/control
+                              wlanchip="AR6004-USB"                    
+                              break
+                          fi
                       fi
-                      dev_idx=$(( $dev_idx + 1))
-                  done
-                  ;;
-              *)
-                  ;;
-              esac
-              ven_idx=$(( $ven_idx + 1))
+                  fi
+              fi
           done
           # auto detect ar6004-usb card end
       fi
@@ -203,6 +193,7 @@ case "$target" in
       fi
 
       echo "The WLAN Chip ID is $wlanchip"
+      setprop wlan.driver.ath.wlanchip $wlanchip
       case "$wlanchip" in
       "AR6004-USB")
         setprop wlan.driver.ath 2
