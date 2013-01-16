@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Copyright (c) 2012, Code Aurora Forum. All rights reserved.
+<!--Copyright (c) 2012, The Linux Foundation. All rights reserved.
 
     Not a Contribution, Apache license notifications and license are retained
     for attribution purposes only.
@@ -51,6 +51,13 @@
         <item>"mobile_cbs,12,0,2,60000,true"</item>
         <item>"wifi_p2p,13,1,0,-1,true"</item>
         <item>"bluetooth,7,7,2,-1,true"</item>
+    </string-array>
+
+    <!-- List of regexpressions describing the interface (if any) that represent tetherable
+         bluetooth interfaces.  If the device doesn't want to support tethering over bluetooth this
+         should be empty. -->
+    <string-array translatable="false" name="config_tether_bluetooth_regexs">
+            <item>"bnep\\d"</item>
     </string-array>
 
     <!-- Array of ConnectivityManager.TYPE_xxxx values allowable for tethering -->
