@@ -39,6 +39,7 @@
 /dev/smd4                 0660   system     system
 /dev/smd_cxm_qmi          0640   radio      radio
 /dev/smd7                 0660   bluetooth  bluetooth
+/dev/radio0               0640   fm_radio   fm_radio
 /dev/rfcomm0              0660   bluetooth  bluetooth
 /dev/smdcntl0             0640   radio      radio
 /dev/smdcntl1             0640   radio      radio
@@ -119,4 +120,9 @@
 /dev/dvb/adapter0/demux*  0444   media       media
 /dev/dvb/adapter0/dvr*    0664   media       media
 /dev/dvb/adapter0/video*  0664   media       media
+
+# native sensors
+/sys/devices/i2c-12/12-*  pollrate_ms 0664 system system
+/sys/devices/i2c-12/12-*  enable  0664 system system
+/sys/devices/i2c-12/12-*  poll_delay 0664 system system
 

@@ -89,7 +89,7 @@ case "$1" in
             ;;
         esac
 
-        #Set up composition type based on the target
+        #Set up MSM-specific configuration
         case "$soc_hwid" in
             87)
                 #8960
@@ -99,7 +99,12 @@ case "$1" in
                 #8064 V2 PRIME
                 setprop debug.composition.type c2d
                 ;;
+            116 | 117 | 118 | 119 | 142 | 143 | 144 | 154 | 155 | 156 | 157)
+                #Disable subsystem restart for 8930
+                setprop persist.sys.ssr.restart_level 1
+                ;;
             *)
+                ;;
         esac
         ;;
 esac

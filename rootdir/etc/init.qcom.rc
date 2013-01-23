@@ -209,8 +209,8 @@ on post-fs-data
     mkdir /data/fota 0771
     chown system system /data/fota
 
-    #Provide the access to hostapd.conf only to root and group
-    chmod 0660 /data/hostapd/hostapd.conf
+    #Create directory for hostapd
+    mkdir /data/hostapd 0770 system wifi
 
     # Create /data/time folder for time-services
     mkdir /data/time/ 0700 system system
@@ -289,7 +289,7 @@ service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -n
     socket dbus_bluetooth stream 660 bluetooth bluetooth
     # init.rc does not yet support applying capabilities, so run as root and
     # let bluetoothd drop uid to bluetooth with the right linux capabilities
-    group bluetooth net_bt_admin misc
+    group bluetooth net_bt_admin misc net_bt_stack
     disabled
 
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
