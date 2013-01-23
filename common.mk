@@ -85,8 +85,7 @@ BT += hcidump.sh
 C2DCC := libc2dcolorconvert
 
 #CONNECTIVITY
-CONNECTIVITY := cnd
-CONNECTIVITY += librefcne
+CONNECTIVITY := libcnefeatureconfig
 
 #CURL
 CURL := libcurl
