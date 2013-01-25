@@ -27,6 +27,7 @@
 
 on init
     write /sys/class/android_usb/android0/f_rndis/wceis 1
+    write /sys/module/g_android/parameters/mtp_rx_req_len 1048576
 
 service qcom-usb-sh /system/bin/sh /init.qcom.usb.sh
     class core
@@ -426,6 +427,7 @@ on property:sys.usb.config=mtp
     write /sys/class/android_usb/android0/idVendor 05C6
     write /sys/class/android_usb/android0/idProduct F003
     write /sys/class/android_usb/android0/functions mtp
+    write /sys/module/ci13xxx_msm/parameters/streaming 1
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state $sys.usb.config
 
@@ -434,6 +436,7 @@ on property:sys.usb.config=mtp,adb
     write /sys/class/android_usb/android0/idVendor 05C6
     write /sys/class/android_usb/android0/idProduct 9039
     write /sys/class/android_usb/android0/functions mtp,adb
+    write /sys/module/ci13xxx_msm/parameters/streaming 1
     write /sys/class/android_usb/android0/enable 1
     start adbd
     setprop sys.usb.state $sys.usb.config
@@ -444,6 +447,7 @@ on property:sys.usb.config=mtp,diag
     write /sys/class/android_usb/android0/idProduct 901B
     write /sys/class/android_usb/android0/f_diag/clients diag
     write /sys/class/android_usb/android0/functions mtp,diag
+    write /sys/module/ci13xxx_msm/parameters/streaming 1
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state $sys.usb.config
 
@@ -453,6 +457,7 @@ on property:sys.usb.config=mtp,diag,adb
     write /sys/class/android_usb/android0/idProduct 903A
     write /sys/class/android_usb/android0/f_diag/clients diag
     write /sys/class/android_usb/android0/functions mtp,diag,adb
+    write /sys/module/ci13xxx_msm/parameters/streaming 1
     write /sys/class/android_usb/android0/enable 1
     start adbd
     setprop sys.usb.state $sys.usb.config
@@ -463,6 +468,7 @@ on property:sys.usb.config=mtp,diag,diag_mdm
     write /sys/class/android_usb/android0/idProduct 9040
     write /sys/class/android_usb/android0/f_diag/clients diag,diag_mdm
     write /sys/class/android_usb/android0/functions mtp,diag
+    write /sys/module/ci13xxx_msm/parameters/streaming 1
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state $sys.usb.config
 
@@ -472,6 +478,7 @@ on property:sys.usb.config=mtp,diag,diag_mdm,adb
     write /sys/class/android_usb/android0/idProduct 903F
     write /sys/class/android_usb/android0/f_diag/clients diag,diag_mdm
     write /sys/class/android_usb/android0/functions mtp,diag,adb
+    write /sys/module/ci13xxx_msm/parameters/streaming 1
     write /sys/class/android_usb/android0/enable 1
     start adbd
     setprop sys.usb.state $sys.usb.config
