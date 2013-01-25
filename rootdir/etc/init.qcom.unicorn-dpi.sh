@@ -30,10 +30,18 @@ export PATH=/system/bin
 
 # Set platform variables
 soc_hwid=`cat /sys/devices/system/soc/soc0/id` 2> /dev/null
+xres=`cat /sys/class/graphics/fb0/xres` 2> /dev/null
 case "$soc_hwid" in
-     "101" | "102" | "103" | "127" | "128" | "129" | "167" | "168" | "169" | "170")
-            setprop ro.sf.lcd_density 240
-            ;;
+     "101" | "102" | "103" | "127" | "128" | "129" | "137" | "167" | "168" | "169" | "170")
+         case "$xres" in
+             "720")
+                setprop ro.sf.lcd_density 320
+                ;;
+             *)
+                setprop ro.sf.lcd_density 240
+                ;;
+         esac
+         ;;
       "98" | "99" | "100")
             setprop ro.sf.lcd_density 160
             ;;
