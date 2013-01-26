@@ -65,11 +65,12 @@ izat_premium_enablement=`getprop ro.qc.sdk.izat.premium_enabled`
 #
 # Suppress default route installation during RA for IPV6; user space will take
 # care of this
-#
+# exception WLAN only
 for file in /proc/sys/net/ipv6/conf/*
 do
   echo 0 > $file/accept_ra_defrtr
 done
+echo 1 > /proc/sys/net/ipv6/conf/wlan0/accept_ra_defrtr
 
 #
 # Start gpsone_daemon for SVLTE Type I & II devices
