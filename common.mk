@@ -313,18 +313,11 @@ MM_CORE := libmm-omxcore
 MM_CORE += libOmxCore
 
 #MM_VIDEO
-MM_VIDEO := ast-mm-vdec-omx-test
 MM_VIDEO += libdivxdrmdecrypt
 MM_VIDEO += liblasic
 MM_VIDEO += libOmxVdec
 MM_VIDEO += libOmxVenc
 MM_VIDEO += libOmxVidEnc
-MM_VIDEO += mm-vdec-omx-property-mgr
-MM_VIDEO += mm-vdec-omx-test
-MM_VIDEO += mm-venc-omx-test
-MM_VIDEO += mm-venc-omx-test720p
-MM_VIDEO += mm-video-driver-test
-MM_VIDEO += mm-video-encdrv-test
 
 #OPENCORE
 OPENCORE := libomx_aacdec_sharedlibrary
