@@ -95,12 +95,17 @@ case "$1" in
                 #8960
                 setprop debug.composition.type dyn
                 ;;
-            153|154|155|156|157|138)
-                #8064 V2 PRIME | 8930AB | 8630AB | 8230AB | 8030AB | 8960AB
+            153 | 154 | 155 | 156 | 157 | 138 | 179 | 180 | 181)
+                #8064 V2 PRIME | 8930AB | 8630AB | 8230AB | 8030AB | 8960AB | 8130/AA/AB
                 setprop debug.composition.type c2d
                 ;;
-            116 | 117 | 118 | 119 | 142 | 143 | 144 | 154 | 155 | 156 | 157)
-                #Disable subsystem restart for 8930
+            *)
+                ;;
+        esac
+
+        case "$soc_hwid" in
+            116 | 117 | 118 | 119 | 142 | 143 | 144 | 154 | 155 | 156 | 157 | 179 | 180 | 181)
+                #Disable subsystem restart for 8x30
                 setprop persist.sys.ssr.restart_level 1
                 ;;
             *)
