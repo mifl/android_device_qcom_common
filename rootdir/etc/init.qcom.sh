@@ -119,9 +119,16 @@ case "$target" in
         esac
         ;;
     "msm8960")
-        if [ "$platformid" != "116" ] && [ "$platformid" != "142" ] && [ "$platformid" != "154" ]; then
-            start_sensors
-        fi
+	case "$platformid" in
+		"116" | "117" | "118" | "119" | "142" | "143" | "144" | "154" | "155" | "156" | "157" | "179" | "180" | "181")
+		# don't start sensors for 8x30
+		;;
+
+		*)
+		start_sensors
+		;;
+	esac
+
         case "$baseband" in
             "msm")
 		start_battery_monitor;;
