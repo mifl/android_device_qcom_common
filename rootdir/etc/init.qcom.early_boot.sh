@@ -104,8 +104,8 @@ case "$1" in
         esac
 
         case "$soc_hwid" in
-            116 | 117 | 118 | 119 | 142 | 143 | 144 | 154 | 155 | 156 | 157 | 179 | 180 | 181)
-                #Disable subsystem restart for 8x30
+            87 | 116 | 117 | 118 | 119 | 138 | 142 | 143 | 144 | 154 | 155 | 156 | 157 | 179 | 180 | 181)
+                #Disable subsystem restart for 8x30 and 8960
                 setprop persist.sys.ssr.restart_level 1
                 ;;
             *)
