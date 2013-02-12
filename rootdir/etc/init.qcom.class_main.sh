@@ -41,11 +41,25 @@ case "$baseband" in
 esac
 
 case "$baseband" in
-    "msm" | "csfb" | "svlte2a" | "mdm" | "sglte" | "unknown")
+    "msm" | "csfb" | "svlte2a" | "mdm" | "sglte" | "dsda2" | "unknown")
     start qmuxd
     case "$baseband" in
         "svlte2a" | "csfb" | "sglte")
         start qmiproxy
+        ;;
+        "sglte")
+        if [ "x$sgltecsfb" != "xtrue" ]; then
+          start qmiproxy
+        else
+          setprop persist.radio.voice.modem.index 0
+        fi
+        ;;
+        "dsda2")
+          setprop ro.multi.rild true
+          setprop persist.multisim.config dsda
+          stop ril-daemon
+          start ril-daemon
+          start ril-daemon1
     esac
     case "$multirild" in
         "true")
