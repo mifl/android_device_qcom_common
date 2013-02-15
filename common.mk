@@ -87,6 +87,7 @@ C2DCC := libc2dcolorconvert
 
 #CONNECTIVITY
 CONNECTIVITY := libcnefeatureconfig
+CONNECTIVITY += services-ext
 
 #CURL
 CURL := libcurl
