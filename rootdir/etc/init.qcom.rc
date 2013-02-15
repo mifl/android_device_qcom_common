@@ -36,6 +36,7 @@ on early-boot
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
     exec /system/bin/sh /init.qcom.early_boot.sh ${ro.board.platform}
+    exec /system/bin/sh /init.qcom.syspart_fixup.sh ${ro.board.platform} ${ro.serialno}
 
 # Starting ueventd, servicemanager, surfaceflinger prior to playing boot up advetisement
     start ueventd
@@ -67,7 +68,6 @@ on early-boot
 # triggering bootup advertisement playback
     start bootmedia
     wait /data/nobootwait_temp.txt
-    exec /system/bin/sh /init.qcom.syspart_fixup.sh ${ro.board.platform} ${ro.serialno}
 
 on early-init
     # for backwards compatibility
