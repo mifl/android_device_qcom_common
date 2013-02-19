@@ -27,7 +27,7 @@
 #
 
 target=`getprop ro.board.platform`
-platformid=`cat /sys/devices/system/soc/soc0/id`
+
 #
 # Function to start sensors for DSPS enabled platforms
 #
@@ -115,9 +115,7 @@ case "$target" in
         esac
         ;;
     "msm8960")
-        if[ "$platformid" != "116" && "$platformid" != "142"]; then
-            start_sensors
-        fi
+        start_sensors
         case "$baseband" in
             "msm")
 		start_battery_monitor;;
