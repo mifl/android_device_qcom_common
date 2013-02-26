@@ -1,4 +1,4 @@
-# Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+# Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -274,7 +274,7 @@ service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     oneshot
 
 service dbus /system/bin/dbus-daemon --system --nofork
-    class main
+    class core
     socket dbus stream 660 bluetooth bluetooth
     user bluetooth
     group bluetooth net_bt_admin
