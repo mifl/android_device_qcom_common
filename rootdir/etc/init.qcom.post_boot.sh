@@ -49,9 +49,24 @@ case "$target" in
 esac
 
 case "$target" in
-     "msm7201a_ffa" | "msm7201a_surf" | "msm7627_ffa" | "msm7627_6x" | "msm7627_surf" | "msm7630_surf" | "msm7630_1x" | "msm7630_fusion" | "msm7627a" )
+     "msm7201a_ffa" | "msm7201a_surf" | "msm7627_ffa" | "msm7627_6x" | "msm7627_surf" | "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
         echo 245760 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         ;;
+
+     "msm7627a")
+        # start with default minimum for this family.
+        echo 245760 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq;
+        available_frequencies=`cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies`
+        for freq in $available_frequencies
+           do
+              # Set this freq as minimum if available.
+              if [[ $freq = "196608" ]]; then
+                 echo 196608 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq;
+              fi
+           done
+        ;;
+
+
 esac
 
 case "$target" in
