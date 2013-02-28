@@ -36,13 +36,16 @@ case "$soc_hwid" in
          case "$xres" in
              "720")
                 setprop ro.sf.lcd_density 320
+                setprop dalvik.vm.heapgrowthlimit 64m
                 ;;
              *)
                 setprop ro.sf.lcd_density 240
+                setprop dalvik.vm.heapgrowthlimit 48m
                 ;;
          esac
          ;;
       "98" | "99" | "100")
             setprop ro.sf.lcd_density 160
+            setprop dalvik.vm.heapgrowthlimit 48m
             ;;
 esac
