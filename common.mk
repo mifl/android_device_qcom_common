@@ -47,6 +47,11 @@ AUDIO_HARDWARE += audio.primary.msm7627a
 #AUDIO_HARDWARE += audio.primary.msm7630_fusion
 #AUDIO_HARDWARE += audio.primary.default
 AUDIO_HARDWARE += audio.a2dp.default
+AUDIO_HARDWARE += audio.usb.default
+AUDIO_HARDWARE += libtinyalsa
+AUDIO_HARDWARE += tinyplay
+AUDIO_HARDWARE += tinycap
+AUDIO_HARDWARE += tinymix
 #
 #AUDIO_POLICY := audio_policy.mpq8064
 AUDIO_POLICY += audio_policy.msm8960
