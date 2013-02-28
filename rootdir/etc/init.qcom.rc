@@ -315,7 +315,7 @@ service hciattach_ath3k /system/bin/sh /system/etc/init.ath3k.bt.sh
      disabled
      oneshot
 
-service bt-dun /system/bin/dun-server /dev/smd7 /dev/rfcomm0
+service bt-dun /system/bin/sh /system/etc/init.qcom.btdun.sh
     class late_start
     user bluetooth
     group bluetooth net_bt_admin inet
