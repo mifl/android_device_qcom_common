@@ -37,15 +37,18 @@ case "$soc_hwid" in
              "720")
                 setprop ro.sf.lcd_density 320
                 setprop dalvik.vm.heapgrowthlimit 64m
+                setprop debug.hwc.dynThreshold 1.88
                 ;;
              *)
                 setprop ro.sf.lcd_density 240
                 setprop dalvik.vm.heapgrowthlimit 48m
+                setprop debug.hwc.dynThreshold 1.91
                 ;;
          esac
          ;;
       "98" | "99" | "100")
             setprop ro.sf.lcd_density 160
             setprop dalvik.vm.heapgrowthlimit 48m
+            setprop debug.hwc.dynThreshold 1.91
             ;;
 esac
