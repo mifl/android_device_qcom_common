@@ -124,31 +124,21 @@ case "$target" in
           # vendor id  product id
           #    0x0cf3     0x9374
           #    0x0cf3     0x9372
-          usb_vendors=`echo \`cat /sys/bus/usb/devices/*/*/idVendor\``
-          usb_products=`echo \`cat /sys/bus/usb/devices/*/*/idProduct\``
-          ven_idx=0
-
-          for vendor in $usb_vendors; do
-              case "$vendor" in
-              "0cf3")
-                  dev_idx=0
-                  for product in $usb_products; do
-                      if [ $ven_idx -eq $dev_idx ]; then
-                          case "$product" in
-                          "9374" | "9372")
+          device_ids=`ls /sys/bus/usb/devices/`
+          for id in $device_ids; do
+              if [ -f /sys/bus/usb/devices/$id/idVendor ]; then
+                  vendor=`cat /sys/bus/usb/devices/$id/idVendor`
+                  if [ $vendor = "0cf3" ]; then
+                      if [ -f /sys/bus/usb/devices/$id/idProduct ]; then
+                          product=`cat /sys/bus/usb/devices/$id/idProduct`
+                          if [ $product = "9374" ] || [ $product = "9372" ]; then
+                              echo "auto" > /sys/bus/usb/devices/$id/power/control
                               wlanchip="AR6004-USB"
-                              ;;
-                          *)
-                              ;;
-                          esac
+                              break
+                          fi
                       fi
-                      dev_idx=$(( $dev_idx + 1))
-                  done
-                  ;;
-              *)
-                  ;;
-              esac
-              ven_idx=$(( $ven_idx + 1))
+                  fi
+              fi
           done
           # auto detect ar6004-usb card end
       fi
@@ -189,45 +179,45 @@ case "$target" in
       fi
 
       echo "The WLAN Chip ID is $wlanchip"
+      setprop wlan.driver.ath.wlanchip $wlanchip
       case "$wlanchip" in
       "AR6004-USB")
         setprop wlan.driver.ath 2
         rm  /system/lib/modules/wlan.ko
-        rm  /system/lib/modules/cfg80211.ko
         ln -s /system/lib/modules/ath6kl-3.5/ath6kl_usb.ko \
 		/system/lib/modules/wlan.ko
-        ln -s /system/lib/modules/ath6kl-3.5/cfg80211.ko \
-		/system/lib/modules/cfg80211.ko
         rm /system/etc/firmware/ath6k/AR6004/hw1.3/fw.ram.bin
         rm /system/etc/firmware/ath6k/AR6004/hw1.3/bdata.bin
         ln -s /system/etc/firmware/ath6k/AR6004/hw1.3/fw.ram.bin_usb \
 		/system/etc/firmware/ath6k/AR6004/hw1.3/fw.ram.bin
         ln -s /system/etc/firmware/ath6k/AR6004/hw1.3/bdata.bin_usb \
 		/system/etc/firmware/ath6k/AR6004/hw1.3/bdata.bin
+        rm /system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin
+        ln -s /system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin_usb \
+		/system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin
         ;;
       "AR6004-SDIO")
         setprop wlan.driver.ath 2
         setprop qcom.bluetooth.soc ath3k
         btsoc="ath3k"
         rm  /system/lib/modules/wlan.ko
-        rm  /system/lib/modules/cfg80211.ko
         ln -s /system/lib/modules/ath6kl-3.5/ath6kl_sdio.ko \
 		/system/lib/modules/wlan.ko
-        ln -s /system/lib/modules/ath6kl-3.5/cfg80211.ko \
-		/system/lib/modules/cfg80211.ko
         rm /system/etc/firmware/ath6k/AR6004/hw1.3/fw.ram.bin
         rm /system/etc/firmware/ath6k/AR6004/hw1.3/bdata.bin
         ln -s /system/etc/firmware/ath6k/AR6004/hw1.3/fw.ram.bin_sdio \
 		/system/etc/firmware/ath6k/AR6004/hw1.3/fw.ram.bin
         ln -s /system/etc/firmware/ath6k/AR6004/hw1.3/bdata.bin_sdio \
 		/system/etc/firmware/ath6k/AR6004/hw1.3/bdata.bin
+        rm /system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin
+        ln -s /system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin_sdio \
+		/system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin
         ;;
       *)
         echo "*** WI-FI chip ID is not specified in /persist/wlan_chip_id **"
         echo "*** Use the default WCN driver.                             **"
         setprop wlan.driver.ath 0 
         rm  /system/lib/modules/wlan.ko
-        rm  /system/lib/modules/cfg80211.ko
         ln -s /system/lib/modules/prima/prima_wlan.ko /system/lib/modules/wlan.ko
         ln -s /system/lib/modules/prima/cfg80211.ko /system/lib/modules/cfg80211.ko
         # Populate the writable driver configuration file
