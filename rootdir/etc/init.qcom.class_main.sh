@@ -42,13 +42,13 @@ case "$baseband" in
 esac
 
 case "$baseband" in
-    "msm" | "csfb" | "svlte2a" | "mdm" | "sglte" | "dsda2" | "unknown")
+    "msm" | "csfb" | "svlte2a" | "mdm" | "sglte" | "sglte2" | "dsda2" | "unknown")
     start qmuxd
     case "$baseband" in
         "svlte2a" | "csfb")
         start qmiproxy
         ;;
-        "sglte")
+        "sglte" | "sglte2")
         if [ "x$sgltecsfb" != "xtrue" ]; then
           start qmiproxy
         else
