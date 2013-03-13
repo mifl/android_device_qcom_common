@@ -76,7 +76,7 @@ on early-init
     mkdir /storage/sdcard0 0000 system system
     mkdir /storage/sdcard1 0000 system system
     mkdir /storage/usb 0000 system system
-    mount tmpfs tmpfs /storage/usb mode=0777,uid=0,gid=0
+    mount tmpfs tmpfs /storage/usb mode=0755,uid=0,gid=0
     symlink /storage/sdcard0 /sdcard
     symlink /storage/sdcard0 /mnt/sdcard
 
