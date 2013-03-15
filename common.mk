@@ -101,7 +101,8 @@ DASH += qcmediaplayer
 E2FSPROGS := e2fsck
 
 #GPS
-GPS_HARDWARE := gps.default
+GPS_HARDWARE := gps.conf
+GPS_HARDWARE += gps.default
 GPS_HARDWARE += gps.mahimahi
 GPS_HARDWARE += libloc_adapter
 GPS_HARDWARE += libgps.utils
