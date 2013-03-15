@@ -407,6 +407,13 @@ CHARGER += charger_res_images
 #VT_JNI
 VT_JNI := libvt_jni
 
+#CRDA
+CRDA := crda
+CRDA += regdbdump
+CRDA += regulatory.bin
+CRDA += linville.key.pub.pem
+CRDA += init.crda.sh
+
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
@@ -497,6 +504,7 @@ PRODUCT_PACKAGES += $(UPDATER)
 PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
+PRODUCT_PACKAGES += $(CRDA)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
