@@ -97,7 +97,7 @@ case "$usb_config" in
                     "sglte")
                          setprop persist.sys.usb.config diag,diag_qsc,serial_smd,serial_tty,serial_hsuart,rmnet_hsuart,mass_storage,adb
                     ;;
-                    "dsda")
+                    "dsda" | "sglte2")
                          setprop persist.sys.usb.config diag,diag_mdm,diag_qsc,serial_hsic,serial_hsuart,rmnet_hsic,rmnet_hsuart,mass_storage,adb
                     ;;
                     "dsda2")
@@ -158,3 +158,49 @@ case "$target" in
     ;;
 esac
 
+#
+# set module params for embedded rmnet devices
+#
+rmnetmux=`getprop persist.rmnet.mux`
+case "$baseband" in
+    "mdm" | "dsda" | "sglte2")
+        case "$rmnetmux" in
+            "enabled")
+                    echo 1 > /sys/module/rmnet_usb/parameters/mux_enabled
+                    echo 8 > /sys/module/rmnet_usb/parameters/no_fwd_rmnet_links
+                    echo 17 > /sys/module/rmnet_usb/parameters/no_rmnet_insts_per_dev
+                    echo 1 > /sys/module/rmnet_usb/parameters/rmnet_data_init
+            ;;
+            *)
+                    echo 1 > /sys/module/rmnet_usb/parameters/rmnet_data_init
+            ;;
+        esac
+    ;;
+    "dsda2")
+          echo 2 > /sys/module/rmnet_usb/parameters/no_rmnet_devs
+          echo hsicctl,hsusbctl > /sys/module/rmnet_usb/parameters/rmnet_dev_names
+          case "$rmnetmux" in
+               "enabled") #mux is neabled on both mdms
+                      echo 3 > /sys/module/rmnet_usb/parameters/mux_enabled
+                      echo 8 > /sys/module/rmnet_usb/parameters/no_fwd_rmnet_links
+                      echo 17 > write /sys/module/rmnet_usb/parameters/no_rmnet_insts_per_dev
+                      echo 1 > /sys/module/rmnet_usb/parameters/rmnet_data_init
+               ;;
+               "enabled_hsic") #mux is enabled on hsic mdm
+                      echo 1 > /sys/module/rmnet_usb/parameters/mux_enabled
+                      echo 8 > /sys/module/rmnet_usb/parameters/no_fwd_rmnet_links
+                      echo 17 > /sys/module/rmnet_usb/parameters/no_rmnet_insts_per_dev
+                      echo 1 > /sys/module/rmnet_usb/parameters/rmnet_data_init
+               ;;
+               "enabled_hsusb") #mux is enabled on hsusb mdm
+                      echo 2 > /sys/module/rmnet_usb/parameters/mux_enabled
+                      echo 8 > /sys/module/rmnet_usb/parameters/no_fwd_rmnet_links
+                      echo 17 > /sys/module/rmnet_usb/parameters/no_rmnet_insts_per_dev
+                      echo 1 > /sys/module/rmnet_usb/parameters/rmnet_data_init
+               ;;
+               *)
+                      echo 1 > /sys/module/rmnet_usb/parameters/rmnet_data_init
+               ;;
+          esac
+    ;;
+esac

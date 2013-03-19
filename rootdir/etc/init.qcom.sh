@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+# Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -33,20 +33,23 @@ platformid=`cat /sys/devices/system/soc/soc0/id`
 #
 start_sensors()
 {
-    mkdir -p /data/system/sensors
-    touch /data/system/sensors/settings
-    chmod 775 /data/system/sensors
-    chmod 664 /data/system/sensors/settings
+    if [ -c /dev/msm_dsps -o -c /dev/sensors ]; then
+        mkdir -p /data/system/sensors
+        touch /data/system/sensors/settings
+        chmod 775 /data/system/sensors
+        chmod 664 /data/system/sensors/settings
+        chown system /data/system/sensors/settings
 
-    mkdir -p /data/misc/sensors
-    chmod 775 /data/misc/sensors
+        mkdir -p /data/misc/sensors
+        chmod 775 /data/misc/sensors
 
-    if [ ! -s /data/system/sensors/settings ]; then
-        # If the settings file is empty, enable sensors HAL
-        # Otherwise leave the file with it's current contents
-        echo 1 > /data/system/sensors/settings
+        if [ ! -s /data/system/sensors/settings ]; then
+            # If the settings file is empty, enable sensors HAL
+            # Otherwise leave the file with it's current contents
+            echo 1 > /data/system/sensors/settings
+        fi
+        start sensors
     fi
-    start sensors
 }
 
 start_battery_monitor()
@@ -65,12 +68,12 @@ izat_premium_enablement=`getprop ro.qc.sdk.izat.premium_enabled`
 #
 # Suppress default route installation during RA for IPV6; user space will take
 # care of this
-# exception WLAN only
+# exception default ifc
 for file in /proc/sys/net/ipv6/conf/*
 do
   echo 0 > $file/accept_ra_defrtr
 done
-echo 1 > /proc/sys/net/ipv6/conf/wlan0/accept_ra_defrtr
+echo 1 > /proc/sys/net/ipv6/conf/default/accept_ra_defrtr
 
 #
 # Start gpsone_daemon for SVLTE Type I & II devices
@@ -89,11 +92,11 @@ case "$baseband" in
         ;;
 esac
 case "$target" in
-        "msm7630_surf" | "msm8660" | "msm8960")
+        "msm7630_surf" | "msm8660" | "msm8960" | "msm8974")
         start quipc_igsn
 esac
 case "$target" in
-        "msm7630_surf" | "msm8660" | "msm8960")
+        "msm7630_surf" | "msm8660" | "msm8960" | "msm8974")
         start quipc_main
 esac
 
@@ -105,6 +108,8 @@ case "$target" in
             start xtwifi_client
         fi
 esac
+
+start_sensors
 
 case "$target" in
     "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
@@ -118,24 +123,13 @@ case "$target" in
         platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
         case "$platformvalue" in
             "Fluid")
-                start_sensors
                 start profiler_daemon;;
         esac
         ;;
     "msm8960")
-	case "$platformid" in
-		"116" | "117" | "118" | "119" | "142" | "143" | "144" | "154" | "155" | "156" | "157" | "179" | "180" | "181")
-		# don't start sensors for 8x30
-		;;
-
-		*)
-		start_sensors
-		;;
-	esac
-
         case "$baseband" in
             "msm")
-		start_battery_monitor;;
+                start_battery_monitor;;
         esac
 
         platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
@@ -145,8 +139,5 @@ case "$target" in
              "Liquid")
                  start profiler_daemon;;
         esac
-        ;;
-    "msm8974")
-        start_sensors
         ;;
 esac

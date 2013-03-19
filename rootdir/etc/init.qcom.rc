@@ -1,4 +1,4 @@
-# Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+# Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -111,6 +111,14 @@ on boot
 
     # Change owner and group for media server and surface flinger
     chown system system /sys/devices/virtual/graphics/fb1/format_3d
+
+    # Change permissions for fps_level nodes
+    chown system graphics /sys/class/graphics/fb0/msm_fb_fps_level
+    chown system graphics /sys/class/graphics/fb1/msm_fb_fps_level
+    chown system graphics /sys/class/graphics/fb2/msm_fb_fps_level
+    chmod 644 /sys/class/graphics/fb0/msm_fb_fps_level
+    chmod 400 /sys/class/graphics/fb1/msm_fb_fps_level
+    chmod 400 /sys/class/graphics/fb2/msm_fb_fps_level
 
     #For bridgemgr daemon to inform the USB driver of the correct transport
     chown radio radio /sys/class/android_usb/f_rmnet_smd_sdio/transport
@@ -274,7 +282,7 @@ service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     oneshot
 
 service dbus /system/bin/dbus-daemon --system --nofork
-    class main
+    class core
     socket dbus stream 660 bluetooth bluetooth
     user bluetooth
     group bluetooth net_bt_admin
@@ -545,6 +553,12 @@ service wifi-sdio-on /system/bin/sh /system/etc/init.qcom.sdio.sh
     group wifi inet
     disabled
     oneshot
+
+service wifi-crda /system/bin/sh /system/etc/init.crda.sh
+   class late_start
+   user root
+   disabled
+   oneshot
 
 
 on property:sys.boot_completed=1
