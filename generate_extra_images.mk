@@ -108,6 +108,32 @@ endif
 
 
 #----------------------------------------------------------------------
+# Generate 1GB userdata image for 8930
+#----------------------------------------------------------------------
+ifeq ($(call is-board-platform-in-list,msm8960),true)
+
+1G_USER_OUT := $(PRODUCT_OUT)/1g_user_image
+BOARD_1G_USERDATAIMAGE_PARTITION_SIZE := 1073741824
+INSTALLED_1G_USERDATAIMAGE_TARGET := $(1G_USER_OUT)/userdata.img
+
+define build-1g-userdataimage-target
+    $(call pretty,"Target 1G userdata fs image: $(INSTALLED_1G_USERDATAIMAGE_TARGET)")
+    @mkdir -p $(1G_USER_OUT)
+    $(hide) $(MKEXTUSERIMG) -s $(TARGET_OUT_DATA) $@ ext4 data $(BOARD_1G_USERDATAIMAGE_PARTITION_SIZE)
+    $(hide) chmod a+r $@
+    $(hide) $(call assert-max-image-size,$@,$(BOARD_1G_USERDATAIMAGE_PARTITION_SIZE),yaffs)
+endef
+
+$(INSTALLED_1G_USERDATAIMAGE_TARGET): $(INSTALLED_USERDATAIMAGE_TARGET)
+	$(build-1g-userdataimage-target)
+
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_1G_USERDATAIMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_1G_USERDATAIMAGE_TARGET)
+
+endif
+
+
+#----------------------------------------------------------------------
 # Generate NAND images
 #----------------------------------------------------------------------
 ifeq ($(call is-board-platform-in-list,msm7627a msm7630_surf),true)
