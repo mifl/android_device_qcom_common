@@ -92,17 +92,18 @@ case "$baseband" in
         ;;
 esac
 case "$target" in
-        "msm7630_surf" | "msm8660" | "msm8960")
+        "msm7630_surf" | "msm8660" | "msm8960" | "msm8974")
         start quipc_igsn
 esac
 case "$target" in
-        "msm7630_surf" | "msm8660" | "msm8960")
+        "msm7630_surf" | "msm8660" | "msm8960" | "msm8974")
         start quipc_main
 esac
 
 case "$target" in
         "msm8960" | "msm8974")
         start location_mq
+        start lowi-server
         if [ "$izat_premium_enablement" -eq 1 ]; then
             start xtwifi_inet
             start xtwifi_client
