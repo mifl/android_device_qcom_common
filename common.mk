@@ -101,7 +101,8 @@ DASH += qcmediaplayer
 E2FSPROGS := e2fsck
 
 #GPS
-GPS_HARDWARE := gps.default
+GPS_HARDWARE := gps.conf
+GPS_HARDWARE += gps.default
 GPS_HARDWARE += gps.mahimahi
 GPS_HARDWARE += libloc_adapter
 GPS_HARDWARE += libgps.utils
@@ -202,6 +203,9 @@ KS += efsks
 
 #LIB_NL
 LIB_NL := libnl_2
+
+#LIB_XML2
+LIB_XML2 := libxml2
 
 #LIBCAMERA
 LIBCAMERA := camera.msm8974
@@ -313,16 +317,6 @@ MM_AUDIO += libOmxEvrcEnc
 MM_AUDIO += libOmxMp3Dec
 MM_AUDIO += libOmxQcelp13Enc
 MM_AUDIO += libOmxAc3HwDec
-MM_AUDIO += mm-adec-omxaac-test
-MM_AUDIO += mm-adec-omxmp3-test
-MM_AUDIO += mm-aenc-omxaac-test
-MM_AUDIO += mm-aenc-omxamr-test
-MM_AUDIO += mm-aenc-omxevrc-test
-MM_AUDIO += mm-aenc-omxqcelp13-test
-MM_AUDIO += sw-adec-omxaac-test
-MM_AUDIO += sw-adec-omxamr-test
-MM_AUDIO += sw-adec-omxamrwb-test
-MM_AUDIO += sw-adec-omxmp3-test
 
 #MM_CORE
 MM_CORE := libmm-omxcore
@@ -413,6 +407,13 @@ CHARGER += charger_res_images
 #VT_JNI
 VT_JNI := libvt_jni
 
+#CRDA
+CRDA := crda
+CRDA += regdbdump
+CRDA += regulatory.bin
+CRDA += linville.key.pub.pem
+CRDA += init.crda.sh
+
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
@@ -470,6 +471,7 @@ PRODUCT_PACKAGES += $(KERNEL_TESTS)
 PRODUCT_PACKAGES += $(KEYPAD)
 PRODUCT_PACKAGES += $(KS)
 PRODUCT_PACKAGES += $(LIB_NL)
+PRODUCT_PACKAGES += $(LIB_XML2)
 PRODUCT_PACKAGES += $(LIBCAMERA)
 PRODUCT_PACKAGES += $(LIBGESTURES)
 PRODUCT_PACKAGES += $(LIBCOPYBIT)
@@ -502,6 +504,7 @@ PRODUCT_PACKAGES += $(UPDATER)
 PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
+PRODUCT_PACKAGES += $(CRDA)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
