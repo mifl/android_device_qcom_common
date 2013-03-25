@@ -195,6 +195,7 @@ KEYPAD += philips_remote_ir.kl
 KEYPAD += samsung_remote_ir.kl
 KEYPAD += surf_keypad.kl
 KEYPAD += ue_rf4ce_remote.kl
+KEYPAD += synaptics_rmi4_i2c.kl
 
 #KS
 KS := ks
