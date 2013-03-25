@@ -300,6 +300,12 @@ case "$target" in
 esac
 
 case "$target" in
+    "msm8226")
+        echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    ;;
+esac
+
+case "$target" in
     "msm7627_ffa" | "msm7627_surf" | "msm7627_6x")
         echo 25000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
         ;;
