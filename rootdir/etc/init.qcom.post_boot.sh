@@ -189,6 +189,14 @@ case "$target" in
 		 chmod 664 /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us
 		 chmod 664 /sys/module/msm_mpdecision/slack_time_max_us
 		 chmod 664 /sys/module/msm_mpdecision/slack_time_min_us
+                 stop mpdecision
+                  echo 1 > /sys/devices/system/cpu/cpu1/online
+                  echo 1026000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+                  echo 1026000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+                  echo 1 > /sys/devices/system/cpu/cpu2/online
+                  echo 1 > /sys/devices/system/cpu/cpu3/online
+                  echo 1026000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+                  echo 1026000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
          start qosmgrd
          ;;
 esac
@@ -285,7 +293,7 @@ esac
 # Post-setup services
 case "$target" in
     "msm8660" | "msm8960" | "msm8974")
-        start mpdecision
+        #start mpdecision
     ;;
     "msm7627a")
         soc_id=`cat /sys/devices/system/soc/soc0/id`
