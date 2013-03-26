@@ -101,7 +101,8 @@ DASH += qcmediaplayer
 E2FSPROGS := e2fsck
 
 #GPS
-GPS_HARDWARE := gps.default
+GPS_HARDWARE := gps.conf
+GPS_HARDWARE += gps.default
 GPS_HARDWARE += gps.mahimahi
 GPS_HARDWARE += libloc_adapter
 GPS_HARDWARE += libgps.utils
@@ -273,6 +274,9 @@ LIBHWCOMPOSER += hwcomposer.msm7627a
 #LIBAUDIOPARAM -- Exposing AudioParameter as dynamic library for SRS TruMedia to work
 LIBAUDIOPARAM := libaudioparameter
 
+#LIBAUDIORESAMPLER -- High-quality audio resampler
+LIBAUDIORESAMPLER := libaudio-resampler
+
 #LIBOPENCOREHW
 LIBOPENCOREHW := libopencorehw
 
@@ -406,6 +410,13 @@ CHARGER += charger_res_images
 #VT_JNI
 VT_JNI := libvt_jni
 
+#CRDA
+CRDA := crda
+CRDA += regdbdump
+CRDA += regulatory.bin
+CRDA += linville.key.pub.pem
+CRDA += init.crda.sh
+
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
@@ -470,6 +481,7 @@ PRODUCT_PACKAGES += $(LIBCOPYBIT)
 PRODUCT_PACKAGES += $(LIBGRALLOC)
 PRODUCT_PACKAGES += $(LIBLIGHTS)
 PRODUCT_PACKAGES += $(LIBAUDIOPARAM)
+PRODUCT_PACKAGES += $(LIBAUDIORESAMPLER)
 PRODUCT_PACKAGES += $(LIBOPENCOREHW)
 PRODUCT_PACKAGES += $(LIBOVERLAY)
 PRODUCT_PACKAGES += $(LIBHWCOMPOSER)
@@ -496,6 +508,7 @@ PRODUCT_PACKAGES += $(UPDATER)
 PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
+PRODUCT_PACKAGES += $(CRDA)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \

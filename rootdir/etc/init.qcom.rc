@@ -224,8 +224,6 @@ on post-fs-data
     mkdir /data/time/ 0700 system system
 
     mkdir /data/audio/ 0770 media audio
-    # Enable the setgid bit on the directory
-    chmod 2770 /data/audio
 
     setprop vold.post_fs_data_done 1
 
@@ -385,24 +383,6 @@ service btwlancoex /system/bin/sh /system/etc/init.qcom.coex.sh
     disabled
     oneshot
 
-service amp_init /system/bin/amploader -i
-    class late_start
-    user root
-    disabled
-    oneshot
-
-service amp_load /system/bin/amploader -l 7000
-    class late_start
-    user root
-    disabled
-    oneshot
-
-service amp_unload /system/bin/amploader -u
-    class late_start
-    user root
-    disabled
-    oneshot
-
 service p2p_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant \
     -ip2p0 -Dnl80211 -c/data/misc/wifi/p2p_supplicant.conf -N \
     -iwlan0 -Dnl80211 -c/data/misc/wifi/wpa_supplicant.conf -dddd \
@@ -510,6 +490,12 @@ service xtwifi_client /system/bin/xtwifi-client
     group net_admin wifi inet gps
     disabled
 
+service lowi-server /system/bin/lowi-server
+    class late_start
+    user gps
+    group gps net_admin wifi inet
+    disabled
+
 service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
     class late_start
     user root
@@ -553,6 +539,12 @@ service wifi-sdio-on /system/bin/sh /system/etc/init.qcom.sdio.sh
     group wifi inet
     disabled
     oneshot
+
+service wifi-crda /system/bin/sh /system/etc/init.crda.sh
+   class late_start
+   user root
+   disabled
+   oneshot
 
 
 on property:sys.boot_completed=1
