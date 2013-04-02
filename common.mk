@@ -124,7 +124,8 @@ EBTABLES += ethertypes
 EBTABLES += libebtc
 
 #GPS
-GPS_HARDWARE := gps.default
+GPS_HARDWARE := gps.conf
+GPS_HARDWARE += gps.default
 GPS_HARDWARE += gps.mahimahi
 GPS_HARDWARE += libloc_adapter
 GPS_HARDWARE += libgps.utils
@@ -230,6 +231,7 @@ KS += efsks
 
 #LIBCAMERA
 LIBCAMERA := camera.msm8974
+LIBCAMERA += camera.msm8226
 LIBCAMERA += camera.msm8960
 LIBCAMERA += camera.msm8660
 LIBCAMERA += camera.msm7630_surf
@@ -277,6 +279,7 @@ LIBGRALLOC += libmemalloc
 LIBLIGHTS := lights.msm8660
 LIBLIGHTS += lights.msm8960
 LIBLIGHTS += lights.msm8974
+LIBLIGHTS += lights.msm8226
 LIBLIGHTS += lights.msm7k
 LIBLIGHTS += lights.msm7630_surf
 LIBLIGHTS += lights.msm7630_fusion
