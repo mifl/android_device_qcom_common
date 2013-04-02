@@ -49,7 +49,7 @@ failed ()
 
 start_hciattach ()
 {
-  /system/bin/hciattach -n /dev/ttyHS2 ath3k 3000000 &
+  /system/bin/hciattach -n /dev/ttyHS0 ath3k 3000000 &
   hciattach_pid=$!
   logi "start_hciattach: pid = $hciattach_pid"
 }
