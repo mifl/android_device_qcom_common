@@ -247,6 +247,7 @@ LIB_XML2 := libxml2
 #LIBCAMERA
 LIBCAMERA := camera.msm8974
 LIBCAMERA += camera.msm8226
+LIBCAMERA += camera.msm8610
 LIBCAMERA += camera.msm8960
 LIBCAMERA += camera.msm8660
 LIBCAMERA += camera.msm7630_surf
