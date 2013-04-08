@@ -72,6 +72,7 @@ load_wifiKM()
                     # There is a device file.  Write to the file
                     # so that the driver knows userspace is
                     # available for firmware download requests
+		    echo 1 > /sys/module/wcnsscore/parameters/do_not_cancel_vote
                     echo 1 > $wcnssnode
                     ;;
                 *)
