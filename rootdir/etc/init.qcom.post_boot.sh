@@ -326,6 +326,7 @@ case "$target" in
         chmod 664 /sys/devices/system/cpu/cpu1/online
         chmod 664 /sys/devices/system/cpu/cpu2/online
         chmod 664 /sys/devices/system/cpu/cpu3/online
+	echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
     ;;
 esac
 
