@@ -305,7 +305,7 @@ LIBPOWER := power.qcom
 
 #LLVM for RenderScript
 #use qcom LLVM
-$(call inherit-product, external/llvm/llvm-select.mk)
+#$(call inherit-product, external/llvm/llvm-select.mk)
 
 #LOC_API
 LOC_API := libloc_api-rpc-qc
