@@ -23,7 +23,7 @@ QSD8K_BOARD_PLATFORMS := qsd8k
 # PRODUCT_PACKAGES to build LOCAL_MODULEs that are tagged with
 # optional tag, which will not be available on target unless
 # explicitly list here. Where project corresponds to the vars here
-# in CAPs.
+# in CAP
 
 #ALSA
 ALSA_HARDWARE := alsa.msm8960
@@ -54,7 +54,8 @@ AUDIO_HARDWARE += audio.primary.msm7627a
 AUDIO_HARDWARE += audio.a2dp.default
 AUDIO_HARDWARE += audio.usb.default
 AUDIO_HARDWARE += audio.r_submix.default
-#
+
+#AUDIO POLICY
 AUDIO_POLICY := audio_policy.mpq8064
 AUDIO_POLICY += audio_policy.msm8960
 AUDIO_POLICY += audio_policy.msm8974
@@ -547,7 +548,6 @@ PRODUCT_COPY_FILES += \
     system/bluetooth/data/audio.conf:system/etc/bluetooth/audio.conf \
     system/bluetooth/data/auto_pairing.conf:system/etc/bluetooth/auto_pairing.conf \
     system/bluetooth/data/blacklist.conf:system/etc/bluetooth/blacklist.conf \
-    system/bluetooth/data/iop_device_list.conf:system/etc/bluetooth/iop_device_list.conf \
     system/bluetooth/data/input.conf:system/etc/bluetooth/input.conf \
     system/bluetooth/data/network.conf:system/etc/bluetooth/network.conf \
 
