@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2012, The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -79,6 +79,9 @@ case "$1" in
                 ;;
             *)
                 case "$soc_hwid" in
+                    "142") #8x30 QRD
+                        setprop ro.sf.lcd_density 320
+                        ;;
                     "109")
                         setprop ro.sf.lcd_density 160
                         ;;
