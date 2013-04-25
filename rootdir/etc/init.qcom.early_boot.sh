@@ -118,6 +118,7 @@ esac
 # HDMI can be fb1 or fb2
 # Loop through the sysfs nodes and determine
 # the HDMI(dtv panel)
+fb_cnt=0
 for file in /sys/class/graphics/fb*
 do
     value=`cat $file/msm_fb_type`
@@ -128,8 +129,9 @@ do
         chmod 0664 $file/video_mode
         chmod 0664 $file/format_3d
         # create symbolic link
-        ln -s $file /dev/graphics/hdmi
+        ln -s "/dev/graphics/fb"$fb_cnt /dev/graphics/hdmi
         # Change owner and group for media server and surface flinger
         chown system.system $file/format_3d;;
     esac
+    fb_cnt=$(( $fb_cnt + 1))
 done
