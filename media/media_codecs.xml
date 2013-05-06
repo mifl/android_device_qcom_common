@@ -76,7 +76,13 @@
         <MediaCodec name="AACDecoder" type="audio/mp4a-latm" />
         <MediaCodec name="OMX.google.g711.alaw.decoder" type="audio/g711-alaw" />
         <MediaCodec name="OMX.google.g711.mlaw.decoder" type="audio/g711-mlaw" />
-        <MediaCodec name="OMX.qcom.audio.decoder.Qcelp13" type="audio/qcelp" >
+        <MediaCodec name="OMX.qcom.audio.decoder.passthroughac3" type="audio/ac3" >
+            <Quirk name="requires-global-flush" />
+        </MediaCodec>
+        <MediaCodec name="OMX.qcom.audio.decoder.passthrougheac3" type="audio/eac3" >
+            <Quirk name="requires-global-flush" />
+        </MediaCodec>
+         <MediaCodec name="OMX.qcom.audio.decoder.Qcelp13" type="audio/qcelp" >
             <Quirk name="requires-global-flush" />
         </MediaCodec>
         <MediaCodec name="OMX.qcom.audio.decoder.evrc" type="audio/evrc" >
