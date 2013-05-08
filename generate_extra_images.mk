@@ -113,7 +113,7 @@ endif
 ifeq ($(call is-board-platform-in-list,msm8960),true)
 
 1G_USER_OUT := $(PRODUCT_OUT)/1g_user_image
-BOARD_1G_USERDATAIMAGE_PARTITION_SIZE := 1073741824
+BOARD_1G_USERDATAIMAGE_PARTITION_SIZE := 5368709120
 INSTALLED_1G_USERDATAIMAGE_TARGET := $(1G_USER_OUT)/userdata.img
 
 define build-1g-userdataimage-target
