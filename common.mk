@@ -48,6 +48,7 @@ ALSA_UCM += snd_soc_msm_Taiko
 ALSA_UCM += snd_soc_msm_Taiko_CDP
 ALSA_UCM += snd_soc_msm_Taiko_Fluid
 ALSA_UCM += snd_soc_msm_Taiko_liquid
+ALSA_UCM += snd_soc_apq_Taiko_DB
 ALSA_UCM += snd_soc_msm_I2SFusion
 ALSA_UCM += snd_soc_msm_Tapan
 ALSA_UCM += snd_soc_msm_8x10_wcd
@@ -319,6 +320,9 @@ LIBHWCOMPOSER += hwcomposer.msm7627a
 #LIBAUDIOPARAM -- Exposing AudioParameter as dynamic library for SRS TruMedia to work
 LIBAUDIOPARAM := libaudioparameter
 
+#LIBAUDIORESAMPLER -- High-quality audio resampler
+LIBAUDIORESAMPLER := libaudio-resampler
+
 #LIBOPENCOREHW
 LIBOPENCOREHW := libopencorehw
 
@@ -506,6 +510,7 @@ PRODUCT_PACKAGES := \
     IM \
     VoiceDialer \
     FM \
+    FM2 \
     VideoEditor
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
@@ -545,6 +550,7 @@ PRODUCT_PACKAGES += $(LIBCOPYBIT)
 PRODUCT_PACKAGES += $(LIBGRALLOC)
 PRODUCT_PACKAGES += $(LIBLIGHTS)
 PRODUCT_PACKAGES += $(LIBAUDIOPARAM)
+PRODUCT_PACKAGES += $(LIBAUDIORESAMPLER)
 PRODUCT_PACKAGES += $(LIBOPENCOREHW)
 PRODUCT_PACKAGES += $(LIBOVERLAY)
 PRODUCT_PACKAGES += $(LIBHWCOMPOSER)
