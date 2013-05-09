@@ -248,6 +248,7 @@ LIB_XML2 := libxml2
 #LIBCAMERA
 LIBCAMERA := camera.msm8974
 LIBCAMERA += camera.msm8226
+LIBCAMERA += camera.msm8610
 LIBCAMERA += camera.msm8960
 LIBCAMERA += camera.msm8660
 LIBCAMERA += camera.msm7630_surf
@@ -310,6 +311,7 @@ LIBHWCOMPOSER := hwcomposer.msm8660
 LIBHWCOMPOSER += hwcomposer.msm8960
 LIBHWCOMPOSER += hwcomposer.msm8974
 LIBHWCOMPOSER += hwcomposer.msm8226
+LIBHWCOMPOSER += hwcomposer.msm8610
 LIBHWCOMPOSER += hwcomposer.msm7k
 LIBHWCOMPOSER += hwcomposer.msm7630_surf
 LIBHWCOMPOSER += hwcomposer.msm7630_fusion
