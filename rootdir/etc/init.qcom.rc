@@ -37,6 +37,9 @@ on early-boot
     setrlimit 8 67108864 67108864
     exec /system/bin/sh /init.qcom.early_boot.sh ${ro.board.platform}
 
+    chmod 0644 /dev/avtimer
+    exec /system/bin/sh /init.qcom.syspart_fixup_modem_links.sh ${ro.board.platform} ${ro.serialno}
+
 # Starting ueventd, servicemanager, surfaceflinger prior to playing boot up advetisement
     start ueventd
     start servicemanager
