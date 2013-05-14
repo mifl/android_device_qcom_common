@@ -132,3 +132,6 @@
 /sys/devices/i2c-12/12-*  enable  0664 system system
 /sys/devices/i2c-12/12-*  poll_delay 0664 system system
 
+# hdmi tx
+/sys/devices/virtual/graphics/hdcpmanager    hdmitx  0664 system system
+
