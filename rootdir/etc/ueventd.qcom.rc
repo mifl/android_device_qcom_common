@@ -163,3 +163,7 @@
 /dev/uio0                 0660   system     system
 /dev/uio1                 0660   system     system
 /dev/uio2                 0660   system     system
+
+# hdmi tx
+/sys/devices/virtual/graphics/hdcpmanager    hdmitx  0664 system system
+
