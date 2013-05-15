@@ -343,6 +343,9 @@ case "$target" in
         chmod 664 /sys/devices/system/cpu/cpu1/online
         chmod 664 /sys/devices/system/cpu/cpu2/online
         chmod 664 /sys/devices/system/cpu/cpu3/online
+        mount -t debugfs none /sys/kernel/debug
+        echo 0x11745 > /sys/kernel/debug/spmi/spmi-0/address
+        echo 0x80 > /sys/kernel/debug/spmi/spmi-0/data
     ;;
 esac
 
