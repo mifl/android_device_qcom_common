@@ -641,8 +641,20 @@ service ssr_diag /system/bin/ssr_diag
     user system
     group system
 
+#Disable boot timeout for external modems.
+on property:persist.sys.mdm.timeout_disable=1
+    write /sys/module/mdm_common/parameters/disable_boot_timeout 1
 # Limit to SoC reset (1) and independent SSR (3)
 on property:persist.sys.ssr.restart_level=1
     write /sys/module/subsystem_restart/parameters/restart_level 1
 on property:persist.sys.ssr.restart_level=3
     write /sys/module/subsystem_restart/parameters/restart_level 3
+
+on property:persist.radio.sglte_sim_active=true
+    kill qmiproxy 15
+on property:persist.radio.sglte_sim_active=false
+    kill qmiproxy 15
+on property:persist.radio.sglte_csfb=true
+    kill qmiproxy 15
+on property:persist.radio.sglte_csfb=false
+    kill qmiproxy 15
