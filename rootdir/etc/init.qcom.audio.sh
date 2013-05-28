@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2012, The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -94,6 +94,15 @@ case "$btsoc" in
         rm /etc/snd_soc_msm/snd_soc_msm_Sitar_auxpcm 2>/dev/null
         ;;
 esac
+
+while read line
+do
+    if [ "$line" = "mpq8064-tabla-snd-card" ]; then
+        setprop mpq.audio.decode true
+        break
+    fi
+done  < "/proc/asound/cards"
+
 setprop qcom.audio.init complete
 exit 0
 
