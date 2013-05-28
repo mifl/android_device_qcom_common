@@ -1,3 +1,4 @@
+ifeq (0,1)
 LOCAL_PATH := $(call my-dir)
 
 ifeq ($(call is-vendor-board-platform,QCOM),true)
@@ -13,4 +14,5 @@ LOCAL_MODULE := power.qcom
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_SHARED_LIBRARY)
 
+endif
 endif
