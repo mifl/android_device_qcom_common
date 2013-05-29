@@ -55,6 +55,9 @@ start_sensors()
 start_battery_monitor()
 {
 	chown root.system /sys/module/pm8921_bms/parameters/*
+	chown root.system /sys/bus/platform/devices/pm8921-bms/fcc_data
+	chown root.system /sys/bus/platform/devices/pm8921-bms/fcc_temp
+	chown root.system /sys/bus/platform/devices/pm8921-bms/fcc_chgcyl
 	chmod 0660 /sys/module/pm8921_bms/parameters/*
 	mkdir -p /data/bms
 	chown root.system /data/bms
@@ -130,6 +133,8 @@ case "$target" in
     "msm8960")
         case "$baseband" in
             "msm")
+                start_battery_monitor;;
+            "mdm")
                 start_battery_monitor;;
         esac
 
