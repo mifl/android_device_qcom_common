@@ -112,6 +112,18 @@ case "$target" in
       ;;
 
     msm8960*)
+
+      if [ -e /sys/bus/platform/drivers/msm_hsic_host ]; then
+          if [ ! -L /sys/bus/usb/devices/1-1 ]; then
+              echo msm_hsic_host > /sys/bus/platform/drivers/msm_hsic_host/unbind
+          else
+              echo auto > /sys/bus/usb/devices/1-1/power/control
+          fi
+
+          chmod 0222 /sys/bus/platform/drivers/msm_hsic_host/bind
+          chmod 0222 /sys/bus/platform/drivers/msm_hsic_host/unbind
+      fi
+
       wlanchip=""
 
       if [ -f /system/etc/firmware/ath6k/AR6004/ar6004_wlan.conf ]; then
