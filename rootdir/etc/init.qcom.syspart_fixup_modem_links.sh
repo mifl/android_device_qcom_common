@@ -55,8 +55,6 @@ if [ -f /system/etc/init.qcom.modem_links.sh ]; then
   /system/bin/sh /system/etc/init.qcom.modem_links.sh
 fi
 
-touch /system/etc/boot_fixup
-
 if $mount_needed ;then
 # This should be the last command
 # remount system as read-only.
