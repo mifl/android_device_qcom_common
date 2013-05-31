@@ -593,6 +593,7 @@ service battery_monitor /system/bin/battery_monitor
     user system
     group system
     disabled
+    oneshot
 
 service ril-daemon1 /system/bin/rild -c 1
     class main
