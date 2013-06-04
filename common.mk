@@ -102,6 +102,7 @@ BSON := libbson
 BT := javax.btobex
 BT += libattrib_static
 BT += hcidump.sh
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
 
 #C2DColorConvert
 C2DCC := libc2dcolorconvert
@@ -266,6 +267,7 @@ LIBCOPYBIT := copybit.msm8660
 LIBCOPYBIT += copybit.msm8960
 LIBCOPYBIT += copybit.msm8974
 LIBCOPYBIT += copybit.msm8226
+LIBCOPYBIT += copybit.msm8610
 LIBCOPYBIT += copybit.msm7k
 LIBCOPYBIT += copybit.qsd8k
 LIBCOPYBIT += copybit.msm7630_surf
@@ -352,7 +354,7 @@ LIBPOWER := power.qcom
 
 #LLVM for RenderScript
 #use qcom LLVM
-$(call inherit-product, external/llvm/llvm-select.mk)
+$(call inherit-product-if-exists, external/llvm/llvm-select.mk)
 
 #LOC_API
 LOC_API := libloc_api-rpc-qc
@@ -641,7 +643,7 @@ DEVICE_PACKAGE_OVERLAYS += device/qcom/common/overlay
 #include frameworks/base/data/sounds/OriginalAudio.mk
 
 #Enabling video for live effects
-include frameworks/base/data/videos/VideoPackage1.mk
+-include frameworks/base/data/videos/VideoPackage1.mk
 
 # For PRODUCT_COPY_FILES, the first instance takes precedence.
 # Since we want use QC specific files, we should inherit
