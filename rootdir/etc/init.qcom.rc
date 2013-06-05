@@ -668,3 +668,7 @@ on property:persist.sys.ssr.restart_level=1
     write /sys/module/subsystem_restart/parameters/restart_level 1
 on property:persist.sys.ssr.restart_level=3
     write /sys/module/subsystem_restart/parameters/restart_level 3
+
+# Enable RPS/XPS on WiFi interface
+on property:wlan.driver.status=ok
+    exec /system/bin/sh /system/etc/init.qcom.wifi.rps.sh ${ro.board.platform} ${wlan.driver.ath}
