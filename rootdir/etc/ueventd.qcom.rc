@@ -166,4 +166,4 @@
 
 # hdmi tx
 /sys/devices/virtual/graphics/hdcpmanager    hdmitx  0664 system system
-
+/sys/devices/virtual/graphics/hdcpmanager    uevent  0664 system system
