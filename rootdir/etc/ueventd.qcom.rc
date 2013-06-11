@@ -49,6 +49,7 @@
 /dev/smdcntl6             0640   radio      radio
 /dev/smdcntl7             0640   radio      radio
 /dev/smuxctl32            0640   radio      radio
+/dev/smuxctl33            0640   radio      radio
 /dev/sdioctl0             0640   radio      radio
 /dev/sdioctl1             0640   radio      radio
 /dev/sdioctl2             0640   radio      radio
