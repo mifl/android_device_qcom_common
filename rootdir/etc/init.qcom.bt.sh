@@ -134,16 +134,10 @@ config_bt ()
 
   #Enable Bluetooth Profiles specific to target Dynamically
   case $target in
-    "msm8960")
+    "msm8960" | "msm8974" | "msm8226" | "msm8610" )
        if [ "$btsoc" != "ath3k" ] && [ "$soc_hwid" != "130" ]
        then
-           setprop ro.bluetooth.hfp.ver 1.6
            setprop ro.qualcomm.bt.hci_transport smd
-       elif [ "$btsoc" == "ath3k" ] && [ "$soc_hwid" == "130" ]
-       then
-           setprop ro.bluetooth.hfp.ver 1.6
-       else
-	   logi "None of the option matches!"
        fi
        ;;
     *)
@@ -153,11 +147,23 @@ config_bt ()
 if [ -f /system/etc/bluetooth/stack.conf ]; then
 stack=`cat /system/etc/bluetooth/stack.conf`
 fi
+#find the transport type
+TRANSPORT=`getprop ro.qualcomm.bt.hci_transport`
 
 case "$stack" in
     "bluez")
 	   logi "Bluetooth stack is $stack"
 	   setprop ro.qc.bluetooth.stack $stack
+           if [ "$TRANSPORT" == "smd" ] || [ "$btsoc" == "ath3k" ]
+           then
+             setprop ro.bluetooth.hfp.ver 1.6
+           fi
+	   reason=`getprop vold.decrypt`
+	   case "$reason" in
+	       "trigger_restart_framework")
+	           start dbus
+	           ;;
+	   esac
         ;;
     *)
 	   logi "Bluetooth stack is Bluedroid"
