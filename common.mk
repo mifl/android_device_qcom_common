@@ -734,3 +734,7 @@ PRODUCT_PRIVATE_KEY := device/qcom/common/qcom.key
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 #$(call inherit-product, frameworks/base/data/fonts/fonts.mk)
 #$(call inherit-product, frameworks/base/data/keyboards/keyboards.mk)
+
+TARGET_PROVIDES_B2G_INIT_RC=true
+$(call inherit-product-if-exists, device/qcom/b2g_common/b2g_product.mk)
+-include device/qcom/b2g_common/keymaps/keymaps.mk
