@@ -191,6 +191,7 @@ INIT += init.qcom.efs.sync.sh
 INIT += ueventd.qcom.rc
 INIT += init.ath3k.bt.sh
 INIT += init.qcom.audio.sh
+INIT += init.qcom.ssr.sh
 
 #IPROUTE2
 IPROUTE2 := ip
@@ -489,7 +490,7 @@ PRODUCT_PACKAGES := \
     DeskClock \
     AlarmProvider \
     Bluetooth \
-    BluetoothQcom \
+    BluetoothExt \
     Calculator \
     Calendar \
     Camera \
