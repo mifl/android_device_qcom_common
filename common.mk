@@ -426,6 +426,7 @@ PRODUCT_PACKAGES := \
     DeskClock \
     AlarmProvider \
     Bluetooth \
+    BluetoothExt \
     Calculator \
     Calendar \
     Camera \
