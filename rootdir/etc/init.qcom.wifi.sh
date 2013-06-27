@@ -124,7 +124,7 @@ case "$target" in
           chmod 0222 /sys/bus/platform/drivers/msm_hsic_host/unbind
       fi
 
-      wlanchip=""
+      wlanchip="AR6004-USB"
 
       if [ -f /system/etc/firmware/ath6k/AR6004/ar6004_wlan.conf ]; then
           wlanchip=`cat /system/etc/firmware/ath6k/AR6004/ar6004_wlan.conf`
