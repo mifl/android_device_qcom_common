@@ -146,6 +146,13 @@ config_bt ()
            setprop ro.qualcomm.bt.hci_transport smd
        fi
        ;;
+    "msm8974")
+       if [ "$btsoc" != "ath3k" ]
+       then
+           setprop ro.bluetooth.hfp.ver 1.6
+           setprop ro.qualcomm.bt.hci_transport smd
+       fi
+       ;;
     *)
        ;;
   esac
