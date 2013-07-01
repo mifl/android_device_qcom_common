@@ -102,6 +102,10 @@ DASH += qcmediaplayer
 #E2FSPROGS
 E2FSPROGS := e2fsck
 
+#FM
+FM := qcom.fmradio
+FM += libqcomfm_jni
+
 #GPS
 GPS_HARDWARE := gps.conf
 GPS_HARDWARE += gps.default
@@ -434,6 +438,7 @@ PRODUCT_PACKAGES := \
     CertInstaller \
     DrmProvider \
     Email \
+    FM \
     Gallery2 \
     LatinIME \
     Launcher2 \
@@ -469,6 +474,7 @@ PRODUCT_PACKAGES += $(CHARGER)
 PRODUCT_PACKAGES += $(CURL)
 PRODUCT_PACKAGES += $(DASH)
 PRODUCT_PACKAGES += $(E2FSPROGS)
+PRODUCT_PACKAGES += $(FM)
 PRODUCT_PACKAGES += $(GPS_HARDWARE)
 PRODUCT_PACKAGES += $(HDMID)
 PRODUCT_PACKAGES += $(HOSTAPD)
