@@ -124,35 +124,10 @@ case "$target" in
           chmod 0222 /sys/bus/platform/drivers/msm_hsic_host/unbind
       fi
 
-      wlanchip="AR6004-USB"
+      wlanchip=""
 
       if [ -f /system/etc/firmware/ath6k/AR6004/ar6004_wlan.conf ]; then
           wlanchip=`cat /system/etc/firmware/ath6k/AR6004/ar6004_wlan.conf`
-      fi
-
-      if [ "$wlanchip" == "" ]; then
-          # auto detect ar6004-usb card
-          # for ar6004-usb card, the vendor id and device id is as the following
-          # vendor id  product id
-          #    0x0cf3     0x9374
-          #    0x0cf3     0x9372
-          device_ids=`ls /sys/bus/usb/devices/`
-          for id in $device_ids; do
-              if [ -f /sys/bus/usb/devices/$id/idVendor ]; then
-                  vendor=`cat /sys/bus/usb/devices/$id/idVendor`
-                  if [ $vendor = "0cf3" ]; then
-                      if [ -f /sys/bus/usb/devices/$id/idProduct ]; then
-                          product=`cat /sys/bus/usb/devices/$id/idProduct`
-                          if [ $product = "9374" ] || [ $product = "9372" ]; then
-                              echo "auto" > /sys/bus/usb/devices/$id/power/control
-                              wlanchip="AR6004-USB"
-                              break
-                          fi
-                      fi
-                  fi
-              fi
-          done
-          # auto detect ar6004-usb card end
       fi
 
       if [ "$wlanchip" == "" ]; then
@@ -188,6 +163,10 @@ case "$target" in
               ven_idx=$(( $ven_idx + 1))
           done
           # auto detect ar6004-sdio card end
+      fi
+
+      if [ "$wlanchip" == "" ]; then
+          wlanchip="AR6004-USB"
       fi
 
       echo "The WLAN Chip ID is $wlanchip"
@@ -226,40 +205,6 @@ case "$target" in
 		/system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin
         ;;
       *)
-        echo "*** WI-FI chip ID is not specified in /persist/wlan_chip_id **"
-        echo "*** Use the default WCN driver.                             **"
-        setprop wlan.driver.ath 0 
-        rm  /system/lib/modules/wlan.ko
-        ln -s /system/lib/modules/prima/prima_wlan.ko /system/lib/modules/wlan.ko
-        ln -s /system/lib/modules/prima/cfg80211.ko /system/lib/modules/cfg80211.ko
-        # Populate the writable driver configuration file
-        if [ ! -e /data/misc/wifi/WCNSS_qcom_cfg.ini ]; then
-            if [ -f /persist/WCNSS_qcom_cfg.ini ]; then
-                cp /persist/WCNSS_qcom_cfg.ini /data/misc/wifi/WCNSS_qcom_cfg.ini
-            else
-                cp /system/etc/wifi/WCNSS_qcom_cfg.ini /data/misc/wifi/WCNSS_qcom_cfg.ini
-            fi
-            chown system:wifi /data/misc/wifi/WCNSS_qcom_cfg.ini
-            chmod 660 /data/misc/wifi/WCNSS_qcom_cfg.ini
-        fi
-
-        # Populate the NV configuration file
-        #  from factory file in /persist if it exists
-        #  from template file if factory file does not exist
-        if [ ! -f /data/misc/wifi/WCNSS_qcom_wlan_nv.bin ]; then
-            if [ -f /persist/WCNSS_qcom_wlan_nv.bin ]; then
-                cp /persist/WCNSS_qcom_wlan_nv.bin /data/misc/wifi/WCNSS_qcom_wlan_nv.bin
-            else
-                cp /system/etc/wifi/WCNSS_qcom_wlan_nv.bin /data/misc/wifi/WCNSS_qcom_wlan_nv.bin
-            fi
-        fi
-
-        # The property below is used in Qcom SDK for softap to determine
-        # the wifi driver config file
-        setprop wlan.driver.config /data/misc/wifi/WCNSS_qcom_cfg.ini
-
-        # Load kernel module in a separate process
-        load_wifiKM &
         ;;
       esac
       ;;
