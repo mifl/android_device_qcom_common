@@ -244,7 +244,7 @@ case "$target" in
 esac
 
 case "$target" in
-    "msm8974")
+    "msm8974-disable")
         echo 2 > /sys/module/lpm_resources/enable_low_power/l2
         echo 1 > /sys/module/lpm_resources/enable_low_power/pxo
         echo 1 > /sys/module/lpm_resources/enable_low_power/vdd_dig
@@ -494,7 +494,7 @@ case "$target" in
     "msm8660" | "msm8960" | "msm8226" | "msm8610")
         start mpdecision
     ;;
-    "msm8974")
+    "msm8974-disable")
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
