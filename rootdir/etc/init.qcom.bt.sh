@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2009-2012, The Linux Foundation. All rights reserved.
+# Copyright (c) 2009-2013, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -76,7 +76,7 @@ config_bt ()
         setprop ro.qualcomm.bluetooth.dun false
         # For MPQ as baseband is same for both
         case $soc_hwid in
-          "130")
+          "130" | "109")
               setprop ro.qualcomm.bluetooth.hsp true
               setprop ro.qualcomm.bluetooth.hfp true
               setprop ro.qualcomm.bluetooth.pbap false
