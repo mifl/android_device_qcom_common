@@ -32,10 +32,19 @@
 target="$1"
 btsoc="$2"
 soc_hwid=`cat /sys/devices/system/soc/soc0/id`
+is_dma="0"
 
 # No path is set up at this point so we have to do it here.
 PATH=/sbin:/system/sbin:/system/bin:/system/xbin
 export PATH
+while read line
+do
+    if [ "$line" = "mpq8064-tabla-snd-card" ]; then
+        setprop mpq.audio.decode true
+        is_dma="10"
+        break
+    fi
+done  < "/proc/asound/cards"
 
 case "$target" in
     msm8974*)
@@ -48,8 +57,8 @@ esac
 case "$target" in
     msm8960*)
         echo "The TARGET ID is $target"
-    case $soc_hwid in
-         "130")
+    case "$is_dma" in
+         "10")
             echo "The BTSOC ID is $btsoc"
             echo "Setting soft links for auxpcm files"
             rm /etc/snd_soc_msm/snd_soc_msm 2>/dev/null
@@ -59,7 +68,13 @@ case "$target" in
             rm /etc/snd_soc_msm/snd_soc_msm_Sitar 2>/dev/null
             ln -s /etc/snd_soc_msm/snd_soc_msm_auxpcm             /etc/snd_soc_msm/snd_soc_msm 2>/dev/null
             ln -s /etc/snd_soc_msm/snd_soc_msm_2x_auxpcm          /etc/snd_soc_msm/snd_soc_msm_2x 2>/dev/null
+            if [ "$soc_hwid" -eq "130" ]
+            then
             ln -s /etc/snd_soc_msm/snd_soc_msm_2x_mpq_auxpcm      /etc/snd_soc_msm/snd_soc_msm_2x_mpq 2>/dev/null
+            else
+               setprop spdif.mi2s true
+               ln -s /etc/snd_soc_msm/snd_soc_msm_2x_mpq_auxpcm_dma      /etc/snd_soc_msm/snd_soc_msm_2x_mpq 2>/dev/null
+            fi
             ln -s /etc/snd_soc_msm/snd_soc_msm_2x_Fusion3_auxpcm  /etc/snd_soc_msm/snd_soc_msm_2x_Fusion3 2>/dev/null
             ln -s /etc/snd_soc_msm/snd_soc_msm_Sitar_auxpcm       /etc/snd_soc_msm/snd_soc_msm_Sitar 2>/dev/null
             setprop qcom.audio.init complete
@@ -95,13 +110,6 @@ case "$btsoc" in
         ;;
 esac
 
-while read line
-do
-    if [ "$line" = "mpq8064-tabla-snd-card" ]; then
-        setprop mpq.audio.decode true
-        break
-    fi
-done  < "/proc/asound/cards"
 
 setprop qcom.audio.init complete
 exit 0
