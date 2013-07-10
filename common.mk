@@ -53,6 +53,8 @@ ALSA_UCM += snd_soc_msm_I2SFusion
 ALSA_UCM += snd_soc_msm_Tapan
 ALSA_UCM += snd_soc_msm_Tapan_SKUF
 ALSA_UCM += snd_soc_msm_8x10_wcd
+ALSA_UCM += snd_soc_msm_8x10_wcd_skuab
+ALSA_UCM += snd_soc_msm_8x10_wcd_skuaa
 
 #ANGLE
 ANGLE := libangle
