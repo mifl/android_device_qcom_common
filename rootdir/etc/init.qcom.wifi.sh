@@ -129,7 +129,7 @@ case "$target" in
                 for device in $sdio_devices; do
                     if [ $ven_idx -eq $dev_idx ]; then
                         case "$device" in
-                        "0x0400" | "0x0401")
+                        "0x0400" | "0x0401" | "0x0402")
                             wlanchip="AR6004-SDIO"
                             ;;
                         *)
@@ -230,6 +230,7 @@ case "$target" in
 		/system/etc/firmware/ath6k/AR6004/hw1.3/fw.ram.bin
       ln -s /system/etc/firmware/ath6k/AR6004/hw1.3/bdata.bin_sdio \
 		/system/etc/firmware/ath6k/AR6004/hw1.3/bdata.bin
+      rm /system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin
       ln -s /system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin_sdio \
                 /system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin
 
