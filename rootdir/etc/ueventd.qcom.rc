@@ -41,6 +41,10 @@
 /dev/smd5                 0660   system     system
 /dev/smd6                 0660   system     system
 /dev/smd7                 0660   bluetooth  bluetooth
+
+#permissions for CSVT
+/dev/smd11                0660   radio      radio
+
 /dev/radio0               0640   fm_radio   fm_radio
 /dev/rfcomm0              0660   bluetooth  bluetooth
 /dev/smdcntl0             0640   radio      radio
@@ -127,6 +131,12 @@
 
 # sensors
 /sys/devices/i2c-12/12-*  pollrate_ms 0664 system system
+/sys/devices/f9925000.i2c/i2c-0/0-000f/enable          0660     input     system
+/sys/devices/f9925000.i2c/i2c-0/0-000f/poll_delay      0660     input     system
+/sys/devices/f9925000.i2c/i2c-0/0-0019/enable          0660     input     system
+/sys/devices/f9925000.i2c/i2c-0/0-0019/poll_delay      0660     input     system
 
 # wlan
 /dev/wcnss_wlan           0660   system     system
+#nfc permissions
+/dev/nfc-nci              0660    nfc         nfc

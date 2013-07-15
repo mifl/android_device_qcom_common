@@ -54,16 +54,24 @@ start_sensors()
 
 start_battery_monitor()
 {
-	chown root.system /sys/module/pm8921_bms/parameters/*
-	chmod 0660 /sys/module/pm8921_bms/parameters/*
-	mkdir -p /data/bms
-	chown root.system /data/bms
-	chmod 0770 /data/bms
-	start battery_monitor
+	if ls /sys/bus/spmi/devices/qpnp-bms-*/fcc_data ; then
+		chown root.system /sys/module/pm8921_bms/parameters/*
+		chown root.system /sys/module/qpnp_bms/parameters/*
+		chown root.system /sys/bus/spmi/devices/qpnp-bms-*/fcc_data
+		chown root.system /sys/bus/spmi/devices/qpnp-bms-*/fcc_temp
+		chown root.system /sys/bus/spmi/devices/qpnp-bms-*/fcc_chgcyl
+		chmod 0660 /sys/module/qpnp_bms/parameters/*
+		chmod 0660 /sys/module/pm8921_bms/parameters/*
+		mkdir -p /data/bms
+		chown root.system /data/bms
+		chmod 0770 /data/bms
+		start battery_monitor
+	fi
 }
 
 baseband=`getprop ro.baseband`
 izat_premium_enablement=`getprop ro.qc.sdk.izat.premium_enabled`
+izat_service_mask=`getprop ro.qc.sdk.izat.service_mask`
 
 #
 # Suppress default route installation during RA for IPV6; user space will take
@@ -91,24 +99,43 @@ case "$baseband" in
         start gpsone_daemon
         ;;
 esac
-case "$target" in
-        "msm7630_surf" | "msm8660" | "msm8960" | "msm8974")
-        start quipc_igsn
-esac
-case "$target" in
-        "msm7630_surf" | "msm8660" | "msm8960" | "msm8974")
-        start quipc_main
-esac
 
-case "$target" in
-        "msm8960" | "msm8974")
-        start location_mq
-        start lowi-server
-        if [ "$izat_premium_enablement" -eq 1 ]; then
-            start xtwifi_inet
-            start xtwifi_client
-        fi
-esac
+let "izat_service_gtp_wifi=$izat_service_mask & 2#1"
+let "izat_service_gtp_wwan_lite=($izat_service_mask & 2#10)>>1"
+let "izat_service_pip=($izat_service_mask & 2#100)>>2"
+
+if [ "$izat_premium_enablement" -ne 1 ]; then
+    if [ "$izat_service_gtp_wifi" -ne 0 ]; then
+# GTP WIFI bit shall be masked by the premium service flag
+        let "izat_service_gtp_wifi=0"
+    fi
+fi
+
+if [ "$izat_service_gtp_wwan_lite" -ne 0 ] ||
+   [ "$izat_service_gtp_wifi" -ne 0 ] ||
+   [ "$izat_service_pip" -ne 0 ]; then
+# OS Agent would also be started under the same condition
+    start location_mq
+fi
+
+if [ "$izat_service_gtp_wwan_lite" -ne 0 ] ||
+   [ "$izat_service_gtp_wifi" -ne 0 ]; then
+# start GTP services shared by WiFi and WWAN Lite
+    start xtwifi_inet
+    start xtwifi_client
+fi
+
+if [ "$izat_service_gtp_wifi" -ne 0 ] ||
+   [ "$izat_service_pip" -ne 0 ]; then
+# advanced WiFi scan service shared by WiFi and PIP
+    start lowi-server
+fi
+
+if [ "$izat_service_pip" -ne 0 ]; then
+# PIP services
+    start quipc_main
+    start quipc_igsn
+fi
 
 start_sensors
 
@@ -148,6 +175,10 @@ case "$target" in
                  start profiler_daemon;;
              "Liquid")
                  start profiler_daemon;;
+        esac
+        case "$baseband" in
+            "msm")
+                start_battery_monitor;;
         esac
         ;;
 esac
