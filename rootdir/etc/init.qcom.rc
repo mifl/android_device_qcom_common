@@ -710,3 +710,8 @@ service fastmmisrv /system/bin/sh /init.qcom.factory.sh
 
 on ffbm
     start fastmmisrv
+
+service charger_monitor /system/bin/charger_monitor
+    user system
+    group system
+    disabled
