@@ -102,6 +102,7 @@ BSON := libbson
 BT := javax.btobex
 BT += libattrib_static
 BT += hcidump.sh
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
 
 #C2DColorConvert
 C2DCC := libc2dcolorconvert
@@ -190,6 +191,7 @@ INIT += init.qcom.efs.sync.sh
 INIT += ueventd.qcom.rc
 INIT += init.ath3k.bt.sh
 INIT += init.qcom.audio.sh
+INIT += init.qcom.ssr.sh
 
 #IPROUTE2
 IPROUTE2 := ip
@@ -267,6 +269,7 @@ LIBCOPYBIT := copybit.msm8660
 LIBCOPYBIT += copybit.msm8960
 LIBCOPYBIT += copybit.msm8974
 LIBCOPYBIT += copybit.msm8226
+LIBCOPYBIT += copybit.msm8610
 LIBCOPYBIT += copybit.msm7k
 LIBCOPYBIT += copybit.qsd8k
 LIBCOPYBIT += copybit.msm7630_surf
@@ -353,7 +356,7 @@ LIBPOWER := power.qcom
 
 #LLVM for RenderScript
 #use qcom LLVM
-$(call inherit-product, external/llvm/llvm-select.mk)
+$(call inherit-product-if-exists, external/llvm/llvm-select.mk)
 
 #LOC_API
 LOC_API := libloc_api-rpc-qc
@@ -488,7 +491,7 @@ PRODUCT_PACKAGES := \
     DeskClock \
     AlarmProvider \
     Bluetooth \
-    BluetoothQcom \
+    BluetoothExt \
     Calculator \
     Calendar \
     Camera \
