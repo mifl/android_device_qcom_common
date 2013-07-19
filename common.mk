@@ -425,6 +425,9 @@ CRDA += regulatory.bin
 CRDA += linville.key.pub.pem
 CRDA += init.crda.sh
 
+#WLAN
+WLAN := prima_wlan.ko
+
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
@@ -520,6 +523,7 @@ PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
 PRODUCT_PACKAGES += $(CRDA)
+PRODUCT_PACKAGES += $(WLAN)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
