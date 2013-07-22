@@ -11,6 +11,7 @@ QCOM_BOARD_PLATFORMS += msm8974
 QCOM_BOARD_PLATFORMS += msm8610
 QCOM_BOARD_PLATFORMS += msm8226
 QCOM_BOARD_PLATFORMS += apq8084
+QCOM_BOARD_PLATFORMS += mpq8092
 
 MSM7K_BOARD_PLATFORMS := msm7630_surf
 MSM7K_BOARD_PLATFORMS += msm7630_fusion
@@ -665,7 +666,7 @@ DEVICE_PACKAGE_OVERLAYS += device/qcom/common/overlay
 # For PRODUCT_COPY_FILES, the first instance takes precedence.
 # Since we want use QC specific files, we should inherit
 # device-vendor.mk first to make sure QC specific files gets installed.
-$(call inherit-product-if-exists, vendor/qcom/proprietary/common/config/device-vendor.mk)
+$(call inherit-product-if-exists, $(QCPATH)/common/config/device-vendor.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 PRODUCT_BRAND := qcom
