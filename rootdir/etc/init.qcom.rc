@@ -665,3 +665,17 @@ on property:persist.radio.sglte_csfb=true
     kill qmiproxy 15
 on property:persist.radio.sglte_csfb=false
     kill qmiproxy 15
+
+service diag_mdlog_start /system/bin/diag_mdlog
+    class late_start
+    user sdcard_rw
+    group system qcom_diag sdcard_rw sdcard_r media_rw
+    disabled
+    oneshot
+
+service diag_mdlog_stop /system/bin/diag_mdlog -k
+    class late_start
+    user sdcard_rw
+    group system qcom_diag sdcard_rw sdcard_r media_rw
+    disabled
+    oneshot
