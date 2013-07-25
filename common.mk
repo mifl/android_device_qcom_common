@@ -439,6 +439,7 @@ PRODUCT_PACKAGES := \
     DrmProvider \
     Email \
     FM \
+    FM2 \
     Gallery2 \
     LatinIME \
     Launcher2 \
@@ -456,7 +457,6 @@ PRODUCT_PACKAGES := \
     SyncProvider \
     IM \
     VoiceDialer \
-    FM \
     VideoEditor
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
