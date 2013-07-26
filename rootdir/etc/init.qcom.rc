@@ -681,3 +681,12 @@ service config_rps_p2p /system/bin/sh /system/etc/init.qcom.wifi.rps.sh "p2p"
 on property:wlan.interface.p2p.group=*
     start config_rps_p2p
 
+service setup_completed /system/bin/sh /system/etc/init.qcom.setup_completed.sh
+  class late_start
+  user root
+  disabled
+  oneshot
+
+on property:persist.sys.setup_completed=1
+   start setup_completed
+
