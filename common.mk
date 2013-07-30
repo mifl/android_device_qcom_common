@@ -443,6 +443,7 @@ PRODUCT_PACKAGES := \
     Email \
     FM \
     FM2 \
+    FMRecord \
     Gallery2 \
     LatinIME \
     Launcher2 \
