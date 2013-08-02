@@ -405,10 +405,6 @@ ZLIB := gzip
 ZLIB += minigzip
 ZLIB += libunz
 
-#Charger
-CHARGER := charger
-CHARGER += charger_res_images
-
 #VT_JNI
 VT_JNI := libvt_jni
 
