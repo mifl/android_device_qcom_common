@@ -284,11 +284,11 @@ service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     oneshot
 
 service dbus /system/bin/dbus-daemon --system --nofork
-    class core
+    class main
     socket dbus stream 660 bluetooth bluetooth
     user bluetooth
     group bluetooth net_bt_admin
-    disabled
+    oneshot
 
 on property:ro.qc.bluetooth.stack=bluez
     start dbus
