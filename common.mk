@@ -24,6 +24,15 @@ QSD8K_BOARD_PLATFORMS := qsd8k
 # optional tag, which will not be available on target unless
 # explicitly list here. Where project corresponds to the vars here
 # in CAPs.
+#ALLJOYN
+ALLJOYN := alljoyn-daemon
+ALLJOYN += liballjoyn
+ALLJOYN += liballjoyn_java
+
+#ALLJOYN_SERVICES
+ALLJOYN_SERVICES := libAllJoynAudioSink
+ALLJOYN_SERVICES += IoEAudioSink
+ALLJOYN_SERVICES += NotificationViewer
 
 #ALSA
 ALSA_HARDWARE := alsa.msm8960
@@ -451,6 +460,8 @@ PRODUCT_PACKAGES := \
     FM \
     VideoEditor
 
+PRODUCT_PACKAGES += $(ALLJOYN)
+PRODUCT_PACKAGES += $(ALLJOYN_SERVICES)
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
 PRODUCT_PACKAGES += $(ANGLE)
