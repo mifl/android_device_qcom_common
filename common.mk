@@ -415,6 +415,7 @@ CRDA += regulatory.bin
 CRDA += linville.key.pub.pem
 CRDA += init.crda.sh
 
+#Email\Mms\FM
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
@@ -426,11 +427,9 @@ PRODUCT_PACKAGES := \
     CellBroadcastReceiver \
     CertInstaller \
     DrmProvider \
-    Email \
     Gallery2 \
     LatinIME \
     Launcher2 \
-    Mms \
     Music \
     Phone \
     Provision \
@@ -444,7 +443,6 @@ PRODUCT_PACKAGES := \
     SyncProvider \
     IM \
     VoiceDialer \
-    FM \
     VideoEditor
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
