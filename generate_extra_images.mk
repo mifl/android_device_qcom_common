@@ -15,10 +15,11 @@ INSTALLED_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img
 recovery_ramdisk := $(PRODUCT_OUT)/ramdisk-recovery.img
 
 #----------------------------------------------------------------------
-# Generate secure boot image
+# Generate secure boot & recovery image
 #----------------------------------------------------------------------
 ifeq ($(TARGET_BOOTIMG_SIGNED),true)
 INSTALLED_SEC_BOOTIMAGE_TARGET := $(PRODUCT_OUT)/boot.img.secure
+INSTALLED_SEC_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img.secure
 
 ifneq ($(BUILD_TINY_ANDROID),true)
 intermediates := $(call intermediates-dir-for,PACKAGING,recovery_patch)
@@ -29,7 +30,7 @@ ifndef TARGET_SHA_TYPE
   TARGET_SHA_TYPE := sha256
 endif
 
-define build-boot-image
+define build-sec-image
 	$(hide) mv -f $(1) $(1).nonsecure
 	$(hide) openssl dgst -$(TARGET_SHA_TYPE) -binary $(1).nonsecure > $(1).$(TARGET_SHA_TYPE)
 	$(hide) openssl rsautl -sign -in $(1).$(TARGET_SHA_TYPE) -inkey $(PRODUCT_PRIVATE_KEY) -out $(1).sig
@@ -41,11 +42,19 @@ define build-boot-image
 endef
 
 $(INSTALLED_SEC_BOOTIMAGE_TARGET): $(INSTALLED_BOOTIMAGE_TARGET) $(RECOVERY_FROM_BOOT_PATCH)
-	$(hide) $(call build-boot-image,$(INSTALLED_BOOTIMAGE_TARGET),$(INTERNAL_BOOTIMAGE_ARGS))
+	$(hide) $(call build-sec-image,$(INSTALLED_BOOTIMAGE_TARGET))
 
 ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_SEC_BOOTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_SEC_BOOTIMAGE_TARGET)
-endif
+
+$(INSTALLED_SEC_RECOVERYIMAGE_TARGET): $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_FROM_BOOT_PATCH)
+	$(hide) $(call build-sec-image,$(INSTALLED_RECOVERYIMAGE_TARGET))
+
+ifneq ($(BUILD_TINY_ANDROID),true)
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_SEC_RECOVERYIMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_SEC_RECOVERYIMAGE_TARGET)
+endif # !BUILD_TINY_ANDROID
+endif # TARGET_BOOTIMG_SIGNED
 
 #----------------------------------------------------------------------
 # Generate persist image (persist.img)
@@ -277,7 +286,7 @@ aboot: $(INSTALLED_BOOTLOADER_MODULE)
 kernel: $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_SEC_BOOTIMAGE_TARGET) $(INSTALLED_4K_BOOTIMAGE_TARGET)
 
 .PHONY: recoveryimage
-recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(INSTALLED_4K_RECOVERYIMAGE_TARGET)
+recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET)  $(INSTALLED_SEC_RECOVERYIMAGE_TARGET) $(INSTALLED_4K_RECOVERYIMAGE_TARGET)
 
 .PHONY: kernelclean
 kernelclean:
