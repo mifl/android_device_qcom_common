@@ -80,10 +80,6 @@ on boot
     chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
-    #Chown for cm36283 L/P sensor
-    chown root input /sys/class/optical_sensors/lightsensor/ls_auto
-    chown root input /sys/class/optical_sensors/proximity/ps_adc
-
     chmod 0660 /dev/ttyHS2
     chown bluetooth bluetooth /dev/ttyHS2
 
