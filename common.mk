@@ -434,6 +434,7 @@ PRODUCT_PACKAGES := \
     AlarmProvider \
     Bluetooth \
     BluetoothExt \
+    BTTestApp \
     Calculator \
     Calendar \
     Camera \
