@@ -60,7 +60,7 @@ trigger_wcnss()
             # caldata is available at userspace.
             if [ -e /data/misc/wifi/WCNSS_qcom_wlan_cal.bin ]; then
                 calparm=`ls /sys/module/wcnsscore/parameters/has_calibrated_data`
-                if [ -e $calparm ]; then
+                if [ -e $calparm ] && [ ! -e /data/misc/wifi/WCN_FACTORY ]; then
                     echo 1 > $calparm
                 fi
             fi
@@ -97,8 +97,6 @@ case "$target" in
     if [ -e /sys/bus/platform/drivers/msm_hsic_host ]; then
        if [ ! -L /sys/bus/usb/devices/1-1 ]; then
            echo msm_hsic_host > /sys/bus/platform/drivers/msm_hsic_host/unbind
-       else
-           echo auto > /sys/bus/usb/devices/1-1/power/control
        fi
 
        chown system.system /sys/bus/platform/drivers/msm_hsic_host/bind

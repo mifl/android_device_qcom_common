@@ -200,7 +200,11 @@ case "$target" in
          chmod 664 /sys/module/msm_dcvs/cores/cpu0/slack_time_min_us
          chmod 664 /sys/module/msm_mpdecision/slack_time_max_us
          chmod 664 /sys/module/msm_mpdecision/slack_time_min_us
-         soc_id=`cat /sys/devices/system/soc/soc0/id`
+         if [ -f /sys/devices/soc0/soc_id ]; then
+             soc_id=`cat /sys/devices/soc0/soc_id`
+         else
+             soc_id=`cat /sys/devices/system/soc/soc0/id`
+         fi
          case "$soc_id" in
              "130")
                  echo 230 > /sys/class/gpio/export
@@ -283,6 +287,7 @@ case "$target" in
         echo 3 > /sys/devices/system/cpu/cpufreq/ondemand/down_differential_multi_core
         echo 960000 > /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
         echo 960000 > /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
+        echo 1190400 > /sys/devices/system/cpu/cpufreq/ondemand/input_boost
         echo 80 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
         echo 300000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         echo 300000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
@@ -445,7 +450,11 @@ case "$target" in
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
     "msm7627a")
-        soc_id=`cat /sys/devices/system/soc/soc0/id`
+        if [ -f /sys/devices/soc0/soc_id ]; then
+            soc_id=`cat /sys/devices/soc0/soc_id`
+        else
+            soc_id=`cat /sys/devices/system/soc/soc0/id`
+        fi
         case "$soc_id" in
             "127" | "128" | "129")
                 start mpdecision
