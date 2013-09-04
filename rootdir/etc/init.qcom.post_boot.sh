@@ -331,12 +331,6 @@ esac
 # Post-setup services
 case "$target" in
     "msm8660" | "msm8960" | "msm8974")
-	rm /data/mpdecision/power_collapse
-	rm /data/mpdecision/standalone_power_collapse
-	rm -rf /data/mpdecision
-	mkdir -p /data/mpdecision
-	chown root.system /data/mpdecision
-	chmod 0770 /data/mpdecision
         start mpdecision
     ;;
     "msm7627a")
