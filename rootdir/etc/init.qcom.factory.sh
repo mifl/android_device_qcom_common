@@ -230,10 +230,13 @@
 
 # Set this property so surfaceflinger is not started by system_init
     setprop system_init.startsurfaceflinger 0
+    insmod /system/lib/modules/adsp_loader.ko
+    insmod /system/lib/modules/adsprpc.ko
 
 # Start the following services needed for fftm
     start config_bluetooth
     start media
+    start zygote
     start fastmmi
     start adbd
     start qcom-post-boot

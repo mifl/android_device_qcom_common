@@ -732,6 +732,7 @@ service fastmmisrv /system/bin/sh /init.qcom.factory.sh
 
 on ffbm
     start fastmmisrv
+    class_start core
 
 service hvdcp /system/bin/hvdcp
     class core
