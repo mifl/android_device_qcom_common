@@ -13,7 +13,6 @@ INSTALLED_SYSTEMIMAGE := $(PRODUCT_OUT)/system.img
 INSTALLED_USERDATAIMAGE_TARGET := $(PRODUCT_OUT)/userdata.img
 INSTALLED_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img
 recovery_ramdisk := $(PRODUCT_OUT)/ramdisk-recovery.img
-INSTALLED_USBIMAGE_TARGET := $(PRODUCT_OUT)/usbdisk.bin
 
 #----------------------------------------------------------------------
 # Generate secure boot image
@@ -101,18 +100,6 @@ ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_DTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DTIMAGE_TARGET)
 endif
 
-define build-usbimage-target
-	$(hide) dd if=/dev/zero of=$(PRODUCT_OUT)/udisk_raw.bin bs=4096 count=$(BOARD_USBIMAGE_PARTITION_SIZE)
-	$(hide) mkfs.vfat -n "Internal SD" $(PRODUCT_OUT)/udisk_raw.bin
-	$(hide) dd if=$(PRODUCT_OUT)/udisk_raw.bin of=$(INSTALLED_USBIMAGE_TARGET) bs=4096 count=$(BOARD_USBIMAGE_PARTITION_SIZE)
-	$(hide) rm -f $(PRODUCT_OUT)/udisk_raw.bin
-endef
-
-$(INSTALLED_USBIMAGE_TARGET):
-	$(build-usbimage-target)
-
-ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_USBIMAGE_TARGET)
-ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DTIMAGE_TARGET)
 
 #----------------------------------------------------------------------
 # Generate NAND images
