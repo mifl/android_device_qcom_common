@@ -39,15 +39,18 @@ on init
     mkdir /storage 0050 system sdcard_r
     mkdir /storage/emulated 0555 root root
     mkdir /storage/emulated/legacy 0555 root root
-	mkdir /storage/sdcard0 0000 system system
     mkdir /storage/sdcard1 0000 system system
 
-    export EXTERNAL_STORAGE /storage/sdcard0
+    export EXTERNAL_STORAGE /storage/emulated/legacy
     export SECONDARY_STORAGE /storage/sdcard1
+    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+    export EMULATED_STORAGE_TARGET /storage/emulated
     export BOOTCLASSPATH ${BOOTCLASSPATH}:/system/framework/qcom.fmradio.jar
 
-    symlink /storage/sdcard0 /sdcard
-    symlink /storage/sdcard0 /mnt/sdcard
+    # Support legacy paths
+    symlink /storage/emulated/legacy /sdcard
+    symlink /storage/emulated/legacy /mnt/sdcard
+    symlink /storage/emulated/legacy /storage/sdcard0
 
 on early-boot
     # set RLIMIT_MEMLOCK to 64MB
