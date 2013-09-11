@@ -126,7 +126,7 @@ case "$target" in
         ln -s /data/misc/audio/wcd9320_mad_audio.bin /system/etc/firmware/wcd9320/wcd9320_mad_audio.bin
         ;;
 
-    msm8226* | msm8228)
+    msm8226* | msm8228*)
 
         rm -rf /system/etc/firmware/wcd9306/wcd9306_anc.bin
         rm -rf /system/etc/firmware/wcd9306/wcd9306_mbhc.bin
