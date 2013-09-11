@@ -309,7 +309,7 @@ case "$target" in
 esac
 
 case "$target" in
-    "msm8226")
+    "msm8226" | "msm8228")
         echo 2 > /sys/module/lpm_resources/enable_low_power/l2
         soc_revision=`cat /sys/devices/soc0/revision`
         if [ "$soc_revision" != "1.0" ]; then
@@ -442,7 +442,7 @@ esac
 
 # Post-setup services
 case "$target" in
-    "msm8660" | "msm8960" | "msm8226" | "msm8610")
+    "msm8660" | "msm8960" | "msm8226" | "msm8228" | "msm8610")
         start mpdecision
     ;;
     "msm8974")
