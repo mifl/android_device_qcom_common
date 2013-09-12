@@ -54,6 +54,7 @@ ALSA_UCM += snd_soc_msm_I2SFusion
 ALSA_UCM += snd_soc_msm_Tapan
 ALSA_UCM += snd_soc_msm_TapanLite
 ALSA_UCM += snd_soc_msm_Tapan_SKUF
+ALSA_UCM += snd_soc_msm_TapanLite_SKUF
 ALSA_UCM += snd_soc_msm_8x10_wcd
 ALSA_UCM += snd_soc_msm_8x10_wcd_skuab
 ALSA_UCM += snd_soc_msm_8x10_wcd_skuaa
@@ -276,6 +277,7 @@ LIBCOPYBIT += copybit.msm8960
 LIBCOPYBIT += copybit.msm8974
 LIBCOPYBIT += copybit.msm8226
 LIBCOPYBIT += copybit.msm8610
+LIBCOPYBIT += copybit.apq8084
 LIBCOPYBIT += copybit.msm7k
 LIBCOPYBIT += copybit.qsd8k
 LIBCOPYBIT += copybit.msm7630_surf
@@ -295,6 +297,7 @@ LIBGRALLOC += gralloc.msm8960
 LIBGRALLOC += gralloc.msm8974
 LIBGRALLOC += gralloc.msm8226
 LIBGRALLOC += gralloc.msm8610
+LIBGRALLOC += gralloc.apq8084
 LIBGRALLOC += gralloc.msm7k
 LIBGRALLOC += gralloc.msm7630_surf
 LIBGRALLOC += gralloc.msm7630_fusion
@@ -322,6 +325,7 @@ LIBHWCOMPOSER += hwcomposer.msm8960
 LIBHWCOMPOSER += hwcomposer.msm8974
 LIBHWCOMPOSER += hwcomposer.msm8226
 LIBHWCOMPOSER += hwcomposer.msm8610
+LIBHWCOMPOSER += hwcomposer.apq8084
 LIBHWCOMPOSER += hwcomposer.msm7k
 LIBHWCOMPOSER += hwcomposer.msm7630_surf
 LIBHWCOMPOSER += hwcomposer.msm7630_fusion
@@ -501,6 +505,7 @@ PRODUCT_PACKAGES := \
     AlarmProvider \
     Bluetooth \
     BluetoothExt \
+    BTTestApp \
     Calculator \
     Calendar \
     Camera \
