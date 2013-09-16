@@ -214,4 +214,7 @@ case "$target" in
                 ;;
         esac
         ;;
+    "msm8610")
+        start_charger_monitor
+        ;;
 esac
