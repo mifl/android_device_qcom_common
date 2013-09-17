@@ -27,7 +27,11 @@
 #
 
 target=`getprop ro.board.platform`
-platformid=`cat /sys/devices/system/soc/soc0/id`
+if [ -f /sys/devices/soc0/soc_id ]; then
+    platformid=`cat /sys/devices/soc0/soc_id`
+else
+    platformid=`cat /sys/devices/system/soc/soc0/id`
+fi
 #
 # Function to start sensors for DSPS enabled platforms
 #
@@ -74,7 +78,11 @@ start_charger_monitor()
 	if ls /sys/module/qpnp_charger/parameters/charger_monitor; then
 		chown root.system /sys/module/qpnp_charger/parameters/*
 		chown root.system /sys/class/power_supply/battery/input_current_max
+		chown root.system /sys/class/power_supply/battery/input_current_trim
+		chown root.system /sys/class/power_supply/battery/voltage_min
 		chmod 0664 /sys/class/power_supply/battery/input_current_max
+		chmod 0664 /sys/class/power_supply/battery/input_current_trim
+		chmod 0664 /sys/class/power_supply/battery/voltage_min
 		chmod 0664 /sys/module/qpnp_charger/parameters/charger_monitor
 		start charger_monitor
 	fi
@@ -152,14 +160,22 @@ start_sensors
 
 case "$target" in
     "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
-        value=`cat /sys/devices/system/soc/soc0/hw_platform`
+        if [ -f /sys/devices/soc0/hw_platform ]; then
+            value=`cat /sys/devices/soc0/hw_platform`
+        else
+            value=`cat /sys/devices/system/soc/soc0/hw_platform`
+        fi
         case "$value" in
             "Fluid")
              start profiler_daemon;;
         esac
         ;;
     "msm8660" )
-        platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
+        if [ -f /sys/devices/soc0/hw_platform ]; then
+            platformvalue=`cat /sys/devices/soc0/hw_platform`
+        else
+            platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
+        fi
         case "$platformvalue" in
             "Fluid")
                 start profiler_daemon;;
@@ -171,7 +187,11 @@ case "$target" in
                 start_battery_monitor;;
         esac
 
-        platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
+        if [ -f /sys/devices/soc0/hw_platform ]; then
+            platformvalue=`cat /sys/devices/soc0/hw_platform`
+        else
+            platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
+        fi
         case "$platformvalue" in
              "Fluid")
                  start profiler_daemon;;

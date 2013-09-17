@@ -52,6 +52,7 @@ ALSA_UCM += snd_soc_msm_Taiko_liquid
 ALSA_UCM += snd_soc_apq_Taiko_DB
 ALSA_UCM += snd_soc_msm_I2SFusion
 ALSA_UCM += snd_soc_msm_Tapan
+ALSA_UCM += snd_soc_msm_TapanLite
 ALSA_UCM += snd_soc_msm_Tapan_SKUF
 ALSA_UCM += snd_soc_msm_8x10_wcd
 ALSA_UCM += snd_soc_msm_8x10_wcd_skuab
@@ -172,7 +173,6 @@ INIT := init.qcom.composition_type.sh
 INIT += init.target.8x25.sh
 INIT += init.qcom.mdm_links.sh
 INIT += init.qcom.modem_links.sh
-INIT += init.qcom.thermal_conf.sh
 INIT += init.qcom.sensor.sh
 INIT += init.target.rc
 INIT += init.qcom.bt.sh
@@ -238,7 +238,6 @@ KEYPAD += qpnp_pon.kl
 KEYPAD += keypad_8960.kl
 KEYPAD += keypad_8960_liquid.kl
 KEYPAD += synaptics_rmi4_i2c.kl
-KEYPAD += Button_Jack.kl
 KEYPAD += msm_tma300_ts.kl
 KEYPAD += philips_remote_ir.kl
 KEYPAD += samsung_remote_ir.kl
@@ -529,6 +528,7 @@ PRODUCT_PACKAGES := \
     VoiceDialer \
     FM \
     FM2 \
+    FMRecord \
     VideoEditor
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
@@ -613,6 +613,12 @@ PRODUCT_PACKAGES += \
     make_ext4fs \
     setup_fs
 
+# Flatland
+PRODUCT_PACKAGES += flatland
+
+# MSM updater library
+PRODUCT_PACKAGES += librecovery_updater_msm
+
 PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
@@ -629,6 +635,7 @@ PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
+    frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
 
 # Bluetooth configuration files
 PRODUCT_COPY_FILES += \
