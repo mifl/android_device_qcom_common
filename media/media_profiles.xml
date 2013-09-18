@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (C) 2010 The Android Open Source Project
+<!-- Copyright 2013 The Android Open Source Project
 
      Licensed under the Apache License, Version 2.0 (the "License");
      you may not use this file except in compliance with the License.
@@ -115,7 +115,7 @@
 
         <EncoderProfile quality="480p" fileFormat="mp4" duration="30">
             <Video codec="h264"
-                   bitRate="5000000"
+                   bitRate="6000000"
                    width="720"
                    height="480"
                    frameRate="30" />
@@ -127,7 +127,7 @@
 
         <EncoderProfile quality="720p" fileFormat="mp4" duration="30">
             <Video codec="h264"
-                   bitRate="8000000"
+                   bitRate="12000000"
                    width="1280"
                    height="720"
                    frameRate="30" />
@@ -139,7 +139,7 @@
 
         <EncoderProfile quality="1080p" fileFormat="mp4" duration="30">
             <Video codec="h264"
-                   bitRate="12000000"
+                   bitRate="17000000"
                    width="1920"
                    height="1080"
                    frameRate="30" />
@@ -147,45 +147,6 @@
                    bitRate="96000"
                    sampleRate="48000"
                    channels="1" />
-        </EncoderProfile>
-
-        <EncoderProfile quality="qcif" fileFormat="3gp" duration="30">
-            <Video codec="h264"
-                   bitRate="192000"
-                   width="176"
-                   height="144"
-                   frameRate="30" />
-
-            <Audio codec="amrnb"
-                   bitRate="12200"
-                   sampleRate="8000"
-                   channels="1" />
-        </EncoderProfile>
-
-        <EncoderProfile quality="wvga" fileFormat="mp4" duration="30">
-            <Video codec="h264"
-                   bitRate="2000000"
-                   width="800"
-                   height="480"
-                   frameRate="30" />
-
-            <Audio codec="aac"
-                   bitRate="156000"
-                   sampleRate="48000"
-                   channels="2" />
-        </EncoderProfile>
-
-        <EncoderProfile quality="vga" fileFormat="mp4" duration="30">
-            <Video codec="h264"
-                   bitRate="2000000"
-                   width="640"
-                   height="480"
-                   frameRate="30" />
-
-            <Audio codec="aac"
-                   bitRate="156000"
-                   sampleRate="48000"
-                   channels="2" />
         </EncoderProfile>
 
         <EncoderProfile quality="timelapseqcif" fileFormat="mp4" duration="30">
@@ -216,7 +177,7 @@
 
         <EncoderProfile quality="timelapse480p" fileFormat="mp4" duration="30">
             <Video codec="h264"
-                   bitRate="5000000"
+                   bitRate="6000000"
                    width="720"
                    height="480"
                    frameRate="30" />
@@ -229,7 +190,7 @@
 
         <EncoderProfile quality="timelapse720p" fileFormat="mp4" duration="30">
             <Video codec="h264"
-                   bitRate="8000000"
+                   bitRate="12000000"
                    width="1280"
                    height="720"
                    frameRate="30" />
@@ -242,7 +203,7 @@
 
         <EncoderProfile quality="timelapse1080p" fileFormat="mp4" duration="30">
             <Video codec="h264"
-                   bitRate="12000000"
+                   bitRate="17000000"
                    width="1920"
                    height="1080"
                    frameRate="30" />
@@ -288,7 +249,7 @@
 
         <EncoderProfile quality="480p" fileFormat="mp4" duration="30">
             <Video codec="h264"
-                   bitRate="5000000"
+                   bitRate="6000000"
                    width="720"
                    height="480"
                    frameRate="30" />
@@ -300,7 +261,7 @@
 
         <EncoderProfile quality="720p" fileFormat="mp4" duration="30">
             <Video codec="h264"
-                   bitRate="8000000"
+                   bitRate="12000000"
                    width="1280"
                    height="720"
                    frameRate="30" />
@@ -308,57 +269,6 @@
                    bitRate="96000"
                    sampleRate="48000"
                    channels="1" />
-        </EncoderProfile>
-
-        <EncoderProfile quality="1080p" fileFormat="mp4" duration="30">
-            <Video codec="h264"
-                   bitRate="20000000"
-                   width="1920"
-                   height="1080"
-                   frameRate="30" />
-            <Audio codec="aac"
-                   bitRate="156000"
-                   sampleRate="48000"
-                   channels="2" />
-        </EncoderProfile>
-
-        <EncoderProfile quality="qcif" fileFormat="3gp" duration="30">
-            <Video codec="h264"
-                   bitRate="192000"
-                   width="176"
-                   height="144"
-                   frameRate="30" />
-
-            <Audio codec="amrnb"
-                   bitRate="12200"
-                   sampleRate="8000"
-                   channels="1" />
-        </EncoderProfile>
-
-        <EncoderProfile quality="wvga" fileFormat="mp4" duration="30">
-            <Video codec="h264"
-                   bitRate="2000000"
-                   width="800"
-                   height="480"
-                   frameRate="30" />
-
-            <Audio codec="aac"
-                   bitRate="156000"
-                   sampleRate="48000"
-                   channels="2" />
-        </EncoderProfile>
-
-        <EncoderProfile quality="vga" fileFormat="mp4" duration="30">
-            <Video codec="h264"
-                   bitRate="2000000"
-                   width="640"
-                   height="480"
-                   frameRate="30" />
-
-            <Audio codec="aac"
-                   bitRate="156000"
-                   sampleRate="48000"
-                   channels="2" />
         </EncoderProfile>
 
         <EncoderProfile quality="timelapseqcif" fileFormat="mp4" duration="30">
@@ -389,7 +299,7 @@
 
         <EncoderProfile quality="timelapse480p" fileFormat="mp4" duration="30">
             <Video codec="h264"
-                   bitRate="5000000"
+                   bitRate="6000000"
                    width="720"
                    height="480"
                    frameRate="30" />
@@ -402,7 +312,7 @@
 
         <EncoderProfile quality="timelapse720p" fileFormat="mp4" duration="30">
             <Video codec="h264"
-                   bitRate="8000000"
+                   bitRate="12000000"
                    width="1280"
                    height="720"
                    frameRate="30" />
