@@ -19,22 +19,6 @@
 import common
 import re
 
-def LoadFilesMap(zip, type):
-  try:
-    data = zip.read("RADIO/filesmap")
-  except KeyError:
-    print "Warning: could not find RADIO/filesmap in %s." % zip
-    data = ""
-  d = {}
-  for line in data.split("\n"):
-    line = line.strip()
-    if not line or line.startswith("#"): continue
-    pieces = line.split()
-    if not (len(pieces) == 2):
-      raise ValueError("malformed filesmap line: \"%s\"" % (line,))
-    d[pieces[0]] = pieces[1]
-  return d
-
 def GetRadioFiles(z):
   out = {}
   for info in z.infolist():
@@ -44,51 +28,93 @@ def GetRadioFiles(z):
   return out
 
 def FullOTA_Assertions(info):
-  #TODO: Implement device specific asserstions.
-  return
+  AddBootloaderAssertion(info, info.input_zip)
+
 
 def IncrementalOTA_Assertions(info):
-  #TODO: Implement device specific asserstions.
-  return
+  AddBootloaderAssertion(info, info.target_zip)
 
-def InstallRawImage(image_data, api_version, input_zip, fn, info, filesmap):
-  #fn is in RADIO/* format. Extracting just file name.
-  filename = fn[6:]
+
+def AddBootloaderAssertion(info, input_zip):
+  android_info = input_zip.read("OTA/android-info.txt")
+  m = re.search(r"require\s+version-bootloader\s*=\s*(\S+)", android_info)
+  if m:
+    bootloaders = m.group(1).split("|")
+    if "*" not in bootloaders:
+      info.script.AssertSomeBootloader(*bootloaders)
+    info.metadata["pre-bootloader"] = m.group(1)
+
+def CheckRadiotarget(info, mount_point):
+    fstab = info.script.info.get("fstab", None)
+    if fstab:
+      p = fstab[mount_point]
+      info.script.AppendExtra('assert(qcom.set_radio("%s"));' %
+                         (p.fs_type))
+
+# map qcom partitions with filenames
+QCOM_MOUNT_MAP = { "NON-HLOS.bin": "modem",
+                   "rpm.mbn": "rpm",
+                   "sbl1.mbn": "sbl1",
+                   "sbl2.mbn": "sbl2",
+                   "sbl3.mbn": "sbl3",
+                   "tz.mbn": "tz",
+                   "emmc_appsboot.mbn": "aboot",
+                   "radio.img": "radio"}
+
+
+def InstallRadio(radio_img, api_version, input_zip, fn, info):
+  fn2 = fn[6:]
+  fn3 = "/sdcard/radio/" + fn2
+  common.ZipWriteStr(info.output_zip, fn2, radio_img)
+
   if api_version >= 3:
-    if filename not in filesmap:
+    if (fn2.endswith("ENC") or fn2.endswith("enc")):
+        info.script.AppendExtra(('''
+assert(package_extract_file("%s", "%s"));
+''' %(fn2,fn3) % locals()).lstrip())
+    else:
+        fstab = info.script.info.get("fstab", None)
+        if fn2 not in QCOM_MOUNT_MAP:
+            return
+        if QCOM_MOUNT_MAP[fn2] not in fstab:
+            return
+        info.script.WriteRawImage(QCOM_MOUNT_MAP[fn2], fn2);
         return
-    info.script.AppendExtra('package_extract_file("%s", "%s");' % (filename,filesmap[filename]))
-    common.ZipWriteStr(info.output_zip, filename, image_data)
-    return
+  elif info.input_version >= 2:
+    info.script.AppendExtra(
+        'write_firmware_image("PACKAGE:radio.img", "radio");')
   else:
-    print "warning raido-update: no support for api_version less than 3."
+    info.script.AppendExtra(
+        ('assert(package_extract_file("radio.img", "/tmp/radio.img"),\n'
+         '       write_firmware_image("/tmp/radio.img", "radio"));\n'))
 
-def FULLOTA_InstallEnd_MMC(info):
-  files = GetRadioFiles(info.input_zip)
-  if files == {}:
-    print "warning radio-update: no radio image in input target_files; not flashing radio"
-    return
-  info.script.UnmountAll()
-  info.script.Print("Writing radio image...")
-  #Load filesmap file
-  filesmap = LoadFilesMap(info.input_zip, info.type)
-  if filesmap == {}:
-      print "warning radio-update: no or invalid filesmap file found. not flashing radio"
-      return
-  for f in files:
-    image_data = info.input_zip.read(f)
-    InstallRawImage(image_data, info.input_version, info.input_zip, f, info, filesmap)
-  return
-
-def FULLOTA_InstallEnd_MTD(info):
-  print "warning radio-update: no implementation for radio upgrade for NAND devices"
-  return
 
 def FullOTA_InstallEnd(info):
-  if info.type == 'MTD':
-    FULLOTA_InstallEnd_MTD(info)
-  if info.type == 'MMC':
-    FULLOTA_InstallEnd_MMC(info)
+  files = GetRadioFiles(info.input_zip)
+  if files == {}:
+    print "warning sha: no radio image in input target_files; not flashing radio"
+    return
+
+  enc_file = "false";
+
+  info.script.UnmountAll()
+  info.script.Print("Writing radio image...")
+  for f in files:
+    if (f.endswith("ENC") or f.endswith("enc")):
+        continue
+    radio_img = info.input_zip.read(f)
+    InstallRadio(radio_img, info.input_version, info.input_zip, f, info)
+
+  for f in files:
+    if (f.endswith("ENC") or f.endswith("enc")):
+        radio_img = info.input_zip.read(f)
+        InstallRadio(radio_img, info.input_version, info.input_zip, f, info)
+        enc_file = "true"
+
+  if (enc_file == "true"):
+    CheckRadiotarget(info, "/recovery")
+  return
+
 
 def IncrementalOTA_InstallEnd(info):
   #TODO: Implement device specific asserstions.
