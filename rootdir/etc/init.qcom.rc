@@ -246,6 +246,36 @@ on post-fs-data
     # Enable the setgid bit on the directory
     chmod 2770 /data/audio
 
+    # A4TV middleware storage
+    mkdir /data/data/tvapp_data 0770 media system
+
+                    # A4TV middleware devices
+                    chmod 777 /dev/block/mmcblk0
+                    chmod 777 /dev/block/mmcblk0p1
+                    chmod 777 /dev/block/mmcblk0p10
+                    chmod 777 /dev/block/mmcblk0p11
+                    chmod 777 /dev/block/mmcblk0p12
+                    chmod 777 /dev/block/mmcblk0p13
+                    chmod 777 /dev/block/mmcblk0p14
+                    chmod 777 /dev/block/mmcblk0p15
+                    chmod 777 /dev/block/mmcblk0p16
+                    chmod 777 /dev/block/mmcblk0p17
+                    chmod 777 /dev/block/mmcblk0p18
+                    chmod 777 /dev/block/mmcblk0p19
+                    chmod 777 /dev/block/mmcblk0p2
+                    chmod 777 /dev/block/mmcblk0p20
+                    chmod 777 /dev/block/mmcblk0p21
+                    chmod 777 /dev/block/mmcblk0p3
+                    chmod 777 /dev/block/mmcblk0p4
+                    chmod 777 /dev/block/mmcblk0p5
+                    chmod 777 /dev/block/mmcblk0p6
+                    chmod 777 /dev/block/mmcblk0p7
+                    chmod 777 /dev/block/mmcblk0p8
+                    chmod 777 /dev/block/mmcblk0p9
+
+                    # A4TV middleware props
+                    setprop iwedia.mw.status stopped
+
     setprop vold.post_fs_data_done 1
 
 # Export GPIO56 for fusion targets to enable/disable hub
@@ -271,6 +301,9 @@ on property:bluetooth.isEnabled=true
 
 on property:ro.bluetooth.ftm_enabled=true
     start ftmd
+
+on property:init.svc.media=stopped
+    setprop iwedia.mw.status stopped
 
 service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
     class core
@@ -645,6 +678,12 @@ service profiler_daemon /system/bin/profiler_daemon
 service sdcard /system/bin/sdcard /data/media 1023 1023
     class late_start
     disabled
+
+service renderer_service /system/bin/renderer_service
+    class late_start
+    user root
+    group root
+    oneshot
 
 on property:ro.fuse_sdcard=true
     start sdcard
