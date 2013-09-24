@@ -195,7 +195,7 @@ case "$fake_batt_capacity" in
         echo "$fake_batt_capacity" > /sys/module/qpnp_bms/parameters/bms_fake_battery
         ;;
 
-	"msm8226")
+	"msm8226" | "msm8228")
         echo "$fake_batt_capacity" > /sys/module/qpnp_bms/parameters/bms_fake_battery
         ;;
 

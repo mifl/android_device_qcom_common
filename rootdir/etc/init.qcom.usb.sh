@@ -92,7 +92,7 @@ case "$usb_config" in
             "apq8084")
                 setprop persist.sys.usb.config diag,adb
                 ;;
-            "msm8960" | "msm8974" | "msm8226" | "msm8610")
+            "msm8960" | "msm8974" | "msm8226" | "msm8228" | "msm8610")
                 case "$baseband" in
                     "mdm")
                          setprop persist.sys.usb.config diag,diag_mdm,serial_hsic,serial_tty,rmnet_hsic,mass_storage,adb
