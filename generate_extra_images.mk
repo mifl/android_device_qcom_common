@@ -104,7 +104,7 @@ endif
 define build-usbimage-target
 	$(hide) dd if=/dev/zero of=$(PRODUCT_OUT)/udisk_raw.bin bs=4096 count=$(BOARD_USBIMAGE_PARTITION_SIZE)
 	$(hide) mkfs.vfat -n "Internal SD" $(PRODUCT_OUT)/udisk_raw.bin
-	$(hide) dd if=$(PRODUCT_OUT)/udisk_raw.bin of=$(INSTALLED_USBIMAGE_TARGET) bs=4096 count=$(BOARD_USBIMAGE_PARTITION_SIZE)
+	$(hide) dd if=$(PRODUCT_OUT)/udisk_raw.bin of=$(INSTALLED_USBIMAGE_TARGET) bs=4096 count=5120
 	$(hide) rm -f $(PRODUCT_OUT)/udisk_raw.bin
 endef
 
