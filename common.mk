@@ -107,7 +107,11 @@ BSON := libbson
 #BT
 BT := javax.btobex
 BT += libattrib_static
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ),true)
 BT += hcidump.sh
+endif
+
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
 
 #C2DColorConvert
@@ -648,15 +652,13 @@ PRODUCT_COPY_FILES += \
 endif
 
 # Bluetooth configuration files
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ),true)
 PRODUCT_COPY_FILES += \
     system/bluetooth/data/audio.conf:system/etc/bluetooth/audio.conf \
     system/bluetooth/data/auto_pairing.conf:system/etc/bluetooth/auto_pairing.conf \
     system/bluetooth/data/blacklist.conf:system/etc/bluetooth/blacklist.conf \
     system/bluetooth/data/input.conf:system/etc/bluetooth/input.conf \
     system/bluetooth/data/network.conf:system/etc/bluetooth/network.conf \
-
-ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ),true)
-PRODUCT_COPY_FILES += \
     system/bluetooth/data/stack.conf:system/etc/bluetooth/stack.conf
 endif # BOARD_HAVE_BLUETOOTH_BLUEZ
 
