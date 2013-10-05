@@ -155,11 +155,11 @@ esac
 # the HDMI(dtv panel)
 for fb_cnt in 0 1 2
 do
-file=/sys/class/graphics/fb$fb_cnt
+sys_file=/sys/class/graphics/fb$fb_cnt
 dev_file=/dev/graphics/fb$fb_cnt
-  if [ -d "$file" ]
+  if [ -d "$sys_file" ]
   then
-    value=`cat $file/msm_fb_type`
+    value=`cat $sys_file/msm_fb_type`
     case "$value" in
             "dtv panel")
         chown system.graphics $file/hpd
