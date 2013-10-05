@@ -139,18 +139,12 @@ def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
     if src_files is not None:
       sf = src_files.get(fn, None)
 
-    full = sf is None or fn.endswith('.enc')
+    full = sf is None or fn.endswith('.enc') or tf.sha1 == sf.sha1
     if not full:
-      # no difference - skip this file
-      if tf.sha1 == sf.sha1:
-        continue
       d = common.Difference(tf, sf)
       _, _, d = d.ComputePatch()
-      # no difference - skip this file
-      if d is None:
-        continue
       # if patch is almost as big as the file - don't bother patching
-      full = len(d) > tf.size * common.OPTIONS.patch_threshold
+      full = d is None or len(d) > tf.size * common.OPTIONS.patch_threshold
       if not full:
         f = "patch/firmware-update/" + fn + ".p"
         common.ZipWriteStr(info.output_zip, f, d)
