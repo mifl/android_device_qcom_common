@@ -134,7 +134,6 @@ INIT := init.qcom.composition_type.sh
 INIT += init.target.8x25.sh
 INIT += init.qcom.mdm_links.sh
 INIT += init.qcom.modem_links.sh
-INIT += init.qcom.sensor.sh
 INIT += init.target.rc
 INIT += init.qcom.bt.sh
 INIT += init.qcom.btdun.sh
