@@ -89,7 +89,7 @@ trigger_wcnss()
 
 
 case "$target" in
-    msm8974* | msm8226* | msm8610*)
+    msm8974* | msm8226* | msm8228* | msm8610*)
 
 # Check whether device is plugged on the HSIC bus
 # Currently HSIC bus will be the first index
