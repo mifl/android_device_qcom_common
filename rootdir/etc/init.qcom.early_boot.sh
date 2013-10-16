@@ -138,6 +138,16 @@ case "$1" in
                 setprop ro.sf.lcd_density 320
                 ;;
         esac
+
+        # Disable the dsds mode for SKUG board
+        platform_subtype=`cat /sys/devices/soc0/platform_subtype` 2> /dev/null
+        case "$platform_subtype" in
+            "SKUG")
+                setprop persist.multisim.config ""
+                ;;
+            *)
+                ;;
+        esac
         ;;
 
     "msm8610" | "apq8084")
