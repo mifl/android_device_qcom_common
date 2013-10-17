@@ -60,6 +60,7 @@ ALSA_UCM += snd_soc_msm_8x10_wcd
 ALSA_UCM += snd_soc_msm_8x10_wcd_skuab
 ALSA_UCM += snd_soc_msm_8x10_wcd_skuaa
 ALSA_UCM += snd_soc_msm_samarium_Tapan
+ALSA_UCM += snd_soc_msm_samarium_Tapan_MTP
 
 #ANGLE
 ANGLE := libangle
