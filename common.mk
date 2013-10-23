@@ -376,6 +376,8 @@ PVOMX += 01_qcomm_omx
 #SENSORS_HARDWARE
 SENSORS_HARDWARE := sensors.msm7630_surf
 SENSORS_HARDWARE += sensors.msm7630_fusion
+SENSORS_HARDWARE += sensors.msm8960
+SENSORS_HARDWARE += sensors_native_hal
 
 #SOFTAP
 SOFTAP := libQWiFiSoftApCfg
