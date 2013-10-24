@@ -442,6 +442,32 @@ case "$target" in
         chmod 664 /sys/devices/system/cpu/cpu1/online
         chmod 664 /sys/devices/system/cpu/cpu2/online
         chmod 664 /sys/devices/system/cpu/cpu3/online
+
+	# enable runtime PM for UFS host
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:0/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:1/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:2/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:3/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:4/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:5/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:6/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:7/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:49409/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:49456/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:49476/power/autosuspend_delay_ms
+	echo 1000 > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:49488/power/autosuspend_delay_ms
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:0/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:1/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:2/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:3/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:4/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:5/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:6/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:7/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:49409/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:49456/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:49476/power/control
+	echo auto > /sys/devices/msm_ufs.1/host0/target0:0:0/0:0:0:49488/power/control
     ;;
 esac
 
