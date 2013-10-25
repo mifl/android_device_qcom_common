@@ -95,6 +95,11 @@ on boot
 
     setprop wifi.interface wlan0
 
+#   Define TCP buffer sizes for various networks
+#   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
+    setprop net.tcp.buffersize.wifi    524288,2097152,4194304,262144,524288,1048576
+
+
     setprop ro.telephony.call_ring.multiple false
 
     #Set SUID bit for usbhub
@@ -166,6 +171,9 @@ on post-fs-data
     # Create the directories used by CnE subsystem
     mkdir /data/connectivity 0771 system system
     chown system system /data/connectivity
+
+    mkdir /data/connectivity/nsrm 0771 system system
+    chown system system /data/connectivity/nsrm
 
     mkdir /data/connectivity/nsrm 0771 system system
     chown system system /data/connectivity/nsrm
@@ -303,25 +311,6 @@ service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     class core
     user root
     oneshot
-
-service dbus /system/bin/dbus-daemon --system --nofork
-    class main
-    socket dbus stream 660 bluetooth bluetooth
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-
-on property:ro.qc.bluetooth.stack=bluez
-    start dbus
-
-service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -n
-    class main
-    socket bluetooth stream 660 bluetooth bluetooth
-    socket dbus_bluetooth stream 660 bluetooth bluetooth
-    # init.rc does not yet support applying capabilities, so run as root and
-    # let bluetoothd drop uid to bluetooth with the right linux capabilities
-    group bluetooth net_bt_admin misc net_bt_stack
-    disabled
 
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
     class late_start

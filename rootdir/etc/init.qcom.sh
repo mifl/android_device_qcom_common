@@ -105,6 +105,12 @@ echo 1 > /proc/sys/net/ipv6/conf/default/accept_ra_defrtr
 #
 # Start gpsone_daemon for SVLTE Type I & II devices
 #
+
+# platform id 126 is for MSM8974
+case "$platformid" in
+        "126")
+        start gpsone_daemon
+esac
 case "$target" in
         "msm7630_fusion")
         start gpsone_daemon
@@ -210,8 +216,14 @@ case "$target" in
         case "$baseband" in
             "msm")
                 start_battery_monitor
-                start_charger_monitor
                 ;;
         esac
+        start_charger_monitor
+        ;;
+    "msm8226")
+        start_charger_monitor
+        ;;
+    "msm8610")
+        start_charger_monitor
         ;;
 esac

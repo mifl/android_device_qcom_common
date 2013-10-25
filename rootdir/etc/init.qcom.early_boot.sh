@@ -138,6 +138,16 @@ case "$1" in
                 setprop ro.sf.lcd_density 320
                 ;;
         esac
+
+        # Disable the dsds mode for SKUG board
+        platform_subtype=`cat /sys/devices/soc0/platform_subtype` 2> /dev/null
+        case "$platform_subtype" in
+            "SKUG")
+                setprop persist.multisim.config ""
+                ;;
+            *)
+                ;;
+        esac
         ;;
 
     "msm8610" | "apq8084")
@@ -159,9 +169,11 @@ do
     case "$value" in
             "dtv panel")
         chown system.graphics $file/hpd
+        chown system.system $file/hdcp/tp
         chown system.graphics $file/vendor_name
         chown system.graphics $file/product_description
         chmod 0664 $file/hpd
+        chmod 0664 $file/hdcp/tp
         chmod 0664 $file/vendor_name
         chmod 0664 $file/product_description
         chmod 0664 $file/video_mode
