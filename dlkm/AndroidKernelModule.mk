@@ -49,6 +49,12 @@ KBUILD_OUT_DIR := $(TARGET_OUT_INTERMEDIATES)/$(LOCAL_PATH)
 # system creates the kernel module.
 KBUILD_MODULE := $(KBUILD_OUT_DIR)/$(LOCAL_MODULE)
 
+#check any additional dependency kernel modules to build
+LOCAL_ADDITIONAL_DEPENDENCIES := $(strip $(LOCAL_ADDITIONAL_DEPENDENCIES))
+ifneq ($(LOCAL_ADDITIONAL_DEPENDENCIES),)
+$(KBUILD_TARGET): $(LOCAL_ADDITIONAL_DEPENDENCIES)
+endif
+
 # Since we only invoke the kernel build system once per directory,
 # each kernel module must depend on the same target.
 $(KBUILD_MODULE): kbuild_out := $(KBUILD_OUT_DIR)/$(LOCAL_MODULE_KBUILD_NAME)
