@@ -71,7 +71,7 @@ if(uc($ARGV[1]) eq "PANEL")
 	open (my $PANELH, '>panel_' . $nameinH . '.h');
 	printheader($PANELH);
 	print $PANELH "\n#ifndef _PANEL_". uc($nameinH) . "_H_\n";
-	print $PANELH "\n#define _PANEL_". uc($nameinH) . "_H_\n";
+	print $PANELH "#define _PANEL_". uc($nameinH) . "_H_\n";
 	printdtsheader($PANELDTSI, $nameinH);
 
 
@@ -83,9 +83,6 @@ if(uc($ARGV[1]) eq "PANEL")
 	printSectionHeader($PANELH, "HEADER files");
 
 	print $PANELH "#include \"panel.h\"\n\n";
-
-	printSectionHeader($PANELH, "Panel configuration");
-	print $PANELH "\n";
 
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry/PanelController'))
 	{
@@ -171,13 +168,13 @@ if(uc($ARGV[1]) eq "PANEL")
 		"DSIStream", "InterleaveMode","BitClockFrequency",
 		"PanelOperatingMode", "PanelWithEnableGPIO");
 
+		printSectionHeader($PANELH, "Panel configuration");
 		printDataStruct($PANELH, \@panelConfigAttrs, $property,
 				"panel_config", lc($nameinH) . "_panel_data",
 				"qcom,mdss_dsi_" .lc($nameinH));
 	}
 
 	print $PANELH "\n\n";
-	printSectionHeader($PANELH, "Panel resolution");
 
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
@@ -188,16 +185,17 @@ if(uc($ARGV[1]) eq "PANEL")
 		"VActiveRes", "InvertDataPolarity", "InvertVsyncPolarity",
 		"InvertHsyncPolarity");
 
+		printSectionHeader($PANELH, "Panel resolution");
 		printStruct($PANELH, \@panelConfigAttrs, $property,
 			"panel_resolution", lc($nameinH) . "_panel_res");
 		print $PANELH "\n";
 	}
 
 	print $PANELH "\n";
-	printSectionHeader($PANELH, "Panel Color Information" );
 
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
+		printSectionHeader($PANELH, "Panel color information" );
 		my @panelConfigAttrs = ("ColorFormat", "ColorOrder",
 		"UnderFlowColor", "BorderColor", "PixelPacking",
 		"PixelAlignment");
@@ -208,7 +206,7 @@ if(uc($ARGV[1]) eq "PANEL")
 	}
 
 	print $PANELH "\n";
-	printSectionHeader($PANELH, "Panel Command information" );
+	printSectionHeader($PANELH, "Panel on/off command information" );
 
 	for my $property ($xmldoc->findnodes('/GCDB/PanelEntry/OnCommand'))
 	{
@@ -311,8 +309,6 @@ if(uc($ARGV[1]) eq "PANEL")
 		}
 	}
 
-	printSectionHeader($PANELH, "Command mode panel information");
-	print $PANELH "\n";
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
 		my @attrs = ("TECheckEnable", "TEPinSelect", "TEUsingTEPin",
@@ -321,6 +317,7 @@ if(uc($ARGV[1]) eq "PANEL")
 		"TEvSyncStartLineDivisor", "TEPercentVariance", "TEDCSCommand",
 		"DisableEoTAfterHSXfer", "CmdModeIdleTime");
 
+		printSectionHeader($PANELH, "Command mode panel information");
 		printStruct($PANELH, \@attrs, $property, "commandpanel_info",
 					lc($nameinH) . "_command_panel");
 		print $PANELH "\n\n";
@@ -389,25 +386,21 @@ if(uc($ARGV[1]) eq "PANEL")
 
 	}
 
-	printSectionHeader($PANELH, "Video mode panel information");
-	print $PANELH "\n";
-
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
 		my @commandAttrs = ("HSyncPulse", "HFPPowerMode", "HBPPowerMode",
 		"HSAPowerMode", "BLLPEOFPowerMode", "BLLPPowerMode",
 		"TrafficMode", "DMADelayAfterVsync", "BLLPEOFPower");
 
+		printSectionHeader($PANELH, "Video mode panel information");
 		printStruct($PANELH, \@commandAttrs, $property,
 				"videopanel_info", lc($nameinH) . "_video_panel");
 		print $PANELH "\n\n";
 	}
 
-	printSectionHeader($PANELH, "Lane Configuration");
-	print $PANELH "\n";
-
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
+		printSectionHeader($PANELH, "Lane configuration");
 		my @commandAttrs = ("DSILanes", "DSILaneMap", "Lane0State",
 		"Lane1State", "Lane2State", "Lane3State");
 
@@ -416,11 +409,10 @@ if(uc($ARGV[1]) eq "PANEL")
 		print $PANELH "\n\n";
 
 	}
-	print $PANELH "\n";
-	printSectionHeader($PANELH, "Panel Timing");
 
 	for my $property ($xmldoc->findnodes('/GCDB/PanelEntry/PanelTimings'))
 	{
+		printSectionHeader($PANELH, "Panel timing");
 		printTargetPhysical($PANELH, $property, lc($nameinH) .
 			"_timings","uint32_t");
 		print $PANELH "\n\n";
@@ -430,6 +422,7 @@ if(uc($ARGV[1]) eq "PANEL")
 
 	for my $property ($xmldoc->findnodes('/GCDB/PanelEntry/PanelRotation'))
 	{
+		printSectionHeader($PANELH, "Panel rotation");
 		printOnCommand($PANELH, $property, lc($nameinH) .
 				"_rotation", lc($nameinH) . "_rotation_cmd");
 		print $PANELH "\n\n";
@@ -446,23 +439,26 @@ if(uc($ARGV[1]) eq "PANEL")
 						lc($nameinH) . "_timing_info");
 		print $PANELH "\n\n";
 	}
+
 	for my $tmpProperty($xmldoc->findnodes('/GCDB/PanelEntry/ResetSequence'))
 	{
+		printSectionHeader($PANELH, "Panel reset sequence");
 		print $PANELH "static struct panel_reset_sequence " .
-				lc($nameinH) . "_reset_seq = {\n ";
+				lc($nameinH) . "_reset_seq = {\n\t";
+
 		printResetSeqinH($PANELH, $tmpProperty);
-		print $PANELH "\n\n"
+		print $PANELH "\n"
 	}
-	printSectionHeader($PANELH, "Backlight Settings");
-	print $PANELH "\n";
+
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
 		my @timingAttrs = ("BLInterfaceType", "BLMinLevel",
 		"BLMaxLevel", "BLStep", "BLPMICControlType", "BLPMICModel");
 
+		printSectionHeader($PANELH, "Backlight setting");
 		printStruct($PANELH, \@timingAttrs, $property, "backlight",
 						lc($nameinH) . "_backlight");
-		print $PANELH "\n\n";
+		print $PANELH "\n";
 
 		my @attrs = ("TClkPost", "TClkPre");
 
@@ -767,9 +763,9 @@ sub printTargetPhysical
 	my $name = shift;
 	my $datatype = shift;
 	(my $element) = $property->textContent() =~ /"([^"]*)"/;
-	print $fh "static const " . $datatype . " " . $name . "[] = {\n";
+	print $fh "static const " . $datatype . " " . $name . "[] = {\n\t";
 	$element =~ s/\t//g;
-	$element =~ s/^/  /mg;
+	$element =~ s/^//mg;
 	print $fh $element . "\n};";
 }
 
@@ -787,7 +783,7 @@ sub printOnCommand
 	{
 		my @sep = split /,/, $line;
 		print $fh "static char " . $cmdname . $i . "[] = {\n";
-		$toPrint = "";
+		$toPrint = "\t";
 		if(scalar @sep > 7)
 		{
 			my $cmdlen = $sep[6];
@@ -798,9 +794,10 @@ sub printOnCommand
 			$cmdlen =~ s/\t//g;
 			if($cmdtype eq "0x29" || $cmdtype eq "0x39")
 			{
-				$toPrint .=  $cmdlen . ", 0x00, " . $cmdtype . ", 0xC0,\n";
+				$toPrint .=  $cmdlen . ", 0x00, " . $cmdtype . ", 0xC0,\n\t";
 			}
 			my $j = 0;
+
 			for(my $i = 7; $i < scalar @sep; $i++)
 			{
 				my $tmp = $sep[$i];
@@ -814,14 +811,23 @@ sub printOnCommand
 				if (($j % 4) == 0)
 				{
 					chop($toPrint);
-					$toPrint .= "\n";
+					$toPrint .= "\n\t";
 				}
 			}
 			if($cmdtype eq "0x29" || $cmdtype eq "0x39")
 			{
-				for( ; ($j % 4) ne 0 ; $j++)
+				if ( ($j % 4) ne 0)
 				{
-					$toPrint .= "0xFF, ";
+					for( ; ($j % 4) ne 0 ; $j++)
+					{
+						$toPrint .= "0xFF, ";
+					}
+					chop($toPrint);
+					$toPrint .= "\n";
+				}
+				else
+				{
+					chop($toPrint);
 				}
 			}
 			else
@@ -830,17 +836,17 @@ sub printOnCommand
 				{
 					$toPrint .= "0xFF, ";
 				}
-				$toPrint .= $cmdtype . ", 0x80";
+				$toPrint .= $cmdtype . ", 0x80\n";
 			}
-			$toPrint .= " };\n"
+			$toPrint .= "};\n"
 		}
 		$i++;
 
-		$toPrint .= "\n\n";
+		$toPrint .= "\n";
 		print $fh $toPrint ;
 	}
 
-	print $fh "\n\nstatic struct mipi_dsi_cmd " . $name . "[] = {\n";
+	print $fh "static struct mipi_dsi_cmd " . $name . "[] = {\n";
 	my $bool = 0;
 	$toPrint = "";
 	$i = 0;
@@ -848,6 +854,8 @@ sub printOnCommand
 	foreach my $line (@lines)
 	{
 		my @sep = split /,/, $line;
+
+		$toPrint .= "\t";
 
 		if(scalar @sep > 7)
 		{
@@ -878,19 +886,18 @@ sub printOnCommand
 			    }
 
 			    # calculate the correct size of command
-			    $hexsize = sprintf("{ 0x%x , ", $cmdsize + 4);
+			    $hexsize = sprintf("{0x%x, ", $cmdsize + 4);
 			}
 			else
 			{
-				$hexsize = sprintf("{ 0x%x , ", 4);
+				$hexsize = sprintf("{0x%x, ", 4);
 			}
 
 			$toPrint .=  $hexsize;
 
-			$toPrint .= $cmdname . $i . ", " . $sep[4] . "},";
+			$toPrint .= $cmdname . $i . "," . $sep[4] . "},";
 
 			$i++;
-
 		}
 
 		$toPrint .= "\n";
@@ -898,7 +905,7 @@ sub printOnCommand
 	chop($toPrint);
 	chop($toPrint);
 	$toPrint .= "\n";
-	print $fh $toPrint . "};";
+	print $fh $toPrint . "};\n";
 
 
 	print $fh "\n#define " . uc($name) . " " . $i . "\n";
@@ -933,7 +940,7 @@ sub printResetSeqinH
 {
 	my $fh = shift;
 	my $property = shift;
-	print $fh "{ ";
+	print $fh "{";
 	for (my $i = 1; $i <=5; $i++)
 	{
 		for my $element ($property->findnodes("PinState" . $i))
@@ -941,7 +948,7 @@ sub printResetSeqinH
 			print $fh $element->textContent() . ", ";
 		}
 	}
-	print $fh "}, { ";
+	print $fh "}, {";
 	for (my $i = 1; $i <=5; $i++)
 	{
 		for my $element ($property->findnodes("PulseWidth" . $i))
@@ -1438,7 +1445,7 @@ sub printStruct
 	my $property = shift;
 	my $structName = shift;
 	my $name = shift;
-	print $fh "static struct " . $structName . " " . $name . " = {\n  ";
+	print $fh "static struct " . $structName . " " . $name . " = {\n\t";
 	my $flag = 0;
 	foreach (@attrs) {
 		my $node = "./" . $_;
@@ -1481,7 +1488,7 @@ sub printDataStruct
 	my $structName = shift;
 	my $name = shift;
 	my $nameinDTS = shift;
-	print $fh "static struct " . $structName . " " . $name . " = {\n  ";
+	print $fh "static struct " . $structName . " " . $name . " = {\n\t";
 	my $flag = 0;
 	my $firsttime = 1;
 	print $fh "\"" . $nameinDTS . "\", ";
@@ -1528,7 +1535,7 @@ sub printDataStruct
 		}
 		if ($firsttime == 1)
 		{
-			print $fh ",\n  ";
+			print $fh ",\n\t";
 			$flag = 0;
 		}
 		$firsttime = 0;
