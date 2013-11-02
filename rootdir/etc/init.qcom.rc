@@ -493,10 +493,9 @@ service iprenew_p2p /system/bin/dhcpcd -n
     disabled
     oneshot
 
-service ptt_socket_app /system/bin/ptt_socket_app
-    class main
-    user system
-    group system
+service wlan_ptt /system/bin/ptt_socket_app
+    user root
+    disabled
     oneshot
 
 service dhcpcd_bt-pan /system/bin/dhcpcd -BKLG
