@@ -384,6 +384,7 @@ service btwlancoex /system/bin/sh /system/etc/init.qcom.coex.sh
     class late_start
     user bluetooth
     group bluetooth net_bt_admin inet net_admin net_raw
+    socket abtfilt stream 660 root inet
     disabled
     oneshot
 
