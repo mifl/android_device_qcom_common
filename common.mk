@@ -441,7 +441,6 @@ PRODUCT_PACKAGES := \
     CertInstaller \
     DrmProvider \
     Email \
-    FM \
     FM2 \
     FMRecord \
     Gallery2 \
