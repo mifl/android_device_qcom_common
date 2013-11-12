@@ -688,3 +688,7 @@ service diag_mdlog_stop /system/bin/diag_mdlog -k
     group system qcom_diag sdcard_rw sdcard_r media_rw
     disabled
     oneshot
+
+# Enable RPS/XPS on WiFi interface
+on property:wlan.driver.status=ok
+    exec /system/bin/sh /system/etc/init.qcom.wifi.rps.sh ${ro.board.platform} ${wlan.driver.ath}
