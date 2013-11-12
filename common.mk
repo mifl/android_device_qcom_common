@@ -509,7 +509,6 @@ PRODUCT_PACKAGES := \
     AlarmProvider \
     Bluetooth \
     BluetoothExt \
-    BTTestApp \
     Calculator \
     Calendar \
     Camera \
@@ -533,8 +532,6 @@ PRODUCT_PACKAGES := \
     CalendarProvider \
     SyncProvider \
     IM \
-    FM \
-    FM2 \
     FMRecord \
     VideoEditor
 
