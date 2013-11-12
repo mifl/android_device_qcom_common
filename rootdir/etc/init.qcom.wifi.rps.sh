@@ -28,8 +28,20 @@
 # This script will check the board type and WLAN type, and configure
 # kernel RPS/XPS for all CPUs.
 
-target="$1"
-wlan_athr="$2"
+target=`getprop ro.board.platform`
+wlan_athr=`getprop wlan.driver.ath`
+
+case "$1" in
+    "p2p")
+        wlan_interface=`getprop wlan.interface.p2p.group`
+        ;;
+    "wlan")
+        wlan_interface=`getprop wifi.interface`
+        ;;
+    *)
+        wlan_interface="wlan0"
+        ;;
+esac
 
 case "$target" in
 
@@ -37,15 +49,8 @@ case "$target" in
 
         case "$wlan_athr" in
             "2")
-                stop mpdecision
-                sleep 1
-                echo 1 > /sys/devices/system/cpu/cpu1/online
-                echo 1 > /sys/devices/system/cpu/cpu2/online
-                echo 1 > /sys/devices/system/cpu/cpu3/online
-                sleep 1
-                echo f > /sys/class/net/wlan0/queues/rx-0/rps_cpus
-                echo f > /sys/class/net/wlan0/queues/tx-0/xps_cpus
-                start mpdecision
+                echo f > /sys/class/net/$wlan_interface/queues/rx-0/rps_cpus
+                echo f > /sys/class/net/$wlan_interface/queues/tx-0/xps_cpus
                 ;;
             *)
                 ;;
