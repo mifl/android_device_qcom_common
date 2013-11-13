@@ -13,13 +13,13 @@ INSTALLED_SYSTEMIMAGE := $(PRODUCT_OUT)/system.img
 INSTALLED_USERDATAIMAGE_TARGET := $(PRODUCT_OUT)/userdata.img
 INSTALLED_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img
 recovery_ramdisk := $(PRODUCT_OUT)/ramdisk-recovery.img
+INSTALLED_USBIMAGE_TARGET := $(PRODUCT_OUT)/usbdisk.img
 
 #----------------------------------------------------------------------
-# Generate secure boot & recovery image
+# Generate secure boot image
 #----------------------------------------------------------------------
 ifeq ($(TARGET_BOOTIMG_SIGNED),true)
 INSTALLED_SEC_BOOTIMAGE_TARGET := $(PRODUCT_OUT)/boot.img.secure
-INSTALLED_SEC_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img.secure
 
 ifneq ($(BUILD_TINY_ANDROID),true)
 intermediates := $(call intermediates-dir-for,PACKAGING,recovery_patch)
@@ -30,7 +30,7 @@ ifndef TARGET_SHA_TYPE
   TARGET_SHA_TYPE := sha256
 endif
 
-define build-sec-image
+define build-boot-image
 	$(hide) mv -f $(1) $(1).nonsecure
 	$(hide) openssl dgst -$(TARGET_SHA_TYPE) -binary $(1).nonsecure > $(1).$(TARGET_SHA_TYPE)
 	$(hide) openssl rsautl -sign -in $(1).$(TARGET_SHA_TYPE) -inkey $(PRODUCT_PRIVATE_KEY) -out $(1).sig
@@ -42,19 +42,11 @@ define build-sec-image
 endef
 
 $(INSTALLED_SEC_BOOTIMAGE_TARGET): $(INSTALLED_BOOTIMAGE_TARGET) $(RECOVERY_FROM_BOOT_PATCH)
-	$(hide) $(call build-sec-image,$(INSTALLED_BOOTIMAGE_TARGET))
+	$(hide) $(call build-boot-image,$(INSTALLED_BOOTIMAGE_TARGET),$(INTERNAL_BOOTIMAGE_ARGS))
 
 ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_SEC_BOOTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_SEC_BOOTIMAGE_TARGET)
-
-$(INSTALLED_SEC_RECOVERYIMAGE_TARGET): $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_FROM_BOOT_PATCH)
-	$(hide) $(call build-sec-image,$(INSTALLED_RECOVERYIMAGE_TARGET))
-
-ifneq ($(BUILD_TINY_ANDROID),true)
-ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_SEC_RECOVERYIMAGE_TARGET)
-ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_SEC_RECOVERYIMAGE_TARGET)
-endif # !BUILD_TINY_ANDROID
-endif # TARGET_BOOTIMG_SIGNED
+endif
 
 #----------------------------------------------------------------------
 # Generate persist image (persist.img)
@@ -93,9 +85,12 @@ DTBTOOL := $(HOST_OUT_EXECUTABLES)/dtbTool$(HOST_EXECUTABLE_SUFFIX)
 
 INSTALLED_DTIMAGE_TARGET := $(PRODUCT_OUT)/dt.img
 
+possible_dtb_dirs = $(KERNEL_OUT)/arch/arm/boot/dts/ $(KERNEL_OUT)/arch/arm/boot/
+dtb_dir = $(firstword $(wildcard $(possible_dtb_dirs)))
+
 define build-dtimage-target
     $(call pretty,"Target dt image: $(INSTALLED_DTIMAGE_TARGET)")
-    $(hide) $(DTBTOOL) -o $@ -s $(BOARD_KERNEL_PAGESIZE) -p $(KERNEL_OUT)/scripts/dtc/ $(KERNEL_OUT)/arch/arm/boot/
+    $(hide) $(DTBTOOL) -o $@ -s $(BOARD_KERNEL_PAGESIZE) -p $(KERNEL_OUT)/scripts/dtc/ $(dtb_dir)
     $(hide) chmod a+r $@
 endef
 
@@ -106,6 +101,40 @@ ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_DTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DTIMAGE_TARGET)
 endif
 
+#---------------------------------------------------------------------
+# Generate usbdisk.img FAT32 image
+# Please NOTICE: the valid max size of usbdisk.bin is 10GB
+#---------------------------------------------------------------------
+ifneq ($(strip $(BOARD_USBIMAGE_PARTITION_SIZE_KB)),)
+define build-usbimage-target
+	$(hide) mkfs.vfat -n "Internal SD" -F 32 -C $(PRODUCT_OUT)/usbdisk.tmp $(BOARD_USBIMAGE_PARTITION_SIZE_KB)
+	$(hide) dd if=$(PRODUCT_OUT)/usbdisk.tmp of=$(INSTALLED_USBIMAGE_TARGET) bs=1024 count=20480
+	$(hide) rm -f $(PRODUCT_OUT)/usbdisk.tmp
+endef
+
+$(INSTALLED_USBIMAGE_TARGET):
+	$(build-usbimage-target)
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_USBIMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DTIMAGE_TARGET)
+endif
+
+#----------------------------------------------------------------------
+# Generate CDROM image
+#----------------------------------------------------------------------
+CDROM_RES_FILE = $(TARGET_DEVICE_DIR)/cdrom_res
+ifneq ($(wildcard $(CDROM_RES_FILE)),)
+CDROM_ISO_TARGET := $(PRODUCT_OUT)/system/etc/cdrom_install.iso
+
+define build-cdrom-target
+    $(hide) mkisofs -o $(CDROM_ISO_TARGET)  $(CDROM_RES_FILE)
+endef
+
+$(CDROM_ISO_TAREGT): $(CDROM_RES_FILE)
+	$(build-cdrom-target)
+
+ALL_DEFAULT_INSTALLED_MODULES += $(CDROM_ISO_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(CDROM_ISO_TARGET)
+endif
 
 #----------------------------------------------------------------------
 # Generate NAND images
@@ -286,7 +315,7 @@ aboot: $(INSTALLED_BOOTLOADER_MODULE)
 kernel: $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_SEC_BOOTIMAGE_TARGET) $(INSTALLED_4K_BOOTIMAGE_TARGET)
 
 .PHONY: recoveryimage
-recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET)  $(INSTALLED_SEC_RECOVERYIMAGE_TARGET) $(INSTALLED_4K_RECOVERYIMAGE_TARGET)
+recoveryimage: $(INSTALLED_RECOVERYIMAGE_TARGET) $(INSTALLED_4K_RECOVERYIMAGE_TARGET)
 
 .PHONY: kernelclean
 kernelclean:

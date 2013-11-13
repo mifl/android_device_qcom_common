@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2012, The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -29,9 +29,21 @@
 export PATH=/system/bin
 
 # Set platform variables
-soc_hwplatform=`cat /sys/devices/system/soc/soc0/hw_platform` 2> /dev/null
-soc_hwid=`cat /sys/devices/system/soc/soc0/id` 2> /dev/null
-soc_hwver=`cat /sys/devices/system/soc/soc0/platform_version` 2> /dev/null
+if [ -f /sys/devices/soc0/hw_platform ]; then
+    soc_hwplatform=`cat /sys/devices/soc0/hw_platform` 2> /dev/null
+else
+    soc_hwplatform=`cat /sys/devices/system/soc/soc0/hw_platform` 2> /dev/null
+fi
+if [ -f /sys/devices/soc0/soc_id ]; then
+    soc_hwid=`cat /sys/devices/soc0/soc_id` 2> /dev/null
+else
+    soc_hwid=`cat /sys/devices/system/soc/soc0/id` 2> /dev/null
+fi
+if [ -f /sys/devices/soc0/platform_version ]; then
+    soc_hwver=`cat /sys/devices/soc0/platform_version` 2> /dev/null
+else
+    soc_hwver=`cat /sys/devices/system/soc/soc0/platform_version` 2> /dev/null
+fi
 
 log -t BOOT -p i "MSM target '$1', SoC '$soc_hwplatform', HwID '$soc_hwid', SoC ver '$soc_hwver'"
 
@@ -111,6 +123,9 @@ case "$1" in
                 # Android sw navigation bar
                 setprop ro.hw.nav_keys 0
                 ;;
+            "Dragon")
+                setprop ro.sf.lcd_density 240
+                ;;
             *)
                 setprop ro.sf.lcd_density 320
                 ;;
@@ -121,6 +136,16 @@ case "$1" in
         case "$soc_hwplatform" in
             *)
                 setprop ro.sf.lcd_density 320
+                ;;
+        esac
+
+        # Disable the dsds mode for SKUG board
+        platform_subtype=`cat /sys/devices/soc0/platform_subtype` 2> /dev/null
+        case "$platform_subtype" in
+            "SKUG")
+                setprop persist.multisim.config ""
+                ;;
+            *)
                 ;;
         esac
         ;;
@@ -144,9 +169,11 @@ do
     case "$value" in
             "dtv panel")
         chown system.graphics $file/hpd
+        chown system.system $file/hdcp/tp
         chown system.graphics $file/vendor_name
         chown system.graphics $file/product_description
         chmod 0664 $file/hpd
+        chmod 0664 $file/hdcp/tp
         chmod 0664 $file/vendor_name
         chmod 0664 $file/product_description
         chmod 0664 $file/video_mode

@@ -60,7 +60,7 @@ trigger_wcnss()
             # caldata is available at userspace.
             if [ -e /data/misc/wifi/WCNSS_qcom_wlan_cal.bin ]; then
                 calparm=`ls /sys/module/wcnsscore/parameters/has_calibrated_data`
-                if [ -e $calparm ]; then
+                if [ -e $calparm ] && [ ! -e /data/misc/wifi/WCN_FACTORY ]; then
                     echo 1 > $calparm
                 fi
             fi
@@ -97,8 +97,6 @@ case "$target" in
     if [ -e /sys/bus/platform/drivers/msm_hsic_host ]; then
        if [ ! -L /sys/bus/usb/devices/1-1 ]; then
            echo msm_hsic_host > /sys/bus/platform/drivers/msm_hsic_host/unbind
-       else
-           echo auto > /sys/bus/usb/devices/1-1/power/control
        fi
 
        chown system.system /sys/bus/platform/drivers/msm_hsic_host/bind
@@ -131,7 +129,7 @@ case "$target" in
                 for device in $sdio_devices; do
                     if [ $ven_idx -eq $dev_idx ]; then
                         case "$device" in
-                        "0x0400" | "0x0401")
+                        "0x0400" | "0x0401" | "0x0402")
                             wlanchip="AR6004-SDIO"
                             ;;
                         *)
@@ -189,6 +187,7 @@ case "$target" in
       echo msm_hsic_host > /sys/bus/platform/drivers/msm_hsic_host/unbind
       setprop wlan.driver.ath 2
       setprop qcom.bluetooth.soc ath3k
+      btsoc="ath3k"
       rm  /system/lib/modules/wlan.ko
       ln -s /system/lib/modules/ath6kl-3.5/ath6kl_usb.ko \
 		/system/lib/modules/wlan.ko
@@ -212,6 +211,7 @@ case "$target" in
       "AR6004-SDIO")
       setprop wlan.driver.ath 2
       setprop qcom.bluetooth.soc ath3k
+      btsoc="ath3k"
       # Chown polling nodes as needed from UI running on system server
       chmod 0200 /sys/devices/msm_sdcc.1/polling
       chmod 0200 /sys/devices/msm_sdcc.2/polling
@@ -232,6 +232,7 @@ case "$target" in
 		/system/etc/firmware/ath6k/AR6004/hw1.3/fw.ram.bin
       ln -s /system/etc/firmware/ath6k/AR6004/hw1.3/bdata.bin_sdio \
 		/system/etc/firmware/ath6k/AR6004/hw1.3/bdata.bin
+      rm /system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin
       ln -s /system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin_sdio \
                 /system/etc/firmware/ath6k/AR6004/hw3.0/bdata.bin
 

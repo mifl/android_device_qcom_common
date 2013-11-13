@@ -26,44 +26,54 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-#
-# start ril-daemon only for targets on which radio is present
-#
-baseband=`getprop ro.baseband`
-multirild=`getprop ro.multi.rild`
-dsds=`getprop persist.dsds.enabled`
-netmgr=`getprop ro.use_data_netmgrd`
-sgltecsfb=`getprop persist.radio.sglte_csfb`
+action=`getprop bluetooth.hsic_ctrl`
+last_action=`getprop hsic_ctrl.last`
+wifi_status=`getprop wlan.driver.status`
+wifi_action=`getprop wlan.hsic_ctrl`
+wifi_type=`getprop wlan.driver.ath`
 
-case "$baseband" in
-    "apq")
-    setprop ro.radio.noril yes
-    stop ril-daemon
-esac
-
-case "$baseband" in
-    "msm" | "csfb" | "svlte2a" | "mdm" | "sglte" | "unknown")
-    start qmuxd
-    case "$baseband" in
-        "svlte2a" | "csfb")
-        start qmiproxy
-        ;;
-        "sglte")
-        if [ "x$sgltecsfb" != "xtrue" ]; then
-          start qmiproxy
+# check action from bt
+if [ $wifi_type == "2" ]; then
+    if [ $action == "load_wlan" ]; then
+        if [ $wifi_status == "ok" ] ||
+           [ $wifi_action == "wlan_loading" ] ||
+           [ $last_action == "load_wlan" ]; then
+           echo "Not doing anything as wlan is on or turning on"
+           # do nothing
         else
-          setprop persist.radio.voice.modem.index 0
+            setprop wlan.hsic_ctrl "service_loading"
+
+            # bind HSIC HCD
+            echo msm_hsic_host > /sys/bus/platform/drivers/msm_hsic_host/bind
+
+            # load WLAN driver
+            insmod /system/lib/modules/wlan.ko
+
+            # inform WLAN driver bt is on
+            echo 1 > /sys/module/wlan/parameters/ath6kl_bt_on
+
+            # unload WLAN driver
+            rmmod wlan
+            echo "Now hsic power control will be in auto mode"
         fi
-    esac
-    case "$multirild" in
-        "true")
-         case "$dsds" in
-             "true")
-             start ril-daemon1
-         esac
-    esac
-    case "$netmgr" in
-        "true")
-        start netmgrd
-    esac
-esac
+    elif [ $action == "unbind_hsic" ]; then
+        if [ "$wifi_action" == "wlan_unloading" ] ||
+           [ "$last_action" == "unbind_hsic" ]; then
+            echo "Not doing anything as wlan is also unloading"
+            # do nothing
+        else
+            # unbind HSIC HCD
+            echo msm_hsic_host > /sys/bus/platform/drivers/msm_hsic_host/unbind
+            echo "Unbinding HSIC before BT turns off"
+        fi
+    fi
+fi # [ $wifi_type == "2" ]
+
+# set property to done
+# setprop bluetooth.hsic_ctrl "done"
+
+# set property to NULL
+setprop wlan.hsic_ctrl ""
+
+setprop hsic_ctrl.last $action
+

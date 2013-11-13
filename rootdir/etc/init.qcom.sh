@@ -27,7 +27,11 @@
 #
 
 target=`getprop ro.board.platform`
-platformid=`cat /sys/devices/system/soc/soc0/id`
+if [ -f /sys/devices/soc0/soc_id ]; then
+    platformid=`cat /sys/devices/soc0/soc_id`
+else
+    platformid=`cat /sys/devices/system/soc/soc0/id`
+fi
 #
 # Function to start sensors for DSPS enabled platforms
 #
@@ -54,12 +58,19 @@ start_sensors()
 
 start_battery_monitor()
 {
-	chown root.system /sys/module/pm8921_bms/parameters/*
-	chmod 0660 /sys/module/pm8921_bms/parameters/*
-	mkdir -p /data/bms
-	chown root.system /data/bms
-	chmod 0770 /data/bms
-	start battery_monitor
+	if ls /sys/bus/spmi/devices/qpnp-bms-*/fcc_data ; then
+		chown root.system /sys/module/pm8921_bms/parameters/*
+		chown root.system /sys/module/qpnp_bms/parameters/*
+		chown root.system /sys/bus/spmi/devices/qpnp-bms-*/fcc_data
+		chown root.system /sys/bus/spmi/devices/qpnp-bms-*/fcc_temp
+		chown root.system /sys/bus/spmi/devices/qpnp-bms-*/fcc_chgcyl
+		chmod 0660 /sys/module/qpnp_bms/parameters/*
+		chmod 0660 /sys/module/pm8921_bms/parameters/*
+		mkdir -p /data/bms
+		chown root.system /data/bms
+		chmod 0770 /data/bms
+		start battery_monitor
+	fi
 }
 
 start_charger_monitor()
@@ -67,8 +78,10 @@ start_charger_monitor()
 	if ls /sys/module/qpnp_charger/parameters/charger_monitor; then
 		chown root.system /sys/module/qpnp_charger/parameters/*
 		chown root.system /sys/class/power_supply/battery/input_current_max
+		chown root.system /sys/class/power_supply/battery/input_current_trim
 		chown root.system /sys/class/power_supply/battery/voltage_min
 		chmod 0664 /sys/class/power_supply/battery/input_current_max
+		chmod 0664 /sys/class/power_supply/battery/input_current_trim
 		chmod 0664 /sys/class/power_supply/battery/voltage_min
 		chmod 0664 /sys/module/qpnp_charger/parameters/charger_monitor
 		start charger_monitor
@@ -92,6 +105,12 @@ echo 1 > /proc/sys/net/ipv6/conf/default/accept_ra_defrtr
 #
 # Start gpsone_daemon for SVLTE Type I & II devices
 #
+
+# platform id 126 is for MSM8974
+case "$platformid" in
+        "126")
+        start gpsone_daemon
+esac
 case "$target" in
         "msm7630_fusion")
         start gpsone_daemon
@@ -147,14 +166,22 @@ start_sensors
 
 case "$target" in
     "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
-        value=`cat /sys/devices/system/soc/soc0/hw_platform`
+        if [ -f /sys/devices/soc0/hw_platform ]; then
+            value=`cat /sys/devices/soc0/hw_platform`
+        else
+            value=`cat /sys/devices/system/soc/soc0/hw_platform`
+        fi
         case "$value" in
             "Fluid")
              start profiler_daemon;;
         esac
         ;;
     "msm8660" )
-        platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
+        if [ -f /sys/devices/soc0/hw_platform ]; then
+            platformvalue=`cat /sys/devices/soc0/hw_platform`
+        else
+            platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
+        fi
         case "$platformvalue" in
             "Fluid")
                 start profiler_daemon;;
@@ -166,7 +193,11 @@ case "$target" in
                 start_battery_monitor;;
         esac
 
-        platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
+        if [ -f /sys/devices/soc0/hw_platform ]; then
+            platformvalue=`cat /sys/devices/soc0/hw_platform`
+        else
+            platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
+        fi
         case "$platformvalue" in
              "Fluid")
                  start profiler_daemon;;
@@ -184,8 +215,15 @@ case "$target" in
         esac
         case "$baseband" in
             "msm")
-                start_charger_monitor
+                start_battery_monitor
                 ;;
         esac
+        start_charger_monitor
+        ;;
+    "msm8226")
+        start_charger_monitor
+        ;;
+    "msm8610")
+        start_charger_monitor
         ;;
 esac

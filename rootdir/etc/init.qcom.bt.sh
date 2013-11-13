@@ -64,7 +64,11 @@ config_bt ()
 {
   baseband=`getprop ro.baseband`
   target=`getprop ro.board.platform`
-  soc_hwid=`cat /sys/devices/system/soc/soc0/id`
+  if [ -f /sys/devices/soc0/soc_id ]; then
+    soc_hwid=`cat /sys/devices/soc0/soc_id`
+  else
+    soc_hwid=`cat /sys/devices/system/soc/soc0/id`
+  fi
   btsoc=`getprop qcom.bluetooth.soc`
 
   case $baseband in
@@ -145,6 +149,12 @@ config_bt ()
        if [ "$btsoc" != "ath3k" ]
        then
            setprop ro.bluetooth.hfp.ver 1.6
+           setprop ro.qualcomm.bt.hci_transport smd
+       fi
+       ;;
+    "apq8084")
+       if ["$btsoc" != "rome"]
+       then
            setprop ro.qualcomm.bt.hci_transport smd
        fi
        ;;

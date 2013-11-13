@@ -11,6 +11,7 @@ QCOM_BOARD_PLATFORMS += msm8974
 QCOM_BOARD_PLATFORMS += msm8610
 QCOM_BOARD_PLATFORMS += msm8226
 QCOM_BOARD_PLATFORMS += apq8084
+QCOM_BOARD_PLATFORMS += mpq8092
 
 MSM7K_BOARD_PLATFORMS := msm7630_surf
 MSM7K_BOARD_PLATFORMS += msm7630_fusion
@@ -51,7 +52,12 @@ ALSA_UCM += snd_soc_msm_Taiko_liquid
 ALSA_UCM += snd_soc_apq_Taiko_DB
 ALSA_UCM += snd_soc_msm_I2SFusion
 ALSA_UCM += snd_soc_msm_Tapan
+ALSA_UCM += snd_soc_msm_TapanLite
+ALSA_UCM += snd_soc_msm_Tapan_SKUF
+ALSA_UCM += snd_soc_msm_TapanLite_SKUF
 ALSA_UCM += snd_soc_msm_8x10_wcd
+ALSA_UCM += snd_soc_msm_8x10_wcd_skuab
+ALSA_UCM += snd_soc_msm_8x10_wcd_skuaa
 
 #ANGLE
 ANGLE := libangle
@@ -101,7 +107,11 @@ BSON := libbson
 #BT
 BT := javax.btobex
 BT += libattrib_static
+
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ),true)
 BT += hcidump.sh
+endif
+
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
 
 #C2DColorConvert
@@ -129,6 +139,9 @@ E2FSPROGS := e2fsck
 EBTABLES := ebtables
 EBTABLES += ethertypes
 EBTABLES += libebtc
+
+#FASTPOWERON
+FASTPOWERON := FastBoot
 
 #FM
 FM := qcom.fmradio
@@ -165,10 +178,10 @@ INIT := init.qcom.composition_type.sh
 INIT += init.target.8x25.sh
 INIT += init.qcom.mdm_links.sh
 INIT += init.qcom.modem_links.sh
-INIT += init.qcom.thermal_conf.sh
 INIT += init.qcom.sensor.sh
 INIT += init.target.rc
 INIT += init.qcom.bt.sh
+INIT += hsic.control.bt.sh
 INIT += init.qcom.coex.sh
 INIT += init.qcom.fm.sh
 INIT += init.qcom.early_boot.sh
@@ -191,6 +204,7 @@ INIT += init.qcom.efs.sync.sh
 INIT += ueventd.qcom.rc
 INIT += init.ath3k.bt.sh
 INIT += init.qcom.audio.sh
+INIT += init.qcom.ssr.sh
 
 #IPROUTE2
 IPROUTE2 := ip
@@ -267,6 +281,7 @@ LIBCOPYBIT += copybit.msm8960
 LIBCOPYBIT += copybit.msm8974
 LIBCOPYBIT += copybit.msm8226
 LIBCOPYBIT += copybit.msm8610
+LIBCOPYBIT += copybit.apq8084
 LIBCOPYBIT += copybit.msm7k
 LIBCOPYBIT += copybit.qsd8k
 LIBCOPYBIT += copybit.msm7630_surf
@@ -286,6 +301,7 @@ LIBGRALLOC += gralloc.msm8960
 LIBGRALLOC += gralloc.msm8974
 LIBGRALLOC += gralloc.msm8226
 LIBGRALLOC += gralloc.msm8610
+LIBGRALLOC += gralloc.apq8084
 LIBGRALLOC += gralloc.msm7k
 LIBGRALLOC += gralloc.msm7630_surf
 LIBGRALLOC += gralloc.msm7630_fusion
@@ -313,6 +329,7 @@ LIBHWCOMPOSER += hwcomposer.msm8960
 LIBHWCOMPOSER += hwcomposer.msm8974
 LIBHWCOMPOSER += hwcomposer.msm8226
 LIBHWCOMPOSER += hwcomposer.msm8610
+LIBHWCOMPOSER += hwcomposer.apq8084
 LIBHWCOMPOSER += hwcomposer.msm7k
 LIBHWCOMPOSER += hwcomposer.msm7630_surf
 LIBHWCOMPOSER += hwcomposer.msm7630_fusion
@@ -483,12 +500,16 @@ CRDA += regulatory.bin
 CRDA += linville.key.pub.pem
 CRDA += init.crda.sh
 
+#WLAN
+WLAN := prima_wlan.ko
+
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
     AlarmProvider \
     Bluetooth \
-    BluetoothQcom \
+    BluetoothExt \
+    BTTestApp \
     Calculator \
     Calendar \
     Camera \
@@ -515,6 +536,7 @@ PRODUCT_PACKAGES := \
     VoiceDialer \
     FM \
     FM2 \
+    FMRecord \
     VideoEditor
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
@@ -535,6 +557,7 @@ PRODUCT_PACKAGES += $(CURL)
 PRODUCT_PACKAGES += $(DASH)
 PRODUCT_PACKAGES += $(E2FSPROGS)
 PRODUCT_PACKAGES += $(EBTABLES)
+PRODUCT_PACKAGES += $(FASTPOWERON)
 PRODUCT_PACKAGES += $(FM)
 PRODUCT_PACKAGES += $(GPS_HARDWARE)
 PRODUCT_PACKAGES += $(HDMID)
@@ -584,6 +607,7 @@ PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
 PRODUCT_PACKAGES += $(CRDA)
+PRODUCT_PACKAGES += $(WLAN)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
@@ -596,6 +620,12 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     make_ext4fs \
     setup_fs
+
+# Flatland
+PRODUCT_PACKAGES += flatland
+
+# MSM updater library
+PRODUCT_PACKAGES += librecovery_updater_msm
 
 PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
@@ -614,17 +644,16 @@ PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
     packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml \
+    frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
 
 # Bluetooth configuration files
+ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ),true)
 PRODUCT_COPY_FILES += \
     system/bluetooth/data/audio.conf:system/etc/bluetooth/audio.conf \
     system/bluetooth/data/auto_pairing.conf:system/etc/bluetooth/auto_pairing.conf \
     system/bluetooth/data/blacklist.conf:system/etc/bluetooth/blacklist.conf \
     system/bluetooth/data/input.conf:system/etc/bluetooth/input.conf \
     system/bluetooth/data/network.conf:system/etc/bluetooth/network.conf \
-
-ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ),true)
-PRODUCT_COPY_FILES += \
     system/bluetooth/data/stack.conf:system/etc/bluetooth/stack.conf
 endif # BOARD_HAVE_BLUETOOTH_BLUEZ
 
@@ -651,7 +680,7 @@ DEVICE_PACKAGE_OVERLAYS += device/qcom/common/overlay
 # For PRODUCT_COPY_FILES, the first instance takes precedence.
 # Since we want use QC specific files, we should inherit
 # device-vendor.mk first to make sure QC specific files gets installed.
-$(call inherit-product-if-exists, vendor/qcom/proprietary/common/config/device-vendor.mk)
+$(call inherit-product-if-exists, $(QCPATH)/common/config/device-vendor.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 PRODUCT_BRAND := qcom
