@@ -153,10 +153,10 @@ config_bt ()
        fi
        ;;
     "apq8084" | "mpq8092" )
-       if ["$btsoc" != "rome"]
+       if [ "$btsoc" != "rome" ]
        then
            setprop ro.qualcomm.bt.hci_transport smd
-       elif ["$btsoc" = "rome"]
+       elif [ "$btsoc" = "rome" ]
        then
            setprop ro.bluetooth.hfp.ver 1.6
            setprop ro.bluetooth.dun true
