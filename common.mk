@@ -533,7 +533,6 @@ PRODUCT_PACKAGES := \
     CalendarProvider \
     SyncProvider \
     IM \
-    VoiceDialer \
     FM \
     FM2 \
     FMRecord \
