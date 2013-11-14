@@ -158,18 +158,18 @@ do
     value=`cat $file/msm_fb_type`
     case "$value" in
             "dtv panel")
-        chown system.graphics $file/hpd
-        chown system.graphics $file/vendor_name
-        chown system.graphics $file/product_description
-        chmod 0664 $file/hpd
-        chmod 0664 $file/vendor_name
-        chmod 0664 $file/product_description
-        chmod 0664 $file/video_mode
-        chmod 0664 $file/format_3d
+        chown -h system.graphics $file/hpd
+        chown -h system.graphics $file/vendor_name
+        chown -h system.graphics $file/product_description
+        chmod -h 0664 $file/hpd
+        chmod -h 0664 $file/vendor_name
+        chmod -h 0664 $file/product_description
+        chmod -h 0664 $file/video_mode
+        chmod -h 0664 $file/format_3d
         # create symbolic link
         ln -s $file /dev/graphics/hdmi
         # Change owner and group for media server and surface flinger
-        chown system.system $file/format_3d;;
+        chown -h system.system $file/format_3d;;
     esac
 done
 
