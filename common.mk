@@ -434,6 +434,7 @@ PRODUCT_PACKAGES := \
     Bluetooth \
     BluetoothExt \
     BTTestApp \
+    HiddTestApp \
     Calculator \
     Calendar \
     Camera \
