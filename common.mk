@@ -535,7 +535,6 @@ PRODUCT_PACKAGES := \
     SyncProvider \
     IM \
     VoiceDialer \
-    FM \
     FM2 \
     FMRecord \
     VideoEditor
