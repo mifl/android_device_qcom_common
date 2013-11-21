@@ -26,7 +26,6 @@
 #
 
 import init.qcom.usb.rc
-import init.ril.rc
 import init.target.rc
 
 on early-init
@@ -276,13 +275,17 @@ service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
     user root
     oneshot
 
+service qcom-c_main-sh /system/bin/sh /init.class_main.sh
+    class main
+    user root
+    oneshot
+
 service ril-qmi /system/bin/sh /init.qcom.ril.sh
     class main
     user root
     oneshot
 
 on property:vold.decrypt=trigger_restart_framework
-    setprop ro.fuse_sdcard ${persist.fuse_sdcard}
     start qcom-c_main-sh
     start config_bluetooth
 
@@ -309,7 +312,7 @@ on property:ro.boot.emmc=true
 service rfs_access /system/bin/rfs_access
    class core
    user system
-   group system
+   group system net_raw
 
 on property:ro.boot.emmc=true
     start rfs_access
@@ -685,24 +688,14 @@ service profiler_daemon /system/bin/profiler_daemon
 
 service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
     class late_start
-    disabled
 
 service fuse_sdcard /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
     class late_start
-    disabled
-
-on property:ro.fuse_sdcard=true
-    start sdcard
-    start fuse_sdcard
 
 # Binding fuse mount point to /storage/emulated/legacy
 on property:init.svc.sdcard=running
     wait /mnt/shell/emulated/0
     mount none /mnt/shell/emulated/0 /storage/emulated/legacy bind
-
-# This will make sure that sdcard service starts as late_start.
-on nonencrypted
-    setprop ro.fuse_sdcard ${persist.fuse_sdcard}
 
 service hcidump /system/bin/sh /system/etc/hcidump.sh
     user bluetooth
