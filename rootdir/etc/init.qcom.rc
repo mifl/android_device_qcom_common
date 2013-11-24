@@ -37,6 +37,8 @@ on init
     mkdir /storage/emulated 0555 root root
     mkdir /storage/emulated/legacy 0555 root root
     mkdir /storage/sdcard1 0000 system system
+    mkdir /storage/usb 0000 system system
+    mount tmpfs tmpfs /storage/usb mode=0755,uid=0,gid=0
 
     export EXTERNAL_STORAGE /storage/emulated/legacy
     export SECONDARY_STORAGE /storage/sdcard1
