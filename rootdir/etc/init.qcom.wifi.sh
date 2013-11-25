@@ -220,8 +220,8 @@ case "$target" in
             else
                 cp /system/etc/wifi/WCNSS_qcom_cfg.ini /data/misc/wifi/WCNSS_qcom_cfg.ini
             fi
-            chown system:wifi /data/misc/wifi/WCNSS_qcom_cfg.ini
-            chmod 660 /data/misc/wifi/WCNSS_qcom_cfg.ini
+            chown -h system:wifi /data/misc/wifi/WCNSS_qcom_cfg.ini
+            chmod -h 660 /data/misc/wifi/WCNSS_qcom_cfg.ini
         fi
 
         # The property below is used in Qcom SDK for softap to determine
