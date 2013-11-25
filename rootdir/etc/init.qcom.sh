@@ -39,19 +39,18 @@ start_sensors()
         chown -h system.root /persist/sensors/sensors_settings
 
         mkdir -p /data/misc/sensors
-        chmod 775 /data/misc/sensors
-
+        chmod -h 775 /data/misc/sensors
         start sensors
     fi
 }
 
 start_battery_monitor()
 {
-	chown root.system /sys/module/pm8921_bms/parameters/*
-	chmod 0660 /sys/module/pm8921_bms/parameters/*
+	chown -h root.system /sys/module/pm8921_bms/parameters/*
+	chmod -h 0660 /sys/module/pm8921_bms/parameters/*
 	mkdir -p /data/bms
-	chown root.system /data/bms
-	chmod 0770 /data/bms
+	chown -h root.system /data/bms
+	chmod -h 0770 /data/bms
 	start battery_monitor
 }
 
