@@ -127,14 +127,14 @@ do
     value=`cat $file/msm_fb_type`
     case "$value" in
             "dtv panel")
-        chown system.graphics $file/hpd
-        chmod 0664 $file/hpd
-        chmod 0664 $file/video_mode
-        chmod 0664 $file/format_3d
+        chown -h system.graphics $file/hpd
+        chmod -h 0664 $file/hpd
+        chmod -h 0664 $file/video_mode
+        chmod -h 0664 $file/format_3d
         # create symbolic link
         ln -s "/dev/graphics/fb"$fb_cnt /dev/graphics/hdmi
         # Change owner and group for media server and surface flinger
-        chown system.system $file/format_3d;;
+        chown -h system.system $file/format_3d;;
     esac
     fb_cnt=$(( $fb_cnt + 1))
 done
