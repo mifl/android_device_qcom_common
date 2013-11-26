@@ -26,7 +26,6 @@
 #
 
 import init.qcom.usb.rc
-import init.ril.rc
 import init.target.rc
 
 on early-init
@@ -276,13 +275,17 @@ service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
     user root
     oneshot
 
+service qcom-c_main-sh /system/bin/sh /init.class_main.sh
+    class main
+    user root
+    oneshot
+
 service ril-qmi /system/bin/sh /init.qcom.ril.sh
     class main
     user root
     oneshot
 
 on property:vold.decrypt=trigger_restart_framework
-    setprop ro.fuse_sdcard ${persist.fuse_sdcard}
     start qcom-c_main-sh
     start config_bluetooth
 
@@ -306,29 +309,18 @@ service rmt_storage /system/bin/rmt_storage
 on property:ro.boot.emmc=true
     start rmt_storage
 
+service rfs_access /system/bin/rfs_access
+   class core
+   user system
+   group system net_raw
+
+on property:ro.boot.emmc=true
+    start rfs_access
+
 service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     class core
     user root
     oneshot
-
-service dbus /system/bin/dbus-daemon --system --nofork
-    class main
-    socket dbus stream 660 bluetooth bluetooth
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-
-on property:ro.qc.bluetooth.stack=bluez
-    start dbus
-
-service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -n
-    class main
-    socket bluetooth stream 660 bluetooth bluetooth
-    socket dbus_bluetooth stream 660 bluetooth bluetooth
-    # init.rc does not yet support applying capabilities, so run as root and
-    # let bluetoothd drop uid to bluetooth with the right linux capabilities
-    group bluetooth net_bt_admin misc net_bt_stack
-    disabled
 
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
     class late_start
@@ -529,7 +521,7 @@ service dhcpcd_bnep4 /system/bin/dhcpcd -BKLG
 service gpsone_daemon /system/bin/gpsone_daemon
     class late_start
     user gps
-    group gps qcom_oncrpc inet net_raw
+    group gps inet net_raw
     disabled
 
 service quipc_igsn /system/bin/quipc_igsn
@@ -626,7 +618,6 @@ service atfwd /system/bin/ATFWD-daemon
     class late_start
     user system
     group system radio
-    onrestart /system/bin/log -t RIL-ATFWD -p w "ATFWD daemon restarted"
 
 service hdmid /system/bin/hdmid
     class late_start
@@ -657,7 +648,7 @@ on property:persist.data.ds_fmc_app.mode=1
 
 service ims_regmanager /system/bin/exe-ims-regmanagerprocessnative
     class late_start
-    group qcom_oncrpc net_bt_admin inet radio wifi
+    group net_bt_admin inet radio wifi
     disabled
 
 on property:persist.ims.regmanager.mode=1
@@ -678,7 +669,7 @@ service ril-daemon1 /system/bin/rild -c 1
     socket rild-debug1 stream 660 radio system
     user root
     disabled
-    group radio cache inet misc audio sdcard_r sdcard_rw qcom_oncrpc diag qcom_diag log
+    group radio cache inet misc audio sdcard_r sdcard_rw diag qcom_diag log
 
 service ril-daemon2 /system/bin/rild -c 2
     class main
@@ -686,7 +677,7 @@ service ril-daemon2 /system/bin/rild -c 2
     socket rild-debug2 stream 660 radio system
     user root
     disabled
-    group radio cache inet misc audio sdcard_r sdcard_rw qcom_oncrpc diag qcom_diag log
+    group radio cache inet misc audio sdcard_r sdcard_rw diag qcom_diag log
 
 service profiler_daemon /system/bin/profiler_daemon
     class late_start
@@ -696,24 +687,14 @@ service profiler_daemon /system/bin/profiler_daemon
 
 service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
     class late_start
-    disabled
 
 service fuse_sdcard /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
     class late_start
-    disabled
-
-on property:ro.fuse_sdcard=true
-    start sdcard
-    start fuse_sdcard
 
 # Binding fuse mount point to /storage/emulated/legacy
 on property:init.svc.sdcard=running
     wait /mnt/shell/emulated/0
     mount none /mnt/shell/emulated/0 /storage/emulated/legacy bind
-
-# This will make sure that sdcard service starts as late_start.
-on nonencrypted
-    setprop ro.fuse_sdcard ${persist.fuse_sdcard}
 
 service hcidump /system/bin/sh /system/etc/hcidump.sh
     user bluetooth

@@ -204,10 +204,10 @@ INIT += init.qcom.factory.sh
 INIT += init.qcom.sdio.sh
 INIT += init.qcom.sh
 INIT += init.qcom.class_core.sh
+INIT += init.class_main.sh
 INIT += init.qcom.wifi.sh
 INIT += vold.fstab
 INIT += init.qcom.ril.path.sh
-INIT += init.ril.rc
 INIT += init.qcom.ril.sh
 INIT += init.qcom.usb.rc
 INIT += init.qcom.usb.sh
@@ -274,7 +274,8 @@ LIB_NL := libnl_2
 LIB_XML2 := libxml2
 
 #LIBCAMERA
-LIBCAMERA := camera.msm8974
+LIBCAMERA := camera.apq8084
+LIBCAMERA += camera.msm8974
 LIBCAMERA += camera.msm8226
 LIBCAMERA += camera.msm8610
 LIBCAMERA += camera.msm8960
@@ -526,6 +527,7 @@ PRODUCT_PACKAGES := \
     Bluetooth \
     BluetoothExt \
     BTTestApp \
+    HiddTestApp \
     Calculator \
     Calendar \
     Camera \
@@ -550,7 +552,6 @@ PRODUCT_PACKAGES := \
     SyncProvider \
     IM \
     VoiceDialer \
-    FM \
     FM2 \
     FMRecord \
     VideoEditor
