@@ -26,7 +26,7 @@
 #
 
 # the DIAG device node is not world writable/readable.
-/dev/diag                 0660   radio      qcom_diag
+/dev/diag                 0660   system     qcom_diag
 
 /dev/genlock              0666   system     system
 /dev/kgsl                 0666   system     system
@@ -148,9 +148,13 @@
 /dev/i2c-5                0660   media       media
 
 # DVB devices
-/dev/dvb/adapter0/demux*  0444   media       media
-/dev/dvb/adapter0/dvr*    0664   media       media
-/dev/dvb/adapter0/video*  0664   media       media
+/dev/dvb/adapter0/demux*  0440   media       media
+/dev/dvb/adapter0/dvr*    0660   media       media
+/dev/dvb/adapter0/video*  0660   media       media
+
+# Broadcast devices
+/dev/tsc_mux0             0660   media       media
+/dev/tsc_ci0              0660   media       media
 
 # sensors
 /sys/devices/i2c-12/12-*  pollrate_ms 0664 system system
@@ -167,3 +171,8 @@
 /dev/wcnss_wlan           0660   system     system
 #nfc permissions
 /dev/nfc-nci              0660    nfc         nfc
+
+# UIO devices
+/dev/uio0                 0660   system     system
+/dev/uio1                 0660   system     system
+/dev/uio2                 0660   system     system
