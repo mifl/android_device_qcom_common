@@ -392,6 +392,8 @@ case "$target" in
         chmod 664 /sys/devices/system/cpu/cpu1/online
         chmod 664 /sys/devices/system/cpu/cpu2/online
         chmod 664 /sys/devices/system/cpu/cpu3/online
+	echo "1024,3072,4096,6144,9216,12288" > /sys/module/lowmemorykiller/parameters/minfree
+        echo "0,58,117,235,529,1000" > /sys/module/lowmemorykiller/parameters/adj
     ;;
 esac
 
