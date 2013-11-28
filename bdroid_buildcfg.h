@@ -21,7 +21,7 @@
 
 #ifndef _BDROID_BUILDCFG_H
 #define _BDROID_BUILDCFG_H
-#define BTM_DEF_LOCAL_NAME   "QCOM-BTD"
+#define BTM_DEF_LOCAL_NAME   "lephone T700"
 
 #define MAX_L2CAP_CHANNELS    14
 #endif
