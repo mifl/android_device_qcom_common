@@ -77,6 +77,7 @@ config_bt ()
         # For MPQ as baseband is same for both
         case $soc_hwid in
           "130")
+              setprop qcom.bluetooth.soc wcn2243
               setprop ro.qualcomm.bluetooth.hsp true
               setprop ro.qualcomm.bluetooth.hfp true
               setprop ro.qualcomm.bluetooth.pbap false
