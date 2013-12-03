@@ -217,6 +217,7 @@ INIT += ueventd.qcom.rc
 INIT += init.ath3k.bt.sh
 INIT += init.qcom.audio.sh
 INIT += init.qcom.ssr.sh
+INIT += enable_swap.sh
 INIT += init.mdm.sh
 
 #IPROUTE2
@@ -324,6 +325,13 @@ LIBGRALLOC += gralloc.msm7627_surf
 LIBGRALLOC += gralloc.msm7627_6x
 LIBGRALLOC += gralloc.msm7627a
 LIBGRALLOC += libmemalloc
+
+#memtrack
+LIBMEMTRACK := memtrack.default
+LIBMEMTRACK += memtrack.msm8974
+LIBMEMTRACK += memtrack.msm8226
+LIBMEMTRACK += memtrack.msm8610
+LIBMEMTRACK += memtrack.apq8084
 
 #LIBLIGHTS
 LIBLIGHTS := lights.msm8660
@@ -594,6 +602,7 @@ PRODUCT_PACKAGES += $(LIBCAMERA)
 PRODUCT_PACKAGES += $(LIBGESTURES)
 PRODUCT_PACKAGES += $(LIBCOPYBIT)
 PRODUCT_PACKAGES += $(LIBGRALLOC)
+PRODUCT_PACKAGES += $(LIBMEMTRACK)
 PRODUCT_PACKAGES += $(LIBLIGHTS)
 PRODUCT_PACKAGES += $(LIBAUDIOPARAM)
 PRODUCT_PACKAGES += $(LIBAUDIORESAMPLER)
