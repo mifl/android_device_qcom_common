@@ -475,6 +475,7 @@ TSLIB_EXTERNAL += ts
 
 #QRGND
 QRGND := qrngd
+QRGND += qrngp
 QRGND += qrngtest
 
 #WPA
@@ -535,7 +536,6 @@ PRODUCT_PACKAGES := \
     SyncProvider \
     IM \
     VoiceDialer \
-    FM \
     FM2 \
     FMRecord \
     VideoEditor
