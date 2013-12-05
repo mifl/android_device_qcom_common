@@ -241,10 +241,6 @@ service usbhub_init /system/bin/usbhub_init
 on property:persist.radio.atfwd.start=false
     stop atfwd
 
-on property:init.svc.surfaceflinger=stopped
-    stop ppd
-    stop hdmid
-
 on property:ro.board.platform=msm7630_fusion
     start usbhub_init
 
@@ -316,6 +312,18 @@ service rfs_access /system/bin/rfs_access
 
 on property:ro.boot.emmc=true
     start rfs_access
+
+on property:bluetooth.start_hci=true
+    start start_hci_filter
+
+on property:bluetooth.start_hci=false
+    stop start_hci_filter
+
+service start_hci_filter /system/bin/wcnss_filter
+    class late_start
+    user bluetooth
+    group bluetooth
+    disabled
 
 service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     class core
@@ -521,7 +529,7 @@ service dhcpcd_bnep4 /system/bin/dhcpcd -BKLG
 service gpsone_daemon /system/bin/gpsone_daemon
     class late_start
     user gps
-    group gps qcom_oncrpc inet net_raw
+    group gps inet net_raw
     disabled
 
 service quipc_igsn /system/bin/quipc_igsn
@@ -563,7 +571,7 @@ service lowi-server /system/bin/lowi-server
 service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
     class late_start
     user root
-    group system fm_radio
+    group system
     disabled
     oneshot
 
@@ -619,17 +627,6 @@ service atfwd /system/bin/ATFWD-daemon
     user system
     group system radio
 
-service hdmid /system/bin/hdmid
-    class late_start
-    socket hdmid stream 0660 root system graphics
-    disabled
-
-service ppd /system/bin/mm-pp-daemon
-    class late_start
-    user system
-    socket pps stream 0660 system system graphics
-    group system graphics
-
 service hostapd /system/bin/hostapd -dddd /data/hostapd/hostapd.conf
     class late_start
     user root
@@ -648,7 +645,7 @@ on property:persist.data.ds_fmc_app.mode=1
 
 service ims_regmanager /system/bin/exe-ims-regmanagerprocessnative
     class late_start
-    group qcom_oncrpc net_bt_admin inet radio wifi
+    group net_bt_admin inet radio wifi
     disabled
 
 on property:persist.ims.regmanager.mode=1
@@ -669,7 +666,7 @@ service ril-daemon1 /system/bin/rild -c 1
     socket rild-debug1 stream 660 radio system
     user root
     disabled
-    group radio cache inet misc audio sdcard_r sdcard_rw qcom_oncrpc diag qcom_diag log
+    group radio cache inet misc audio sdcard_r sdcard_rw diag qcom_diag log
 
 service ril-daemon2 /system/bin/rild -c 2
     class main
@@ -677,7 +674,7 @@ service ril-daemon2 /system/bin/rild -c 2
     socket rild-debug2 stream 660 radio system
     user root
     disabled
-    group radio cache inet misc audio sdcard_r sdcard_rw qcom_oncrpc diag qcom_diag log
+    group radio cache inet misc audio sdcard_r sdcard_rw diag qcom_diag log
 
 service profiler_daemon /system/bin/profiler_daemon
     class late_start
