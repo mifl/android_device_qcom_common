@@ -249,23 +249,26 @@ case "$target" in
         echo 1 > /sys/module/lpm_resources/enable_low_power/pxo
         echo 1 > /sys/module/lpm_resources/enable_low_power/vdd_dig
         echo 1 > /sys/module/lpm_resources/enable_low_power/vdd_mem
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/retention/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/retention/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/retention/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/retention/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/retention/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/retention/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/retention/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/retention/idle_enabled
         echo 0 > /sys/module/msm_thermal/core_control/enabled
         echo 1 > /sys/devices/system/cpu/cpu1/online
         echo 1 > /sys/devices/system/cpu/cpu2/online
@@ -287,6 +290,9 @@ case "$target" in
                 echo 1497600 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
                 echo "85 1500000:90 1800000:70" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
                 echo 40000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+                echo 20 > /sys/module/cpu_boost/parameters/boost_ms
+                echo 1728000 > /sys/module/cpu_boost/parameters/sync_threshold
+                echo 100000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
             ;;
             *)
                 echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
@@ -332,19 +338,19 @@ case "$target" in
         if [ "$soc_revision" != "1.0" ]; then
                 echo 1 > /sys/module/lpm_resources/enable_low_power/pxo
         fi
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled
         echo 1 > /sys/devices/system/cpu/cpu1/online
         echo 1 > /sys/devices/system/cpu/cpu2/online
         echo 1 > /sys/devices/system/cpu/cpu3/online
@@ -377,19 +383,19 @@ case "$target" in
         echo 1 > /sys/module/lpm_resources/enable_low_power/pxo
         echo 1 > /sys/module/lpm_resources/enable_low_power/vdd_dig
         echo 1 > /sys/module/lpm_resources/enable_low_power/vdd_mem
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled
         echo 1 > /sys/devices/system/cpu/cpu1/online
         echo 1 > /sys/devices/system/cpu/cpu2/online
         echo 1 > /sys/devices/system/cpu/cpu3/online
@@ -419,23 +425,23 @@ esac
 case "$target" in
     "apq8084")
         echo 4 > /sys/module/lpm_levels/enable_low_power/l2
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu0/retention/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu1/retention/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu2/retention/idle_enabled
-        echo 1 > /sys/module/pm_8x60/modes/cpu3/retention/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu0/retention/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu1/retention/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu2/retention/idle_enabled
+        echo 1 > /sys/module/msm_pm/modes/cpu3/retention/idle_enabled
         echo 0 > /sys/module/msm_thermal/core_control/enabled
         echo 1 > /sys/devices/system/cpu/cpu1/online
         echo 1 > /sys/devices/system/cpu/cpu2/online
