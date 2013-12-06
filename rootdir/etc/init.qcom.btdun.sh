@@ -51,7 +51,7 @@ soc_hwid=`cat /sys/devices/system/soc/soc0/id`
 if [ "$baseband" == "mdm" ] && [ "$soc_hwid" == "109" ]
 then
         logi "Set the ttyUSB0 as Modem endpoint for Fusion3"
-        chown bluetooth:bluetooth /dev/ttyUSB0
+        chown -h bluetooth:bluetooth /dev/ttyUSB0
         BTDUN_MDM_PORT="/dev/ttyUSB0"
 fi
 
