@@ -170,4 +170,8 @@
         <item>255</item>
     </integer-array>
 
+    <!-- Configuration to restart radio upon PDP_DEACTIVATE with
+         error cause as Regular deactivation(36). -->
+    <bool name="config_radio_reset_on_regular_deactivation">false</bool>
+
 </resources>
