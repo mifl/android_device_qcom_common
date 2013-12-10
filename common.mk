@@ -12,6 +12,7 @@ QCOM_BOARD_PLATFORMS += msm8610
 QCOM_BOARD_PLATFORMS += msm8226
 QCOM_BOARD_PLATFORMS += apq8084
 QCOM_BOARD_PLATFORMS += mpq8092
+QCOM_BOARD_PLATFORMS += msm_bronze
 
 MSM7K_BOARD_PLATFORMS := msm7630_surf
 MSM7K_BOARD_PLATFORMS += msm7630_fusion
@@ -208,7 +209,6 @@ INIT += init.class_main.sh
 INIT += init.qcom.wifi.sh
 INIT += vold.fstab
 INIT += init.qcom.ril.path.sh
-INIT += init.qcom.ril.sh
 INIT += init.qcom.usb.rc
 INIT += init.qcom.usb.sh
 INIT += usf_post_boot.sh
@@ -527,6 +527,7 @@ CRDA += init.crda.sh
 
 #WLAN
 WLAN := prima_wlan.ko
+WLAN += pronto_wlan.ko
 
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
