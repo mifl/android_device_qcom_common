@@ -36,12 +36,12 @@ start_sensors()
     if [ -c /dev/msm_dsps -o -c /dev/sensors ]; then
         mkdir -p /data/system/sensors
         touch /data/system/sensors/settings
-        chmod 775 /data/system/sensors
-        chmod 664 /data/system/sensors/settings
-        chown system /data/system/sensors/settings
+        chmod -h 775 /data/system/sensors
+        chmod -h 664 /data/system/sensors/settings
+        chown -h system /data/system/sensors/settings
 
         mkdir -p /data/misc/sensors
-        chmod 775 /data/misc/sensors
+        chmod -h 775 /data/misc/sensors
 
         if [ ! -s /data/system/sensors/settings ]; then
             # If the settings file is empty, enable sensors HAL
@@ -54,14 +54,14 @@ start_sensors()
 
 start_battery_monitor()
 {
-	chown root.system /sys/module/pm8921_bms/parameters/*
-	chown root.system /sys/bus/platform/devices/pm8921-bms/fcc_data
-	chown root.system /sys/bus/platform/devices/pm8921-bms/fcc_temp
-	chown root.system /sys/bus/platform/devices/pm8921-bms/fcc_chgcyl
-	chmod 0660 /sys/module/pm8921_bms/parameters/*
+	chown -h root.system /sys/module/pm8921_bms/parameters/*
+	chown -h root.system /sys/bus/platform/devices/pm8921-bms/fcc_data
+	chown -h root.system /sys/bus/platform/devices/pm8921-bms/fcc_temp
+	chown -h root.system /sys/bus/platform/devices/pm8921-bms/fcc_chgcyl
+	chmod -h 0660 /sys/module/pm8921_bms/parameters/*
 	mkdir -p /data/bms
-	chown root.system /data/bms
-	chmod 0770 /data/bms
+	chown -h root.system /data/bms
+	chmod -h 0770 /data/bms
 	start battery_monitor
 }
 
