@@ -33,6 +33,8 @@
     <string name="pref_camera_scenemode_entry_candlelight">"烛光"</string>
     <string name="pref_camera_scenemode_entry_backlight">"背光"</string>
     <string name="pref_camera_scenemode_entry_flowers">"花卉"</string>
+    <string name="pref_camera_scenemode_label_action">"动态"</string>
+    <string name="pref_camera_scenemode_entry_action">"动态"</string>
 
    <!-- Settings screen, Select Histogram title -->
     <string name="pref_camera_histogram_title">"直方图"</string>
