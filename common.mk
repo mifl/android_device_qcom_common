@@ -204,6 +204,7 @@ INIT += init.qcom.efs.sync.sh
 INIT += ueventd.qcom.rc
 INIT += init.ath3k.bt.sh
 INIT += init.qcom.audio.sh
+INIT += enable_swap.sh
 INIT += init.qcom.ssr.sh
 
 #IPROUTE2
@@ -504,6 +505,7 @@ CRDA += init.crda.sh
 
 #WLAN
 WLAN := prima_wlan.ko
+WLAN += pronto_wlan.ko
 
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
