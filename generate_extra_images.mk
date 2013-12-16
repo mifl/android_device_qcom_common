@@ -7,13 +7,14 @@
 # and gets parsed before build/core/Makefile, which has these
 # variables defined. build/core/Makefile will overwrite these
 # variables again.
+ifneq ($(strip $(TARGET_NO_KERNEL)),true)
 INSTALLED_BOOTIMAGE_TARGET := $(PRODUCT_OUT)/boot.img
 INSTALLED_RAMDISK_TARGET := $(PRODUCT_OUT)/ramdisk.img
 INSTALLED_SYSTEMIMAGE := $(PRODUCT_OUT)/system.img
 INSTALLED_USERDATAIMAGE_TARGET := $(PRODUCT_OUT)/userdata.img
 INSTALLED_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img
 recovery_ramdisk := $(PRODUCT_OUT)/ramdisk-recovery.img
-
+endif
 #----------------------------------------------------------------------
 # Generate secure boot & recovery image
 #----------------------------------------------------------------------
@@ -59,6 +60,8 @@ endif # TARGET_BOOTIMG_SIGNED
 #----------------------------------------------------------------------
 # Generate persist image (persist.img)
 #----------------------------------------------------------------------
+ifneq ($(strip $(TARGET_NO_KERNEL)),true)
+
 TARGET_OUT_PERSIST := $(PRODUCT_OUT)/persist
 
 INTERNAL_PERSISTIMAGE_FILES := \
@@ -80,6 +83,7 @@ $(INSTALLED_PERSISTIMAGE_TARGET): $(MKEXTUSERIMG) $(MAKE_EXT4FS) $(INTERNAL_PERS
 ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_PERSISTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_PERSISTIMAGE_TARGET)
 
+endif
 
 #----------------------------------------------------------------------
 # Generate device tree image (dt.img)
