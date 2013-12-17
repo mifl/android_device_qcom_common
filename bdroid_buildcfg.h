@@ -24,4 +24,6 @@
 #define BTM_DEF_LOCAL_NAME   "QCOM-BTD"
 // Enables Interleave scan
 #define BTA_HOST_INTERLEAVE_SEARCH  TRUE
+// skips conn update at conn completion
+#define BTA_BLE_SKIP_CONN_UPD  TRUE
 #endif
