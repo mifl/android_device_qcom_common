@@ -39,6 +39,9 @@ ALSA_UCM += snd_soc_msm_2x_Fusion3_auxpcm
 ALSA_UCM += snd_soc_msm_Sitar_auxpcm
 ALSA_UCM += snd_soc_msm_Taiko
 
+#Notification wav file
+NOTIFY_WAV_FILE := notification.wav
+
 #ANGLE
 ANGLE := libangle
 
@@ -447,6 +450,7 @@ PRODUCT_PACKAGES := \
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
+PRODUCT_PACKAGES += $(NOTIFY_WAV_FILE)
 PRODUCT_PACKAGES += $(ANGLE)
 PRODUCT_PACKAGES += $(AUDIO_HARDWARE)
 PRODUCT_PACKAGES += $(AUDIO_POLICY)
