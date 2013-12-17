@@ -13,6 +13,7 @@ QCOM_BOARD_PLATFORMS += msm8226
 QCOM_BOARD_PLATFORMS += apq8084
 QCOM_BOARD_PLATFORMS += mpq8092
 QCOM_BOARD_PLATFORMS += msm_bronze
+QCOM_BOARD_PLATFORMS += msm8916
 
 MSM7K_BOARD_PLATFORMS := msm7630_surf
 MSM7K_BOARD_PLATFORMS += msm7630_fusion
@@ -80,6 +81,7 @@ AUDIO_HARDWARE += audio.primary.msm7630_fusion
 #AUDIO_HARDWARE += audio.primary.default
 AUDIO_HARDWARE += audio.a2dp.default
 AUDIO_HARDWARE += audio.usb.default
+AUDIO_HARDWARE += audio.primary.mpq8092
 #
 AUDIO_POLICY := audio_policy.mpq8064
 AUDIO_POLICY += audio_policy.apq8084
@@ -88,6 +90,7 @@ AUDIO_POLICY += audio_policy.msm8974
 AUDIO_POLICY += audio_policy.msm8226
 AUDIO_POLICY += audio_policy.msm8660
 AUDIO_POLICY += audio_policy.msm8610
+AUDIO_POLICY += audio_policy.mpq8092
 #AUDIO_POLICY += audio_policy.msm7627_surf
 AUDIO_POLICY += audio_policy.msm7627a
 AUDIO_POLICY += audio_policy.msm7630_surf
