@@ -55,37 +55,6 @@ on early-boot
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
     exec /system/bin/sh /init.qcom.early_boot.sh ${ro.board.platform}
-
-# Starting ueventd, servicemanager, surfaceflinger prior to playing boot up advetisement
-    start ueventd
-    start servicemanager
-    start surfaceflinger
-
-# setting appropriate permissions for bootup advertisement app
-    chmod 777 /system/bin/MpqEarlyVideo
-    chmod 777 /data/nobootwait_temp.txt
-    rm /data/nobootwait_temp.txt
-
-# necessary configurations for bootup advertisement video to be played
-    chmod 100 insmod /system/lib/modules/tspp.ko
-    chmod 100 /system/lib/modules/dvb-core.ko
-    chmod 100 /system/lib/modules/mpq-adapter.ko
-    chmod 100 /system/lib/modules/mpq-dmx-hw-plugin.ko
-    chmod 100 /system/lib/modules/mpq_dvb_video.ko
-    insmod /system/lib/modules/tspp.ko
-    insmod /system/lib/modules/dvb-core.ko dvbdev_debug=0 debug=0 dvb_demux_performancecheck=1
-    insmod /system/lib/modules/mpq-adapter.ko adapter_nr=0
-    insmod /system/lib/modules/mpq-dmx-hw-plugin.ko
-    insmod /system/lib/modules/mpq_dvb_video.ko
-    chmod 664 insmod /system/lib/modules/tspp.ko
-    chmod 664 /system/lib/modules/dvb-core.ko
-    chmod 664 /system/lib/modules/mpq-adapter.ko
-    chmod 664 /system/lib/modules/mpq-dmx-hw-plugin.ko
-    chmod 664 /system/lib/modules/mpq_dvb_video.ko
-
-# triggering bootup advertisement playback
-    start bootmedia
-    wait /data/nobootwait_temp.txt
     exec /system/bin/sh /init.qcom.syspart_fixup.sh ${ro.board.platform} ${ro.serialno}
 
 on boot
@@ -312,10 +281,6 @@ service rmt_storage /system/bin/rmt_storage
 
 on property:ro.boot.emmc=true
     start rmt_storage
-
-# boot up advertisement
-service bootmedia /system/bin/MpqEarlyVideo
-    oneshot
 
 service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     class core
