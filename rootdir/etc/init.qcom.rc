@@ -57,6 +57,23 @@ on early-boot
     exec /system/bin/sh /init.qcom.early_boot.sh ${ro.board.platform}
     exec /system/bin/sh /init.qcom.syspart_fixup.sh ${ro.board.platform} ${ro.serialno}
 
+# necessary configurations for bootup advertisement video to be played
+    chmod 100 /system/lib/modules/tspp.ko
+    chmod 100 /system/lib/modules/dvb-core.ko
+    chmod 100 /system/lib/modules/mpq-adapter.ko
+    chmod 100 /system/lib/modules/mpq-dmx-hw-plugin.ko
+    chmod 100 /system/lib/modules/mpq_dvb_video.ko
+    insmod /system/lib/modules/tspp.ko
+    insmod /system/lib/modules/dvb-core.ko dvbdev_debug=0 debug=0 dvb_demux_performancecheck=1
+    insmod /system/lib/modules/mpq-adapter.ko adapter_nr=0
+    insmod /system/lib/modules/mpq-dmx-hw-plugin.ko
+    insmod /system/lib/modules/mpq_dvb_video.ko
+    chmod 664 /system/lib/modules/tspp.ko
+    chmod 664 /system/lib/modules/dvb-core.ko
+    chmod 664 /system/lib/modules/mpq-adapter.ko
+    chmod 664 /system/lib/modules/mpq-dmx-hw-plugin.ko
+    chmod 664 /system/lib/modules/mpq_dvb_video.ko
+
 on boot
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
