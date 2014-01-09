@@ -184,3 +184,29 @@ do
         chown system.system $file/format_3d;;
     esac
 done
+
+# Setup ro.alarm_boot value to true when it is RTC triggered boot up
+# For existing PMIC chips, the following mapping applies
+# for the value of boot_reason:
+#
+# 0 -> unknown
+# 1 -> hard reset
+# 2 -> sudden momentary power loss (SMPL)
+# 3 -> real time clock (RTC)
+# 4 -> DC charger inserted
+# 5 -> USB charger inserted
+# 6 -> PON1 pin toggled (for secondary PMICs)
+# 7 -> CBLPWR_N pin toggled (for external power supply)
+# 8 -> KPDPWR_N pin toggled (power key pressed)
+if [ -f /proc/sys/kernel/boot_reason ]; then
+    boot_reason_index=`cat /proc/sys/kernel/boot_reason`
+    case "$boot_reason_index" in
+        "3")
+            setprop ro.alarm_boot true
+            ;;
+        *)
+            #set ro.alarm_boot default to be false when boot up
+            setprop ro.alarm_boot false
+            ;;
+    esac
+fi
