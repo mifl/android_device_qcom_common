@@ -542,6 +542,18 @@ PRODUCT_PACKAGES := \
     FMRecord \
     VideoEditor
 
+ifndef $(QC_PATH)
+
+#BT BLUEZ
+BT += bluetoothd
+BT += bttest
+BT += libbluedroid
+BT += libbluetooth
+BT += libbluetoothd
+BT += stack.conf
+
+endif # (QC_PATH)
+
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
 PRODUCT_PACKAGES += $(ANGLE)
