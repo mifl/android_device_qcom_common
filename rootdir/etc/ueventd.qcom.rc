@@ -107,7 +107,7 @@
 /dev/msm_vidc_dec         0660   system     audio
 /dev/msm_vidc_dec_sec     0660   system     audio
 /dev/msm_vidc_enc         0660   system     audio
-/dev/msm_rotator          0660   system     system
+/dev/msm_rotator          0660   system     graphics
 /dev/hw_random            0660   system     system
 
 #permissions for audio
@@ -157,6 +157,7 @@
 
 # wlan
 /dev/wcnss_wlan           0660   system     system
+/dev/wcnss_ctrl           0660   system     system
 
 # UIO devices
 /dev/uio0                 0660   system     system
