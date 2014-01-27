@@ -130,6 +130,7 @@ case "$target" in
         rm -rf /system/etc/firmware/wcd9320/wcd9320_anc.bin
         rm -rf /system/etc/firmware/wcd9320/wcd9320_mbhc.bin
         mkdir -p /system/etc/firmware/wcd9320
+	chmod 644 /system/etc/firmware/wcd9320
         ln -s /data/misc/audio/wcd9320_anc.bin /system/etc/firmware/wcd9320/wcd9320_anc.bin
         ln -s /data/misc/audio/mbhc.bin /system/etc/firmware/wcd9320/wcd9320_mbhc.bin
         ln -s /data/misc/audio/wcd9320_mad_audio.bin /system/etc/firmware/wcd9320/wcd9320_mad_audio.bin
@@ -140,6 +141,7 @@ case "$target" in
         rm -rf /system/etc/firmware/wcd9306/wcd9306_anc.bin
         rm -rf /system/etc/firmware/wcd9306/wcd9306_mbhc.bin
         mkdir -p /system/etc/firmware/wcd9306
+	chmod 644 /system/etc/firmware/wcd9306
         ln -s /data/misc/audio/wcd9320_anc.bin /system/etc/firmware/wcd9306/wcd9306_anc.bin
         ln -s /data/misc/audio/mbhc.bin /system/etc/firmware/wcd9306/wcd9306_mbhc.bin
         ;;
@@ -151,6 +153,7 @@ case "$target" in
         rm -f /system/etc/firmware/wcd9310/wcd9310_anc.bin
         rm -f /system/etc/firmware/wcd9310/wcd9310_mbhc.bin
         mkdir -p /system/etc/firmware/wcd9310
+	chmod 644 /system/etc/firmware/wcd9310
         ln -s /data/misc/audio/wcd9310_anc.bin /system/etc/firmware/wcd9310/wcd9310_anc.bin
         ln -s /data/misc/audio/mbhc.bin /system/etc/firmware/wcd9310/wcd9310_mbhc.bin
         ;;
