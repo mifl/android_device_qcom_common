@@ -170,6 +170,13 @@ on boot
     # Set the default message loglevel to KERN_INFO
     write /proc/sys/kernel/printk "6 6 1 7"
 
+    # MPQ Init
+    insmod /system/lib/modules/tspp2.ko
+    insmod /system/lib/modules/mpq-adapter.ko adapter_nr=0
+    insmod /system/lib/modules/mpq-dmx-hw-plugin.ko
+    insmod /system/lib/modules/mpq_dvb_video.ko
+    insmod /system/lib/modules/tsc.ko
+
 # msm specific files that need to be created on /data
 on post-fs-data
     # we will remap this as /mnt/sdcard with the sdcard fuse tool
@@ -245,6 +252,10 @@ on post-fs-data
 
     #Create a folder for SRS to be able to create a usercfg file
     mkdir /data/data/media 0770 media media
+
+    # Middleware init
+    mkdir /data/data/tvapp_data
+    chmod 777 /data/data/tvapp_data
 
 # Export GPIO56 for fusion targets to enable/disable hub
 service usbhub_init /system/bin/usbhub_init
