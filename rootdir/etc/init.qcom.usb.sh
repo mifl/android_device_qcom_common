@@ -33,6 +33,9 @@
 # do not have unique serial number.
 # User needs to set unique usb serial number to persist.usb.serialno
 #
+
+insmod /system/lib/modules/ehci-hcd.ko
+
 serialno=`getprop persist.usb.serialno`
 case "$serialno" in
     "")
