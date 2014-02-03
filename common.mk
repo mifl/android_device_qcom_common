@@ -381,8 +381,8 @@ PVOMX := libqcomm_omx
 PVOMX += 01_qcomm_omx
 
 #RF4CE
-RF4CE := RemoTI_RNP.cfg
-RF4CE += rf4ce
+#RF4CE := RemoTI_RNP.cfg
+#RF4CE += rf4ce
 
 #SENSORS_HARDWARE
 SENSORS_HARDWARE := sensors.msm7630_surf
