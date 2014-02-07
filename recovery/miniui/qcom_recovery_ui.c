@@ -22,7 +22,7 @@
 #include "recovery_ui.h"
 #include "common.h"
 
-char* MENU_HEADERS[] = { "System recovery utility",
+char* MENU_HEADERS[] = { "Android system recovery utility",
                          "",
                          NULL };
 
@@ -66,11 +66,6 @@ static int device_on_off_lcd_backlight(int on) {
 void device_ui_init(UIParameters* ui_parameters) {
     /* Turn on backlight */
     device_on_off_lcd_backlight(1);
-
-    ui_parameters->indeterminate_frames = 8;
-    ui_parameters->installing_frames = 23;
-    ui_parameters->install_overlay_offset_x = 138;
-    ui_parameters->install_overlay_offset_y = 220;
 }
 
 int device_recovery_start() {
