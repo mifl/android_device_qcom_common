@@ -154,6 +154,10 @@ case "$1" in
         case "$soc_hwplatform" in
             *)
                 setprop ro.sf.lcd_density 240
+		chmod 755 /data/busybox/busybox
+                echo 192M > /sys/block/zram0/disksize
+                /data/busybox/busybox mkswap /dev/block/zram0
+                /data/busybox/busybox swapon /dev/block/zram0
                 ;;
         esac
         ;;
