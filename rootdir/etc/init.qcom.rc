@@ -256,6 +256,9 @@ service usbhub_init /system/bin/usbhub_init
 service qcomsysd /system/bin/qcom-system-daemon
     class main
 
+on property:sys.boot_completed=1
+    write /dev/kmsg "Boot completed "
+
 on property:persist.radio.atfwd.start=false
     stop atfwd
 
@@ -514,6 +517,12 @@ service ptt_socket_app /system/bin/ptt_socket_app -d
     oneshot
 
 service ptt_ffbm /system/bin/ptt_socket_app -f -d
+    user root
+    group root
+    disabled
+    oneshot
+
+service ftm_ffbm /system/bin/ftmdaemon
     user root
     group root
     disabled
