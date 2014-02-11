@@ -494,6 +494,7 @@ CHARGER += charger_res_images
 
 #VT_JNI
 VT_JNI := libvt_jni
+VT_JNI += libimscamera_jni
 
 #CRDA
 CRDA := crda
