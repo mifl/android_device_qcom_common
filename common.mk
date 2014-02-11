@@ -520,7 +520,7 @@ PRODUCT_PACKAGES := \
     CertInstaller \
     DrmProvider \
     Email \
-    Gallery2 \
+    Gallery \
     LatinIME \
     Launcher2 \
     Mms \
