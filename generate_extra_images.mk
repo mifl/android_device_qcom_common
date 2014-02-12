@@ -22,6 +22,7 @@ endif
 #----------------------------------------------------------------------
 ifeq ($(TARGET_BOOTIMG_SIGNED),true)
 INSTALLED_SEC_BOOTIMAGE_TARGET := $(PRODUCT_OUT)/boot.img.secure
+INSTALLED_SEC_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img.secure
 
 ifneq ($(BUILD_TINY_ANDROID),true)
 intermediates := $(call intermediates-dir-for,PACKAGING,recovery_patch)
@@ -32,7 +33,13 @@ ifndef TARGET_SHA_TYPE
   TARGET_SHA_TYPE := sha256
 endif
 
+# Override signing key
+ifeq ($(TARGET_PRODUCT),$(filter $(TARGET_PRODUCT),thor apollo kodiak))
+PRODUCT_PRIVATE_KEY := device/amazon/$(TARGET_PRODUCT)/kernel.eng.key
+endif
+
 define build-boot-image
+	$(hide) echo "Signing $(1) with $(PRODUCT_PRIVATE_KEY)"
 	$(hide) mv -f $(1) $(1).nonsecure
 	$(hide) openssl dgst -$(TARGET_SHA_TYPE) -binary $(1).nonsecure > $(1).$(TARGET_SHA_TYPE)
 	$(hide) openssl rsautl -sign -in $(1).$(TARGET_SHA_TYPE) -inkey $(PRODUCT_PRIVATE_KEY) -out $(1).sig
@@ -43,11 +50,14 @@ define build-boot-image
 	$(hide) mv -f $(1).secure $(1)
 endef
 
-$(INSTALLED_SEC_BOOTIMAGE_TARGET): $(INSTALLED_BOOTIMAGE_TARGET) $(RECOVERY_FROM_BOOT_PATCH)
+bootimage_signed $(INSTALLED_SEC_BOOTIMAGE_TARGET): $(INSTALLED_BOOTIMAGE_TARGET) $(RECOVERY_FROM_BOOT_PATCH)
 	$(hide) $(call build-boot-image,$(INSTALLED_BOOTIMAGE_TARGET),$(INTERNAL_BOOTIMAGE_ARGS))
 
-ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_SEC_BOOTIMAGE_TARGET)
-ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_SEC_BOOTIMAGE_TARGET)
+recoveryimage_signed $(INSTALLED_SEC_RECOVERYIMAGE_TARGET): $(INSTALLED_RECOVERYIMAGE_TARGET) $(RECOVERY_FROM_BOOT_PATCH)
+	$(hide) $(call build-boot-image,$(INSTALLED_RECOVERYIMAGE_TARGET),)
+
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_SEC_BOOTIMAGE_TARGET) $(INSTALLED_SEC_RECOVERYIMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_SEC_BOOTIMAGE_TARGET) $(INSTALLED_SEC_RECOVERYIMAGE_TARGET)
 endif
 
 #----------------------------------------------------------------------
@@ -81,6 +91,7 @@ endif
 #----------------------------------------------------------------------
 # Generate device tree image (dt.img)
 #----------------------------------------------------------------------
+ifneq ($(strip $(TARGET_NO_KERNEL)),true)
 ifeq ($(strip $(BOARD_KERNEL_SEPARATED_DT)),true)
 ifeq ($(strip $(BUILD_TINY_ANDROID)),true)
 include device/qcom/common/dtbtool/Android.mk
@@ -104,6 +115,7 @@ $(INSTALLED_DTIMAGE_TARGET): $(DTBTOOL) $(INSTALLED_KERNEL_TARGET)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_DTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DTIMAGE_TARGET)
+endif
 endif
 
 #---------------------------------------------------------------------
@@ -143,11 +155,32 @@ define build-cdrom-target
     $(hide) mkisofs -o $(CDROM_ISO_TARGET)  $(CDROM_RES_FILE)
 endef
 
-$(CDROM_ISO_TAREGT): $(CDROM_RES_FILE)
+$(CDROM_ISO_TARGET): $(CDROM_RES_FILE)
 	$(build-cdrom-target)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(CDROM_ISO_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(CDROM_ISO_TARGET)
+endif
+#---------------------------------------------------------------------
+#Generate the SingleImage.bin / MMC_FLASHMEM1.dat
+#---------------------------------------------------------------------
+ifeq ($(strip $(BOARD_DISK_ANDROID_IMG)),true)
+DISK_IMG_TOOL := $(HOST_OUT_EXECUTABLES)/singleimage.py
+$(call pretty,"Android Disk Image for simulator: $(DISK_IMG_TOOL)")
+
+INSTALLED_DISK_IMG_TARGET := $(PRODUCT_OUT)/MMC_FLASHMEM1.dat
+$(call pretty,"Android Disk Image for simulator: $(INSTALLED_DISK_IMG_TARGET)")
+
+define build-disk-img-target
+	$(call pretty,"Android Disk Image for simulator: $(INSTALLED_DISK_IMG_TARGET)")
+	$(hide) $(DISK_IMG_TOOL) $(PRODUCT_OUT)
+	$(hide) mv $(PRODUCT_OUT)/singleimage.bin $(PRODUCT_OUT)/MMC_FLASHMEM1.dat
+endef
+
+$(INSTALLED_DISK_IMG_TARGET): $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_RAMDISK_TARGET) $(INSTALLED_SYSTEMIMAGE) $(INSTALLED_USERDATAIMAGE_TARGET) $(INSTALLED_RECOVERYIMAGE_TARGET) $(BUILT_CACHEIMAGE_TARGET) $(DISK_IMG_TOOL)
+	$(build-disk-img-target)
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_DISK_IMG_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DISK_IMG_TARGET)
 endif
 
 #----------------------------------------------------------------------
