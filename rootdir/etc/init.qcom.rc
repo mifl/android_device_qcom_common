@@ -36,8 +36,8 @@ on init
     mkdir /persist 0771 system system
     # See storage config details at http://source.android.com/tech/storage/
     mkdir /storage 0050 system sdcard_r
-    mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
-    mkdir /storage/sdcard1 0700 root root
+    mkdir /mnt/media_rw/sdcard 0700 media_rw media_rw
+    mkdir /storage/sdcard 0700 root root
 
 on early-boot
     # set RLIMIT_MEMLOCK to 64MB
@@ -711,7 +711,7 @@ service profiler_daemon /system/bin/profiler_daemon
     group root
     disabled
 
-service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 /mnt/media_rw/sdcard1 /storage/sdcard1
+service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 /mnt/media_rw/sdcard /storage/sdcard
     class late_start
 
 service hcidump /system/bin/sh /system/etc/hcidump.sh
