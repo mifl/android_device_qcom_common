@@ -58,7 +58,8 @@ ifneq ($(strip $(TARGET_NO_KERNEL)),true)
 TARGET_OUT_PERSIST := $(PRODUCT_OUT)/persist
 
 INTERNAL_PERSISTIMAGE_FILES := \
-	$(filter $(TARGET_OUT_PERSIST)/%,$(ALL_DEFAULT_INSTALLED_MODULES))
+	$(filter $(TARGET_OUT_PERSIST)/%,\
+		$(foreach f,$(PRODUCT_COPY_FILES),$(PRODUCT_OUT)/$(call word-colon,2,$(f))))
 
 INSTALLED_PERSISTIMAGE_TARGET := $(PRODUCT_OUT)/persist.img
 
