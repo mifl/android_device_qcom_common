@@ -181,4 +181,7 @@
          error cause as Regular deactivation(36). -->
     <bool name="config_radio_reset_on_regular_deactivation">false</bool>
 
+    <!-- Configuration to enable non-default PDP during IWLAN -->
+    <bool name="config_feature_iwlan_enabled">true</bool>
+
 </resources>
