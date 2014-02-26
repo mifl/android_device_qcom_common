@@ -1,4 +1,4 @@
-# Copyright (c) 2013, The Linux Foundation. All rights reserved.
+# Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -71,7 +71,7 @@ if(uc($ARGV[1]) eq "PANEL")
 	open (my $PANELH, '>panel_' . $nameinH . '.h');
 	printheader($PANELH);
 	print $PANELH "\n#ifndef _PANEL_". uc($nameinH) . "_H_\n";
-	print $PANELH "\n#define _PANEL_". uc($nameinH) . "_H_\n";
+	print $PANELH "#define _PANEL_". uc($nameinH) . "_H_\n";
 	printdtsheader($PANELDTSI, $nameinH);
 
 
@@ -83,9 +83,6 @@ if(uc($ARGV[1]) eq "PANEL")
 	printSectionHeader($PANELH, "HEADER files");
 
 	print $PANELH "#include \"panel.h\"\n\n";
-
-	printSectionHeader($PANELH, "Panel configuration");
-	print $PANELH "\n";
 
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry/PanelController'))
 	{
@@ -146,6 +143,16 @@ if(uc($ARGV[1]) eq "PANEL")
 				printArray($PANELDTSI, \@tmp, $property,
 							"qcom,mdss-dsi-panel-framerate");
 			}
+			elsif($_ eq "PixelPacking")
+			{
+				printPixelPacking($PANELDTSI, \@tmp, $property,
+							"qcom,mdss-dsi-pixel-packing");
+			}
+			elsif($_ eq "ColorOrder")
+			{
+				printColorOrder($PANELDTSI, \@tmp, $property,
+							"qcom,mdss-dsi-color-order");
+			}
 			else
 			{
 				printArray($PANELDTSI, \@tmp, $property,
@@ -161,13 +168,13 @@ if(uc($ARGV[1]) eq "PANEL")
 		"DSIStream", "InterleaveMode","BitClockFrequency",
 		"PanelOperatingMode", "PanelWithEnableGPIO");
 
+		printSectionHeader($PANELH, "Panel configuration");
 		printDataStruct($PANELH, \@panelConfigAttrs, $property,
 				"panel_config", lc($nameinH) . "_panel_data",
 				"qcom,mdss_dsi_" .lc($nameinH));
 	}
 
 	print $PANELH "\n\n";
-	printSectionHeader($PANELH, "Panel resolution");
 
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
@@ -178,16 +185,17 @@ if(uc($ARGV[1]) eq "PANEL")
 		"VActiveRes", "InvertDataPolarity", "InvertVsyncPolarity",
 		"InvertHsyncPolarity");
 
+		printSectionHeader($PANELH, "Panel resolution");
 		printStruct($PANELH, \@panelConfigAttrs, $property,
 			"panel_resolution", lc($nameinH) . "_panel_res");
 		print $PANELH "\n";
 	}
 
 	print $PANELH "\n";
-	printSectionHeader($PANELH, "Panel Color Information" );
 
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
+		printSectionHeader($PANELH, "Panel color information" );
 		my @panelConfigAttrs = ("ColorFormat", "ColorOrder",
 		"UnderFlowColor", "BorderColor", "PixelPacking",
 		"PixelAlignment");
@@ -198,7 +206,7 @@ if(uc($ARGV[1]) eq "PANEL")
 	}
 
 	print $PANELH "\n";
-	printSectionHeader($PANELH, "Panel Command information" );
+	printSectionHeader($PANELH, "Panel on/off command information" );
 
 	for my $property ($xmldoc->findnodes('/GCDB/PanelEntry/OnCommand'))
 	{
@@ -230,8 +238,7 @@ if(uc($ARGV[1]) eq "PANEL")
 						"qcom,mdss-dsi-" . $lower);
 		}
 
-		my @attrs = ("HSyncPulse", "TrafficMode",
-		"DSILaneMap",);
+		my @attrs = ("HSyncPulse",);
 
 		foreach(@attrs)
 		{
@@ -241,6 +248,22 @@ if(uc($ARGV[1]) eq "PANEL")
 			$lower = convertLower($lower);
 			printArray($PANELDTSI, \@tmp, $property,
 						"qcom,mdss-dsi-" . $lower);
+		}
+
+		@attrs = ("TrafficMode",);
+		foreach(@attrs)
+		{
+			push(my @tmp, $_);
+			printTrafficMode($PANELDTSI, \@tmp, $property,
+					"qcom,mdss-dsi-traffic-mode");
+		}
+
+		@attrs = ("DSILaneMap",);
+		foreach(@attrs)
+		{
+			push(my @tmp, $_);
+			printLaneMap($PANELDTSI, \@tmp, $property,
+					"qcom,mdss-dsi-lane-map");
 		}
 
 		@attrs = ("BLLPEOFPowerMode");
@@ -286,8 +309,6 @@ if(uc($ARGV[1]) eq "PANEL")
 		}
 	}
 
-	printSectionHeader($PANELH, "Command mode panel information");
-	print $PANELH "\n";
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
 		my @attrs = ("TECheckEnable", "TEPinSelect", "TEUsingTEPin",
@@ -296,6 +317,7 @@ if(uc($ARGV[1]) eq "PANEL")
 		"TEvSyncStartLineDivisor", "TEPercentVariance", "TEDCSCommand",
 		"DisableEoTAfterHSXfer", "CmdModeIdleTime");
 
+		printSectionHeader($PANELH, "Command mode panel information");
 		printStruct($PANELH, \@attrs, $property, "commandpanel_info",
 					lc($nameinH) . "_command_panel");
 		print $PANELH "\n\n";
@@ -364,25 +386,21 @@ if(uc($ARGV[1]) eq "PANEL")
 
 	}
 
-	printSectionHeader($PANELH, "Video mode panel information");
-	print $PANELH "\n";
-
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
 		my @commandAttrs = ("HSyncPulse", "HFPPowerMode", "HBPPowerMode",
 		"HSAPowerMode", "BLLPEOFPowerMode", "BLLPPowerMode",
 		"TrafficMode", "DMADelayAfterVsync", "BLLPEOFPower");
 
+		printSectionHeader($PANELH, "Video mode panel information");
 		printStruct($PANELH, \@commandAttrs, $property,
 				"videopanel_info", lc($nameinH) . "_video_panel");
 		print $PANELH "\n\n";
 	}
 
-	printSectionHeader($PANELH, "Lane Configuration");
-	print $PANELH "\n";
-
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
+		printSectionHeader($PANELH, "Lane configuration");
 		my @commandAttrs = ("DSILanes", "DSILaneMap", "Lane0State",
 		"Lane1State", "Lane2State", "Lane3State");
 
@@ -391,11 +409,10 @@ if(uc($ARGV[1]) eq "PANEL")
 		print $PANELH "\n\n";
 
 	}
-	print $PANELH "\n";
-	printSectionHeader($PANELH, "Panel Timing");
 
 	for my $property ($xmldoc->findnodes('/GCDB/PanelEntry/PanelTimings'))
 	{
+		printSectionHeader($PANELH, "Panel timing");
 		printTargetPhysical($PANELH, $property, lc($nameinH) .
 			"_timings","uint32_t");
 		print $PANELH "\n\n";
@@ -405,6 +422,7 @@ if(uc($ARGV[1]) eq "PANEL")
 
 	for my $property ($xmldoc->findnodes('/GCDB/PanelEntry/PanelRotation'))
 	{
+		printSectionHeader($PANELH, "Panel rotation");
 		printOnCommand($PANELH, $property, lc($nameinH) .
 				"_rotation", lc($nameinH) . "_rotation_cmd");
 		print $PANELH "\n\n";
@@ -421,23 +439,26 @@ if(uc($ARGV[1]) eq "PANEL")
 						lc($nameinH) . "_timing_info");
 		print $PANELH "\n\n";
 	}
+
 	for my $tmpProperty($xmldoc->findnodes('/GCDB/PanelEntry/ResetSequence'))
 	{
+		printSectionHeader($PANELH, "Panel reset sequence");
 		print $PANELH "static struct panel_reset_sequence " .
-				lc($nameinH) . "_reset_seq = {\n ";
+				lc($nameinH) . "_reset_seq = {\n\t";
+
 		printResetSeqinH($PANELH, $tmpProperty);
-		print $PANELH "\n\n"
+		print $PANELH "\n"
 	}
-	printSectionHeader($PANELH, "Backlight Settings");
-	print $PANELH "\n";
+
 	for my $property($xmldoc->findnodes('/GCDB/PanelEntry'))
 	{
 		my @timingAttrs = ("BLInterfaceType", "BLMinLevel",
 		"BLMaxLevel", "BLStep", "BLPMICControlType", "BLPMICModel");
 
+		printSectionHeader($PANELH, "Backlight setting");
 		printStruct($PANELH, \@timingAttrs, $property, "backlight",
 						lc($nameinH) . "_backlight");
-		print $PANELH "\n\n";
+		print $PANELH "\n";
 
 		my @attrs = ("TClkPost", "TClkPre");
 
@@ -483,14 +504,14 @@ if(uc($ARGV[1]) eq "PANEL")
 		foreach(@attrs)
 		{
 			push(my @tmp, $_);
-			printArray($PANELDTSI, \@tmp, $property,
+			printTrigger($PANELDTSI, \@tmp, $property,
 					"qcom,mdss-dsi-dma-trigger");
 		}
 		@attrs = ("DSIMDPTrigger");
 		foreach(@attrs)
 		{
 			push(my @tmp, $_);
-			printArray($PANELDTSI, \@tmp, $property,
+			printTrigger($PANELDTSI, \@tmp, $property,
 					"qcom,mdss-dsi-mdp-trigger");
 		}
 
@@ -599,6 +620,22 @@ elsif(uc($ARGV[1]) eq "PLATFORM")
 		print $PLATFORMH "\n\n";
 
 		printGPIO($PLATFORMDTSI, $property, "qcom,platform-te-gpio");
+	}
+	for my $property ($xmldoc->findnodes('/GCDB/PlatformEntry/ModeGPIO'))
+	{
+		printStruct($PLATFORMH, \@gpioConfAttrs, $property, "gpio_pin",
+								 "mode_gpio");
+		print $PLATFORMH "\n\n";
+
+		printGPIO($PLATFORMDTSI, $property, "qcom,platform-mode-gpio");
+	}
+	for my $property ($xmldoc->findnodes('/GCDB/PlatformEntry/BacklightGPIO'))
+	{
+		printStruct($PLATFORMH, \@gpioConfAttrs, $property,
+						"gpio_pin", "bklight_gpio");
+		print $PLATFORMH "\n\n";
+
+		printGPIO($PLATFORMDTSI, $property, "qcom,platform-bklight-gpio");
 	}
 	for my $property ($xmldoc->findnodes('/GCDB/PlatformEntry/PWMGPIO'))
 	{
@@ -726,9 +763,9 @@ sub printTargetPhysical
 	my $name = shift;
 	my $datatype = shift;
 	(my $element) = $property->textContent() =~ /"([^"]*)"/;
-	print $fh "static const " . $datatype . " " . $name . "[] = {\n";
+	print $fh "static const " . $datatype . " " . $name . "[] = {\n\t";
 	$element =~ s/\t//g;
-	$element =~ s/^/  /mg;
+	$element =~ s/^//mg;
 	print $fh $element . "\n};";
 }
 
@@ -746,7 +783,7 @@ sub printOnCommand
 	{
 		my @sep = split /,/, $line;
 		print $fh "static char " . $cmdname . $i . "[] = {\n";
-		$toPrint = "";
+		$toPrint = "\t";
 		if(scalar @sep > 7)
 		{
 			my $cmdlen = $sep[6];
@@ -757,9 +794,10 @@ sub printOnCommand
 			$cmdlen =~ s/\t//g;
 			if($cmdtype eq "0x29" || $cmdtype eq "0x39")
 			{
-				$toPrint .=  $cmdlen . ", 0x00, " . $cmdtype . ", 0xC0,\n";
+				$toPrint .=  $cmdlen . ", 0x00, " . $cmdtype . ", 0xC0,\n\t";
 			}
 			my $j = 0;
+
 			for(my $i = 7; $i < scalar @sep; $i++)
 			{
 				my $tmp = $sep[$i];
@@ -773,29 +811,42 @@ sub printOnCommand
 				if (($j % 4) == 0)
 				{
 					chop($toPrint);
-					$toPrint .= "\n";
+					$toPrint .= "\n\t";
 				}
 			}
 			if($cmdtype eq "0x29" || $cmdtype eq "0x39")
 			{
-				for( ; ($j % 4) ne 0 ; $j++)
+				if ( ($j % 4) ne 0)
 				{
-					$toPrint .= "0xFF, ";
+					for( ; ($j % 4) ne 0 ; $j++)
+					{
+						$toPrint .= "0xFF, ";
+					}
+					chop($toPrint);
+					$toPrint .= "\n";
+				}
+				else
+				{
+					chop($toPrint);
 				}
 			}
 			else
 			{
-				$toPrint .= $cmdtype . ", 0x80";
+				for( ; ($j % 2) ne 0 ; $j++)
+				{
+					$toPrint .= "0xFF, ";
+				}
+				$toPrint .= $cmdtype . ", 0x80\n";
 			}
-			$toPrint .= " };\n"
+			$toPrint .= "};\n"
 		}
 		$i++;
 
-		$toPrint .= "\n\n";
+		$toPrint .= "\n";
 		print $fh $toPrint ;
 	}
 
-	print $fh "\n\nstatic struct mipi_dsi_cmd " . $name . "[] = {\n";
+	print $fh "static struct mipi_dsi_cmd " . $name . "[] = {\n";
 	my $bool = 0;
 	$toPrint = "";
 	$i = 0;
@@ -803,6 +854,8 @@ sub printOnCommand
 	foreach my $line (@lines)
 	{
 		my @sep = split /,/, $line;
+
+		$toPrint .= "\t";
 
 		if(scalar @sep > 7)
 		{
@@ -833,20 +886,18 @@ sub printOnCommand
 			    }
 
 			    # calculate the correct size of command
-			    $hexsize = sprintf("{ 0x%x , ", $cmdsize + 4);
+			    $hexsize = sprintf("{0x%x, ", $cmdsize + 4);
 			}
 			else
 			{
-				$hexsize = sprintf("{ 0x%x , ", 4);
+				$hexsize = sprintf("{0x%x, ", 4);
 			}
-
 
 			$toPrint .=  $hexsize;
 
-			$toPrint .= $cmdname . $i . "},";
+			$toPrint .= $cmdname . $i . "," . $sep[4] . "},";
 
 			$i++;
-
 		}
 
 		$toPrint .= "\n";
@@ -854,7 +905,7 @@ sub printOnCommand
 	chop($toPrint);
 	chop($toPrint);
 	$toPrint .= "\n";
-	print $fh $toPrint . "};";
+	print $fh $toPrint . "};\n";
 
 
 	print $fh "\n#define " . uc($name) . " " . $i . "\n";
@@ -889,7 +940,7 @@ sub printResetSeqinH
 {
 	my $fh = shift;
 	my $property = shift;
-	print $fh "{ ";
+	print $fh "{";
 	for (my $i = 1; $i <=5; $i++)
 	{
 		for my $element ($property->findnodes("PinState" . $i))
@@ -897,7 +948,7 @@ sub printResetSeqinH
 			print $fh $element->textContent() . ", ";
 		}
 	}
-	print $fh "}, { ";
+	print $fh "}, {";
 	for (my $i = 1; $i <=5; $i++)
 	{
 		for my $element ($property->findnodes("PulseWidth" . $i))
@@ -1104,6 +1155,217 @@ sub printCommandState
 	}
 }
 
+sub printTrigger
+{
+	my $fh = shift;
+	my $attrs = shift;
+	my @attrs = @$attrs;
+	my $property = shift;
+	my $name = shift;
+	my $first = 1;
+	foreach(@attrs)
+	{
+		for my $element ($property->findnodes("./" . $_))
+		{
+			print $fh "\t\t" . $name . " = \"";
+			my $str = $element->textContent();
+			if ($str =~ /0x0.$/) {
+				$str =~ s/0x0//;
+			}
+			$str =~ s/0x//;
+			if($str eq "0")
+			{
+				print $fh "none";
+			}
+			elsif($str eq "2")
+			{
+				print $fh "trigger_te";
+			}
+			elsif($str eq "4")
+			{
+				print $fh "trigger_sw";
+			}
+			elsif($str eq "5")
+			{
+				print $fh "trigger_sw_seof";
+			}
+			elsif($str eq "6")
+			{
+				print $fh "trigger_sw_te";
+			}
+			print $fh "\";\n";
+		}
+	}
+}
+
+sub printPixelPacking
+{
+	my $fh = shift;
+	my $attrs = shift;
+	my @attrs = @$attrs;
+	my $property = shift;
+	my $name = shift;
+	my $first = 1;
+	foreach(@attrs)
+	{
+		for my $element ($property->findnodes("./" . $_))
+		{
+			my $str = $element->textContent();
+			if ($str =~ /0x0.$/) {
+				$str =~ s/0x0//;
+			}
+			$str =~ s/0x//;
+			print $fh "\t\t" . $name . " = \"";
+			if($str eq "1")
+			{
+				print $fh "loose";
+			}
+			elsif($str eq "0")
+			{
+				print $fh "tight";
+			}
+			print $fh "\";\n";
+		}
+	}
+}
+
+sub printTrafficMode
+{
+	my $fh = shift;
+	my $attrs = shift;
+	my @attrs = @$attrs;
+	my $property = shift;
+	my $name = shift;
+	my $first = 1;
+	foreach(@attrs)
+	{
+		for my $element ($property->findnodes("./" . $_))
+		{
+			print $fh "\t\t" . $name . " = \"";
+			my $str = $element->textContent();
+			if ($str =~ /0x0.$/) {
+				$str =~ s/0x0//;
+			}
+			$str =~ s/0x//;
+			if($str eq "0")
+			{
+				print $fh "non_burst_sync_pulse";
+			}
+			elsif($str eq "1")
+			{
+				print $fh "non_burst_sync_event";
+			}
+			elsif($str eq "2")
+			{
+				print $fh "burst_mode";
+			}
+			print $fh "\";\n";
+		}
+	}
+}
+
+sub printColorOrder
+{
+	my $fh = shift;
+	my $attrs = shift;
+	my @attrs = @$attrs;
+	my $property = shift;
+	my $name = shift;
+	my $first = 1;
+	foreach(@attrs)
+	{
+		for my $element ($property->findnodes("./" . $_))
+		{
+			print $fh "\t\t" . $name . " = \"";
+			my $str = $element->textContent();
+			if ($str =~ /0x0.$/) {
+				$str =~ s/0x0//;
+			}
+			$str =~ s/0x//;
+			if($str eq "0")
+			{
+				print $fh "rgb_swap_rgb";
+			}
+			elsif($str eq "1")
+			{
+				print $fh "rgb_swap_rbg";
+			}
+			elsif($str eq "2")
+			{
+				print $fh "rgb_swap_bgr";
+			}
+			elsif($str eq "3")
+			{
+				print $fh "rgb_swap_brg";
+			}
+			elsif($str eq "4")
+			{
+				print $fh "rgb_swap_grb";
+			}
+			elsif($str eq "5")
+			{
+				print $fh "rgb_swap_gbr";
+			}
+			print $fh "\";\n";
+		}
+	}
+}
+
+sub printLaneMap
+{
+	my $fh = shift;
+	my $attrs = shift;
+	my @attrs = @$attrs;
+	my $property = shift;
+	my $name = shift;
+	my $first = 1;
+	foreach(@attrs)
+	{
+		for my $element ($property->findnodes("./" . $_))
+		{
+			print $fh "\t\t" . $name . " = \"";
+			my $str = $element->textContent();
+			if ($str =~ /0x0.$/) {
+				$str =~ s/0x0//;
+			}
+			$str =~ s/0x//;
+			if($str eq "0")
+			{
+				print $fh "lane_map_0123";
+			}
+			elsif($str eq "1")
+			{
+				print $fh "lane_map_3012";
+			}
+			elsif($str eq "2")
+			{
+				print $fh "lane_map_2301";
+			}
+			elsif($str eq "3")
+			{
+				print $fh "lane_map_1230";
+			}
+			elsif($str eq "4")
+			{
+				print $fh "lane_map_0321";
+			}
+			elsif($str eq "5")
+			{
+				print $fh "lane_map_1032";
+			}
+			elsif($str eq "6")
+			{
+				print $fh "lane_map_2103";
+			}
+			elsif($str eq "7")
+			{
+				print $fh "lane_map_3210";
+			}
+			print $fh "\";\n";
+		}
+	}
+}
+
 sub printPanelType
 {
 	my $fh = shift;
@@ -1183,7 +1445,7 @@ sub printStruct
 	my $property = shift;
 	my $structName = shift;
 	my $name = shift;
-	print $fh "static struct " . $structName . " " . $name . " = {\n  ";
+	print $fh "static struct " . $structName . " " . $name . " = {\n\t";
 	my $flag = 0;
 	foreach (@attrs) {
 		my $node = "./" . $_;
@@ -1226,7 +1488,7 @@ sub printDataStruct
 	my $structName = shift;
 	my $name = shift;
 	my $nameinDTS = shift;
-	print $fh "static struct " . $structName . " " . $name . " = {\n  ";
+	print $fh "static struct " . $structName . " " . $name . " = {\n\t";
 	my $flag = 0;
 	my $firsttime = 1;
 	print $fh "\"" . $nameinDTS . "\", ";
@@ -1273,7 +1535,7 @@ sub printDataStruct
 		}
 		if ($firsttime == 1)
 		{
-			print $fh ",\n  ";
+			print $fh ",\n\t";
 			$flag = 0;
 		}
 		$firsttime = 0;
