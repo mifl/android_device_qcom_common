@@ -27,9 +27,4 @@
 #  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-add_lunch_combo msm7627a-userdebug
-add_lunch_combo msm8625-userdebug
-add_lunch_combo msm7630_surf-userdebug
-add_lunch_combo msm8660_surf-userdebug
 add_lunch_combo msm8960-userdebug
-add_lunch_combo msm8974-userdebug
