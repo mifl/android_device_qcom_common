@@ -74,6 +74,30 @@ BT += libattrib_static
 
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
 
+#CAN
+CAN := candump
+CAN += cansend
+CAN += bcmserver
+CAN += can-calc-bit-timing
+CAN += canbusload
+CAN += canfdtest
+CAN += cangen
+CAN += cangw
+CAN += canlogserver
+CAN += canplayer
+CAN += cansniffer
+CAN += isotpdump
+CAN += isotprecv
+CAN += isotpsend
+CAN += isotpserver
+CAN += isotpsniffer.c
+CAN += isotptun
+CAN += log2asc
+CAN += log2long
+CAN += slcan_attach
+CAN += slcand
+CAN += slcanpty
+
 #C2DColorConvert
 C2DCC := libc2dcolorconvert
 
@@ -472,6 +496,7 @@ PRODUCT_PACKAGES += $(AMPLOADER)
 PRODUCT_PACKAGES += $(APPS)
 PRODUCT_PACKAGES += $(BSON)
 PRODUCT_PACKAGES += $(BT)
+PRODUCT_PACKAGES += $(CAN)
 PRODUCT_PACKAGES += $(C2DCC)
 PRODUCT_PACKAGES += $(CONNECTIVITY)
 PRODUCT_PACKAGES += $(CHARGER)
