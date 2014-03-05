@@ -37,6 +37,8 @@ on init
     # See storage config details at http://source.android.com/tech/storage/
     mkdir /storage 0150 system sdcard_r
     mkdir /storage/sdcard1 0000 system system
+    mkdir /storage/sdcard  0000 system system
+    symlink /storage/sdcard /sdcard
 
     export BOOTCLASSPATH ${BOOTCLASSPATH}:/system/framework/qcom.fmradio.jar
 
