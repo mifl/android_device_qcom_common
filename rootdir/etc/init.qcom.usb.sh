@@ -35,6 +35,7 @@
 #
 
 insmod /system/lib/modules/ehci-hcd.ko
+insmod /system/lib/modules/usb-storage.ko
 
 serialno=`getprop persist.usb.serialno`
 case "$serialno" in
