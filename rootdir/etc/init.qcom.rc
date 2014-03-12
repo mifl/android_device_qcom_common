@@ -291,6 +291,7 @@ service ril-qmi /system/bin/sh /init.qcom.ril.sh
     oneshot
 
 on property:vold.decrypt=trigger_restart_framework
+    start ril-qmi
     start qcom-c_main-sh
     start config_bluetooth
 
