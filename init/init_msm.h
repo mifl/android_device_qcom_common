@@ -1,5 +1,5 @@
 /*
-   Copyright (c) 2013, The Linux Foundation. All rights reserved.
+   Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
 
    Redistribution and use in source and binary forms, with or without
    modification, are permitted provided that the following conditions are
@@ -35,10 +35,13 @@
 #define PROP_HWROTATE    "ro.sf.hwrotation"
 #define PROP_LCDDENSITY  "ro.sf.lcd_density"
 #define PROP_QEMU_NAVKEY "qemu.hw.mainkeys"
+#define PROP_BOOT_BASEBAND "ro.boot.baseband"
+#define PROP_BLUETOOTH_SOC "qcom.bluetooth.soc"
 
 #define UNUSED(a)       ((void)(a))
 #define ISMATCH(a,b)    (!strncmp(a,b,PROP_VALUE_MAX))
 
 void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *board_type);
+int read_file2(const char *fname, char *data, int max_size);
 
 #endif /* __INIT_MSM__H__ */
