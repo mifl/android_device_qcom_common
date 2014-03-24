@@ -73,7 +73,7 @@
 /dev/msm_vidc_dec_sec     0660   system     audio
 /dev/msm_vidc_enc         0660   system     audio
 /dev/msm_rotator          0664   system     system
-/dev/hw_random            0660   system     system
+/dev/hw_random            0660    root       root
 
 #permissions for audio
 /dev/msm_qcelp            0660   system     audio
@@ -97,3 +97,8 @@
 /dev/tty_sdio_00          0660   system     system
 /dev/ttyGS0               0660   system     system
 /dev/i2c-5                0660   media       media
+
+# UIO devices
+/dev/uio0                 0660   system     system
+/dev/uio1                 0660   system     system
+/dev/uio2                 0660   system     system
