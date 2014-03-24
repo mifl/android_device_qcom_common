@@ -84,10 +84,10 @@ init_DMM()
         block_size_bytes=0x`cat $mem/block_size_bytes`
         block=$((#${movable_start_bytes}/${block_size_bytes}))
 
-        chown system.system $mem/memory$block/state
-        chown system.system $mem/probe
-        chown system.system $mem/active
-        chown system.system $mem/remove
+        chown -h system.system $mem/memory$block/state
+        chown -h system.system $mem/probe
+        chown -h system.system $mem/active
+        chown -h system.system $mem/remove
 
         case "$target" in
         "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
@@ -169,6 +169,25 @@ case "$target" in
                 ;;
         esac
         ;;
+
+    "msm8610" | "msm8974" | "msm8226")
+	case "$serial" in
+	     "0")
+		echo 0 > /sys/devices/f991f000.serial/console
+		;;
+	     "1")
+		echo 1 > /sys/devices/f991f000.serial/console
+		start console
+		;;
+            *)
+		case "$dserial" in
+                     "1")
+			start console
+			;;
+		esac
+		;;
+	esac
+	;;
     *)
         case "$dserial" in
             "1")
@@ -186,23 +205,8 @@ fake_batt_capacity=`getprop persist.bms.fake_batt_capacity`
 case "$fake_batt_capacity" in
     "") ;; #Do nothing here
     * )
-    case $target in
-        "msm8960")
-        echo "$fake_batt_capacity" > /sys/module/pm8921_bms/parameters/bms_fake_battery
-        ;;
-
-	"msm8974")
-        echo "$fake_batt_capacity" > /sys/module/qpnp_bms/parameters/bms_fake_battery
-        ;;
-
-	"msm8226")
-        echo "$fake_batt_capacity" > /sys/module/qpnp_bms/parameters/bms_fake_battery
-        ;;
-
-	"msm8610")
-        echo "$fake_batt_capacity" > /sys/module/qpnp_bms/parameters/bms_fake_battery
-        ;;
-    esac
+    echo "$fake_batt_capacity" > /sys/class/power_supply/battery/capacity
+    ;;
 esac
 
 case "$target" in
@@ -210,9 +214,9 @@ case "$target" in
         insmod /system/lib/modules/ss_mfcinit.ko
         insmod /system/lib/modules/ss_vencoder.ko
         insmod /system/lib/modules/ss_vdecoder.ko
-        chmod 0666 /dev/ss_mfc_reg
-        chmod 0666 /dev/ss_vdec
-        chmod 0666 /dev/ss_venc
+        chmod -h 0666 /dev/ss_mfc_reg
+        chmod -h 0666 /dev/ss_vdec
+        chmod -h 0666 /dev/ss_venc
 
         init_DMM
         ;;
