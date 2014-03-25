@@ -23,6 +23,7 @@ MSM7K_BOARD_PLATFORMS += msm7k
 
 QSD8K_BOARD_PLATFORMS := qsd8k
 
+TARGET_USE_VENDOR_CAMERA_EXT := true
 
 # Below projects/packages with LOCAL_MODULEs will be used by
 # PRODUCT_PACKAGES to build LOCAL_MODULEs that are tagged with
@@ -80,6 +81,7 @@ AUDIO_HARDWARE += audio.primary.msm7630_fusion
 #AUDIO_HARDWARE += audio.primary.default
 AUDIO_HARDWARE += audio.a2dp.default
 AUDIO_HARDWARE += audio.usb.default
+AUDIO_HARDWARE += audio.r_submix.default
 #
 AUDIO_POLICY := audio_policy.mpq8064
 AUDIO_POLICY += audio_policy.apq8084
@@ -95,6 +97,13 @@ AUDIO_POLICY += audio_policy.msm7630_fusion
 #AUDIO_POLICY += audio_policy.default
 AUDIO_POLICY += audio_policy.conf
 AUDIO_POLICY += audio_policy_8064.conf
+
+#tinyalsa test apps
+TINY_ALSA_TEST_APPS := tinyplay
+TINY_ALSA_TEST_APPS += tinycap
+TINY_ALSA_TEST_APPS += tinymix
+TINY_ALSA_TEST_APPS += tinypcminfo
+TINY_ALSA_TEST_APPS += cplay
 
 #AMPLOADER
 AMPLOADER := amploader
@@ -198,7 +207,7 @@ INIT += init.qcom.factory.sh
 INIT += init.qcom.sdio.sh
 INIT += init.qcom.sh
 INIT += init.qcom.class_core.sh
-INIT += init.qcom.class_main.sh
+INIT += init.class_main.sh
 INIT += init.qcom.wifi.sh
 INIT += vold.fstab
 INIT += init.qcom.ril.path.sh
@@ -209,8 +218,10 @@ INIT += usf_post_boot.sh
 INIT += init.qcom.efs.sync.sh
 INIT += ueventd.qcom.rc
 INIT += init.ath3k.bt.sh
+INIT += qca6234-service.sh
 INIT += init.qcom.audio.sh
 INIT += init.qcom.ssr.sh
+INIT += enable_swap.sh
 INIT += init.mdm.sh
 
 #IPROUTE2
@@ -503,6 +514,7 @@ CHARGER += charger_res_images
 
 #VT_JNI
 VT_JNI := libvt_jni
+VT_JNI += libimscamera_jni
 
 #CRDA
 CRDA := crda
@@ -521,6 +533,7 @@ PRODUCT_PACKAGES := \
     Bluetooth \
     BluetoothExt \
     BTTestApp \
+    HiddTestApp \
     Calculator \
     Calendar \
     Camera \
@@ -545,7 +558,6 @@ PRODUCT_PACKAGES := \
     SyncProvider \
     IM \
     VoiceDialer \
-    FM \
     FM2 \
     FMRecord \
     VideoEditor
@@ -555,6 +567,7 @@ PRODUCT_PACKAGES += $(ALSA_UCM)
 PRODUCT_PACKAGES += $(ANGLE)
 PRODUCT_PACKAGES += $(AUDIO_HARDWARE)
 PRODUCT_PACKAGES += $(AUDIO_POLICY)
+PRODUCT_PACKAGES += $(TINY_ALSA_TEST_APPS)
 PRODUCT_PACKAGES += $(AMPLOADER)
 PRODUCT_PACKAGES += $(APPS)
 PRODUCT_PACKAGES += $(BRCTL)
