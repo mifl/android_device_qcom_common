@@ -41,7 +41,10 @@ on init
     mkdir /storage/emulated/legacy 0555 root root
     mkdir /mnt/media_rw/sdcard1 0700 media_rw media_rw
     mkdir /mnt/media_rw/usbotg 0700 media_rw media_rw
+    mkdir /mnt/media_rw/uicc0 0700 media_rw media_rw
+    mkdir /mnt/media_rw/uicc1 0700 media_rw media_rw
     mkdir /storage/sdcard1 0700 root root
+    mkdir /storage/uicc0 0700 root root
     mkdir /storage/usbotg 0700 root root
 
     export EXTERNAL_STORAGE /storage/emulated/legacy
@@ -289,6 +292,12 @@ on property:bluetooth.dun.status=stopped
 on property:ro.bluetooth.ftm_enabled=true
     start ftmd
 
+on property:bluetooth.startbtsnoop=true
+    start btsnoop
+
+on property:bluetooth.startbtsnoop=false
+    stop btsnoop
+
 service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
     class core
     user root
@@ -381,6 +390,13 @@ service bt-sap /system/bin/sapd 15
     class late_start
     disabled
     oneshot
+
+service btsnoop /system/bin/btsnoop
+   user bluetooth
+   group bluetooth net_bt_admin sdcard_rw sdcard_r
+   class late_start
+   disabled
+   oneshot
 
 service ftmd /system/bin/logwrapper /system/bin/ftmdaemon
     class late_start
@@ -679,6 +695,9 @@ service sdcard /system/bin/sdcard /data/media /mnt/shell/emulated 1023 1023
     class late_start
 
 service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1 /storage/sdcard1
+    class late_start
+
+service fuse_uicc0 /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/uicc0 /storage/uicc0
     class late_start
 
 service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/usbotg /storage/usbotg
