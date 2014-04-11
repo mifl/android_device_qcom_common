@@ -138,7 +138,7 @@ case "$usb_config" in
               ;;
               *)
 		case "$target" in
-			"msm8916")
+			"msm8916" | "msm8916_32")
 				setprop persist.sys.usb.config diag,serial_smd,rmnet_bam,adb
 			;;
 			*)
@@ -224,7 +224,7 @@ esac
 cdromname="/system/etc/cdrom_install.iso"
 platformver=`cat /sys/devices/soc0/hw_platform`
 case "$target" in
-        "msm8226" | "msm8610" | "msm8916" | "msm8916_32")
+	"msm8226" | "msm8610" | "msm8916" | "msm8916_32")
 		case $platformver in
 			"QRD")
 				echo "mounting usbcdrom lun"
