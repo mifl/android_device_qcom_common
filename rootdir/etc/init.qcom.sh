@@ -56,7 +56,6 @@ start_battery_monitor()
 }
 
 baseband=`getprop ro.baseband`
-izat_premium_enablement=`getprop ro.qc.sdk.izat.premium_enabled`
 
 #
 # Suppress default route installation during RA for IPV6; user space will take
@@ -68,20 +67,9 @@ do
 done
 echo 1 > /proc/sys/net/ipv6/conf/default/accept_ra_defrtr
 
-#
-# Start gpsone_daemon for SVLTE Type I & II devices
-#
-case "$target" in
-        "msm7630_fusion")
-        start gpsone_daemon
-esac
 case "$baseband" in
         "svlte2a")
-        start gpsone_daemon
         start bridgemgrd
-        ;;
-        "sglte" | "sglte2")
-        start gpsone_daemon
         ;;
 esac
 case "$target" in
@@ -91,16 +79,6 @@ esac
 case "$target" in
         "msm7630_surf" | "msm8660" | "msm8960" | "msm8974")
         start quipc_main
-esac
-
-case "$target" in
-        "msm8960" | "msm8974")
-        start location_mq
-        start lowi-server
-        if [ "$izat_premium_enablement" -eq 1 ]; then
-            start xtwifi_inet
-            start xtwifi_client
-        fi
 esac
 
 start_sensors
