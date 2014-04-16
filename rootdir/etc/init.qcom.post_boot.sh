@@ -373,10 +373,12 @@ case "$target" in
         echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
         echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
         echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled
-        echo 1 > /sys/devices/system/cpu/cpu1/online
-        echo 1 > /sys/devices/system/cpu/cpu2/online
-        echo 1 > /sys/devices/system/cpu/cpu3/online
+        #Put all other cores offline
+        echo 0 > /sys/devices/system/cpu/cpu1/online
+        echo 0 > /sys/devices/system/cpu/cpu2/online
+        echo 0 > /sys/devices/system/cpu/cpu3/online
         echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        #below ondemand parameters can be tuned
         echo 50000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
         echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
         echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
@@ -616,8 +618,9 @@ case "$target" in
 esac
 
 # Post-setup services
+#Add msm8226 target to below line to start mpdecision
 case "$target" in
-    "msm8660" | "msm8960" | "msm8226" | "msm8610" | "mpq8092" | "msm8916")
+    "msm8660" | "msm8960"  | "msm8610" | "mpq8092" | "msm8916")
         start mpdecision
     ;;
     "msm8974")
