@@ -140,10 +140,16 @@ config_bt ()
   #Enable Bluetooth Profiles specific to target Dynamically
   case $target in
     "msm8960")
-       if [ "$btsoc" != "ath3k" ] && [ "$soc_hwid" != "130" ]
+       if [ "$btsoc" != "ath3k" ] && [ "$btsoc" != "rome" ] && [ "$soc_hwid" != "130" ]
        then
+           logi "Setting transport property as SMD"
            setprop ro.bluetooth.hfp.ver 1.6
            setprop ro.qualcomm.bt.hci_transport smd
+       elif [ "$btsoc" != "rome" ]
+       then
+           logi "BT-SOC type is ROME"
+       else
+           logi "Undefined BT-SOC Type!"
        fi
        ;;
     "msm8974")
