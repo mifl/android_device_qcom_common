@@ -391,6 +391,10 @@ case "$target" in
         echo 80 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
         echo 787200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         echo 787200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+        #Below entries are to set the GPU frequency and DCVS governor
+        echo 200000000 > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
+        echo 200000000 > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
+        echo performance > /sys/class/kgsl/kgsl-3d0/devfreq/governor
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         chown -h root.system /sys/devices/system/cpu/cpu1/online
