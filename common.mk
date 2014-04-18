@@ -25,6 +25,8 @@ ALSA_UCM += snd_soc_msm_2x_Fusion3_auxpcm
 ALSA_UCM += snd_soc_msm_Sitar_auxpcm
 ALSA_UCM += snd_soc_msm_Taiko
 
+NOTIFY_WAV_FILE := notification.wav
+
 #ANGLE
 ANGLE := libangle
 
@@ -450,6 +452,7 @@ PRODUCT_PACKAGES := \
     VoiceDialer \
     VideoEditor
 
+PRODUCT_PACKAGES += $(NOTIFY_WAV_FILE)
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
 PRODUCT_PACKAGES += $(ANGLE)
