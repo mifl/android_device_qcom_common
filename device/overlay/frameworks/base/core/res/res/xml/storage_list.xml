@@ -54,4 +54,10 @@
             android:emulated="false"
             android:removable="true"
             android:allowMassStorage="false" />
+ <storage android:mountPoint="/storage/sata"
+            android:storageDescription="@string/storage_sata"
+            android:primary="false"
+            android:emulated="false"
+            android:removable="true"
+            android:allowMassStorage="false" />
 </StorageList>
