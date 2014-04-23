@@ -170,7 +170,7 @@ esac
 #
 rmnetmux=`getprop persist.rmnet.mux`
 case "$baseband" in
-    "mdm" | "dsda" | "sglte2")
+    "mdm" | "dsda" | "sglte2" | "apq")
         case "$rmnetmux" in
             "enabled")
                     echo 1 > /sys/module/rmnet_usb/parameters/mux_enabled
