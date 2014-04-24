@@ -41,8 +41,9 @@
 
 void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *board_type)
 {
-    char platform[PROP_VALUE_MAX], *virtual_size = NULL;
+    char platform[PROP_VALUE_MAX];
     int rc;
+    unsigned long virtual_size = 0;
     char str[BUF_SIZE];
 
     UNUSED(msm_id);
@@ -55,15 +56,15 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
 
     rc = read_file2(VIRTUAL_SIZE, str, sizeof(str));
     if (rc) {
-        virtual_size = strtok(str,",");
+        virtual_size = strtoul(str, NULL, 0);
     }
 
-    if(!strncmp(virtual_size,"1080",strlen(virtual_size))) {
+    if(virtual_size == 1080) {
         property_set(PROP_LCDDENSITY, "480");
-    } else if (!strncmp(virtual_size,"720",strlen(virtual_size))) {
+    } else if (virtual_size,"720") {
         // For 720x1280 resolution
         property_set(PROP_LCDDENSITY, "320");
-    } else if (!strncmp(virtual_size,"480",strlen(virtual_size))) {
+    } else if (virtual_size == 480) {
         // For 480x854 resolution QRD.
         property_set(PROP_LCDDENSITY, "240");
     } else
