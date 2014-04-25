@@ -98,7 +98,7 @@ case "$usb_config" in
         case $target in
             "msm8960" | "msm8974")
                 case "$baseband" in
-                    "mdm")
+                    "mdm" | "apq")
                          setprop persist.sys.usb.config diag,diag_mdm,serial_hsic,serial_tty,rmnet_hsic,mass_storage,adb
                     ;;
                     "sglte")
