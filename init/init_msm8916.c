@@ -61,7 +61,7 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
 
     if(virtual_size == 1080) {
         property_set(PROP_LCDDENSITY, "480");
-    } else if (virtual_size,"720") {
+    } else if (virtual_size == 720) {
         // For 720x1280 resolution
         property_set(PROP_LCDDENSITY, "320");
     } else if (virtual_size == 480) {
