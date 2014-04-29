@@ -1015,4 +1015,5 @@ on property:sys.usb.config=charging,adb
     write /sys/class/android_usb/android0/idProduct 90dc
     write /sys/class/android_usb/android0/functions qdss,adb
     write /sys/class/android_usb/android0/enable 1
+    start adbd
     setprop sys.usb.state ${sys.usb.config}
