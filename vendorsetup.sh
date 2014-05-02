@@ -36,4 +36,4 @@ add_lunch_combo msm_bronze-userdebug
 add_lunch_combo msm8916_32-userdebug
 add_lunch_combo msm8916_32_512-userdebug
 add_lunch_combo msm8916_32_k64-userdebug
-add_lunch_combo plutonium-userdebug
+add_lunch_combo msm8994-userdebug
