@@ -204,7 +204,6 @@ INIT += init.qcom.rc
 INIT += init.qcom.factory.sh
 INIT += init.qcom.sdio.sh
 INIT += init.qcom.sh
-INIT += run_trace.sh
 INIT += init.qcom.class_core.sh
 INIT += init.class_main.sh
 INIT += init.qcom.wifi.sh
