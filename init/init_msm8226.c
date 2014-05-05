@@ -44,6 +44,7 @@ enum {
     PLATFORM_SUBTYPE_720p = 0x0,
     PLATFORM_SUBTYPE_1080p = 0x2,
     PLATFORM_SUBTYPE_1080p_EXT_BUCK = 0x3,
+    PLATFORM_SUBTYPE_LW_QVGA = 0x4,
     PLATFORM_SUBTYPE_INVALID,
 };
 
@@ -72,6 +73,8 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
 
     if ((subtype == PLATFORM_SUBTYPE_1080p) || (subtype == PLATFORM_SUBTYPE_1080p_EXT_BUCK))
         property_set(PROP_LCDDENSITY, "480");
+    else if (subtype == PLATFORM_SUBTYPE_LW_QVGA)
+        property_set(PROP_LCDDENSITY, "120");
     else
         property_set(PROP_LCDDENSITY, "320");
 }
