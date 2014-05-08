@@ -52,10 +52,12 @@ case "$btsoc" in
         rm /etc/snd_soc_msm/snd_soc_msm_2x 2>/dev/null
         rm /etc/snd_soc_msm/snd_soc_msm_2x_Fusion3 2>/dev/null
         rm /etc/snd_soc_msm/snd_soc_msm_Sitar 2>/dev/null
+        rm /etc/snd_soc_msm/snd_soc_msm_auto 2>/dev/null
         ln -s /etc/snd_soc_msm/snd_soc_msm_auxpcm             /etc/snd_soc_msm/snd_soc_msm 2>/dev/null
         ln -s /etc/snd_soc_msm/snd_soc_msm_2x_auxpcm          /etc/snd_soc_msm/snd_soc_msm_2x 2>/dev/null
         ln -s /etc/snd_soc_msm/snd_soc_msm_2x_Fusion3_auxpcm  /etc/snd_soc_msm/snd_soc_msm_2x_Fusion3 2>/dev/null
         ln -s /etc/snd_soc_msm/snd_soc_msm_Sitar_auxpcm       /etc/snd_soc_msm/snd_soc_msm_Sitar 2>/dev/null
+        ln -s /etc/snd_soc_msm/snd_soc_msm_auto_auxpcm       /etc/snd_soc_msm/snd_soc_msm_auto 2>/dev/null
         ;;
     *)
         echo "Not setting soft links, remove Auxpcm UCM files"
@@ -63,6 +65,7 @@ case "$btsoc" in
         rm /etc/snd_soc_msm/snd_soc_msm_2x_auxpcm 2>/dev/null
         rm /etc/snd_soc_msm/snd_soc_msm_2x_Fusion3_auxpcm 2>/dev/null
         rm /etc/snd_soc_msm/snd_soc_msm_Sitar_auxpcm 2>/dev/null
+        rm /etc/snd_soc_msm/snd_soc_msm_auto_auxpcm 2>/dev/null
         ;;
 esac
 setprop qcom.audio.init complete
