@@ -12,7 +12,7 @@ QCOM_BOARD_PLATFORMS += plutonium
 
 QSD8K_BOARD_PLATFORMS := qsd8k
 
-TARGET_USE_VENDOR_CAMERA_EXT := true
+TARGET_USE_VENDOR_CAMERA_EXT := false
 
 # Below projects/packages with LOCAL_MODULEs will be used by
 # PRODUCT_PACKAGES to build LOCAL_MODULEs that are tagged with
@@ -536,67 +536,24 @@ CRDA += init.crda.sh
 WLAN := prima_wlan.ko
 WLAN += pronto_wlan.ko
 
-PRODUCT_PACKAGES := \
-    AccountAndSyncSettings \
-    DeskClock \
-    AlarmProvider \
-    Bluetooth \
-    BluetoothExt \
-    BTTestApp \
-    HiddTestApp \
-    Calculator \
-    Calendar \
-    Camera \
-    CellBroadcastReceiver \
-    CertInstaller \
-    DrmProvider \
-    Email \
-    Gallery2 \
-    LatinIME \
-    Launcher2 \
-    Mms \
-    Music \
-    Phone \
-    Provision \
-    Protips \
-    QuickSearchBox \
-    Settings \
-    Sync \
-    SystemUI \
-    Updater \
-    CalendarProvider \
-    SyncProvider \
-    IM \
-    VoiceDialer \
-    FM2 \
-    FMRecord \
-    VideoEditor
-
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
 PRODUCT_PACKAGES += $(ANGLE)
 PRODUCT_PACKAGES += $(AUDIO_HARDWARE)
 PRODUCT_PACKAGES += $(AUDIO_POLICY)
 PRODUCT_PACKAGES += $(TINY_ALSA_TEST_APPS)
-PRODUCT_PACKAGES += $(AMPLOADER)
-PRODUCT_PACKAGES += $(APPS)
+#PRODUCT_PACKAGES += $(AMPLOADER)
+#PRODUCT_PACKAGES += $(APPS)
 PRODUCT_PACKAGES += $(BRCTL)
 PRODUCT_PACKAGES += $(BSON)
 PRODUCT_PACKAGES += $(BT)
 PRODUCT_PACKAGES += $(C2DCC)
 PRODUCT_PACKAGES += $(CIMAX)
-PRODUCT_PACKAGES += $(CONNECTIVITY)
 PRODUCT_PACKAGES += $(CHARGER)
 PRODUCT_PACKAGES += $(CURL)
-PRODUCT_PACKAGES += $(DASH)
-PRODUCT_PACKAGES += $(DATA_OS)
 PRODUCT_PACKAGES += $(E2FSPROGS)
 PRODUCT_PACKAGES += $(EBTABLES)
 PRODUCT_PACKAGES += $(FASTPOWERON)
-PRODUCT_PACKAGES += $(FM)
-PRODUCT_PACKAGES += $(GPS_HARDWARE)
-PRODUCT_PACKAGES += $(HDMID)
-PRODUCT_PACKAGES += $(HOSTAPD)
 PRODUCT_PACKAGES += $(I420CC)
 PRODUCT_PACKAGES += $(INIT)
 PRODUCT_PACKAGES += $(IPROUTE2)
@@ -606,8 +563,6 @@ PRODUCT_PACKAGES += $(KEYPAD)
 PRODUCT_PACKAGES += $(KS)
 PRODUCT_PACKAGES += $(LIB_NL)
 PRODUCT_PACKAGES += $(LIB_XML2)
-PRODUCT_PACKAGES += $(LIBCAMERA)
-PRODUCT_PACKAGES += $(LIBGESTURES)
 PRODUCT_PACKAGES += $(LIBCOPYBIT)
 PRODUCT_PACKAGES += $(LIBGRALLOC)
 PRODUCT_PACKAGES += $(LIBMEMTRACK)
@@ -619,31 +574,22 @@ PRODUCT_PACKAGES += $(LIBOVERLAY)
 PRODUCT_PACKAGES += $(LIBHWCOMPOSER)
 PRODUCT_PACKAGES += $(LIBGENLOCK)
 PRODUCT_PACKAGES += $(LIBPERFLOCK)
-PRODUCT_PACKAGES += $(LIBQCOMUI)
-PRODUCT_PACKAGES += $(LIBQDUTILS)
-PRODUCT_PACKAGES += $(LIBQDMETADATA)
 PRODUCT_PACKAGES += $(LIBPOWER)
-PRODUCT_PACKAGES += $(LOC_API)
 PRODUCT_PACKAGES += $(MEDIA_PROFILES)
 PRODUCT_PACKAGES += $(MM_AUDIO)
 PRODUCT_PACKAGES += $(MM_CORE)
 PRODUCT_PACKAGES += $(MM_VIDEO)
-PRODUCT_PACKAGES += $(OPENCORE)
 PRODUCT_PACKAGES += $(PPP)
-PRODUCT_PACKAGES += $(PVOMX)
 PRODUCT_PACKAGES += $(RF4CE)
 PRODUCT_PACKAGES += $(SENSORS_HARDWARE)
-PRODUCT_PACKAGES += $(SOFTAP)
 PRODUCT_PACKAGES += $(STK)
 PRODUCT_PACKAGES += $(STMLOG)
 PRODUCT_PACKAGES += $(TSLIB_EXTERNAL)
 PRODUCT_PACKAGES += $(QRGND)
 PRODUCT_PACKAGES += $(UPDATER)
-PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
 PRODUCT_PACKAGES += $(CRDA)
-PRODUCT_PACKAGES += $(WLAN)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
@@ -686,16 +632,7 @@ PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
-    packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
-
-# Bluetooth configuration files
-PRODUCT_COPY_FILES += \
-    system/bluetooth/data/audio.conf:system/etc/bluetooth/audio.conf \
-    system/bluetooth/data/auto_pairing.conf:system/etc/bluetooth/auto_pairing.conf \
-    system/bluetooth/data/blacklist.conf:system/etc/bluetooth/blacklist.conf \
-    system/bluetooth/data/input.conf:system/etc/bluetooth/input.conf \
-    system/bluetooth/data/network.conf:system/etc/bluetooth/network.conf \
 
 ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ),true)
 PRODUCT_COPY_FILES += \
@@ -727,7 +664,6 @@ PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
 # Since we want use QC specific files, we should inherit
 # device-vendor.mk first to make sure QC specific files gets installed.
 $(call inherit-product-if-exists, $(QCPATH)/common/config/device-vendor.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 PRODUCT_BRAND := qcom
 PRODUCT_LOCALES := en_US es_US de_DE zh_CN
