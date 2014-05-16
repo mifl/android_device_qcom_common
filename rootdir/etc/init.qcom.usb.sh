@@ -145,6 +145,10 @@ case "$target" in
 	if [ "$baseband" == "apq" ]; then
 		echo "msm_hsic_host" > /sys/bus/platform/drivers/xhci_msm_hsic/unbind
 	fi
+
+	if [ "$esoc_link" == "PCIe" ] || [ "$esoc_link" == "HSIC+PCIe" ]; then
+	      echo 5 > /sys/module/g_android/parameters/tx_qmult
+	fi
     ;;
     "msm8226")
          if [ -e /sys/bus/platform/drivers/msm_hsic_host ]; then
