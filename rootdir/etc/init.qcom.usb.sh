@@ -148,6 +148,7 @@ case "$target" in
 
 	if [ "$esoc_link" == "PCIe" ] || [ "$esoc_link" == "HSIC+PCIe" ]; then
 	      echo 5 > /sys/module/g_android/parameters/tx_qmult
+	      echo 1036800 > /sys/module/g_android/parameters/min_cpu_freq
 	fi
     ;;
     "msm8226")
