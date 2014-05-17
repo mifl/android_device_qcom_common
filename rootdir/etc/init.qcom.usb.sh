@@ -118,7 +118,7 @@ case "$usb_config" in
               ;;
               *)
 		case "$target" in
-			"msm8916" | "msm8916_32")
+			"msm8916_32")
 				setprop persist.sys.usb.config diag,serial_smd,rmnet_bam,adb
 			;;
 			*)
@@ -144,6 +144,11 @@ case "$target" in
     "apq8084")
 	if [ "$baseband" == "apq" ]; then
 		echo "msm_hsic_host" > /sys/bus/platform/drivers/xhci_msm_hsic/unbind
+	fi
+
+	if [ "$esoc_link" == "PCIe" ] || [ "$esoc_link" == "HSIC+PCIe" ]; then
+	      echo 5 > /sys/module/g_android/parameters/tx_qmult
+	      echo 1036800 > /sys/module/g_android/parameters/min_cpu_freq
 	fi
     ;;
     "msm8226")
@@ -204,7 +209,7 @@ esac
 cdromname="/system/etc/cdrom_install.iso"
 platformver=`cat /sys/devices/soc0/hw_platform`
 case "$target" in
-	"msm8226" | "msm8610" | "msm8916" | "msm8916_32")
+	"msm8226" | "msm8610" | "msm8916_32")
 		case $platformver in
 			"QRD")
 				echo "mounting usbcdrom lun"

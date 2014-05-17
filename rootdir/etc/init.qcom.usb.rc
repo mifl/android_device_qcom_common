@@ -524,6 +524,8 @@ on property:sys.usb.config=diag,diag_mdm,serial_tty,rmnet_qti_ether,mass_storage
     write /sys/class/android_usb/android0/idProduct 9035
     write /sys/class/android_usb/android0/f_diag/clients diag,diag_mdm
     write /sys/class/android_usb/android0/f_serial/transports tty
+    write /sys/module/g_android/parameters/min_cpu_freq 1036800
+    write /sys/module/g_android/parameters/tx_qmult 5
     write /sys/class/android_usb/android0/f_rmnet/transports qti,ether
     write /sys/class/android_usb/android0/functions diag,adb,serial,rmnet,mass_storage
     write /sys/class/android_usb/android0/enable 1
@@ -538,6 +540,8 @@ on property:sys.usb.config=diag,diag_mdm,serial_hsic,rmnet_hsic,mass_storage
     write /sys/class/android_usb/android0/idProduct 9036
     write /sys/class/android_usb/android0/f_diag/clients diag,diag_mdm
     write /sys/class/android_usb/android0/f_serial/transports tty
+    write /sys/module/g_android/parameters/min_cpu_freq 1036800
+    write /sys/module/g_android/parameters/tx_qmult 5
     write /sys/class/android_usb/android0/f_rmnet/transports qti,ether
     write /sys/class/android_usb/android0/functions diag,serial,rmnet,mass_storage
     write /sys/class/android_usb/android0/enable 1
@@ -552,6 +556,8 @@ on property:sys.usb.config=diag,diag_mdm,serial_hsic,rmnet_qti_ether,mass_storag
     write /sys/class/android_usb/android0/f_diag/clients diag,diag_mdm
     write /sys/class/android_usb/android0/f_serial/transports hsic
     write /sys/class/android_usb/android0/f_serial/transport_names serial_hsic
+    write /sys/module/g_android/parameters/min_cpu_freq 1036800
+    write /sys/module/g_android/parameters/tx_qmult 5
     write /sys/class/android_usb/android0/f_rmnet/transports qti,ether
     write /sys/class/android_usb/android0/functions diag,adb,serial,rmnet,mass_storage
     write /sys/class/android_usb/android0/enable 1
@@ -567,6 +573,8 @@ on property:sys.usb.config=diag,diag_mdm,serial_hsic,rmnet_hsic,mass_storage
     write /sys/class/android_usb/android0/f_diag/clients diag,diag_mdm
     write /sys/class/android_usb/android0/f_serial/transports hsic
     write /sys/class/android_usb/android0/f_serial/transport_names serial_hsic
+    write /sys/module/g_android/parameters/min_cpu_freq 1036800
+    write /sys/module/g_android/parameters/tx_qmult 5
     write /sys/class/android_usb/android0/f_rmnet/transports qti,ether
     write /sys/class/android_usb/android0/functions diag,serial,rmnet,mass_storage
     write /sys/class/android_usb/android0/enable 1
