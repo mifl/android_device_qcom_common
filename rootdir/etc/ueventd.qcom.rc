@@ -41,6 +41,7 @@
 /dev/smd5                 0660   system     system
 /dev/smd6                 0660   system     system
 /dev/smd7                 0660   bluetooth  bluetooth
+/dev/ccid_bridge          0660   system     system
 
 #permissions for CSVT
 /dev/smd11                0660   radio      radio
@@ -133,7 +134,7 @@
 /dev/msm_amrnb_in         0640   system     audio
 /dev/msm_a2dp_in          0660   system     audio
 /dev/msm_ac3              0660   system     audio
-/dev/msm_acdb             0660   system     audio
+/dev/msm_audio_cal        0660   system     audio
 /dev/msm_cad              0660   system     audio
 /dev/msm_fm               0660   system     audio
 /dev/msm_mvs              0660   system     audio
