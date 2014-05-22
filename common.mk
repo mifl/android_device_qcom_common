@@ -750,4 +750,4 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     persist.sys.strict_op_enable=false
 
 PRODUCT_COPY_FILES += \
-    device/qcom/common/whitelist_appops.xml:system/etc/whitelist_appops.xml
+    device/qcom/common/checklist_appops.xml:system/etc/checklist_appops.xml

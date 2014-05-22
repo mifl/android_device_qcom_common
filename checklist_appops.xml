@@ -28,32 +28,10 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 -->
-<whitelist-pkgs>
-<pkg name="android"/>
-<pkg name="com.android.backupconfirm"/>
-<pkg name="com.android.certinstaller"/>
-<pkg name="com.android.defcontainer"/>
-<pkg name="com.android.dreams.basic"/>
-<pkg name="com.android.facelock"/>
-<pkg name="com.android.inputmethod.latin"/>
-<pkg name="com.android.inputmethod.pinyin"/>
-<pkg name="com.android.launcher"/>
-<pkg name="com.android.magicsmoke"/>
-<pkg name="com.android.packageinstaller"/>
-<pkg name="com.android.providers.applications"/>
-<pkg name="com.android.providers.calendar"/>
-<pkg name="com.android.providers.contacts"/>
-<pkg name="com.android.providers.downloads"/>
-<pkg name="com.android.providers.downloads.ui"/>
-<pkg name="com.android.providers.drm"/>
-<pkg name="com.android.providers.media"/>
-<pkg name="com.android.providers.partnerbookmarks"/>
-<pkg name="com.android.providers.userdictionary"/>
-<pkg name="com.android.provision"/>
-<pkg name="com.android.sharedstoragebackup"/>
-<pkg name="com.android.systemui"/>
-<pkg name="com.android.vpndialogs"/>
-<pkg name="com.android.wallpaper.holospiral"/>
-<pkg name="com.android.wallpaper.livepicker"/>
-<pkg name="com.qualcomm.location"/>
-</whitelist-pkgs>
+<checklist>
+    <whitelist-pkgs>
+    </whitelist-pkgs>
+    <blacklist>
+        <pkg name="com.android.browser"/>
+    </blacklist>
+</checklist>
