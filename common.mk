@@ -254,7 +254,7 @@ KEYPAD += fluid-keypad.kl
 KEYPAD += gpio-keys.kl
 KEYPAD += keypad_8960.kl
 KEYPAD += keypad_8960_liquid.kl
-KEYPAD += synaptics_rmi4_i2c.kl
+KEYPAD += synaptics_dsx.kl
 KEYPAD += msm_tma300_ts.kl
 KEYPAD += philips_remote_ir.kl
 KEYPAD += samsung_remote_ir.kl
@@ -745,3 +745,10 @@ PRODUCT_PRIVATE_KEY := device/qcom/common/qcom.key
 $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 #$(call inherit-product, frameworks/base/data/fonts/fonts.mk)
 #$(call inherit-product, frameworks/base/data/keyboards/keyboards.mk)
+
+# appops configuration
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    persist.sys.strict_op_enable=false
+
+PRODUCT_COPY_FILES += \
+    device/qcom/common/whitelist_appops.xml:system/etc/whitelist_appops.xml

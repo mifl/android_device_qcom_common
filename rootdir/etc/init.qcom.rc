@@ -131,7 +131,7 @@ on boot
 
 #   Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
-    setprop net.tcp.buffersize.default 4096,87380,110208,4096,16384,110208
+    setprop net.tcp.buffersize.default 4096,87380,524288,4096,16384,110208
     setprop net.tcp.buffersize.lte     2097152,4194304,8388608,262144,524288,1048576
     setprop net.tcp.buffersize.umts    4094,87380,110208,4096,16384,110208
     setprop net.tcp.buffersize.hspa    4094,87380,1220608,4096,16384,1220608
@@ -140,7 +140,7 @@ on boot
     setprop net.tcp.buffersize.hspap   4094,87380,1220608,4096,16384,1220608
     setprop net.tcp.buffersize.edge    4093,26280,35040,4096,16384,35040
     setprop net.tcp.buffersize.gprs    4092,8760,11680,4096,8760,11680
-    setprop net.tcp.buffersize.evdo    4094,87380,262144,4096,16384,262144
+    setprop net.tcp.buffersize.evdo    4094,87380,524288,4096,16384,262144
 
 # Define TCP delayed ack settings for WiFi & LTE
     setprop net.tcp.delack.default     1
@@ -212,15 +212,15 @@ on post-fs-data
     mkdir /data/connectivity 0771 system system
     chown system system /data/connectivity
 
-    mkdir /data/connectivity/nsrm 0771 system system
-    chown system system /data/connectivity/nsrm
-
     # Create the directories used by DPM subsystem
     mkdir /data/dpm 0771 system system
     chown system system /data/dpm
 
     mkdir /data/dpm/fdMgr 0771 system system
     chown system system /data/dpm/fdMgr
+
+    mkdir /data/dpm/nsrm 0771 system system
+    chown system system /data/dpm/nsrm
 
     # Create directory used by audio subsystem
     mkdir /data/misc/audio 0770 audio audio
