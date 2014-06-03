@@ -178,9 +178,6 @@ case "$target" in
                  start profiler_daemon;;
         esac
         ;;
-    "msm8226")
-        start_charger_monitor
-        ;;
     "msm8610")
         start_charger_monitor
         ;;
