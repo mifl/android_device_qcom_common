@@ -337,26 +337,83 @@ esac
 
 case "$target" in
     "msm8916")
-        echo 4 > /sys/module/lpm_levels/enable_low_power/l2
-        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled
-        echo 1 > /sys/devices/system/cpu/cpu1/online
-        echo 1 > /sys/devices/system/cpu/cpu2/online
-        echo 1 > /sys/devices/system/cpu/cpu3/online
+       if [ -f /sys/devices/soc0/soc_id ]; then
+            soc_id=`cat /sys/devices/soc0/soc_id`
+        else
+            soc_id=`cat /sys/devices/system/soc/soc0/id`
+        fi
+        case "$soc_id" in
+            "206")
+	        echo 4 > /sys/module/lpm_levels/enable_low_power/l2
+	        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled
+	        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled
+	        echo 1 > /sys/devices/system/cpu/cpu1/online
+	        echo 1 > /sys/devices/system/cpu/cpu2/online
+	        echo 1 > /sys/devices/system/cpu/cpu3/online
+		;;
+            "239" | "241")
+		echo Y > /sys/module/lpm_levels/system/performance/cpu0/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu1/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu2/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu3/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu4/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu5/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu6/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu7/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu0/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu1/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu2/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu3/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu4/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu5/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu6/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu7/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu0/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu1/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu2/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu3/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu4/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu5/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu6/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu7/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu0/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu1/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu2/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/cpu3/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu4/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu5/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu6/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/power/cpu7/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/power/power-l2-pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/performance-l2-pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/power/power-l2-pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/performance-l2-pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/system-cci-retention/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/system-cci-pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/system-cci-pc/suspend_enabled
+ 	        echo 1 > /sys/devices/system/cpu/cpu1/online
+	        echo 1 > /sys/devices/system/cpu/cpu2/online
+	        echo 1 > /sys/devices/system/cpu/cpu3/online
+	        echo 1 > /sys/devices/system/cpu/cpu4/online
+                echo 1 > /sys/devices/system/cpu/cpu5/online
+                echo 1 > /sys/devices/system/cpu/cpu6/online
+                echo 1 > /sys/devices/system/cpu/cpu7/online
+		;;
+	esac
     ;;
 esac
 
