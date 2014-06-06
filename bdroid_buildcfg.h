@@ -27,4 +27,14 @@
 #define MAX_L2CAP_CHANNELS    14
 // skips conn update at conn completion
 #define BTA_BLE_SKIP_CONN_UPD  FALSE
+
+#define BTA_DM_COD {0x00, BTM_COD_MAJOR_WEARABLE, BTM_COD_MINOR_WRIST_WATCH}
+
+#define BTA_AR_INCLUDED               FALSE
+#define A2D_INCLUDED                  FALSE
+#define AVDT_INCLUDED                 FALSE
+#define AVCT_INCLUDED                 FALSE
+#define AVRC_INCLUDED                 FALSE
+#define PAN_NAP_DISABLED              TRUE
+
 #endif
