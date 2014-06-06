@@ -128,6 +128,11 @@ def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
   update_list = {}
   largest_source_size = 0
 
+  if info.type == 'MMC':
+    part = "EMMC"
+  else:
+    part = "MTD"
+
   print "Preparing radio-update files..."
   for fn in tgt_files:
     dest, destBak = GetFileDestination(fn, filesmap)
@@ -176,18 +181,18 @@ def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
       # Not incremental
       if sf is None:
         continue
-      info.script.PatchCheck("EMMC:%s:%d:%s:%d:%s" %
-              (dest, sf.size, sf.sha1, tf.size, tf.sha1))
+      info.script.PatchCheck("%s:%s:%d:%s:%d:%s" %
+              (part, dest, sf.size, sf.sha1, tf.size, tf.sha1))
       if destBak is not None:
-        info.script.PatchCheck("EMMC:%s:%d:%s:%d:%s" %
-                (destBak, sf.size, sf.sha1, tf.size, tf.sha1))
+        info.script.PatchCheck("%s:%s:%d:%s:%d:%s" %
+                (part, destBak, sf.size, sf.sha1, tf.size, tf.sha1))
     for f in binImages:
       dest, destBak, tf, sf = binImages[f]
       # Not incremental
       if sf is None:
         continue
-      info.script.PatchCheck("EMMC:%s:%d:%s:%d:%s" %
-              (dest, sf.size, sf.sha1, tf.size, tf.sha1))
+      info.script.PatchCheck("%s:%s:%d:%s:%d:%s" %
+              (part, dest, sf.size, sf.sha1, tf.size, tf.sha1))
 
     last_mounted = ""
     for f in fwImages:
@@ -203,8 +208,8 @@ def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
       if dest.startswith("/dev/"):
         if last_mounted != dest:
           info.script.AppendExtra('unmount("/firmware");')
-          info.script.AppendExtra('mount("vfat", "EMMC", "%s", "/firmware");' %
-                                    (dest))
+          info.script.AppendExtra('mount("vfat", "%s", "%s", "/firmware");' %
+                                    (part, dest))
           last_mounted = dest
         dest = "/firmware/image/" + f
       else:
@@ -232,10 +237,14 @@ def IncrementalOTA_VerifyEnd(info):
 
 
 # This function handles only non-HLOS whole partition images
-def InstallRawImage(script, f, dest, tf, sf):
+def InstallRawImage(type, script, f, dest, tf, sf):
   if f.endswith('.p'):
-    script.ApplyPatch("EMMC:%s:%d:%s:%d:%s" %
-                        (dest, sf.size, sf.sha1, tf.size, tf.sha1),
+    if type == 'MMC':
+      part = "EMMC"
+    elif type == 'MTD':
+      part = "MTD"
+    script.ApplyPatch("%s:%s:%d:%s:%d:%s" %
+                       (part, dest, sf.size, sf.sha1, tf.size, tf.sha1),
                         "-", tf.size, tf.sha1, sf.sha1, f)
   elif f.endswith('.enc'):
     # Get the filename without the path
@@ -243,52 +252,66 @@ def InstallRawImage(script, f, dest, tf, sf):
     script.AppendExtra('package_extract_file("%s", "/tmp/%s");' % (f, fn))
     script.AppendExtra('msm.decrypt("/tmp/%s", "%s");' % (fn, dest))
   else:
-    script.AppendExtra('package_extract_file("%s", "%s");' % (f, dest))
+    if type == 'MMC':
+      script.AppendExtra('package_extract_file("%s", "%s");' % (f, dest))
+    elif type == 'MTD':
+      script.AppendExtra('write_raw_image(package_extract_file("%s"), "%s");' % (f, dest))
   return
 
 
 # This function handles only non-HLOS boot images - files list must contain
 # only such images (aboot, tz, etc)
-def InstallBootImages(script, files):
-  bakExists = False
-  # update main partitions
-  script.AppendExtra('ifelse(msm.boot_update("main"), (')
-  for f in files:
-    dest, destBak, tf, sf = files[f]
-    if destBak is not None:
-      bakExists = True
-    InstallRawImage(script, f, dest, tf, sf)
-  script.AppendExtra('), "");')
-
-  # update backup partitions
-  if bakExists:
-    script.AppendExtra('ifelse(msm.boot_update("backup"), (')
+def InstallBootImages(type, script, files):
+  if type == 'MMC':
+    bakExists = False
+    # update main partitions
+    script.AppendExtra('ifelse(msm.boot_update("main"), (')
     for f in files:
       dest, destBak, tf, sf = files[f]
       if destBak is not None:
-        InstallRawImage(script, f, destBak, tf, sf)
+        bakExists = True
+      InstallRawImage(type, script, f, dest, tf, sf)
     script.AppendExtra('), "");')
-  # just finalize primary update stage
-  else:
-    script.AppendExtra('msm.boot_update("backup");')
 
-  # finalize partitions update
-  script.AppendExtra('msm.boot_update("finalize");')
+    # update backup partitions
+    if bakExists:
+      script.AppendExtra('ifelse(msm.boot_update("backup"), (')
+      for f in files:
+        dest, destBak, tf, sf = files[f]
+        if destBak is not None:
+          InstallRawImage(type, script, f, destBak, tf, sf)
+      script.AppendExtra('), "");')
+    # just finalize primary update stage
+    else:
+      script.AppendExtra('msm.boot_update("backup");')
+
+    # finalize partitions update
+    script.AppendExtra('msm.boot_update("finalize");')
+  elif type == 'MTD':
+    for f in files:
+      dest, _, tf, sf = files[f]
+      InstallRawImage(type, script, f, dest, tf, sf)
   return
 
 
 # This function handles only non-HLOS bin images
-def InstallBinImages(script, files):
+def InstallBinImages(type, script, files):
   for f in files:
     dest, _, tf, sf = files[f]
-    InstallRawImage(script, f, dest, tf, sf)
+    InstallRawImage(type, script, f, dest, tf, sf)
   return
 
 
 # This function handles only non-HLOS firmware files that are not whole
 # partition images (modem, dsp, etc)
-def InstallFwImages(script, files):
+def InstallFwImages(type, script, files):
   last_mounted = ""
+  fs_type = "vfat"
+
+  if type == 'MMC':
+    part = "EMMC"
+  elif type == 'MTD':
+    part = "MTD"
 
   for f in files:
     dest, _, tf, sf = files[f]
@@ -300,8 +323,8 @@ def InstallFwImages(script, files):
     if dest.startswith("/dev/"):
       if last_mounted != dest:
         script.AppendExtra('unmount("/firmware");')
-        script.AppendExtra('mount("vfat", "EMMC", "%s", "/firmware");' %
-                            (dest))
+        script.AppendExtra('mount("%s", "%s", "%s", "/firmware");' %
+                            (fs_type, part, dest))
         last_mounted = dest
       dest = "/firmware/image/" + fn
     else:
@@ -326,30 +349,17 @@ def OTA_InstallEnd(info):
   info.script.Print("Patching firmware images...")
 
   if bootImages != {}:
-    InstallBootImages(info.script, bootImages)
+    InstallBootImages(info.type, info.script, bootImages)
   if binImages != {}:
-    InstallBinImages(info.script, binImages)
+    InstallBinImages(info.type, info.script, binImages)
   if fwImages != {}:
-    InstallFwImages(info.script, fwImages)
-  return
-
-
-def FullOTA_InstallEnd_MMC(info):
-  if OTA_VerifyEnd(info, info.input_version, info.input_zip):
-    OTA_InstallEnd(info)
-  return
-
-
-def FullOTA_InstallEnd_MTD(info):
-  print "warning radio-update: radio update for NAND devices not supported"
+    InstallFwImages(info.type, info.script, fwImages)
   return
 
 
 def FullOTA_InstallEnd(info):
-  if info.type == 'MMC':
-    FullOTA_InstallEnd_MMC(info)
-  elif info.type == 'MTD':
-    FullOTA_InstallEnd_MTD(info)
+  if OTA_VerifyEnd(info, info.input_version, info.input_zip):
+    OTA_InstallEnd(info)
   return
 
 
