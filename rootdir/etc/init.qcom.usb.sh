@@ -159,6 +159,8 @@ case "$target" in
              fi
          fi
     ;;
+    "msm8994")
+        echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
 esac
 
 #
