@@ -159,6 +159,8 @@ case "$target" in
              fi
          fi
     ;;
+    "msm8994")
+        echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
 esac
 
 #
@@ -220,3 +222,11 @@ case "$target" in
 		esac
 		;;
 esac
+
+#
+# Initialize RNDIS Diag option. If unset, set it to 'none'.
+#
+diag_extra=`getprop persist.sys.usb.config.extra`
+if [ "$diag_extra" == "" ]; then
+	setprop persist.sys.usb.config.extra none
+fi
