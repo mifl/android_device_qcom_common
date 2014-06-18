@@ -729,7 +729,7 @@ service usb_uicc_enable /system/bin/sh /system/etc/init.qcom.uicc.sh
 service usb_uicc_daemon /system/bin/usb_uicc_client
     class main
     user system
-    group system log
+    group system log net_raw
     oneshot
 
 on property:usb_uicc.enabled=1
