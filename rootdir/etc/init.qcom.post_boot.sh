@@ -357,6 +357,21 @@ case "$target" in
         echo 1 > /sys/devices/system/cpu/cpu1/online
         echo 1 > /sys/devices/system/cpu/cpu2/online
         echo 1 > /sys/devices/system/cpu/cpu3/online
+
+        # online all 8 cores for 8939
+        if [ -f /sys/devices/soc0/soc_id ]; then
+           soc_id=`cat /sys/devices/soc0/soc_id`
+        else
+           soc_id=`cat /sys/devices/system/soc/soc0/id`
+        fi
+        case "$soc_id" in
+           "239")
+                echo 1 > /sys/devices/system/cpu/cpu4/online
+                echo 1 > /sys/devices/system/cpu/cpu5/online
+                echo 1 > /sys/devices/system/cpu/cpu6/online
+                echo 1 > /sys/devices/system/cpu/cpu7/online
+            ;;
+        esac
     ;;
 esac
 
@@ -454,16 +469,56 @@ esac
 
 case "$target" in
     "msm8916")
-        echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-        echo "25000 1094400:50000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
-        echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
-        echo 25000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
-        echo 998400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
-        echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
-        echo "85 998400:90 1094400:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
-        echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
-        echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
-        echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+
+        if [ -f /sys/devices/soc0/soc_id ]; then
+           soc_id=`cat /sys/devices/soc0/soc_id`
+        else
+           soc_id=`cat /sys/devices/system/soc/soc0/id`
+        fi
+
+        # Apply governor settings for 8916
+        case "$soc_id" in
+            "206")
+                echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+                echo "25000 1094400:50000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+                echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+                echo 25000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+                echo 998400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+                echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+                echo "85 998400:90 1094400:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+                echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+                echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
+                echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+            ;;
+        esac
+
+        # Apply governor settings for 8939
+        case "$soc_id" in
+            "239")
+                # enable governor for perf cluster
+                echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+                echo "25000 800000:50000" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+                echo 90 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
+                echo 25000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
+                echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+                echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
+                echo "85 800000:90" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+                echo 50000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
+                echo 50000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/sampling_down_factor
+                echo 200000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+                # enable governor for power cluster
+                echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+                echo "25000 500000:50000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+                echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
+                echo 25000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
+                echo 500000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+                echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
+                echo "85 500000:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+                echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
+                echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
+                echo 200000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+            ;;
+        esac
     ;;
 esac
 
