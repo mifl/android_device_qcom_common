@@ -98,7 +98,7 @@ case "$usb_config" in
         case $target in
             "msm8960" | "msm8974")
                 case "$baseband" in
-                    "mdm" | "apq")
+                    "mdm" | "apq" | "auto")
                          setprop persist.sys.usb.config diag,diag_mdm,serial_hsic,serial_tty,rmnet_hsic,mass_storage,adb
                     ;;
                     "sglte")
@@ -170,7 +170,7 @@ esac
 #
 rmnetmux=`getprop persist.rmnet.mux`
 case "$baseband" in
-    "mdm" | "dsda" | "sglte2" | "apq")
+    "mdm" | "dsda" | "sglte2" | "apq" | "auto")
         case "$rmnetmux" in
             "enabled")
                     echo 1 > /sys/module/rmnet_usb/parameters/mux_enabled
