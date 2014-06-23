@@ -337,35 +337,23 @@ esac
 
 case "$target" in
     "msm8916")
-        echo 4 > /sys/module/lpm_levels/enable_low_power/l2
-        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled
-        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled
-        echo 1 > /sys/devices/system/cpu/cpu1/online
-        echo 1 > /sys/devices/system/cpu/cpu2/online
-        echo 1 > /sys/devices/system/cpu/cpu3/online
-
-        # online all 8 cores for 8939
         if [ -f /sys/devices/soc0/soc_id ]; then
-           soc_id=`cat /sys/devices/soc0/soc_id`
+            soc_id=`cat /sys/devices/soc0/soc_id`
         else
-           soc_id=`cat /sys/devices/system/soc/soc0/id`
+            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
         case "$soc_id" in
-           "239")
+            "206")
+		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+	        echo 1 > /sys/devices/system/cpu/cpu1/online
+		echo 1 > /sys/devices/system/cpu/cpu2/online
+	        echo 1 > /sys/devices/system/cpu/cpu3/online
+		;;
+           "239" | "241" )
+		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+	        echo 1 > /sys/devices/system/cpu/cpu1/online
+		echo 1 > /sys/devices/system/cpu/cpu2/online
+	        echo 1 > /sys/devices/system/cpu/cpu3/online
                 echo 1 > /sys/devices/system/cpu/cpu4/online
                 echo 1 > /sys/devices/system/cpu/cpu5/online
                 echo 1 > /sys/devices/system/cpu/cpu6/online
