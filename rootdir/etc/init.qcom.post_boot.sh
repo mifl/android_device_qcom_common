@@ -642,6 +642,22 @@ esac
 
 case "$target" in
     "msm8994")
+	echo 0 > /sys/module/lpm_levels/system/a53/cpu0/standalone_pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a53/cpu1/standalone_pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a53/cpu2/standalone_pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a53/cpu3/standalone_pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a57/cpu4/standalone_pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a57/cpu5/standalone_pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a57/cpu6/standalone_pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a57/cpu7/standalone_pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a53/cpu0/pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a53/cpu1/pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a53/cpu2/pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a53/cpu3/pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a57/cpu4/pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a57/cpu5/pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a57/cpu6/pc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/a57/cpu7/pc/idle_enabled
         echo 0 > /sys/module/lpm_levels/system/a53/a53-l2-pc/idle_enabled
         echo 0 > /sys/module/lpm_levels/system/a57/a57-l2-pc/idle_enabled
         echo 0 > /sys/module/lpm_levels/system/system-cci-pc/idle_enabled
