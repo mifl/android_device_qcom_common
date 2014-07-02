@@ -685,8 +685,13 @@ esac
 
 # Post-setup services
 case "$target" in
-    "msm8660" | "msm8960" | "msm8226" | "msm8610" | "mpq8092" | "msm8916")
+    "msm8660" | "msm8960" | "msm8226" | "msm8610" | "mpq8092" )
         start mpdecision
+    ;;
+    "msm8916")
+        if [ ! -f /proc/sys/kernel/sched_enable_hmp_task_placement ]; then
+           start mpdecision
+        fi
     ;;
     "msm8974")
         start mpdecision
