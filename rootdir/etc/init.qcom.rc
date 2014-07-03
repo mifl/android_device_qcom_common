@@ -849,3 +849,9 @@ service vm_bms /system/bin/vm_bms
     user root
     group root
     disabled
+
+service msm_irqbalance /system/bin/msm_irqbalance -p 0,0,0,0,1,1,1,1
+    class core
+    user root
+    group root
+    disabled
