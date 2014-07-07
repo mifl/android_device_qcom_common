@@ -413,6 +413,31 @@ case "$target" in
                 echo 1 > /sys/devices/system/cpu/cpu6/online
                 echo 1 > /sys/devices/system/cpu/cpu7/online
 		;;
+	"233")
+	        echo Y > /sys/module/lpm_levels/system/cpu0/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu1/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu2/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu3/wfi/idle_enabled
+	        echo Y > /sys/module/lpm_levels/system/cpu0/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu1/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu2/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu3/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu0/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu1/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu2/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu3/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu0/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu1/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu2/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu3/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/system-cci-active-l2-gdhs/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/system-cci-retention-l2-pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/system-cci-pc-l2-pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/system-cci-pc-l2-pc/suspend_enable
+		echo 1 > /sys/devices/system/cpu/cpu1/online
+	        echo 1 > /sys/devices/system/cpu/cpu2/online
+	        echo 1 > /sys/devices/system/cpu/cpu3/online
+		;;
 	esac
 
         # online all 8 cores for 8939
