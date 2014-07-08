@@ -197,3 +197,7 @@
 
 # ESOC devices
 /dev/subsys_esoc*         0640   system     radio
+
+# HSIC devices
+/dev/ks_hsic_bridge       0660   root       system
+/dev/efs_hsic_bridge      0660   root       system
