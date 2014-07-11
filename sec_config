@@ -255,3 +255,8 @@
 509:4294967295:3011
 510:4294967295:3011
 511:4294967295:3011
+/* <GPS QMI Service ID - 16>:
+ *<GPS QMI Instance ID - all instances>:
+ *<Client Group ID>
+ */
+16:4294967295:1000:3004
