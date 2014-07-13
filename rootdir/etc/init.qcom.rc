@@ -323,6 +323,11 @@ on property:persist.debug.trace=1
     write /sys/bus/coresight/devices/coresight-etm3/enable 1
     write /sys/module/coresight_event/parameters/event_abort_enable 1
 
+service qcom-debug /system/bin/sh /system/etc/init.qcom.debug.sh
+    class core
+    user root
+    oneshot
+
 on property:ro.board.platform=msm7630_fusion
     start usbhub_init
 
