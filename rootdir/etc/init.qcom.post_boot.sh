@@ -408,13 +408,6 @@ case "$target" in
 		echo Y > /sys/module/lpm_levels/system/system-cci-retention/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/suspend_enabled
- 	        echo 1 > /sys/devices/system/cpu/cpu1/online
-	        echo 1 > /sys/devices/system/cpu/cpu2/online
-	        echo 1 > /sys/devices/system/cpu/cpu3/online
-	        echo 1 > /sys/devices/system/cpu/cpu4/online
-                echo 1 > /sys/devices/system/cpu/cpu5/online
-                echo 1 > /sys/devices/system/cpu/cpu6/online
-                echo 1 > /sys/devices/system/cpu/cpu7/online
 		;;
 	"233")
 	        echo Y > /sys/module/lpm_levels/system/cpu0/wfi/idle_enabled
@@ -587,6 +580,13 @@ case "$target" in
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
                 echo 249600 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+		echo 1 > /sys/devices/system/cpu/cpu1/online
+	        echo 1 > /sys/devices/system/cpu/cpu2/online
+	        echo 1 > /sys/devices/system/cpu/cpu3/online
+	        echo 1 > /sys/devices/system/cpu/cpu4/online
+                echo 1 > /sys/devices/system/cpu/cpu5/online
+                echo 1 > /sys/devices/system/cpu/cpu6/online
+                echo 1 > /sys/devices/system/cpu/cpu7/online
             ;;
         esac
     ;;
