@@ -47,7 +47,8 @@ uicc_insert()
             echo Y > /sys/module/ehci_msm_uicc/parameters/uicc_card_present
             echo 79c0000.qcom,ehci-host  > /sys/bus/platform/drivers/msm_ehci_uicc/bind
         elif [ $soc_hwid == "206" ]; then
-            insmod /system/lib/modules/ice40-hcd.ko
+            echo Y > /sys/module/ice40_hcd/parameters/uicc_card_present
+            echo spi0.0 > /sys/bus/spi/drivers/ice40_spi/bind
         else
             echo "The TARGET ID is $target hw $soc_hwid"
         fi
@@ -75,7 +76,8 @@ uicc_remove()
             echo 79c0000.qcom,ehci-host  > /sys/bus/platform/drivers/msm_ehci_uicc/unbind
             echo N > /sys/module/ehci_msm_uicc/parameters/uicc_card_present
         elif [ $soc_hwid == "206" ]; then
-            rmmod /system/lib/modules/ice40-hcd.ko
+            echo spi0.0 > /sys/bus/spi/drivers/ice40_spi/unbind
+            echo N > /sys/module/ice40_hcd/parameters/uicc_card_present
         else
             echo "The TARGET ID is $target hw $soc_hwid"
         fi
