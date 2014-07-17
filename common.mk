@@ -569,6 +569,9 @@ endif # BOARD_HAVE_BLUETOOTH_BLUEZ
 PRODUCT_COPY_FILES += device/qcom/common/media/media_profiles.xml:system/etc/media_profiles.xml \
                       device/qcom/common/media/media_codecs.xml:system/etc/media_codecs.xml
 
+PRODUCT_COPY_FILES += \
+    device/qcom/common/sec_config:system/etc/sec_config
+
 # enable overlays to use our version of
 # source/resources etc.
 DEVICE_PACKAGE_OVERLAYS += device/qcom/common/overlay
