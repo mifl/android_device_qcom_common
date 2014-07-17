@@ -28,6 +28,12 @@
 
 baseband=`getprop ro.baseband`
 if [ "$baseband" = "mdm" ] || [ "$baseband" = "mdm2" ]; then
+	for f in /dev/block/bootdevice/by-name/mdm1m9kefs*
+	do
+		t=`realpath $f`
+		chown -h root:system "${t}"
+		chmod 660 "${t}"
+	done
 	start mdm_helper
 fi
 

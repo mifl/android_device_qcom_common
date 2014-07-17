@@ -351,13 +351,6 @@ case "$target" in
 		;;
            "239" | "241" )
 		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
-	        echo 1 > /sys/devices/system/cpu/cpu1/online
-		echo 1 > /sys/devices/system/cpu/cpu2/online
-	        echo 1 > /sys/devices/system/cpu/cpu3/online
-                echo 1 > /sys/devices/system/cpu/cpu4/online
-                echo 1 > /sys/devices/system/cpu/cpu5/online
-                echo 1 > /sys/devices/system/cpu/cpu6/online
-                echo 1 > /sys/devices/system/cpu/cpu7/online
             ;;
         esac
     ;;
@@ -505,6 +498,13 @@ case "$target" in
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
                 echo 249600 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+		echo 1 > /sys/devices/system/cpu/cpu1/online
+		echo 1 > /sys/devices/system/cpu/cpu2/online
+	        echo 1 > /sys/devices/system/cpu/cpu3/online
+                echo 1 > /sys/devices/system/cpu/cpu4/online
+                echo 1 > /sys/devices/system/cpu/cpu5/online
+                echo 1 > /sys/devices/system/cpu/cpu6/online
+                echo 1 > /sys/devices/system/cpu/cpu7/online
             ;;
         esac
     ;;
@@ -630,9 +630,6 @@ esac
 
 case "$target" in
     "msm8994")
-        echo 0 > /sys/module/lpm_levels/system/a53/a53-l2-pc/idle_enabled
-        echo 0 > /sys/module/lpm_levels/system/a57/a57-l2-pc/idle_enabled
-        echo 0 > /sys/module/lpm_levels/system/system-cci-pc/idle_enabled
         echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
         # enable interactive first in case interactive_pro doesn't exist
         echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
@@ -645,7 +642,7 @@ case "$target" in
         echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive_pro/io_is_busy
         echo "85 600000:90" > /sys/devices/system/cpu/cpu0/cpufreq/interactive_pro/target_loads
         echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive_pro/min_sample_time
-        echo 200000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+        echo 199200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         # enable governor for performance cluster
         echo "interactive_pro" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
         echo "20000 600000:40000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive_pro/above_hispeed_delay
@@ -655,7 +652,7 @@ case "$target" in
         echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive_pro/io_is_busy
         echo "85 600000:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive_pro/target_loads
         echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive_pro/min_sample_time
-        echo 200000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+        echo 199200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
     ;;
 esac
 
