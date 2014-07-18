@@ -554,12 +554,12 @@ case "$target" in
             "239")
                 # enable governor for perf cluster
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-                echo "25000 800000:50000" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+                echo "25000 1113600:50000" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
                 echo 25000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
-                echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+                echo 960000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
-                echo "85 800000:90" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+                echo "85 1113600:90 1267200:80" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/sampling_down_factor
                 echo 400000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
