@@ -344,24 +344,27 @@ case "$target" in
         fi
         case "$soc_id" in
             "206")
-	        echo 4 > /sys/module/lpm_levels/enable_low_power/l2
-	        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/suspend_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/suspend_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/suspend_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/suspend_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/suspend_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/suspend_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu0/standalone_power_collapse/idle_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu1/standalone_power_collapse/idle_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu2/standalone_power_collapse/idle_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu3/standalone_power_collapse/idle_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/idle_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/idle_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu2/power_collapse/idle_enabled
-	        echo 1 > /sys/module/msm_pm/modes/cpu3/power_collapse/idle_enabled
-	        echo 1 > /sys/devices/system/cpu/cpu1/online
+	        echo Y > /sys/module/lpm_levels/system/cpu0/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu1/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu2/wfi/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu3/wfi/idle_enabled
+	        echo Y > /sys/module/lpm_levels/system/cpu0/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu1/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu2/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu3/standalone_pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu0/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu1/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu2/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu3/pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu0/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu1/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu2/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/cpu3/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/l2-gdhs/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/l2-gdhs/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/l2-pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/l2-pc/suspend_enabled
+		echo 1 > /sys/devices/system/cpu/cpu1/online
 	        echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
 		;;
