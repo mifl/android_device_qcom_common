@@ -28,3 +28,4 @@
 #
 
 add_lunch_combo msm8226-userdebug
+add_lunch_combo apq8026_lw-userdebug
