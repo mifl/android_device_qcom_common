@@ -79,6 +79,7 @@ done
 fi
 
 target=`getprop ro.product.device`
+target=${target:0:7}
 
 #
 # Allow USB enumeration with default PID/VID
@@ -118,7 +119,7 @@ case "$usb_config" in
               ;;
               *)
 		case "$target" in
-			"msm8916_32")
+			"msm8916")
 				setprop persist.sys.usb.config diag,serial_smd,rmnet_bam,adb
 			;;
 			*)
@@ -204,7 +205,7 @@ esac
 cdromname="/system/etc/cdrom_install.iso"
 platformver=`cat /sys/devices/soc0/hw_platform`
 case "$target" in
-	"msm8226" | "msm8610" | "msm8916_32")
+	"msm8226" | "msm8610" | "msm8916")
 		case $platformver in
 			"QRD")
 				echo "mounting usbcdrom lun"
