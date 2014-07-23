@@ -429,7 +429,7 @@ case "$target" in
 		echo Y > /sys/module/lpm_levels/system/system-cci-active-l2-gdhs/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-retention-l2-pc/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc-l2-pc/idle_enabled
-		echo Y > /sys/module/lpm_levels/system/system-cci-pc-l2-pc/suspend_enable
+		echo Y > /sys/module/lpm_levels/system/system-cci-pc-l2-pc/suspend_enabled
 		echo 1 > /sys/devices/system/cpu/cpu1/online
 	        echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
