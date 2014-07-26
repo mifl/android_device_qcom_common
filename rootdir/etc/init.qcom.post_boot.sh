@@ -555,10 +555,6 @@ case "$target" in
         # Apply governor settings for 8939
         case "$soc_id" in
             "239")
-                for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
-                do
-                    echo "bw_hwmon" > $devfreq_gov
-                done
                 # enable governor for perf cluster
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
                 echo "25000 1113600:50000" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
