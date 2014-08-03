@@ -94,13 +94,20 @@ start_vm_bms()
 	fi
 }
 
-start_msm_irqbalance()
+start_msm_irqbalance_8939()
 {
 	if [ -f /system/bin/msm_irqbalance ]; then
 		case "$platformid" in
 		    "239")
 			start msm_irqbalance;;
 		esac
+	fi
+}
+
+start_msm_irqbalance()
+{
+	if [ -f /system/bin/msm_irqbalance ]; then
+		start msm_irqbalance
 	fi
 }
 
@@ -196,6 +203,9 @@ case "$target" in
         ;;
     "msm8916")
         start_vm_bms
+        start_msm_irqbalance_8939
+        ;;
+    "msm8994")
         start_msm_irqbalance
         ;;
 esac
