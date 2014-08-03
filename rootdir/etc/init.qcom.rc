@@ -235,7 +235,7 @@ on post-fs-data
     #Create a folder for SRS to be able to create a usercfg file
     mkdir /data/data/media 0770 media media
 
-    mkdir /data/dts 0755 media audio
+    mkdir /data/data/dts 0755 media audio
 
 # Export GPIO56 for fusion targets to enable/disable hub
 service usbhub_init /system/bin/usbhub_init
