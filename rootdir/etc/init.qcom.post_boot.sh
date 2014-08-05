@@ -572,18 +572,18 @@ case "$target" in
                 echo "85 1113600:90 1267200:80" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/sampling_down_factor
-                echo 400000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+                echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
                 # enable governor for power cluster
                 echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-                echo "25000 499200:50000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+                echo "25000 800000:50000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
                 echo 25000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
-                echo 499200 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+                echo 800000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
-                echo "85 499200:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+                echo "85 800000:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
-                echo 249600 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+                echo 499200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 		echo 1 > /sys/devices/system/cpu/cpu1/online
 	        echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
@@ -591,6 +591,9 @@ case "$target" in
                 echo 1 > /sys/devices/system/cpu/cpu5/online
                 echo 1 > /sys/devices/system/cpu/cpu6/online
                 echo 1 > /sys/devices/system/cpu/cpu7/online
+                echo 2 > /proc/sys/kernel/sched_window_stats_policy
+                echo 60 > /proc/sys/kernel/sched_upmigrate
+                echo 40 > /proc/sys/kernel/sched_downmigrate
             ;;
         esac
     ;;
@@ -770,8 +773,8 @@ case "$target" in
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
         if [ $soc_id = 239 ]; then
-	    setprop ro.min_freq_0 400000
-	    setprop ro.min_freq_4 249600
+	    setprop ro.min_freq_0 800000
+	    setprop ro.min_freq_4 499200
 	    start perfd
         else
 	    setprop ro.min_freq_0 800000
