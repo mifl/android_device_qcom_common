@@ -900,7 +900,7 @@ service vm_bms /system/bin/vm_bms
     group root
     disabled
 
-service msm_irqbalance /system/bin/msm_irqbalance -p 0,0,0,0,1,1,1,1
+service msm_irqbalance /system/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance.conf
     class core
     user root
     group root
