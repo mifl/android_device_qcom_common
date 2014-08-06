@@ -540,13 +540,6 @@ VT_JNI += libimscamera_jni
 #VT_PERM
 VT_PERM := qti_permissions.xml
 
-#CRDA
-CRDA := crda
-CRDA += regdbdump
-CRDA += regulatory.bin
-CRDA += linville.key.pub.pem
-CRDA += init.crda.sh
-
 #WLAN
 WLAN := prima_wlan.ko
 WLAN += pronto_wlan.ko
@@ -659,7 +652,6 @@ PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
 PRODUCT_PACKAGES += $(VT_PERM)
-PRODUCT_PACKAGES += $(CRDA)
 PRODUCT_PACKAGES += $(WLAN)
 
 # Live Wallpapers
