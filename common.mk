@@ -398,6 +398,7 @@ QRGND += qrngtest
 
 #WPA
 WPA := wpa_supplicant.conf
+WPA += wpa_supplicant
 
 #ZLIB
 ZLIB := gzip
