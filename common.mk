@@ -219,6 +219,7 @@ INIT += enable_swap.sh
 INIT += init.mdm.sh
 INIT += init.qcom.uicc.sh
 INIT += init.qcom.debug.sh
+INIT += init.qcom.zram.sh
 
 #IPROUTE2
 IPROUTE2 := ip
