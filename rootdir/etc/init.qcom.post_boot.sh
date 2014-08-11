@@ -583,7 +583,11 @@ case "$target" in
                 echo "85 800000:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
+		# disable thermal core_control for updating little cluster scaling_min_freq
+		echo 0 > /sys/module/msm_thermal/core_control/enabled
+		echo 1 >/sys/devices/system/cpu/cpu4/online
                 echo 499200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+		echo 1 > /sys/module/msm_thermal/core_control/enabled
 		echo 1 > /sys/devices/system/cpu/cpu1/online
 	        echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
