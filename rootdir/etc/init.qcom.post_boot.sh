@@ -594,6 +594,7 @@ case "$target" in
                 echo 2 > /proc/sys/kernel/sched_window_stats_policy
                 echo 60 > /proc/sys/kernel/sched_upmigrate
                 echo 40 > /proc/sys/kernel/sched_downmigrate
+		echo 3 > /proc/sys/kernel/sched_ravg_hist_size
             ;;
         esac
     ;;
