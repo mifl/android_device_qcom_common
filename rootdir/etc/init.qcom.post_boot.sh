@@ -718,6 +718,9 @@ case "$target" in
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
+    "msm8994")
+        start perfd
+    ;;
     "apq8084")
         rm /data/system/default_values
         start mpdecision
