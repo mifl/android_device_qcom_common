@@ -760,9 +760,6 @@ case "$target" in
         start mpdecision
     ;;
     "msm8916")
-        if [ ! -f /proc/sys/kernel/sched_enable_hmp_task_placement ]; then
-           start mpdecision
-        fi
 	if [ -f /sys/devices/soc0/soc_id ]; then
            soc_id=`cat /sys/devices/soc0/soc_id`
         else
@@ -774,6 +771,7 @@ case "$target" in
 	    start perfd
         else
 	    setprop ro.min_freq_0 800000
+	    start perfd
         fi
     ;;
     "msm8974")
