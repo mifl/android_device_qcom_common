@@ -553,7 +553,7 @@ case "$target" in
                 echo 25000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
                 echo 998400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
-                echo "85 998400:90 1094400:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+                echo "1 800000:85 998400:90 1094400:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
                 echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
@@ -569,7 +569,7 @@ case "$target" in
                 echo 25000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
                 echo 960000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
-                echo "85 1113600:90 1267200:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+                echo "1 800000:85 1113600:90 1267200:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
                 echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
@@ -586,25 +586,26 @@ case "$target" in
                 echo 25000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
                 echo 960000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
-                echo "85 1113600:90 1267200:80" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+                echo "1 800000:85 1113600:90 1267200:80" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/sampling_down_factor
                 echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
                 # enable governor for power cluster
+		# disable thermal core_control for updating little cluster scaling_min_freq
+                echo 0 > /sys/module/msm_thermal/core_control/enabled
+                echo 1 >/sys/devices/system/cpu/cpu4/online
                 echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
                 echo "25000 800000:50000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
                 echo 25000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
                 echo 800000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
-                echo "85 800000:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+                echo "1 499200:85 800000:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
-		# disable thermal core_control for updating little cluster scaling_min_freq
-		echo 0 > /sys/module/msm_thermal/core_control/enabled
-		echo 1 >/sys/devices/system/cpu/cpu4/online
                 echo 499200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 		echo 1 > /sys/module/msm_thermal/core_control/enabled
+
 		echo 1 > /sys/devices/system/cpu/cpu1/online
 	        echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
