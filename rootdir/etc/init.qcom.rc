@@ -833,3 +833,8 @@ on property:persist.sys.rootagent=1
     start rootagent
 on property:persist.sys.rootagent=0
     stop rootagent
+
+service dmesg2logcat /system/bin/logwrapper cat /proc/kmsg
+    class late_start
+    user root
+    oneshot
