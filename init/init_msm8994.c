@@ -33,9 +33,10 @@
 #include "property_service.h"
 #include "log.h"
 #include "util.h"
+#include <fcntl.h>
 
 #include "init_msm.h"
-
+#define MODEM_SSR_NODE "/dev/subsys_modem"
 void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *board_type)
 {
     char platform[PROP_VALUE_MAX];
@@ -50,4 +51,22 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
         return;
 
     property_set(PROP_LCDDENSITY, "480");
+}
+
+int load_msm_modem()
+{
+    static int modem_fd = -1;
+    if (modem_fd < 0) {
+        /*
+         * This node is required to be kept open forever to
+         * keep the modem on
+         */
+        modem_fd = open(MODEM_SSR_NODE, O_RDONLY);
+        if (modem_fd < 0) {
+           ERROR("Failed to power on modem: %s",
+                   strerror(errno));
+           return 1;
+        }
+    }
+    return 0;
 }
