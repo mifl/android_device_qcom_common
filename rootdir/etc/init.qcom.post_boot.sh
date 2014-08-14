@@ -539,6 +539,11 @@ case "$target" in
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
 
+        # Apply HMP Task packing for 8916, 8936 and 8939
+        echo 30 > /proc/sys/kernel/sched_small_task
+        echo 50 > /proc/sys/kernel/sched_mostly_idle_load
+        echo 10 > /proc/sys/kernel/sched_mostly_idle_nr_run
+
         # Apply governor settings for 8916
         case "$soc_id" in
             "206")
@@ -549,6 +554,22 @@ case "$target" in
                 echo 998400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
                 echo "85 998400:90 1094400:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+                echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+                echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
+                echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+            ;;
+        esac
+
+	# Apply governor settings for 8936
+        case "$soc_id" in
+            "233")
+                echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+                echo "25000 1113600:50000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+                echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
+                echo 25000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+                echo 960000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+                echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
+                echo "85 1113600:90 1267200:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
                 echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
@@ -568,18 +589,22 @@ case "$target" in
                 echo "85 1113600:90 1267200:80" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/sampling_down_factor
-                echo 400000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+                echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
                 # enable governor for power cluster
                 echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-                echo "25000 499200:50000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+                echo "25000 800000:50000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
                 echo 25000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
-                echo 499200 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+                echo 800000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
-                echo "85 499200:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+                echo "85 800000:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
                 echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
-                echo 249600 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+		# disable thermal core_control for updating little cluster scaling_min_freq
+		echo 0 > /sys/module/msm_thermal/core_control/enabled
+		echo 1 >/sys/devices/system/cpu/cpu4/online
+                echo 499200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+		echo 1 > /sys/module/msm_thermal/core_control/enabled
 		echo 1 > /sys/devices/system/cpu/cpu1/online
 	        echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
@@ -587,6 +612,10 @@ case "$target" in
                 echo 1 > /sys/devices/system/cpu/cpu5/online
                 echo 1 > /sys/devices/system/cpu/cpu6/online
                 echo 1 > /sys/devices/system/cpu/cpu7/online
+                echo 2 > /proc/sys/kernel/sched_window_stats_policy
+                echo 60 > /proc/sys/kernel/sched_upmigrate
+                echo 40 > /proc/sys/kernel/sched_downmigrate
+		echo 3 > /proc/sys/kernel/sched_ravg_hist_size
             ;;
         esac
     ;;
@@ -757,8 +786,18 @@ case "$target" in
         start mpdecision
     ;;
     "msm8916")
-        if [ ! -f /proc/sys/kernel/sched_enable_hmp_task_placement ]; then
-           start mpdecision
+	if [ -f /sys/devices/soc0/soc_id ]; then
+           soc_id=`cat /sys/devices/soc0/soc_id`
+        else
+           soc_id=`cat /sys/devices/system/soc/soc0/id`
+        fi
+        if [ $soc_id = 239 ]; then
+	    setprop ro.min_freq_0 800000
+	    setprop ro.min_freq_4 499200
+	    start perfd
+        else
+	    setprop ro.min_freq_0 800000
+	    start perfd
         fi
     ;;
     "msm8974")
