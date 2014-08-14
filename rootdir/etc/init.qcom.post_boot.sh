@@ -401,10 +401,13 @@ case "$target" in
 		echo Y > /sys/module/lpm_levels/system/power/cpu5/pc/suspend_enabled
 		echo Y > /sys/module/lpm_levels/system/power/cpu6/pc/suspend_enabled
 		echo Y > /sys/module/lpm_levels/system/power/cpu7/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/power/power-l2-active/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/power/power-l2-pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/performance-l2-active/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/performance/performance-l2-pc/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/power/power-l2-pc/suspend_enabled
 		echo Y > /sys/module/lpm_levels/system/performance/performance-l2-pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/system-cci-active/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-retention/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/suspend_enabled
