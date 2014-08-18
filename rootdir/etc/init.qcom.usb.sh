@@ -87,6 +87,15 @@ case "$usbcurrentlimit" in
 	;;
     esac
 esac
+
+otg_mode=`getprop persist.sys.usb.otg.mode`
+case "$otg_mode" in
+    "") ;;
+    * )
+       setprop sys.usb.otg.mode $otg_mode
+       ;;
+esac
+
 #
 # Allow USB enumeration with default PID/VID
 #

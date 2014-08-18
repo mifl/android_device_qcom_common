@@ -659,3 +659,10 @@ on property:sys.usb.config=diag,qdss,adb
     write /sys/class/android_usb/android0/enable 1
     start adbd
     setprop sys.usb.state ${sys.usb.config}
+
+# Configure usb otg mode as per the property value
+on property:persist.sys.usb.otg.mode=*
+    setprop sys.usb.otg.mode ${persist.sys.usb.otg.mode}
+
+on property:sys.usb.otg.mode=*
+    write /sys/bus/platform/devices/msm_otg/mode ${sys.usb.otg.mode}
