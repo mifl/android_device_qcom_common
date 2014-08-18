@@ -63,7 +63,7 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
     else
         property_set(PROP_LCDDENSITY, "320");
 
-    if (msm_id >= 239 && msm_id <= 243) {
+    if ((msm_id >= 239 && msm_id <= 243) || msm_id == 233) {
          property_set("media.hwhevccodectype", "1");
     } else if (msm_id == 206) {
         property_set("media.swhevccodectype", "1");
