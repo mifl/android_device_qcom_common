@@ -72,7 +72,11 @@ void init_msm_properties(unsigned long soc, unsigned long socrev, char *board)
     UNUSED(socrev);
     UNUSED(board);
 }
-
+__attribute__ ((weak))
+int load_msm_modem()
+{
+    return 0;
+}
 int read_file2(const char *fname, char *data, int max_size)
 {
     int fd, rc;
@@ -260,6 +264,9 @@ void vendor_load_properties()
 
     /* Define MSM family properties */
     init_msm_properties(msm_id, msm_ver, board_type);
+
+    /*Load the modem if required*/
+    load_msm_modem();
 
     init_alarm_boot_properties();
     /* Set Display Node Permissions */
