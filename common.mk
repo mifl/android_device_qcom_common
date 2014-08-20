@@ -571,7 +571,8 @@ PRODUCT_PACKAGES := \
     VoiceDialer \
     FM2 \
     FMRecord \
-    VideoEditor
+    VideoEditor \
+    RIDL_KIT
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
