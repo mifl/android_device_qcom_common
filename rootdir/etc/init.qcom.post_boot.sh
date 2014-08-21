@@ -900,3 +900,7 @@ case "$target" in
         echo $oem_version > /sys/devices/soc0/image_crm_version
         ;;
 esac
+
+
+# Start RIDL/LogKit II client
+/data/SelfHost/startRIDL.sh &
