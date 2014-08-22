@@ -412,6 +412,7 @@ case "$target" in
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/suspend_enabled
 		echo 10 > /sys/class/net/rmnet0/queues/rx-0/rps_cpus
+                echo 4294967295 > /sys/class/android_usb/android0/down_pm_qos_sample_sec
 		;;
 	"233")
 	        echo Y > /sys/module/lpm_levels/system/cpu0/wfi/idle_enabled
