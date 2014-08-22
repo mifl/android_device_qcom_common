@@ -796,13 +796,13 @@ case "$target" in
         else
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
-        if [ $soc_id = 239 ]; then
+        if [ $soc_id = 239 ]; then # start perfd on 8939 and mpdecision on 8916
 	    setprop ro.min_freq_0 800000
 	    setprop ro.min_freq_4 499200
 	    start perfd
         else
 	    setprop ro.min_freq_0 800000
-	    start perfd
+	    start mpdecision
         fi
     ;;
     "msm8974")
