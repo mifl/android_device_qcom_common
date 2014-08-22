@@ -543,11 +543,6 @@ case "$target" in
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
 
-        # Apply HMP Task packing for 8916, 8936 and 8939
-        echo 30 > /proc/sys/kernel/sched_small_task
-        echo 50 > /proc/sys/kernel/sched_mostly_idle_load
-        echo 10 > /proc/sys/kernel/sched_mostly_idle_nr_run
-
         # Apply governor settings for 8916
         case "$soc_id" in
             "206")
@@ -583,6 +578,11 @@ case "$target" in
         # Apply governor settings for 8939
         case "$soc_id" in
             "239")
+	        # Apply HMP Task packing for 8939
+                echo 30 > /proc/sys/kernel/sched_small_task
+                echo 50 > /proc/sys/kernel/sched_mostly_idle_load
+                echo 10 > /proc/sys/kernel/sched_mostly_idle_nr_run
+
                 # enable governor for perf cluster
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
                 echo "25000 1113600:50000" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
