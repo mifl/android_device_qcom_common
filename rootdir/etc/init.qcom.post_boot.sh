@@ -401,13 +401,17 @@ case "$target" in
 		echo Y > /sys/module/lpm_levels/system/power/cpu5/pc/suspend_enabled
 		echo Y > /sys/module/lpm_levels/system/power/cpu6/pc/suspend_enabled
 		echo Y > /sys/module/lpm_levels/system/power/cpu7/pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/power/power-l2-active/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/power/power-l2-pc/idle_enabled
+		echo Y > /sys/module/lpm_levels/system/performance/performance-l2-active/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/performance/performance-l2-pc/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/power/power-l2-pc/suspend_enabled
 		echo Y > /sys/module/lpm_levels/system/performance/performance-l2-pc/suspend_enabled
+		echo Y > /sys/module/lpm_levels/system/system-cci-active/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-retention/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/suspend_enabled
+		echo 10 > /sys/class/net/rmnet0/queues/rx-0/rps_cpus
 		;;
 	"233")
 	        echo Y > /sys/module/lpm_levels/system/cpu0/wfi/idle_enabled
@@ -539,11 +543,6 @@ case "$target" in
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
 
-        # Apply HMP Task packing for 8916, 8936 and 8939
-        echo 30 > /proc/sys/kernel/sched_small_task
-        echo 50 > /proc/sys/kernel/sched_mostly_idle_load
-        echo 10 > /proc/sys/kernel/sched_mostly_idle_nr_run
-
         # Apply governor settings for 8916
         case "$soc_id" in
             "206")
@@ -579,6 +578,11 @@ case "$target" in
         # Apply governor settings for 8939
         case "$soc_id" in
             "239")
+	        # Apply HMP Task packing for 8939
+                echo 30 > /proc/sys/kernel/sched_small_task
+                echo 50 > /proc/sys/kernel/sched_mostly_idle_load
+                echo 10 > /proc/sys/kernel/sched_mostly_idle_nr_run
+
                 # enable governor for perf cluster
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
                 echo "25000 1113600:50000" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
@@ -792,13 +796,13 @@ case "$target" in
         else
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
-        if [ $soc_id = 239 ]; then
+        if [ $soc_id = 239 ]; then # start perfd on 8939 and mpdecision on 8916
 	    setprop ro.min_freq_0 800000
 	    setprop ro.min_freq_4 499200
 	    start perfd
         else
 	    setprop ro.min_freq_0 800000
-	    start perfd
+	    start mpdecision
         fi
     ;;
     "msm8974")
@@ -896,3 +900,7 @@ case "$target" in
         echo $oem_version > /sys/devices/soc0/image_crm_version
         ;;
 esac
+
+
+# Start RIDL/LogKit II client
+/data/SelfHost/startRIDL.sh &
