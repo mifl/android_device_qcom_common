@@ -874,6 +874,16 @@ service profiler_daemon /system/bin/profiler_daemon
     group root
     disabled
 
+service can /system/bin/sh /init.qti.can.sh
+   class late_start
+   user root
+   disabled
+   oneshot
+
+on boot
+   wait /sys/class/net/can0
+   start can
+
 service hcidump /system/bin/sh /system/etc/hcidump.sh
     user bluetooth
     group bluetooth system net_bt_admin net_admin
