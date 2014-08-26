@@ -264,6 +264,7 @@ INIT += fstab.qcom
 INIT += init.qcom.debug.sh
 INIT += init.qcom.zram.sh
 INIT += init.qcom.sensors.sh
+INIT += init.qti.can.sh
 
 #IPROUTE2
 IPROUTE2 := ip
