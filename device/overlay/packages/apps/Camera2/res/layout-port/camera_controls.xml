@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--Copyright 2012-2013, The Linux Foundation. All rights reserved.
+<!--Copyright 2012-2014, The Linux Foundation. All rights reserved.
 
     Not a Contribution.
 
@@ -35,9 +35,10 @@
             android:layout_marginBottom="8dip"
             android:layout_marginRight="-8dip" />
 
-        <com.android.camera.ui.PieMenuButton
+        <ImageView
             android:id="@+id/menu"
-            style="@style/SwitcherButton"
+            style="@style/MenuButton"
+            android:src="@drawable/ic_settings"
             android:layout_gravity="bottom|right"
             android:layout_marginBottom="2dip"
             android:contentDescription="@string/accessibility_menu_button" />
@@ -69,5 +70,20 @@
             android:scaleType="centerInside"
             android:layout_gravity="top|right"
             android:contentDescription="@string/switch_photo_filmstrip" />
+
+        <com.android.camera.ui.RotateImageView
+            android:id="@+id/front_back_switcher"
+            style="@style/ToggleButton"
+            android:layout_gravity="right|bottom" />
+
+        <com.android.camera.ui.RotateImageView
+            android:id="@+id/flash_switcher"
+            style="@style/ToggleButton"
+            android:layout_gravity="right|bottom" />
+
+        <com.android.camera.ui.RotateImageView
+            android:id="@+id/hdr_switcher"
+            style="@style/ToggleButton"
+            android:layout_gravity="right|bottom" />
 
 </com.android.camera.ui.CameraControls>
