@@ -387,6 +387,14 @@ endif
 
 endif
 
+#----------------------------------------------------------------------
+# Generate secure boot image
+#----------------------------------------------------------------------
+ifeq ($(TARGET_BOOTIMG_SIGNED),true)
+.PHONY: bootimage
+bootimage: $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_SEC_BOOTIMAGE_TARGET)
+endif
+
 ###################################################################################################
 
 .PHONY: aboot
