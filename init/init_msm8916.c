@@ -67,5 +67,6 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
          property_set("media.hwhevccodectype", "1");
     } else if (msm_id == 206) {
         property_set("media.swhevccodectype", "1");
+        property_set("vidc.enc.narrow.searchrange", "0");
     }
 }
