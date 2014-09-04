@@ -26,6 +26,8 @@ ALSA_UCM += snd_soc_msm_Sitar_auxpcm
 ALSA_UCM += snd_soc_msm_Taiko
 ALSA_UCM += snd_soc_msm_auto
 ALSA_UCM += snd_soc_msm_auto_auxpcm
+ALSA_UCM += snd_soc_msm_mplatform
+ALSA_UCM += snd_soc_msm_mplatform_auxpcm
 
 NOTIFY_WAV_FILE := notification.wav
 
