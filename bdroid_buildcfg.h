@@ -30,11 +30,11 @@
 
 #define BTA_DM_COD {0x00, BTM_COD_MAJOR_WEARABLE, BTM_COD_MINOR_WRIST_WATCH}
 
-#define BTA_AR_INCLUDED               FALSE
-#define A2D_INCLUDED                  FALSE
-#define AVDT_INCLUDED                 FALSE
-#define AVCT_INCLUDED                 FALSE
-#define AVRC_INCLUDED                 FALSE
+#define BTA_AR_INCLUDED               TRUE
+#define A2D_INCLUDED                  TRUE
+#define AVDT_INCLUDED                 TRUE
+#define AVCT_INCLUDED                 TRUE
+#define AVRC_INCLUDED                 TRUE
 #define PAN_NAP_DISABLED              TRUE
 
 #endif
