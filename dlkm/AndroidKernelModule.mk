@@ -81,6 +81,21 @@ else
 TARGET_KERNEL_STRIP := $(TARGET_STRIP)
 endif
 
+-include $(KERNEL_OUT)/.config
+
+ifeq ($(CONFIG_MODULE_SIG_ALL), y)
+MODSECKEY = $(KERNEL_OUT)/signing_key.priv
+MODPUBKEY = $(KERNEL_OUT)/signing_key.x509
+mod_sign_cmd = perl ./kernel/scripts/sign-file $(CONFIG_MODULE_SIG_HASH) $(MODSECKEY) $(MODPUBKEY)
+
+define sign-mod
+$(mod_sign_cmd) $@
+endef
+
+else
+mod_sign_cmd = true
+endif
+
 $(LOCAL_BUILT_MODULE): $(KBUILD_MODULE) | $(ACP)
 ifneq "$(LOCAL_MODULE_DEBUG_ENABLE)" ""
 	@mkdir -p $(dir $@)
@@ -88,6 +103,8 @@ ifneq "$(LOCAL_MODULE_DEBUG_ENABLE)" ""
 else
 	$(transform-prebuilt-to-target)
 endif
+	@echo "mod_sign_cmd: $(mod_sign_cmd)"
+	$(sign-mod)
 
 # This should really be cleared in build/core/clear-vars.mk, but for
 # the time being, we need to clear it ourselves
