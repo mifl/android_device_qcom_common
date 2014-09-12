@@ -536,6 +536,13 @@ CRDA += init.crda.sh
 WLAN := prima_wlan.ko
 WLAN += pronto_wlan.ko
 
+#Audio decoders
+AUDIO_DECODERS := libstagefright_soft_amrdec
+AUDIO_DECODERS += libstagefright_soft_mp3dec
+AUDIO_DECODERS += libstagefright_soft_mpeg4dec
+AUDIO_DECODERS += libstagefright_soft_rawdec
+AUDIO_DECODERS += libstagefright_soft_vorbisdec
+
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
 PRODUCT_PACKAGES += $(ANGLE)
@@ -590,6 +597,7 @@ PRODUCT_PACKAGES += $(UPDATER)
 PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
 PRODUCT_PACKAGES += $(CRDA)
+PRODUCT_PACKAGES += $(AUDIO_DECODERS)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
