@@ -202,3 +202,6 @@
 # HSIC devices
 /dev/ks_hsic_bridge       0660   root       system
 /dev/efs_hsic_bridge      0660   root       system
+
+# Ultrasound device
+/dev/usf1                 0660   system     system
