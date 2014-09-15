@@ -631,9 +631,9 @@ service ftm_ffbm /system/bin/ftmdaemon
     oneshot
 
 service cnss_diag /system/bin/cnss_diag --q
+    class main
     user root
     group root
-    disabled
     oneshot
 
 service cnss-daemon /system/bin/cnss-daemon -n -l
