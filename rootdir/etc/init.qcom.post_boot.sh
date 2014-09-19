@@ -401,3 +401,11 @@ esac
 insmod /system/lib/modules/adsprpc.ko
 chown -h system.system /dev/adsprpc-smd
 chmod -h 666 /dev/adsprpc-smd
+# bluetooth module
+insmod /system/lib/modules/bluetooth.ko
+insmod /system/lib/modules/hci_smd.ko
+insmod /system/lib/modules/hci_uart.ko
+insmod /system/lib/modules/bluetooth-power.ko
+insmod /system/lib/modules/rfcomm.ko
+insmod /system/lib/modules/bnep.ko
+insmod /system/lib/modules/hidp.ko
