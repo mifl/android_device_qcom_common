@@ -661,6 +661,16 @@ service fuse_usbotg /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/
 service fuse_sata /system/bin/sdcard -u 1023 -g 1023 -w 1023 -d /mnt/media_rw/sata /storage/sata
     class late_start
 
+service can /system/bin/sh /init.qti.can.sh
+   class late_start
+   user root
+   disabled
+   oneshot
+
+on boot
+   wait /sys/class/net/can0
+   start can
+
 # Binding fuse mount point to /storage/emulated/legacy
 on property:init.svc.sdcard=running
     wait /mnt/shell/emulated/0
