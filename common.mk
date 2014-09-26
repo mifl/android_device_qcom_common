@@ -751,7 +751,11 @@ PRODUCT_MANUFACTURER := QUALCOMM
 endif
 
 PRODUCT_BRAND := qcom
-PRODUCT_LOCALES := en_US es_US de_DE zh_CN
+PRODUCT_LOCALES := en_US es_US de_DE zh_CN it_IT ja_JP zh_TW zh_HK ru_RU ko_KR pt_BR \
+hi_IN in_ID vi_VN tl_PH th_TH ar_SA fr_FR bn_BD mr_IN ta_IN te_IN cs_CZ da_DK et_EE fa_IR \
+fi_FI it_IT lt_LT lv_LV nl_NL pl_PL ro_RO sk_SK sl_SI sr_RS sv_SE uk_UA am az eu gl gu hy \
+is ka kk km kn mk ms_BX my ne pa sw uz ca el he hr hu ku ml no si tr
+
 PRODUCT_LOCALES += hdpi mdpi
 
 PRODUCT_PROPERTY_OVERRIDES += \
