@@ -247,3 +247,4 @@
     start qcomsysd
     start ptt_ffbm
     start ftm_ffbm
+    start wcnss-service
