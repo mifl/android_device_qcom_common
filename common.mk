@@ -155,7 +155,6 @@ FM := qcom.fmradio
 FM += libqcomfm_jni
 
 #GPS
-GPS_HARDWARE := gps.conf
 GPS_HARDWARE += gps.default
 GPS_HARDWARE += gps.mahimahi
 GPS_HARDWARE += libloc_adapter
@@ -560,6 +559,7 @@ PRODUCT_PACKAGES += $(CHARGER)
 PRODUCT_PACKAGES += $(CURL)
 PRODUCT_PACKAGES += $(E2FSPROGS)
 PRODUCT_PACKAGES += $(EBTABLES)
+PRODUCT_PACKAGES += $(GPS_HARDWARE)
 PRODUCT_PACKAGES += $(FASTPOWERON)
 PRODUCT_PACKAGES += $(I420CC)
 PRODUCT_PACKAGES += $(INIT)
@@ -642,6 +642,10 @@ endif # BOARD_HAVE_BLUETOOTH_BLUEZ
 # gps/location secuity configuration file
 PRODUCT_COPY_FILES += \
     device/qcom/common/sec_config:system/etc/sec_config
+
+# gps configuration
+PRODUCT_COPY_FILES += \
+    device/qcom/common/gps.conf:system/etc/gps.conf
 
 PRODUCT_COPY_FILES += device/qcom/common/media/media_profiles.xml:system/etc/media_profiles.xml \
                       device/qcom/common/media/media_codecs.xml:system/etc/media_codecs.xml
