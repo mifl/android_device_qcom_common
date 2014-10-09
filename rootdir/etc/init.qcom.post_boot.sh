@@ -349,7 +349,7 @@ case "$target" in
 		echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
 		;;
-           "239" | "241" )
+           "239")
 		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 		if [ -f /sys/devices/soc0/platform_subtype_id ]; then
 			platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
@@ -365,8 +365,18 @@ case "$target" in
 					;;
 				esac
 			;;
+			"MTP")
+				case "$platform_subtype_id" in
+					"3")
+						start hbtp
+					;;
+				esac
+			;;
 		esac
-            ;;
+                ;;
+           "241")
+		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+		;;
         esac
     ;;
 esac
