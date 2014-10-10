@@ -343,7 +343,7 @@ case "$target" in
             soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
         case "$soc_id" in
-            "206")
+            "206" | "247" | "248" | "249" | "250")
 	        echo Y > /sys/module/lpm_levels/system/cpu0/wfi/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/cpu1/wfi/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/cpu2/wfi/idle_enabled
@@ -368,7 +368,7 @@ case "$target" in
 	        echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
 		;;
-            "239" | "241")
+            "239" | "241" | "263")
 		echo Y > /sys/module/lpm_levels/system/performance/cpu0/wfi/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/performance/cpu1/wfi/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/performance/cpu2/wfi/idle_enabled
@@ -413,7 +413,7 @@ case "$target" in
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/suspend_enabled
 		echo 10 > /sys/class/net/rmnet0/queues/rx-0/rps_cpus
 		;;
-	"233")
+	"233" | "240" | "242")
 	        echo Y > /sys/module/lpm_levels/system/cpu0/wfi/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/cpu1/wfi/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/cpu2/wfi/idle_enabled
@@ -545,7 +545,7 @@ case "$target" in
 
         # Apply governor settings for 8916
         case "$soc_id" in
-            "206")
+            "206" | "247" | "248" | "249" | "250")
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
                 echo "25000 1094400:50000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
@@ -561,7 +561,7 @@ case "$target" in
 
 	# Apply governor settings for 8936
         case "$soc_id" in
-            "233")
+	    "233" | "240" | "242")
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
                 echo "25000 1113600:50000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
@@ -577,7 +577,7 @@ case "$target" in
 
         # Apply governor settings for 8939
         case "$soc_id" in
-            "239")
+            "239" | "241" | "263")
 	        # Apply HMP Task packing for 8939
                 echo 30 > /proc/sys/kernel/sched_small_task
                 echo 50 > /proc/sys/kernel/sched_mostly_idle_load
