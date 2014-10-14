@@ -409,3 +409,14 @@ insmod /system/lib/modules/bluetooth-power.ko
 insmod /system/lib/modules/rfcomm.ko
 insmod /system/lib/modules/bnep.ko
 insmod /system/lib/modules/hidp.ko
+chown bluetooth.bluetooth /sys/module/bluetooth_power/parameters/power
+chown bluetooth.bluetooth /sys/class/rfkill/rfkill0/type
+chown bluetooth.bluetooth /sys/class/rfkill/rfkill0/state
+chown bluetooth.bluetooth /proc/bluetooth/sleep/proto
+chmod 0660 /sys/module/bluetooth_power/parameters/power
+chmod 0660 /sys/class/rfkill/rfkill0/state
+chmod 0660 /proc/bluetooth/sleep/proto
+chown bluetooth.bluetooth /dev/ttyHS0
+chmod 0660 /dev/ttyHS0
+chown bluetooth.bluetooth /sys/devices/platform/msm_serial_hs.0/clock
+chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
