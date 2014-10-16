@@ -37,4 +37,11 @@
 #define AVRC_INCLUDED                 TRUE
 #define PAN_NAP_DISABLED              TRUE
 
+#define BTA_FTS_OPS_IDLE_TO_SNIFF_DELAY_MS 1000
+
+#define BTA_DM_PM_SNIFF_MAX      2048
+#define BTA_DM_PM_SNIFF_MIN      1024
+#define BTA_DM_PM_SNIFF_ATTEMPT  4
+#define BTA_DM_PM_SNIFF_TIMEOUT  1
+
 #endif
