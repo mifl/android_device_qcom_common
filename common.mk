@@ -537,6 +537,7 @@ WLAN := prima_wlan.ko
 WLAN += pronto_wlan.ko
 
 #Audio decoders
+AUDIO_DECODERS := libstagefright_soft_aacdec
 AUDIO_DECODERS := libstagefright_soft_amrdec
 AUDIO_DECODERS += libstagefright_soft_mp3dec
 AUDIO_DECODERS += libstagefright_soft_mpeg4dec
