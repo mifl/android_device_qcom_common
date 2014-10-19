@@ -397,6 +397,9 @@ on property:vold.decrypt=trigger_restart_framework
     start qcom-c_main-sh
     start config_bluetooth
 
+on property:vold.decrypt=trigger_restart_min_framework
+    start qcom-c_main-sh
+
 on property:persist.env.fastdorm.enabled=true
     setprop persist.radio.data_no_toggle 1
 
