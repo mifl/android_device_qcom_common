@@ -621,7 +621,7 @@ service can /system/bin/sh /init.qti.can.sh
    disabled
    oneshot
 
-on boot
+on property:sys.boot_completed=1
    wait /sys/class/net/can0
    start can
 
