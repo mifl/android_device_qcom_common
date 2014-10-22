@@ -621,6 +621,7 @@ case "$target" in
                 echo 60 > /proc/sys/kernel/sched_upmigrate
                 echo 40 > /proc/sys/kernel/sched_downmigrate
 		echo 3 > /proc/sys/kernel/sched_ravg_hist_size
+                echo 0 > /proc/sys/kernel/sched_account_wait_time
             ;;
         esac
     ;;
