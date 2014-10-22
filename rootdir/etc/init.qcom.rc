@@ -56,10 +56,7 @@ on init
     symlink /storage/emulated/legacy /storage/sdcard0
 
 on early-boot
-    # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
-    exec /system/bin/sh /init.qcom.early_boot.sh ${ro.board.platform}
-    exec /system/bin/sh /init.qcom.syspart_fixup.sh ${ro.board.platform} ${ro.serialno}
 
 service modem-sh /system/bin/sh /system/etc/init.qcom.modem_links.sh
     class core
@@ -67,23 +64,11 @@ service modem-sh /system/bin/sh /system/etc/init.qcom.modem_links.sh
     oneshot
 
 on boot
-    chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
-    chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
-    chown bluetooth bluetooth /proc/bluetooth/sleep/proto
-    chown system system /sys/module/sco/parameters/disable_esco
-    chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
-    chmod 0660 /sys/module/bluetooth_power/parameters/power
-    chmod 0660 /sys/module/hci_smd/parameters/hcismd_set
-    chmod 0660 /sys/class/rfkill/rfkill0/state
-    chmod 0660 /proc/bluetooth/sleep/proto
     chown bluetooth bluetooth /dev/ttyHS0
     chmod 0660 /dev/ttyHS0
     chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
-    chmod 0660 /dev/ttyHS2
-    chown bluetooth bluetooth /dev/ttyHS2
 
     #Create QMUX deamon socket area
     mkdir /dev/socket/qmux_radio 0770 radio radio
@@ -100,14 +85,9 @@ on boot
     setprop ro.telephony.call_ring.multiple false
 
     #Set SUID bit for usbhub
-    chmod 4755 /system/bin/usbhub
-    chmod 755 /system/bin/usbhub_init
 
     #Remove SUID bit for iproute2 ip tool
-    chmod 0755 /system/bin/ip
 
-
-    chmod 0444 /sys/devices/platform/msm_hsusb/gadget/usb_state
 
     # Change permissions for fps_level nodes
     chown system graphics /sys/class/graphics/fb0/msm_fb_fps_level
@@ -151,26 +131,6 @@ on boot
     write /proc/sys/net/core/wmem_max  2097152
 
     #To allow interfaces to get v6 address when tethering is enabled
-    write /proc/sys/net/ipv6/conf/rmnet0/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet1/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet2/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet3/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet4/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet5/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet6/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet7/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio0/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio1/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio2/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio3/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio4/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio5/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio6/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_sdio7/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb0/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb1/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb2/accept_ra 2
-    write /proc/sys/net/ipv6/conf/rmnet_usb3/accept_ra 2
 
     # To prevent out of order acknowledgements from making
     # connection tracking to treat them as not belonging to
@@ -214,19 +174,14 @@ on post-fs-data
     chown system system /persist
     chmod 0771 /persist
     chmod 0664 /sys/devices/platform/msm_sdcc.1/polling
-    chmod 0664 /sys/devices/platform/msm_sdcc.2/polling
-    chmod 0664 /sys/devices/platform/msm_sdcc.3/polling
     chmod 0664 /sys/devices/platform/msm_sdcc.4/polling
 
     # Chown polling nodes as needed from UI running on system server
     chown system system /sys/devices/platform/msm_sdcc.1/polling
-    chown system system /sys/devices/platform/msm_sdcc.2/polling
-    chown system system /sys/devices/platform/msm_sdcc.3/polling
     chown system system /sys/devices/platform/msm_sdcc.4/polling
 
     #Create the symlink to qcn wpa_supplicant folder for ar6000 wpa_supplicant
     mkdir /data/system 0775 system system
-    #symlink /data/misc/wifi/wpa_supplicant /data/system/wpa_supplicant
 
     #Create directories for Location services
     mkdir /data/misc/location 0770 gps gps
@@ -583,7 +538,6 @@ service atfwd /system/bin/ATFWD-daemon
     class late_start
     user system
     group system radio
-    onrestart /system/bin/log -t RIL-ATFWD -p w "ATFWD daemon restarted"
 
 service hdmid /system/bin/hdmid
     class late_start
@@ -705,15 +659,6 @@ on property:persist.sys.ssr.restart_level=1
     write /sys/module/subsystem_restart/parameters/restart_level 1
 on property:persist.sys.ssr.restart_level=3
     write /sys/module/subsystem_restart/parameters/restart_level 3
-
-on property:persist.radio.sglte_sim_active=true
-    kill qmiproxy 15
-on property:persist.radio.sglte_sim_active=false
-    kill qmiproxy 15
-on property:persist.radio.sglte_csfb=true
-    kill qmiproxy 15
-on property:persist.radio.sglte_csfb=false
-    kill qmiproxy 15
 
 service diag_mdlog_start /system/bin/diag_mdlog
     class late_start
