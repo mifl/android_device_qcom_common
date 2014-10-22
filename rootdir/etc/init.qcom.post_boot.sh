@@ -409,6 +409,8 @@ insmod /system/lib/modules/bluetooth-power.ko
 insmod /system/lib/modules/rfcomm.ko
 insmod /system/lib/modules/bnep.ko
 insmod /system/lib/modules/hidp.ko
+insmod /system/lib/modules/hid-magicmouse.ko
+insmod /system/lib/modules/hid-elecom.ko
 chown bluetooth.bluetooth /sys/module/bluetooth_power/parameters/power
 chown bluetooth.bluetooth /sys/class/rfkill/rfkill0/type
 chown bluetooth.bluetooth /sys/class/rfkill/rfkill0/state
