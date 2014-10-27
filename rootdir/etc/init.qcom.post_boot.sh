@@ -796,14 +796,23 @@ case "$target" in
         else
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
-        if [ $soc_id = 239 ]; then # start perfd on 8939 and mpdecision on 8916
-	    setprop ro.min_freq_0 800000
-	    setprop ro.min_freq_4 499200
-	    start perfd
-        else
-	    setprop ro.min_freq_0 800000
-	    start mpdecision
-        fi
+	case "$soc_id" in
+             "239" | "241" | "263")
+            setprop ro.min_freq_0 800000
+            setprop ro.min_freq_4 499200
+            start perfd
+	;;
+	#for 8916
+	     "206" | "247" | "248" | "249" | "250")
+            setprop ro.min_freq_0 800000
+            start mpdecision
+	;;
+	#for 8936
+             "233" | "240" | "242")
+             setprop ro.min_freq_0 800000
+             start mpdecision
+	;;
+	esac
     ;;
     "msm8974")
         start mpdecision
