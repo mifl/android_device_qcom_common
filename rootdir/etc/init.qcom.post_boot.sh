@@ -591,6 +591,10 @@ case "$target" in
 				echo 25 > $cpu_bimc_io_percent
 			done
 		done
+		for gpu_bimc_io_percent in /sys/class/devfreq/qcom,gpubw*/bw_hwmon/io_percent
+		do
+			 echo 40 > $gpu_bimc_io_percent
+		done
 
                 # enable governor for perf cluster
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
