@@ -45,41 +45,6 @@ enable_stm_events()
         return
     fi
 
-    echo 1 > /sys/bus/coresight/devices/coresight-tmc-etr/curr_sink
-    echo 1 > /sys/bus/coresight/devices/coresight-stm/enable
-    echo 1 > /sys/kernel/debug/tracing/tracing_on
-    # schedular
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_cpu_hotplug/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_cpu_load/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_enq_deq_task/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_load_balance/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_migrate_task/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_switch/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_task_load/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_update_history/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_update_task_ravg/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup_new/enable
-    # sound
-    echo 1 > /sys/kernel/debug/tracing/events/asoc/snd_soc_reg_read/enable
-    echo 1 > /sys/kernel/debug/tracing/events/asoc/snd_soc_reg_write/enable
-    # mdp
-    echo 1 > /sys/kernel/debug/tracing/events/mdss/mdp_video_underrun_done/enable
-    # video
-    echo 1 > /sys/kernel/debug/tracing/events/msm_vidc/enable
-    # clock
-    echo 1 > /sys/kernel/debug/tracing/events/power/clock_set_rate/enable
-    # regulator
-    echo 1 > /sys/kernel/debug/tracing/events/regulator/enable
-    # power
-    echo 1 > /sys/kernel/debug/tracing/events/msm_low_power/enable
-    #thermal
-    echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_pre_core_offline/enable
-    echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_post_core_offline/enable
-    echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_pre_core_online/enable
-    echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_post_core_online/enable
-    echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_pre_frequency_mit/enable
-    echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_post_frequency_mit/enable
 }
 
 coresight_config=`getprop persist.debug.coresight.config`
