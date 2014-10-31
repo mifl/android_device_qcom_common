@@ -31,5 +31,5 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <resources>
     <!-- Enable doze mode -->
-    <bool name="doze_display_state_supported">true</bool>
+    <!--<bool name="doze_display_state_supported">true</bool>-->
 </resources>

@@ -757,10 +757,10 @@ PRODUCT_COPY_FILES := \
 #endif # BOARD_HAVE_BLUETOOTH_BLUEZ
 
 # gps/location secuity configuration file
-PRODUCT_COPY_FILES += \
+#PRODUCT_COPY_FILES += \
     device/qcom/common/sec_config:system/etc/sec_config
 
-PRODUCT_COPY_FILES += \
+#PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml \
@@ -783,4 +783,4 @@ PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
 
 # dm-verity definitions
 PRODUCT_VERITY_PARTITION=/dev/block/bootdevice/by-name/system
-$(call inherit-product, build/target/product/verity.mk)
+$(call inherit-product-if-exists, build/target/product/verity.mk)
