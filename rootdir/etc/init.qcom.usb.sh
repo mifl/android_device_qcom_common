@@ -27,28 +27,8 @@
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 #
-# Update USB serial number from persist storage if present, if not update
-# with value passed from kernel command line, if none of these values are
-# set then use the default value. This order is needed as for devices which
-# do not have unique serial number.
-# User needs to set unique usb serial number to persist.usb.serialno
-#
-serialno=`getprop persist.usb.serialno`
-case "$serialno" in
-    "")
-    serialnum=`getprop ro.serialno`
-    case "$serialnum" in
-        "");; #Do nothing, use default serial number
-        *)
-        echo "$serialnum" > /sys/class/android_usb/android0/iSerial
-    esac
-    ;;
-    *)
-    echo "$serialno" > /sys/class/android_usb/android0/iSerial
-esac
-
-chown root.system /sys/devices/platform/msm_hsusb/gadget/wakeup
-chmod 220 /sys/devices/platform/msm_hsusb/gadget/wakeup
+chown -h root.system /sys/devices/platform/msm_hsusb/gadget/wakeup
+chmod -h 220 /sys/devices/platform/msm_hsusb/gadget/wakeup
 
 #
 # Allow persistent usb charging disabling
@@ -80,6 +60,26 @@ case "$usbcurrentlimit" in
 	;;
     esac
 esac
+
+#
+# Check ESOC for external MDM
+#
+# Note: currently only a single MDM is supported
+#
+if [ -d /sys/bus/esoc/devices ]; then
+for f in /sys/bus/esoc/devices/*; do
+    if [ -d $f ]; then
+        esoc_name=`cat $f/esoc_name`
+        if [ "$esoc_name" = "MDM9x25" -o "$esoc_name" = "MDM9x35" ]; then
+            esoc_link=`cat $f/esoc_link`
+            break
+        fi
+    fi
+done
+fi
+
+target=`getprop ro.board.platform`
+
 #
 # Allow USB enumeration with default PID/VID
 #
@@ -88,73 +88,80 @@ echo 1  > /sys/class/android_usb/f_mass_storage/lun/nofua
 usb_config=`getprop persist.sys.usb.config`
 case "$usb_config" in
     "" | "adb") #USB persist config not set, select default configuration
-        case $target in
-            "msm8960" | "msm8974" | "msm8226" | "msm8610" | "apq8084")
-                case "$baseband" in
-                    "mdm")
-                         setprop persist.sys.usb.config diag,diag_mdm,serial_hsic,serial_tty,rmnet_hsic,mass_storage,adb
-                    ;;
-                    "sglte")
-                         setprop persist.sys.usb.config diag,diag_qsc,serial_smd,serial_tty,serial_hsuart,rmnet_hsuart,mass_storage,adb
-                    ;;
-                    "dsda" | "sglte2")
-                         setprop persist.sys.usb.config diag,diag_mdm,diag_qsc,serial_hsic,serial_hsuart,rmnet_hsic,rmnet_hsuart,mass_storage,adb
-                    ;;
-                    "dsda2")
-                         setprop persist.sys.usb.config diag,diag_mdm,diag_mdm2,serial_hsic,serial_hsusb,rmnet_hsic,rmnet_hsusb,mass_storage,adb
-                    ;;
-                    *)
-                         setprop persist.sys.usb.config diag,serial_smd,serial_tty,rmnet_bam,mass_storage,adb
-                    ;;
-                esac
-            ;;
-            "msm7627a")
-                setprop persist.sys.usb.config diag,serial_smd,serial_tty,rmnet_smd,mass_storage,adb
-            ;;
-            * )
-                case "$baseband" in
-                    "svlte2a")
-                         setprop persist.sys.usb.config diag,diag_mdm,serial_sdio,serial_smd,rmnet_smd_sdio,mass_storage,adb
-                    ;;
-                    "csfb")
-                         setprop persist.sys.usb.config diag,diag_mdm,serial_sdio,serial_tty,rmnet_sdio,mass_storage,adb
-                    ;;
-                    *)
-                         setprop persist.sys.usb.config diag,serial_tty,serial_tty,rmnet_smd,mass_storage,adb
-                    ;;
-                esac
-            ;;
-        esac
+      case "$esoc_link" in
+          "HSIC")
+              setprop persist.sys.usb.config diag,diag_mdm,serial_hsic,serial_tty,rmnet_hsic,mass_storage,adb
+              setprop persist.rmnet.mux enabled
+          ;;
+          "HSIC+PCIe")
+              setprop persist.sys.usb.config diag,diag_mdm,serial_hsic,rmnet_qti_ether,mass_storage,adb
+          ;;
+          "PCIe")
+              setprop persist.sys.usb.config diag,diag_mdm,serial_tty,rmnet_qti_ether,mass_storage,adb
+          ;;
+          *)
+          case "$baseband" in
+              "mdm")
+                   setprop persist.sys.usb.config diag,diag_mdm,serial_hsic,serial_tty,rmnet_hsic,mass_storage,adb
+              ;;
+              "mdm2")
+                   setprop persist.sys.usb.config diag,diag_mdm,serial_hsic,serial_tty,rmnet_hsic,mass_storage,adb
+              ;;
+              "sglte")
+                   setprop persist.sys.usb.config diag,diag_qsc,serial_smd,serial_tty,serial_hsuart,rmnet_hsuart,mass_storage,adb
+              ;;
+              "dsda" | "sglte2")
+                   setprop persist.sys.usb.config diag,diag_mdm,diag_qsc,serial_hsic,serial_hsuart,rmnet_hsic,rmnet_hsuart,mass_storage,adb
+              ;;
+              "dsda2")
+                   setprop persist.sys.usb.config diag,diag_mdm,diag_mdm2,serial_hsic,serial_hsusb,rmnet_hsic,rmnet_hsusb,mass_storage,adb
+              ;;
+              *)
+		case "$target" in
+                        "msm8916")
+                            setprop persist.sys.usb.config diag,serial_smd,rmnet_bam,adb
+                        ;;
+                        "msm8994")
+                            setprop persist.sys.usb.config diag,serial_smd,serial_tty,rmnet_ipa,mass_storage,adb
+                        ;;
+                        "msm8909")
+                            setprop persist.sys.usb.config diag,serial_smd,rmnet_qti_bam,adb
+                        ;;
+                        *)
+                            setprop persist.sys.usb.config diag,serial_smd,serial_tty,rmnet_bam,mass_storage,adb
+                        ;;
+                    esac
+              ;;
+          esac
+          ;;
+      esac
     ;;
     * ) ;; #USB persist config exists, do nothing
 esac
 
 #
-# Add support for exposing lun0 as cdrom in mass-storage
-#
-target=`getprop ro.product.device`
-cdromname="/system/etc/cdrom_install.iso"
-cdromenable=`getprop persist.service.cdrom.enable`
-case "$target" in
-        "msm7627a" | "msm8226" | "msm8610")
-                case "$cdromenable" in
-                        0)
-                                echo "" > /sys/class/android_usb/android0/f_mass_storage/lun0/file
-                                ;;
-                        1)
-                                echo "mounting usbcdrom lun"
-                                echo $cdromname > /sys/class/android_usb/android0/f_mass_storage/lun0/file
-                                ;;
-                esac
-                ;;
-esac
-
-#
-# Select USB BAM - 2.0 or 3.0
+# Do target specific things
 #
 case "$target" in
     "msm8974")
+# Select USB BAM - 2.0 or 3.0
         echo ssusb > /sys/bus/platform/devices/usb_bam/enable
+    ;;
+    "apq8084")
+	if [ "$baseband" == "apq" ]; then
+		echo "msm_hsic_host" > /sys/bus/platform/drivers/xhci_msm_hsic/unbind
+	fi
+    ;;
+    "msm8226")
+         if [ -e /sys/bus/platform/drivers/msm_hsic_host ]; then
+             if [ ! -L /sys/bus/usb/devices/1-1 ]; then
+                 echo msm_hsic_host > /sys/bus/platform/drivers/msm_hsic_host/unbind
+             fi
+         fi
+    ;;
+    "msm8994")
+        echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
+        echo 1 > /sys/class/android_usb/android0/f_rndis_qc/max_pkt_per_xfer # Disable RNDIS UL aggregation
     ;;
 esac
 
@@ -173,7 +180,7 @@ case "$baseband" in
         esac
         echo 1 > /sys/module/rmnet_usb/parameters/rmnet_data_init
         # Allow QMUX daemon to assign port open wait time
-        chown radio.radio /sys/devices/virtual/hsicctl/hsicctl0/modem_wait
+        chown -h radio.radio /sys/devices/virtual/hsicctl/hsicctl0/modem_wait
     ;;
     "dsda2")
           echo 2 > /sys/module/rmnet_usb/parameters/no_rmnet_devs
@@ -197,6 +204,52 @@ case "$baseband" in
           esac
           echo 1 > /sys/module/rmnet_usb/parameters/rmnet_data_init
           # Allow QMUX daemon to assign port open wait time
-          chown radio.radio /sys/devices/virtual/hsicctl/hsicctl0/modem_wait
+          chown -h radio.radio /sys/devices/virtual/hsicctl/hsicctl0/modem_wait
     ;;
+esac
+
+#
+# Add support for exposing lun0 as cdrom in mass-storage
+#
+cdromname="/system/etc/cdrom_install.iso"
+platformver=`cat /sys/devices/soc0/hw_platform`
+case "$target" in
+	"msm8226" | "msm8610" | "msm8916")
+		case $platformver in
+			"QRD")
+				echo "mounting usbcdrom lun"
+				echo $cdromname > /sys/class/android_usb/android0/f_mass_storage/rom/file
+				chmod 0444 /sys/class/android_usb/android0/f_mass_storage/rom/file
+				;;
+		esac
+		;;
+esac
+
+#
+# Add changes to support diag with rndis
+#
+diag_extra=`getprop persist.sys.usb.config.extra`
+case "$diag_extra" in
+	"diag" | "diag,diag_mdm" | "diag,diag_mdm,diag_qsc")
+		case "$baseband" in
+			"mdm")
+				setprop persist.sys.usb.config.extra diag,diag_mdm
+			;;
+		        "dsda" | "sglte2" )
+				setprop persist.sys.usb.config.extra diag,diag_mdm,diag_qsc
+			;;
+		        "sglte")
+				setprop persist.sys.usb.config.extra diag,diag_qsc
+			;;
+		        "dsda2")
+				setprop persist.sys.usb.config.extra diag,diag_mdm,diag_mdm2
+			;;
+		        *)
+				setprop persist.sys.usb.config.extra diag
+			;;
+	        esac
+	;;
+        *)
+		setprop persist.sys.usb.config.extra none
+	;;
 esac

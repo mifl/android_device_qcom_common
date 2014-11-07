@@ -7,6 +7,7 @@
 # and gets parsed before build/core/Makefile, which has these
 # variables defined. build/core/Makefile will overwrite these
 # variables again.
+ifneq ($(strip $(TARGET_NO_KERNEL)),true)
 INSTALLED_BOOTIMAGE_TARGET := $(PRODUCT_OUT)/boot.img
 INSTALLED_RAMDISK_TARGET := $(PRODUCT_OUT)/ramdisk.img
 INSTALLED_SYSTEMIMAGE := $(PRODUCT_OUT)/system.img
@@ -14,6 +15,7 @@ INSTALLED_USERDATAIMAGE_TARGET := $(PRODUCT_OUT)/userdata.img
 INSTALLED_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img
 recovery_ramdisk := $(PRODUCT_OUT)/ramdisk-recovery.img
 INSTALLED_USBIMAGE_TARGET := $(PRODUCT_OUT)/usbdisk.img
+endif
 
 #----------------------------------------------------------------------
 # Generate secure boot image
@@ -51,6 +53,8 @@ endif
 #----------------------------------------------------------------------
 # Generate persist image (persist.img)
 #----------------------------------------------------------------------
+ifneq ($(strip $(TARGET_NO_KERNEL)),true)
+
 TARGET_OUT_PERSIST := $(PRODUCT_OUT)/persist
 
 INTERNAL_PERSISTIMAGE_FILES := \
@@ -72,10 +76,12 @@ $(INSTALLED_PERSISTIMAGE_TARGET): $(MKEXTUSERIMG) $(MAKE_EXT4FS) $(INTERNAL_PERS
 ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_PERSISTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_PERSISTIMAGE_TARGET)
 
+endif
 
 #----------------------------------------------------------------------
 # Generate device tree image (dt.img)
 #----------------------------------------------------------------------
+ifneq ($(strip $(TARGET_NO_KERNEL)),true)
 ifeq ($(strip $(BOARD_KERNEL_SEPARATED_DT)),true)
 ifeq ($(strip $(BUILD_TINY_ANDROID)),true)
 include device/qcom/common/dtbtool/Android.mk
@@ -85,7 +91,7 @@ DTBTOOL := $(HOST_OUT_EXECUTABLES)/dtbTool$(HOST_EXECUTABLE_SUFFIX)
 
 INSTALLED_DTIMAGE_TARGET := $(PRODUCT_OUT)/dt.img
 
-possible_dtb_dirs = $(KERNEL_OUT)/arch/arm/boot/dts/ $(KERNEL_OUT)/arch/arm/boot/
+possible_dtb_dirs = $(KERNEL_OUT)/arch/$(TARGET_KERNEL_ARCH)/boot/dts/ $(KERNEL_OUT)/arch/arm/boot/dts/ $(KERNEL_OUT)/arch/arm/boot/
 dtb_dir = $(firstword $(wildcard $(possible_dtb_dirs)))
 
 define build-dtimage-target
@@ -99,6 +105,7 @@ $(INSTALLED_DTIMAGE_TARGET): $(DTBTOOL) $(INSTALLED_KERNEL_TARGET)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_DTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DTIMAGE_TARGET)
+endif
 endif
 
 #---------------------------------------------------------------------
@@ -121,19 +128,55 @@ endif
 #----------------------------------------------------------------------
 # Generate CDROM image
 #----------------------------------------------------------------------
-CDROM_RES_FILE = $(TARGET_DEVICE_DIR)/cdrom_res
+CDROM_RES_FILE := $(TARGET_DEVICE_DIR)/cdrom_res
+CDROM_DUMMY_FILE := $(TARGET_DEVICE_DIR)/cdrom_res/zero.bin
+
 ifneq ($(wildcard $(CDROM_RES_FILE)),)
 CDROM_ISO_TARGET := $(PRODUCT_OUT)/system/etc/cdrom_install.iso
+#delete the dummy file if it already exists.
+ifneq ($(wildcard $(CDROM_DUMMY_FILE)),)
+$(shell rm -f $(CDROM_DUMMY_FILE))
+endif
+CDROM_RES_SIZE := $(shell du -bs $(CDROM_RES_FILE) | egrep -o '^[0-9]+')
+#At least 300 sectors, 2048Bytes per Sector, set as 310 here
+CDROM_MIN_SIZE := 634880
+CDROM_CAPACITY_IS_ENOUGH := $(shell expr $(CDROM_RES_SIZE) / $(CDROM_MIN_SIZE))
+ifeq ($(CDROM_CAPACITY_IS_ENOUGH),0)
+CDROM_DUMMY_SIZE := $(shell expr $(CDROM_MIN_SIZE) - $(CDROM_RES_SIZE))
+CDROM_DUMMY_SIZE_KB := $(shell expr `expr $(CDROM_DUMMY_SIZE) + 1023` / 1024)
+$(shell dd if=/dev/zero of=$(CDROM_RES_FILE)/zero.bin bs=1024 count=$(CDROM_DUMMY_SIZE_KB))
+endif
 
 define build-cdrom-target
     $(hide) mkisofs -o $(CDROM_ISO_TARGET)  $(CDROM_RES_FILE)
 endef
 
-$(CDROM_ISO_TAREGT): $(CDROM_RES_FILE)
+$(CDROM_ISO_TARGET): $(CDROM_RES_FILE)
 	$(build-cdrom-target)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(CDROM_ISO_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(CDROM_ISO_TARGET)
+endif
+#---------------------------------------------------------------------
+#Generate the SingleImage.bin / MMC_FLASHMEM1.dat
+#---------------------------------------------------------------------
+ifeq ($(strip $(BOARD_DISK_ANDROID_IMG)),true)
+DISK_IMG_TOOL := $(HOST_OUT_EXECUTABLES)/singleimage.py
+$(call pretty,"Android Disk Image for simulator: $(DISK_IMG_TOOL)")
+
+INSTALLED_DISK_IMG_TARGET := $(PRODUCT_OUT)/MMC_FLASHMEM1.dat
+$(call pretty,"Android Disk Image for simulator: $(INSTALLED_DISK_IMG_TARGET)")
+
+define build-disk-img-target
+	$(call pretty,"Android Disk Image for simulator: $(INSTALLED_DISK_IMG_TARGET)")
+	$(hide) $(DISK_IMG_TOOL) $(PRODUCT_OUT)
+	$(hide) mv $(PRODUCT_OUT)/singleimage.bin $(PRODUCT_OUT)/MMC_FLASHMEM1.dat
+endef
+
+$(INSTALLED_DISK_IMG_TARGET): $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_RAMDISK_TARGET) $(INSTALLED_SYSTEMIMAGE) $(INSTALLED_USERDATAIMAGE_TARGET) $(INSTALLED_RECOVERYIMAGE_TARGET) $(BUILT_CACHEIMAGE_TARGET) $(DISK_IMG_TOOL)
+	$(build-disk-img-target)
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_DISK_IMG_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DISK_IMG_TARGET)
 endif
 
 #----------------------------------------------------------------------
@@ -307,6 +350,58 @@ ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_4K_RECOVERYIMAGE_TARGET)
 endif # !BUILD_TINY_ANDROID
 
 endif # is-board-platform-in-list
+
+#####################################################################################################
+# support for small user data image
+
+ifneq ($(strip $(BOARD_SMALL_USERDATAIMAGE_PARTITION_SIZE)),)
+# Don't build userdata.img if it's extfs but no partition size
+skip_userdata.img :=
+ifdef INTERNAL_USERIMAGES_EXT_VARIANT
+ifndef BOARD_USERDATAIMAGE_PARTITION_SIZE
+skip_userdata.img := true
+endif
+endif
+
+ifneq ($(skip_userdata.img),true)
+
+INSTALLED_SMALL_USERDATAIMAGE_TARGET := $(PRODUCT_OUT)/userdata_small.img
+
+define build-small-userdataimage
+  @echo "target small userdata image"
+  $(hide) mkdir -p $(1)
+  $(hide) $(MKEXTUSERIMG) -s $(TARGET_OUT_DATA) $(2) ext4 data $(BOARD_SMALL_USERDATAIMAGE_PARTITION_SIZE)
+  $(hide) chmod a+r $@
+  $(hide) $(call assert-max-image-size,$@,$(BOARD_SMALL_USERDATAIMAGE_PARTITION_SIZE),yaffs)
+endef
+
+
+$(INSTALLED_SMALL_USERDATAIMAGE_TARGET): $(MKEXTUSERIMG) $(MAKE_EXT4FS) $(INSTALLED_USERDATAIMAGE_TARGET)
+	$(hide) $(call build-small-userdataimage,$(PRODUCT_OUT),$(INSTALLED_SMALL_USERDATAIMAGE_TARGET))
+
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_SMALL_USERDATAIMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_SMALL_USERDATAIMAGE_TARGET)
+
+endif
+
+endif
+
+#----------------------------------------------------------------------
+# Compile (L)ittle (K)ernel bootloader and the nandwrite utility
+#----------------------------------------------------------------------
+ifneq ($(strip $(TARGET_NO_BOOTLOADER)),true)
+
+# Compile
+include bootable/bootloader/lk/AndroidBoot.mk
+
+$(INSTALLED_BOOTLOADER_MODULE): $(TARGET_EMMC_BOOTLOADER) | $(ACP)
+    $(transform-prebuilt-to-target)
+$(BUILT_TARGET_FILES_PACKAGE): $(INSTALLED_BOOTLOADER_MODULE)
+
+droidcore: $(INSTALLED_BOOTLOADER_MODULE)
+endif
+
+###################################################################################################
 
 .PHONY: aboot
 aboot: $(INSTALLED_BOOTLOADER_MODULE)

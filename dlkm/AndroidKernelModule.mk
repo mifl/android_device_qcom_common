@@ -1,3 +1,16 @@
+DISABLE_THIS_DLKM := $(strip $(TARGET_KERNEL_DLKM_DISABLE))
+
+ifeq ($(DISABLE_THIS_DLKM),true)
+ifneq (,$(filter $(LOCAL_MODULE),$(TARGET_KERNEL_DLKM_OVERRIDE)))
+    DISABLE_THIS_DLKM = false
+else
+endif
+endif
+
+ifeq ($(DISABLE_THIS_DLKM),true)
+$(warning DLKM '$(LOCAL_MODULE)' disabled for target)
+else
+
 # Assign external kernel modules to the DLKM class
 LOCAL_MODULE_CLASS := DLKM
 
@@ -64,11 +77,23 @@ endif
 # the modules
 $(LOCAL_BUILT_MODULE): $(KBUILD_MODULE) | $(ACP)
 ifneq "$(LOCAL_MODULE_DEBUG_ENABLE)" ""
-	@mkdir -p $(dir $@)
-	$(hide) $(TARGET_STRIP) --strip-debug $< -o $@
-else
-	$(transform-prebuilt-to-target)
+	mkdir -p $(dir $@)
+	cp $< $<.unstripped
+	$(TARGET_STRIP) --strip-debug $<
+	cp $< $<.stripped
 endif
+	@sh -c "\
+	   KMOD_SIG_ALL=`cat $(KERNEL_OUT)/.config | grep CONFIG_MODULE_SIG_ALL | cut -d'=' -f2`; \
+	   KMOD_SIG_HASH=`cat $(KERNEL_OUT)/.config | grep CONFIG_MODULE_SIG_HASH | cut -d'=' -f2 | sed 's/\"//g'`; \
+	   if [ \"\$$KMOD_SIG_ALL\" = \"y\" ] && [ -n \"\$$KMOD_SIG_HASH\" ]; then \
+	      echo \"Signing kernel module: \" `basename $<`; \
+	      MODSECKEY=$(KERNEL_OUT)/signing_key.priv; \
+	      MODPUBKEY=$(KERNEL_OUT)/signing_key.x509; \
+	      cp $< $<.unsigned; \
+	      perl ./kernel/scripts/sign-file \$$KMOD_SIG_HASH \$$MODSECKEY \$$MODPUBKEY $<; \
+	   fi; \
+	"
+	$(transform-prebuilt-to-target)
 
 # This should really be cleared in build/core/clear-vars.mk, but for
 # the time being, we need to clear it ourselves
@@ -118,7 +143,7 @@ $(KBUILD_TARGET): kbuild_options := $(KBUILD_OPTIONS)
 $(KBUILD_TARGET): $(TARGET_PREBUILT_INT_KERNEL)
 	@mkdir -p $(kbuild_out_dir)
 	$(hide) cp -f $(local_path)/Kbuild $(kbuild_out_dir)/Kbuild
-	$(MAKE) -C kernel M=../$(local_path) O=../$(KERNEL_OUT) ARCH=arm CROSS_COMPILE=arm-eabi- modules $(kbuild_options)
+	$(MAKE) -C kernel M=../$(local_path) O=../$(KERNEL_OUT) ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(KERNEL_CROSS_COMPILE) $(KERNEL_CFLAGS) modules $(kbuild_options)
 
 # Once the KBUILD_OPTIONS variable has been used for the target
 # that's specific to the LOCAL_PATH, clear it. If this isn't done,
@@ -126,4 +151,5 @@ $(KBUILD_TARGET): $(TARGET_PREBUILT_INT_KERNEL)
 # or the variable would have to be cleared in 'include $(CLEAR_VARS)'
 # which would require a change to build/core.
 KBUILD_OPTIONS :=
+endif
 endif

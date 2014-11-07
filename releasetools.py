@@ -139,12 +139,18 @@ def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
     if src_files is not None:
       sf = src_files.get(fn, None)
 
-    full = sf is None or fn.endswith('.enc') or tf.sha1 == sf.sha1
+    full = sf is None or fn.endswith('.enc')
     if not full:
+      # no difference - skip this file
+      if tf.sha1 == sf.sha1:
+        continue
       d = common.Difference(tf, sf)
       _, _, d = d.ComputePatch()
+      # no difference - skip this file
+      if d is None:
+        continue
       # if patch is almost as big as the file - don't bother patching
-      full = d is None or len(d) > tf.size * common.OPTIONS.patch_threshold
+      full = len(d) > tf.size * common.OPTIONS.patch_threshold
       if not full:
         f = "patch/firmware-update/" + fn + ".p"
         common.ZipWriteStr(info.output_zip, f, d)
@@ -220,9 +226,8 @@ def IncrementalOTA_Assertions(info):
 
 
 def IncrementalOTA_VerifyEnd(info):
-  if info.type == 'MMC':
-    OTA_VerifyEnd(info, info.target_version, info.target_zip, info.source_zip)
-  return
+ OTA_VerifyEnd(info, info.target_version, info.target_zip, info.source_zip)
+ return
 
 
 # This function handles only non-HLOS whole partition images
@@ -340,12 +345,8 @@ def FullOTA_InstallEnd_MTD(info):
 
 
 def FullOTA_InstallEnd(info):
-  if info.type == 'MMC':
-    FullOTA_InstallEnd_MMC(info)
-  elif info.type == 'MTD':
-    FullOTA_InstallEnd_MTD(info)
+  FullOTA_InstallEnd_MMC(info)
   return
-
 
 def IncrementalOTA_InstallEnd_MMC(info):
   OTA_InstallEnd(info)
@@ -356,10 +357,6 @@ def IncrementalOTA_InstallEnd_MTD(info):
   print "warning radio-update: radio update for NAND devices not supported"
   return
 
-
 def IncrementalOTA_InstallEnd(info):
-  if info.type == 'MMC':
-    IncrementalOTA_InstallEnd_MMC(info)
-  elif info.type == 'MTD':
-    IncrementalOTA_InstallEnd_MTD(info)
+  IncrementalOTA_InstallEnd_MMC(info)
   return

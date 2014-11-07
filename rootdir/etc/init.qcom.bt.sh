@@ -76,8 +76,8 @@ config_bt ()
         setprop ro.qualcomm.bluetooth.opp true
         setprop ro.qualcomm.bluetooth.ftp true
         setprop ro.qualcomm.bluetooth.nap false
-        setprop ro.qualcomm.bluetooth.sap false
-        setprop ro.qualcomm.bluetooth.dun false
+        setprop ro.bluetooth.sap false
+        setprop ro.bluetooth.dun false
         # For MPQ as baseband is same for both
         case $soc_hwid in
           "130")
@@ -102,8 +102,16 @@ config_bt ()
         setprop ro.qualcomm.bluetooth.ftp true
         setprop ro.qualcomm.bluetooth.map true
         setprop ro.qualcomm.bluetooth.nap true
-        setprop ro.qualcomm.bluetooth.sap true
-        setprop ro.qualcomm.bluetooth.dun false
+        setprop ro.bluetooth.sap true
+        case $target in
+          "apq8084")
+              setprop ro.bluetooth.dun true
+              logi "Enabling BT-DUN for APQ8084"
+              ;;
+          *)
+              setprop ro.bluetooth.dun false
+              ;;
+        esac
         ;;
     "msm")
         setprop ro.qualcomm.bluetooth.opp true
@@ -112,8 +120,8 @@ config_bt ()
         setprop ro.qualcomm.bluetooth.pbap true
         setprop ro.qualcomm.bluetooth.ftp true
         setprop ro.qualcomm.bluetooth.nap true
-        setprop ro.qualcomm.bluetooth.sap true
-        setprop ro.qualcomm.bluetooth.dun true
+        setprop ro.bluetooth.sap true
+        setprop ro.bluetooth.dun true
         case $btsoc in
           "ath3k")
               setprop ro.qualcomm.bluetooth.map false
@@ -131,8 +139,8 @@ config_bt ()
         setprop ro.qualcomm.bluetooth.ftp true
         setprop ro.qualcomm.bluetooth.map true
         setprop ro.qualcomm.bluetooth.nap true
-        setprop ro.qualcomm.bluetooth.sap true
-        setprop ro.qualcomm.bluetooth.dun true
+        setprop ro.bluetooth.sap true
+        setprop ro.bluetooth.dun true
         ;;
   esac
 
@@ -145,17 +153,20 @@ config_bt ()
            setprop ro.qualcomm.bt.hci_transport smd
        fi
        ;;
-    "msm8974" | "msm8226" | "msm8610" )
+    "msm8974" | "msm8226" | "msm8610" | "msm8916" | "msm8909" )
        if [ "$btsoc" != "ath3k" ]
        then
            setprop ro.bluetooth.hfp.ver 1.6
            setprop ro.qualcomm.bt.hci_transport smd
        fi
        ;;
-    "apq8084")
-       if ["$btsoc" != "rome"]
+    "apq8084" | "mpq8092" | "msm8994" )
+       if [ "$btsoc" != "rome" ]
        then
            setprop ro.qualcomm.bt.hci_transport smd
+       elif [ "$btsoc" = "rome" ]
+       then
+           setprop ro.bluetooth.hfp.ver 1.6
        fi
        ;;
     *)
