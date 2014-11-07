@@ -668,6 +668,8 @@ PRODUCT_PACKAGES += flatland
 # MSM updater library
 PRODUCT_PACKAGES += librecovery_updater_msm
 
+# tcmiface for tcm support
+PRODUCT_PACKAGES += tcmiface
 
 #intialise PRODUCT_PACKAGES_DEBUG list for debug modules
 PRODUCT_PACKAGES_DEBUG :=
