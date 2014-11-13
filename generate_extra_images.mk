@@ -148,6 +148,7 @@ $(shell dd if=/dev/zero of=$(CDROM_RES_FILE)/zero.bin bs=1024 count=$(CDROM_DUMM
 endif
 
 define build-cdrom-target
+    @mkdir -p $(PRODUCT_OUT)/system/etc
     $(hide) mkisofs -o $(CDROM_ISO_TARGET)  $(CDROM_RES_FILE)
 endef
 
@@ -399,6 +400,14 @@ $(INSTALLED_BOOTLOADER_MODULE): $(TARGET_EMMC_BOOTLOADER) | $(ACP)
 $(BUILT_TARGET_FILES_PACKAGE): $(INSTALLED_BOOTLOADER_MODULE)
 
 droidcore: $(INSTALLED_BOOTLOADER_MODULE)
+endif
+
+#----------------------------------------------------------------------
+# Generate secure boot image
+#----------------------------------------------------------------------
+ifeq ($(TARGET_BOOTIMG_SIGNED),true)
+.PHONY: bootimage
+bootimage: $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_SEC_BOOTIMAGE_TARGET)
 endif
 
 ###################################################################################################
