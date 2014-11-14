@@ -757,7 +757,7 @@ PRODUCT_COPY_FILES := \
 #endif # BOARD_HAVE_BLUETOOTH_BLUEZ
 
 # gps/location secuity configuration file
-#PRODUCT_COPY_FILES += \
+PRODUCT_COPY_FILES += \
     device/qcom/common/sec_config:system/etc/sec_config
 
 #PRODUCT_COPY_FILES += \
