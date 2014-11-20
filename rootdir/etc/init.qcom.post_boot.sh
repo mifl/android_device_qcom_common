@@ -601,13 +601,13 @@ case "$target" in
                 echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
                 echo "25000 800000:50000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
-                echo 25000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
-                echo 800000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+                echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
+                echo 1113600 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
                 echo "1 499200:85 800000:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
-                echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
-                echo 50000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
-                echo 499200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+                echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
+                echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/sampling_down_factor
+                echo 800000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 		echo 1 > /sys/module/msm_thermal/core_control/enabled
 
 		echo 1 > /sys/devices/system/cpu/cpu1/online
@@ -618,9 +618,12 @@ case "$target" in
                 echo 1 > /sys/devices/system/cpu/cpu6/online
                 echo 1 > /sys/devices/system/cpu/cpu7/online
                 echo 2 > /proc/sys/kernel/sched_window_stats_policy
-                echo 60 > /proc/sys/kernel/sched_upmigrate
-                echo 40 > /proc/sys/kernel/sched_downmigrate
-		echo 3 > /proc/sys/kernel/sched_ravg_hist_size
+                echo 80 > /proc/sys/kernel/sched_upmigrate
+                echo 60 > /proc/sys/kernel/sched_downmigrate
+		echo 5 > /proc/sys/kernel/sched_ravg_hist_size
+                # Enable frequency sync during cluster migration
+                echo 25 > /sys/module/cpu_boost/parameters/boost_ms
+                echo 1 > /dev/cpuctl/apps/cpu.notify_on_migrate
             ;;
         esac
     ;;
@@ -799,7 +802,7 @@ case "$target" in
 	case "$soc_id" in
              "239" | "241" | "263")
             setprop ro.min_freq_0 800000
-            setprop ro.min_freq_4 499200
+            setprop ro.min_freq_4 800000
             start perfd
 	;;
 	#for 8916
