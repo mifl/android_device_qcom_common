@@ -583,24 +583,6 @@ case "$target" in
                 echo 50 > /proc/sys/kernel/sched_mostly_idle_load
                 echo 10 > /proc/sys/kernel/sched_mostly_idle_nr_run
 
-		for devfreq_gov in /sys/class/devfreq/qcom,mincpubw*/governor
-		do
-			echo "cpufreq" > $devfreq_gov
-			for timeout in /sys/class/devfreq/qcom,mincpubw*/cpufreq/timeout
-			do
-				echo 20 > $timeout
-			done
-		done
-
-		for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
-		do
-			echo "bw_hwmon" > $devfreq_gov
-			for cpu_bimc_io_percent in /sys/class/devfreq/qcom,cpubw*/bw_hwmon/io_percent
-			do
-				echo 30 > $cpu_bimc_io_percent
-			done
-		done
-
                 # enable governor for perf cluster
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
                 echo "25000 1113600:50000" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
