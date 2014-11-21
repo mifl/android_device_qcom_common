@@ -412,6 +412,25 @@ case "$target" in
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/system-cci-pc/suspend_enabled
 		echo 10 > /sys/class/net/rmnet0/queues/rx-0/rps_cpus
+		if [ -f /sys/devices/soc0/platform_subtype_id ]; then
+			platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
+		fi
+		if [ -f /sys/devices/soc0/hw_platform ]; then
+			hw_platform=`cat /sys/devices/soc0/hw_platform`
+                fi
+                case "$soc_id" in
+	            "239")
+                        case "$hw_platform" in
+                            "Surf")
+                                case "$platform_subtype_id" in
+                                    "1")
+                                        start hbtp
+                                    ;;
+                                esac
+                            ;;
+                        esac
+                    ;;
+                esac
 		;;
 	"233" | "240" | "242")
 	        echo Y > /sys/module/lpm_levels/system/cpu0/wfi/idle_enabled
