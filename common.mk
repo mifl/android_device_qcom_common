@@ -672,7 +672,7 @@ PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
 $(call inherit-product-if-exists, $(QCPATH)/common/config/device-vendor.mk)
 
 PRODUCT_BRAND := qcom
-PRODUCT_LOCALES := en_US es_US de_DE zh_CN
+PRODUCT_LOCALES := en_US es_US de_DE zh_CN fr_FR ja_JP en_GB
 PRODUCT_LOCALES += hdpi mdpi
 
 PRODUCT_PROPERTY_OVERRIDES += \
