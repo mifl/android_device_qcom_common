@@ -643,9 +643,6 @@ case "$target" in
                 echo 80 > /proc/sys/kernel/sched_upmigrate
                 echo 60 > /proc/sys/kernel/sched_downmigrate
 		echo 5 > /proc/sys/kernel/sched_ravg_hist_size
-                # Enable frequency sync during cluster migration
-                echo 25 > /sys/module/cpu_boost/parameters/boost_ms
-                echo 1 > /dev/cpuctl/apps/cpu.notify_on_migrate
             ;;
         esac
     ;;
