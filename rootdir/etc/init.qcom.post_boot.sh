@@ -600,6 +600,10 @@ case "$target" in
 				echo 25 > $cpu_bimc_io_percent
 			done
 		done
+		for poll in /sys/class/devfreq/qcom,cpubw*/polling_interval
+	        do
+	                echo 20 > $poll
+		done
 		for gpu_bimc_io_percent in /sys/class/devfreq/qcom,gpubw*/bw_hwmon/io_percent
 		do
 			 echo 40 > $gpu_bimc_io_percent
