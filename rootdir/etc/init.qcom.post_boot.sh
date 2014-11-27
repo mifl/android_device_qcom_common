@@ -333,11 +333,11 @@ case "$target" in
     "msm8960")
         soc_id=`cat /sys/devices/system/soc/soc0/id`
         case "$soc_id" in
-             "153") #8064 v2
+             "153" | "244") #8064 v2 and 8064AU (automotive)
                  start thermal-engine
              ;;
 
-	     *) #all targets except 8064 v2
+	     *) #all other targets
 		 start thermald
 	     ;;
         esac
