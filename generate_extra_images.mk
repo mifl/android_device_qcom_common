@@ -148,6 +148,7 @@ $(shell dd if=/dev/zero of=$(CDROM_RES_FILE)/zero.bin bs=1024 count=$(CDROM_DUMM
 endif
 
 define build-cdrom-target
+    @mkdir -p $(PRODUCT_OUT)/system/etc
     $(hide) mkisofs -o $(CDROM_ISO_TARGET)  $(CDROM_RES_FILE)
 endef
 
@@ -412,7 +413,11 @@ endif
 ###################################################################################################
 
 .PHONY: aboot
+ifeq ($(USESECIMAGETOOL), true)
+aboot: gensecimage_target
+else
 aboot: $(INSTALLED_BOOTLOADER_MODULE)
+endif
 
 .PHONY: kernel
 kernel: $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_SEC_BOOTIMAGE_TARGET) $(INSTALLED_4K_BOOTIMAGE_TARGET)
