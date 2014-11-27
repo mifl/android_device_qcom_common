@@ -438,8 +438,6 @@ PRODUCT_PACKAGES := \
     AlarmProvider \
     Bluetooth \
     BluetoothExt \
-    BTTestApp \
-    HiddTestApp \
     Calculator \
     Calendar \
     Camera \
