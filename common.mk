@@ -489,6 +489,9 @@ PRODUCT_PACKAGES := \
     VoiceDialer \
     VideoEditor
 
+# tcmiface for tcm support
+PRODUCT_PACKAGES += tcmiface
+
 #PRODUCT_PACKAGES += $(NOTIFY_WAV_FILE)
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
