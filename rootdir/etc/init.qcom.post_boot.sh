@@ -605,9 +605,9 @@ case "$target" in
         case "$soc_id" in
             "239" | "241" | "263")
 	        # Apply HMP Task packing for 8939
-                echo 30 > /proc/sys/kernel/sched_small_task
-                echo 50 > /proc/sys/kernel/sched_mostly_idle_load
-                echo 10 > /proc/sys/kernel/sched_mostly_idle_nr_run
+                echo 20 > /proc/sys/kernel/sched_small_task
+                echo 30 > /proc/sys/kernel/sched_mostly_idle_load
+                echo 3 > /proc/sys/kernel/sched_mostly_idle_nr_run
 
                 # enable governor for perf cluster
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
