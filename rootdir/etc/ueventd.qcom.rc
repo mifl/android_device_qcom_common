@@ -208,3 +208,7 @@
 
 # Ultrasound device
 /dev/usf1                 0660   system     system
+
+#Improve Touch
+/dev/hbtp_input           0660   system     system
+/dev/jdi-bu21150          0660   system     system
