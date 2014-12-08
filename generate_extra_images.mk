@@ -389,6 +389,11 @@ endif
 
 ###################################################################################################
 
+ifeq ($(TARGET_BOOTIMG_SIGNED),true)
+.PHONY: otapackage
+otapackage: $(INSTALLED_SEC_BOOTIMAGE_TARGET) $(INSTALLED_SEC_RECOVERYIMAGE_TARGET)
+endif
+
 .PHONY: aboot
 aboot: $(INSTALLED_BOOTLOADER_MODULE)
 
