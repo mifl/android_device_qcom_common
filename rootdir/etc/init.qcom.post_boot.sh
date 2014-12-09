@@ -734,6 +734,15 @@ case "$target" in
 esac
 
 case "$target" in
+    "msm8992")
+        echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+        # online A57 cores
+        echo 1 > /sys/devices/system/cpu/cpu4/online
+        echo 1 > /sys/devices/system/cpu/cpu5/online
+    ;;
+esac
+
+case "$target" in
     "msm8994")
         echo 0 > /sys/module/msm_thermal/core_control/enabled
         echo -n disable > /sys/devices/soc.*/qcom,bcl.*/mode
