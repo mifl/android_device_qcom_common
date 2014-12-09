@@ -739,6 +739,34 @@ case "$target" in
         # online A57 cores
         echo 1 > /sys/devices/system/cpu/cpu4/online
         echo 1 > /sys/devices/system/cpu/cpu5/online
+        # configure governor settings for little cluster
+        echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load
+        echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_migration_notif
+        echo 19000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+        echo 90 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
+        echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
+        echo 960000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+        echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
+        echo 80 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
+        echo 40000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
+        echo 80000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/max_freq_hysteresis
+        echo 384000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+        # configure governor settings for big cluster
+        echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
+        echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/use_sched_load
+        echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/use_migration_notif
+        echo 19000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+        echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
+        echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
+        echo 1536000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+        echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
+        echo 85 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
+        echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
+        echo 80000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/max_freq_hysteresis
+        echo 384000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+	echo 0:1248000 > /sys/module/cpu_boost/parameters/input_boost_freq
+        echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
     ;;
 esac
 
