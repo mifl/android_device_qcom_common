@@ -510,6 +510,7 @@ QRGND += qrngtest
 WPA := wpa_supplicant.conf
 WPA += wpa_supplicant_wcn.conf
 WPA += wpa_supplicant_ath6kl.conf
+WPA += wpa_supplicant
 
 #ZLIB
 ZLIB := gzip
@@ -599,6 +600,8 @@ PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
 PRODUCT_PACKAGES += $(CRDA)
 PRODUCT_PACKAGES += $(AUDIO_DECODERS)
+PRODUCT_PACKAGES += $(WPA)
+PRODUCT_PACKAGES += $(HOSTAPD)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
