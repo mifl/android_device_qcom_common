@@ -811,7 +811,6 @@ case "$target" in
         do
             echo "bw_hwmon" > $devfreq_gov
         done
-        /system/bin/energy-awareness &
     ;;
 esac
 
