@@ -41,6 +41,7 @@ enum SCREEN_DISPLAY_TYPE {
 
 enum PWR_CLSP_TYPE {
     ALL_CPUS_PWR_CLPS_DIS = 0x100,
+    ALL_CPUS_PWR_LPM_DIS = 0x101,
 };
 
 /* For CPUx min freq, the leftmost byte
@@ -213,6 +214,15 @@ enum CPU6_MAX_FREQ_LVL {
 enum CPU7_MAX_FREQ_LVL {
     CPU7_MAX_FREQ_NONTURBO_MAX = 0x260A,
 };
+
+enum SCHED_PREFER_IDLE {
+    SCHED_PREFER_IDLE_DIS = 0x3E01,
+};
+
+enum SCHED_MIGRATE_COST_CHNG {
+    SCHED_MIGRATE_COST_SET = 0x3F01,
+};
+
 
 #ifdef __cplusplus
 }
