@@ -194,7 +194,6 @@ case "$target" in
         ;;
 
     "msm8960")
-        insmod /system/lib/modules/adv7533.ko
         init_DMM
         ;;
 esac
