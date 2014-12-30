@@ -601,8 +601,7 @@ $(call inherit-product-if-exists, vendor/qcom/proprietary/common/config/device-v
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 PRODUCT_BRAND := qcom
-PRODUCT_LOCALES := en_US es_US de_DE zh_CN
-PRODUCT_LOCALES += hdpi mdpi
+PRODUCT_AAPT_CONFIG += hdpi mdpi
 
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.vendor.extension_library=libqti-perfd-client.so
