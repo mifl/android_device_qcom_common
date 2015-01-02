@@ -532,6 +532,7 @@ service wifi-crda /system/bin/sh /system/etc/init.crda.sh
 
 
 on property:sys.boot_completed=1
+    write /proc/bootkpi/marker_entry "Boot completed"
     start qcom-post-boot
 
 service atfwd /system/bin/ATFWD-daemon
