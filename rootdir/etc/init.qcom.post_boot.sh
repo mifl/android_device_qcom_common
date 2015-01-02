@@ -1020,17 +1020,3 @@ if [ ! -z "$root_tasks" ]
 then
 	echo "Error: Could not move all tasks to native cgroup"
 fi
-
-# Move all native tasks to native memory cgroup
-
-MEMORY_CGROUP_ROOT=/sys/fs/cgroup/memory
-NATIVE_ADJ=-16
-
-for i in $(cat $MEMORY_CGROUP_ROOT/tasks)
-do
-	OOM_ADJ=$(cat /proc/$i/oom_adj)
-	if [ $OOM_ADJ -eq $NATIVE_ADJ ]
-	then
-		echo $i > $MEMORY_CGROUP_ROOT/native/tasks
-	fi
-done
