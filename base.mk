@@ -240,6 +240,7 @@ INIT += init.qcom.uicc.sh
 INIT += fstab.qcom
 INIT += init.qcom.debug.sh
 INIT += init.qcom.zram.sh
+INIT += init.qcom.bms.sh
 
 #IPROUTE2
 IPROUTE2 := ip
