@@ -585,11 +585,11 @@ case "$target" in
 
 		for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
 		do
-                         echo "bw_hwmon" > $devfreq_gov
-                         for cpu_io_percent in /sys/class/devfreq/qcom,cpubw*/bw_hwmon/io_percent
-                         do
-                                echo 20 > $cpu_io_percent
-                         done
+			echo "bw_hwmon" > $devfreq_gov
+                        for cpu_io_percent in /sys/class/devfreq/qcom,cpubw*/bw_hwmon/io_percent
+                        do
+                               echo 20 > $cpu_io_percent
+                        done
 		done
 
 		for gpu_bimc_io_percent in /sys/class/devfreq/qcom,gpubw*/bw_hwmon/io_percent
@@ -632,6 +632,7 @@ case "$target" in
                 echo 1 > /sys/devices/system/cpu/cpu6/online
                 echo 1 > /sys/devices/system/cpu/cpu7/online
                 # HMP scheduler (big.Little cluster related) settings
+                echo 2 > /proc/sys/kernel/sched_window_stats_policy
                 echo 75 > /proc/sys/kernel/sched_upmigrate
                 echo 60 > /proc/sys/kernel/sched_downmigrate
 		echo 5 > /proc/sys/kernel/sched_ravg_hist_size
