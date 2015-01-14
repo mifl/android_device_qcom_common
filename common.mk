@@ -322,10 +322,10 @@ LIBMEMTRACK += memtrack.msm8610
 LIBMEMTRACK += memtrack.apq8084
 
 #LIBLIGHTS
+ifeq ($(TARGET_SMARTWATCH_BUILD), false)
 LIBLIGHTS := lights.msm8660
 LIBLIGHTS += lights.msm8960
 LIBLIGHTS += lights.msm8974
-LIBLIGHTS += lights.msm8226
 LIBLIGHTS += lights.msm7k
 LIBLIGHTS += lights.msm7630_surf
 LIBLIGHTS += lights.msm7630_fusion
@@ -334,6 +334,8 @@ LIBLIGHTS += lights.msm7627_6x
 LIBLIGHTS += lights.msm7627a
 LIBLIGHTS += lights.msm8610
 LIBLIGHTS += lights.apq8084
+endif
+LIBLIGHTS += lights.msm8226
 
 #LIBHWCOMPOSER
 LIBHWCOMPOSER := hwcomposer.msm8660
@@ -522,42 +524,56 @@ CRDA += init.crda.sh
 WLAN := prima_wlan.ko
 WLAN += pronto_wlan.ko
 
+ifeq ($(TARGET_SMARTWATCH_BUILD), false)
 PRODUCT_PACKAGES := \
-    AccountAndSyncSettings \
     DeskClock \
     AlarmProvider \
-    Bluetooth \
-    BluetoothExt \
-    BTTestApp \
     HiddTestApp \
     Calculator \
     Calendar \
     Camera \
-    CellBroadcastReceiver \
-    CertInstaller \
-    DrmProvider \
     Email \
     Gallery2 \
     LatinIME \
     Launcher2 \
     Mms \
-    Music \
-    Phone \
-    Provision \
-    Protips \
     QuickSearchBox \
-    Settings \
-    Sync \
-    SystemUI \
-    Updater \
     CalendarProvider \
-    SyncProvider \
     IM \
     VoiceDialer \
     FM2 \
     FMRecord \
     VideoEditor
+endif
 
+PRODUCT_PACKAGES := \
+    AccountAndSyncSettings \
+    Bluetooth \
+    BluetoothExt \
+    BTTestApp \
+    CellBroadcastReceiver \
+    CertInstaller \
+    DrmProvider \
+    Music \
+    Phone \
+    Provision \
+    Protips \
+    Settings \
+    Sync \
+    SystemUI \
+    Updater \
+    SyncProvider \
+
+ifeq ($(TARGET_SMARTWATCH_BUILD), false)
+PRODUCT_PACKAGES += $(DASH)
+PRODUCT_PACKAGES += $(FM)
+PRODUCT_PACKAGES += $(LIBCAMERA)
+PRODUCT_PACKAGES += $(LIBQCOMUI)
+PRODUCT_PACKAGES += $(MM_VIDEO)
+PRODUCT_PACKAGES += $(OPENCORE)
+PRODUCT_PACKAGES += $(VT_JNI)
+PRODUCT_PACKAGES += $(VT_QTI_PERMISSIONS)
+endif
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
 PRODUCT_PACKAGES += $(ANGLE)
@@ -574,12 +590,10 @@ PRODUCT_PACKAGES += $(CIMAX)
 PRODUCT_PACKAGES += $(CONNECTIVITY)
 PRODUCT_PACKAGES += $(CHARGER)
 PRODUCT_PACKAGES += $(CURL)
-PRODUCT_PACKAGES += $(DASH)
 PRODUCT_PACKAGES += $(DATA_OS)
 PRODUCT_PACKAGES += $(E2FSPROGS)
 PRODUCT_PACKAGES += $(EBTABLES)
 PRODUCT_PACKAGES += $(FASTPOWERON)
-PRODUCT_PACKAGES += $(FM)
 PRODUCT_PACKAGES += $(GPS_HARDWARE)
 PRODUCT_PACKAGES += $(HDMID)
 PRODUCT_PACKAGES += $(HOSTAPD)
@@ -592,7 +606,6 @@ PRODUCT_PACKAGES += $(KEYPAD)
 PRODUCT_PACKAGES += $(KS)
 PRODUCT_PACKAGES += $(LIB_NL)
 PRODUCT_PACKAGES += $(LIB_XML2)
-PRODUCT_PACKAGES += $(LIBCAMERA)
 PRODUCT_PACKAGES += $(LIBGESTURES)
 PRODUCT_PACKAGES += $(LIBCOPYBIT)
 PRODUCT_PACKAGES += $(LIBGRALLOC)
@@ -605,7 +618,6 @@ PRODUCT_PACKAGES += $(LIBOVERLAY)
 PRODUCT_PACKAGES += $(LIBHWCOMPOSER)
 PRODUCT_PACKAGES += $(LIBGENLOCK)
 PRODUCT_PACKAGES += $(LIBPERFLOCK)
-PRODUCT_PACKAGES += $(LIBQCOMUI)
 PRODUCT_PACKAGES += $(LIBQDUTILS)
 PRODUCT_PACKAGES += $(LIBQDMETADATA)
 PRODUCT_PACKAGES += $(LIBPOWER)
@@ -613,8 +625,6 @@ PRODUCT_PACKAGES += $(LOC_API)
 PRODUCT_PACKAGES += $(MEDIA_PROFILES)
 PRODUCT_PACKAGES += $(MM_AUDIO)
 PRODUCT_PACKAGES += $(MM_CORE)
-PRODUCT_PACKAGES += $(MM_VIDEO)
-PRODUCT_PACKAGES += $(OPENCORE)
 PRODUCT_PACKAGES += $(PPP)
 PRODUCT_PACKAGES += $(PVOMX)
 PRODUCT_PACKAGES += $(RF4CE)
@@ -627,18 +637,17 @@ PRODUCT_PACKAGES += $(QRGND)
 PRODUCT_PACKAGES += $(UPDATER)
 PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
-PRODUCT_PACKAGES += $(VT_JNI)
-PRODUCT_PACKAGES += $(VT_QTI_PERMISSIONS)
 PRODUCT_PACKAGES += $(CRDA)
 PRODUCT_PACKAGES += $(WLAN)
 
+ifeq ($(TARGET_SMARTWATCH_BUILD), false)
 # Live Wallpapers
 PRODUCT_PACKAGES += \
         LiveWallpapers \
         LiveWallpapersPicker \
         VisualizationWallpapers \
         librs_jni
-
+endif
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     make_ext4fs \
@@ -660,16 +669,20 @@ PRODUCT_PACKAGES += tcmiface
 PRODUCT_PACKAGES_DEBUG :=
 
 
+ifeq ($(TARGET_SMARTWATCH_BUILD), false)
 PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
+    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
+endif
+
+PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
     frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
     frameworks/native/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
     frameworks/native/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
-    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.sensor.proximity.xml:system/etc/permissions/android.hardware.sensor.proximity.xml \
     frameworks/native/data/etc/android.hardware.sensor.light.xml:system/etc/permissions/android.hardware.sensor.light.xml \
@@ -713,8 +726,10 @@ PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
 #Enabling Ring Tones
 #include frameworks/base/data/sounds/OriginalAudio.mk
 
+ifeq ($(TARGET_SMARTWATCH_BUILD), false)
 #Enabling video for live effects
 -include frameworks/base/data/videos/VideoPackage1.mk
+endif
 
 #skip boot jars check if QCPATH not available
 ifeq ($(strip $(QCPATH)),)
@@ -736,6 +751,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
 
 PRODUCT_PRIVATE_KEY := device/qcom/common/qcom.key
 
-$(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
+$(call inherit-product, frameworks/native/build/phone-hdpi-512-dalvik-heap.mk)
 #$(call inherit-product, frameworks/base/data/fonts/fonts.mk)
 #$(call inherit-product, frameworks/base/data/keyboards/keyboards.mk)
