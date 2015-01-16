@@ -630,6 +630,16 @@ case "$target" in
                 echo 80 > /proc/sys/kernel/sched_upmigrate
                 echo 60 > /proc/sys/kernel/sched_downmigrate
 		echo 5 > /proc/sys/kernel/sched_ravg_hist_size
+
+                # cpu idle load threshold
+                echo 30 > /sys/devices/system/cpu/cpu0/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu1/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu2/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu3/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu4/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu5/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu6/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu7/sched_mostly_idle_load
             ;;
         esac
     ;;
