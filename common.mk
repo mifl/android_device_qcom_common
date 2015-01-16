@@ -530,6 +530,9 @@ CHARGER += charger_res_images
 VT_JNI := libvt_jni
 VT_JNI += libimscamera_jni
 
+# VT QTI Permissions
+VT_QTI_PERMISSIONS := qti_permissions.xml
+
 #CRDA
 CRDA := crda
 CRDA += regdbdump
@@ -647,6 +650,7 @@ PRODUCT_PACKAGES += $(UPDATER)
 PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
+PRODUCT_PACKAGES += $(VT_QTI_PERMISSIONS)
 PRODUCT_PACKAGES += $(CRDA)
 PRODUCT_PACKAGES += $(WLAN)
 
