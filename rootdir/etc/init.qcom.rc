@@ -884,6 +884,11 @@ on ffbm
     trigger early-boot
     trigger mmi
 
+service srvmag_ffbm /system/bin/servicemanager
+    user root
+    disabled
+    oneshot
+
 service hvdcp /system/bin/hvdcp
     class core
     user root
