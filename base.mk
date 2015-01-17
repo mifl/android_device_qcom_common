@@ -512,6 +512,13 @@ PPP := ip-up-vpn
 PVOMX := libqcomm_omx
 PVOMX += 01_qcomm_omx
 
+#RCS
+RCS := rcs_service_aidl
+RCS += rcs_service_aidl.xml
+RCS += rcs_service_aidl_static
+RCS += rcs_service_api
+RCS += rcs_service_api.xml
+
 #RF4CE
 RF4CE := RemoTI_RNP.cfg
 RF4CE += rf4ce
@@ -684,6 +691,7 @@ PRODUCT_PACKAGES += $(MM_VIDEO)
 PRODUCT_PACKAGES += $(OPENCORE)
 PRODUCT_PACKAGES += $(PPP)
 PRODUCT_PACKAGES += $(PVOMX)
+PRODUCT_PACKAGES += $(RCS)
 PRODUCT_PACKAGES += $(RF4CE)
 PRODUCT_PACKAGES += $(SENSORS_HARDWARE)
 PRODUCT_PACKAGES += $(SOFTAP)
