@@ -586,7 +586,12 @@ case "$target" in
 		for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
 		do
 			echo "bw_hwmon" > $devfreq_gov
+                        for cpu_io_percent in /sys/class/devfreq/qcom,cpubw*/bw_hwmon/io_percent
+                        do
+                               echo 20 > $cpu_io_percent
+                        done
 		done
+
 		for gpu_bimc_io_percent in /sys/class/devfreq/qcom,gpubw*/bw_hwmon/io_percent
 		do
 			 echo 40 > $gpu_bimc_io_percent
@@ -594,7 +599,7 @@ case "$target" in
 
                 # enable governor for perf cluster
                 echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-                echo "25000 1113600:50000" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
+                echo "20000 1113600:50000" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
                 echo 85 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
                 echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
                 echo 1113600 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
@@ -611,7 +616,7 @@ case "$target" in
                 echo "25000 800000:50000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
                 echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
-                echo 1113600 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+                echo 998400 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
                 echo "1 800000:90" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
                 echo 40000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
@@ -626,10 +631,21 @@ case "$target" in
                 echo 1 > /sys/devices/system/cpu/cpu5/online
                 echo 1 > /sys/devices/system/cpu/cpu6/online
                 echo 1 > /sys/devices/system/cpu/cpu7/online
+                # HMP scheduler (big.Little cluster related) settings
                 echo 2 > /proc/sys/kernel/sched_window_stats_policy
-                echo 80 > /proc/sys/kernel/sched_upmigrate
+                echo 75 > /proc/sys/kernel/sched_upmigrate
                 echo 60 > /proc/sys/kernel/sched_downmigrate
 		echo 5 > /proc/sys/kernel/sched_ravg_hist_size
+
+                # cpu idle load threshold
+                echo 30 > /sys/devices/system/cpu/cpu0/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu1/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu2/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu3/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu4/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu5/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu6/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu7/sched_mostly_idle_load
             ;;
         esac
     ;;
