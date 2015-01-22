@@ -190,7 +190,7 @@ endif
 #----------------------------------------------------------------------
 # Generate NAND images
 #----------------------------------------------------------------------
-ifeq ($(call is-board-platform-in-list,msm7627a msm7630_surf msm8909),true)
+ifeq ($(call is-board-platform-in-list,msm7627a msm7630_surf msm8909_nand),true)
 
 2K_NAND_OUT := $(PRODUCT_OUT)/2k_nand_images
 4K_NAND_OUT := $(PRODUCT_OUT)/4k_nand_images
