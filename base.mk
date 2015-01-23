@@ -250,6 +250,7 @@ INIT += fstab.qcom
 INIT += init.qcom.debug.sh
 INIT += init.qcom.zram.sh
 INIT += init.qti.synaptics_dsx_qhd.sh
+INIT += init.qcom.bms.sh
 
 #IPROUTE2
 IPROUTE2 := ip
@@ -579,6 +580,13 @@ VT_JNI += libimscamera_jni
 # VT QTI Permissions
 VT_QTI_PERMISSIONS := qti_permissions.xml
 
+#RCS
+RCS := rcs_service_aidl
+RCS += rcs_service_aidl.xml
+RCS += rcs_service_aidl_static
+RCS += rcs_service_api
+RCS += rcs_service_api.xml
+
 #CRDA
 CRDA := crda
 CRDA += regdbdump
@@ -650,6 +658,7 @@ PRODUCT_PACKAGES += $(CONNECTIVITY)
 PRODUCT_PACKAGES += $(CHARGER)
 PRODUCT_PACKAGES += $(CURL)
 PRODUCT_PACKAGES += $(CM)
+PRODUCT_PACKAGES += $(RCS)
 PRODUCT_PACKAGES += $(DASH)
 PRODUCT_PACKAGES += $(DATA_OS)
 PRODUCT_PACKAGES += $(E2FSPROGS)
