@@ -56,4 +56,5 @@
 <pkg name="com.android.wallpaper.holospiral"/>
 <pkg name="com.android.wallpaper.livepicker"/>
 <pkg name="com.qualcomm.location"/>
+<pkg name="com.qti.antitheftdemo"/>
 </whitelist-pkgs>
