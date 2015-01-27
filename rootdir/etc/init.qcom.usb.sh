@@ -34,11 +34,8 @@
 # User needs to set unique usb serial number to persist.usb.serialno
 #
 
-insmod /system/lib/modules/ehci-hcd.ko
 insmod /system/lib/modules/scsi_mod.ko
 insmod /system/lib/modules/scsi_wait_scan.ko
-insmod /system/lib/modules/sd_mod.ko
-insmod /system/lib/modules/usb-storage.ko
 
 serialno=`getprop persist.usb.serialno`
 case "$serialno" in
