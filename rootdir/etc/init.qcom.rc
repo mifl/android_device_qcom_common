@@ -613,6 +613,7 @@ service atfwd /system/bin/ATFWD-daemon
     class late_start
     user system
     group system radio
+    disabled
 
 service hostapd /system/bin/hostapd -dd /data/hostapd/hostapd.conf
     class late_start
