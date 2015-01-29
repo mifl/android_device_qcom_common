@@ -57,4 +57,5 @@
 <pkg name="com.android.wallpaper.livepicker"/>
 <pkg name="com.qualcomm.location"/>
 <pkg name="com.qti.antitheftdemo"/>
+<pkg name="org.codeaurora.snapcam"/>
 </whitelist-pkgs>
