@@ -322,6 +322,21 @@ endif # !BUILD_TINY_ANDROID
 
 endif # is-board-platform-in-list
 
+#----------------------------------------------------------------------
+# Generate secure OTA TARGET FILES PACKAGE
+#----------------------------------------------------------------------
+ifeq ($(TARGET_BOOTIMG_SIGNED),true)
+.PHONY: target-files-package-sec
+target-files-package-sec: $(BUILT_TARGET_FILES_PACKAGE) $(INSTALLED_SEC_BOOTIMAGE_TARGET)
+endif
+
+###################################################################################################
+
+ifeq ($(TARGET_BOOTIMG_SIGNED),true)
+.PHONY: otapackage
+otapackage: $(INSTALLED_SEC_BOOTIMAGE_TARGET) $(INSTALLED_SEC_RECOVERYIMAGE_TARGET) droidcore
+endif
+
 .PHONY: aboot
 aboot: $(INSTALLED_BOOTLOADER_MODULE)
 
