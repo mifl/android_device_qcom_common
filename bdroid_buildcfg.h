@@ -22,6 +22,15 @@
 #ifndef _BDROID_BUILDCFG_H
 #define _BDROID_BUILDCFG_H
 #define BTM_DEF_LOCAL_NAME   "QCOM-BTD"
+/* Default class of device
+* {SERVICE_CLASS, MAJOR_CLASS, MINOR_CLASS}
+*
+* SERVICE_CLASS:0x5A (Bit17 -Networking,Bit20 -Object Transfer,Bit21 - Audio)
+* MAJOR_CLASS:0x02 - AUDIO
+* MINOR_CLASS:0x0C - CAR_AUDIO
+*
+*/
+#define BTA_DM_COD {0x32, 0x04, 0x20}
 // Enables Interleave scan
 #define BTA_HOST_INTERLEAVE_SEARCH  TRUE
 // skips conn update at conn completion
