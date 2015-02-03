@@ -414,6 +414,7 @@ insmod /system/lib/modules/hid-elecom.ko
 chown bluetooth.bluetooth /sys/module/bluetooth_power/parameters/power
 chown bluetooth.bluetooth /sys/class/rfkill/rfkill0/type
 chown bluetooth.bluetooth /sys/class/rfkill/rfkill0/state
+chown bluetooth.bluetooth /sys/class/rfkill/rfkill1/state
 chown bluetooth.bluetooth /proc/bluetooth/sleep/proto
 chmod 0660 /sys/module/bluetooth_power/parameters/power
 chmod 0660 /sys/class/rfkill/rfkill0/state
