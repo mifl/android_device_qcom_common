@@ -15,6 +15,14 @@ INSTALLED_USERDATAIMAGE_TARGET := $(PRODUCT_OUT)/userdata.img
 INSTALLED_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img
 recovery_ramdisk := $(PRODUCT_OUT)/ramdisk-recovery.img
 endif
+
+#---------------------------------------------------------------------
+#Add systemimage as a dependency on userdata.img
+#---------------------------------------------------------------------
+$(INSTALLED_USERDATAIMAGE_TARGET) : systemimage \
+                                    $(INTERNAL_USERIMAGES_DEPS) \
+                                    $(INTERNAL_USERDATAIMAGE_FILES)
+
 #----------------------------------------------------------------------
 # Generate secure boot & recovery image
 #----------------------------------------------------------------------
@@ -333,6 +341,11 @@ bootimage: $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_SEC_BOOTIMAGE_TARGET)
 endif
 
 ###################################################################################################
+
+ifeq ($(TARGET_BOOTIMG_SIGNED),true)
+.PHONY: otapackage
+otapackage: $(INSTALLED_SEC_BOOTIMAGE_TARGET) $(INSTALLED_SEC_RECOVERYIMAGE_TARGET)
+endif
 
 .PHONY: aboot
 aboot: $(INSTALLED_BOOTLOADER_MODULE)
