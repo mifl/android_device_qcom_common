@@ -273,9 +273,6 @@ on post-fs-data
     #Create a folder for SRS to be able to create a usercfg file
     mkdir /data/data/media 0770 media media
 
-    chmod 777 /data/qm8626/qm8626-led-init
-    chmod 777 /data/qm8626/qm8626-usb-ctrl
-
 # Export GPIO56 for fusion targets to enable/disable hub
 service usbhub_init /system/bin/usbhub_init
    class late_start
@@ -837,20 +834,20 @@ on property:persist.sys.rootagent=1
 on property:persist.sys.rootagent=0
     stop rootagent
 
-service qm8626-led-init /data/qm8626/qm8626-led-init
+service qm8626-led /system/bin/qm8626-led-init
     class late_start
     user root
     group root
     oneshot
 
-service qm8626-usb-ctrl /data/qm8626/qm8626-usb-ctrl
+service qm8626-usb /system/bin/qm8626-usb-ctrl
     disabled
     class late_start
     user root
     group root
     oneshot
 on property:persist.qm8626.usbclonly.enable=1
-    start qm8626-usb-ctrl
+    start qm8626-usb
 on property:persist.qm8626.usbclonly.enable=0
-    start qm8626-usb-ctrl
+    start qm8626-usb
 
