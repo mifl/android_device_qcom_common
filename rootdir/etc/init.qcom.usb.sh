@@ -34,6 +34,10 @@ chmod -h 220 /sys/devices/platform/msm_hsusb/gadget/wakeup
 # Allow persistent usb charging disabling
 # User needs to set usb charging disabled in persist.usb.chgdisabled
 #
+
+# qm8626 defaults charging off
+setprop persist.usb.chgdisabled 1
+
 target=`getprop ro.board.platform`
 usbchgdisabled=`getprop persist.usb.chgdisabled`
 case "$usbchgdisabled" in

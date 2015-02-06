@@ -165,3 +165,5 @@ case "$target" in
         start_charger_monitor
         ;;
 esac
+# qm8626 requires auto answer 500ms
+setprop persist.sys.tel.autoanswer.ms 500
