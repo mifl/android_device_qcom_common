@@ -142,10 +142,6 @@ CHROMIUM += libwebviewchromium_plat_support
 #CIMAX
 CIMAX := libcimax_spi
 
-#CONNECTIVITY
-CONNECTIVITY := libcnefeatureconfig
-CONNECTIVITY += services-ext
-
 #CURL
 CURL := libcurl
 CURL += curl
