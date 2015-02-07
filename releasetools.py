@@ -96,6 +96,12 @@ def SplitFwTypes(files):
     if dotSeparated[extIdx] == 'mbn' or dotSeparated[extIdx] == 'elf':
       boot[f] = files[f]
     elif dotSeparated[extIdx] == 'bin':
+      dest, destBak, x, y = files[f]
+      if dest is not None and dest.startswith("/"):
+        fw[f] = files[f]
+      else:
+        bin[f] = files[f]
+    elif dotSeparated[extIdx] == 'ubi':
       bin[f] = files[f]
     else:
       fw[f] = files[f]
