@@ -31,8 +31,6 @@
 *
 */
 #define BTA_DM_COD {0x32, 0x04, 0x20}
-// Enables Interleave scan
-#define BTA_HOST_INTERLEAVE_SEARCH  TRUE
 // skips conn update at conn completion
 #define BTA_BLE_SKIP_CONN_UPD  TRUE
 // Disables read remote device feature
