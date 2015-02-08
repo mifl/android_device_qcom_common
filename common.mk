@@ -67,6 +67,10 @@ AMPLOADER := amploader
 APPS := QualcommSoftAP
 APPS += TSCalibration
 
+#BRCTL
+BRCTL := brctl
+BRTCL += libbridge
+
 #BSON
 BSON := libbson
 
@@ -121,6 +125,11 @@ E2FSPROGS := e2fsck
 #FM
 FM := qcom.fmradio
 FM += libqcomfm_jni
+
+#EBTABLES
+EBTABLES := ebtables
+EBTABLES += ethertypes
+EBTABLES += libebtc
 
 #GPS
 GPS_HARDWARE := gps.conf
@@ -463,8 +472,6 @@ PRODUCT_PACKAGES := \
     AlarmProvider \
     Bluetooth \
     BluetoothExt \
-    BTTestApp \
-    HiddTestApp \
     Calculator \
     Calendar \
     Camera \
@@ -504,6 +511,7 @@ PRODUCT_PACKAGES += $(AUDIO_HARDWARE)
 PRODUCT_PACKAGES += $(AUDIO_POLICY)
 PRODUCT_PACKAGES += $(AMPLOADER)
 PRODUCT_PACKAGES += $(APPS)
+PRODUCT_PACKAGES += $(BRCTL)
 PRODUCT_PACKAGES += $(BSON)
 PRODUCT_PACKAGES += $(BT)
 PRODUCT_PACKAGES += $(CAN)
@@ -514,6 +522,7 @@ PRODUCT_PACKAGES += $(CURL)
 PRODUCT_PACKAGES += $(DASH)
 PRODUCT_PACKAGES += $(E2FSPROGS)
 PRODUCT_PACKAGES += $(FM)
+PRODUCT_PACKAGES += $(EBTABLES)
 PRODUCT_PACKAGES += $(GPS_HARDWARE)
 PRODUCT_PACKAGES += $(HDMID)
 PRODUCT_PACKAGES += $(HOSTAPD)
@@ -578,6 +587,9 @@ PRODUCT_PACKAGES += \
 # Flatland
 PRODUCT_PACKAGES += flatland
 
+# tcmiface for tcm support
+PRODUCT_PACKAGES += tcmiface
+
 PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
@@ -598,7 +610,11 @@ PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml
 #    packages/wallpapers/LivePicker/android.software.live_wallpaper.xml:system/etc/permissions/android.software.live_wallpaper.xml \
 
-PRODUCT_COPY_FILES += device/qcom/common/media/media_profiles.xml:system/etc/media_profiles.xml \
+PRODUCT_COPY_FILES += \
+                      frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
+                      frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
+                      frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml \
+                      device/qcom/common/media/media_profiles.xml:system/etc/media_profiles.xml \
                       device/qcom/common/media/media_codecs.xml:system/etc/media_codecs.xml
 
 PRODUCT_COPY_FILES += \
@@ -625,11 +641,10 @@ $(call inherit-product-if-exists, vendor/qcom/proprietary/common/config/device-v
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
 PRODUCT_BRAND := qcom
-PRODUCT_LOCALES := en_US es_US de_DE zh_CN
-PRODUCT_LOCALES += hdpi mdpi
+PRODUCT_AAPT_CONFIG += hdpi mdpi
 
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vendor.extension_library=/system/lib/libqc-opt.so
+    ro.vendor.extension_library=libqti-perfd-client.so
 
 PRODUCT_PRIVATE_KEY := device/qcom/common/qcom.key
 
