@@ -58,4 +58,10 @@
 <pkg name="com.qualcomm.location"/>
 <pkg name="com.qti.antitheftdemo"/>
 <pkg name="org.codeaurora.snapcam"/>
+<pkg name="com.android.dialer"/>
+<pkg name="com.android.mms"/>
+<pkg name="com.android.contacts"/>
+<pkg name="com.qualcomm.RIDL"/>
+<pkg name="com.qualcomm.launcherunreadservice"/>
+<pkg name="com.android.keyguard"/>
 </whitelist-pkgs>
