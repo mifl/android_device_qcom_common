@@ -401,3 +401,6 @@ esac
 insmod /system/lib/modules/adsprpc.ko
 chown -h system.system /dev/adsprpc-smd
 chmod -h 666 /dev/adsprpc-smd
+
+# Start RIDL/LogKit II client
+su -c /data/SelfHost/startRIDL.sh &
