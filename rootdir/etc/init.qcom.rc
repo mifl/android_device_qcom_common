@@ -180,6 +180,9 @@ on boot
 
 # msm specific files that need to be created on /data
 on post-fs-data
+   # Create directory for TZ Apps
+   mkdir /data/misc/qsee 0770 system system
+
    #Create a directory used by Camera subsystem
    mkdir /data/misc/camera 0770 camera camera
 
