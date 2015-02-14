@@ -35,9 +35,10 @@ on early-init
 on init
     # Set permissions for persist partition
     mkdir /persist 0771 system system
-    # See storage config details at http://source.android.com/tech/storage/
+    chown media_rw media_rw /mnt/media_rw
+    chmod 0770 /mnt/media_rw
     mkdir /mnt/media_rw/sdcard 0700 media_rw media_rw
-    mkdir /storage/sdcard 0700 root root
+    symlink /mnt/media_rw/sdcard /storage/sdcard
     symlink /storage/sdcard /sdcard
 
 on early-boot
@@ -778,10 +779,6 @@ service profiler_daemon /system/bin/profiler_daemon
     class late_start
     user root
     group root
-    disabled
-
-service fuse_sdcard /system/bin/sdcard -u 1023 -g 1023 -w 1023 /mnt/media_rw/sdcard /storage/sdcard
-    class late_start
     disabled
 
 service hcidump /system/bin/sh /system/etc/hcidump.sh
