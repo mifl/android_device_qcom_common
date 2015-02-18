@@ -133,6 +133,9 @@ void init_alarm_boot_properties()
 {
     char *alarm_file = "/proc/sys/kernel/boot_reason";
     char buf[BUF_SIZE];
+    char tmp[PROP_VALUE_MAX]="";
+
+    property_get("ro.boot.alarmboot", tmp);
 
     if(read_file2(alarm_file, buf, sizeof(buf))) {
 
@@ -151,7 +154,7 @@ void init_alarm_boot_properties()
      * 7 -> CBLPWR_N pin toggled (for external power supply)
      * 8 -> KPDPWR_N pin toggled (power key pressed)
      */
-        if(buf[0] == '3')
+        if(buf[0] == '3' || !strcmp(tmp,"true"))
             property_set("ro.alarm_boot", "true");
         else
             property_set("ro.alarm_boot", "false");
