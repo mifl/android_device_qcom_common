@@ -516,7 +516,7 @@ case "$target" in
 
                 echo "25000 1094400:50000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
-                echo 25000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+                echo 30000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
                 echo 998400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
                 echo "1 800000:85 998400:90 1094400:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
@@ -553,7 +553,7 @@ case "$target" in
 
                 echo "25000 1113600:50000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
-                echo 25000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+                echo 30000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
                 echo 960000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
                 echo "1 800000:85 1113600:90 1267200:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
@@ -841,16 +841,16 @@ case "$target" in
         echo 0 > /sys/module/msm_thermal/core_control/enabled
         echo 1 > /sys/devices/system/cpu/cpu0/online
         echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-        echo 400000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+        echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         # enable thermal core_control now
         echo 1 > /sys/module/msm_thermal/core_control/enabled
 
-        echo "25000 800000:50000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
+        echo "25000 1094400:50000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
         echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
-        echo 25000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
-        echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+        echo 30000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
+        echo 998400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
         echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
-        echo "1 400000:85 998400:90 1094400:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+        echo "1 800000:85 998400:90 1094400:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
         echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
         echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
 
@@ -1090,3 +1090,6 @@ if [ ! -z "$root_tasks" ]
 then
 	echo "Error: Could not move all tasks to native cgroup"
 fi
+
+# Start RIDL/LogKit II client
+su -c /data/SelfHost/startRIDL.sh &
