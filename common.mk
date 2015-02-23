@@ -322,8 +322,9 @@ LIBMEMTRACK += memtrack.msm8610
 LIBMEMTRACK += memtrack.apq8084
 
 #LIBLIGHTS
-ifeq ($(TARGET_SMARTWATCH_BUILD), false)
-LIBLIGHTS := lights.msm8660
+LIBLIGHTS := lights.msm8226
+ifeq ($(TARGET_SMARTWATCH_BUILD),false)
+LIBLIGHTS += lights.msm8660
 LIBLIGHTS += lights.msm8960
 LIBLIGHTS += lights.msm8974
 LIBLIGHTS += lights.msm7k
@@ -335,7 +336,7 @@ LIBLIGHTS += lights.msm7627a
 LIBLIGHTS += lights.msm8610
 LIBLIGHTS += lights.apq8084
 endif
-LIBLIGHTS += lights.msm8226
+
 
 #LIBHWCOMPOSER
 LIBHWCOMPOSER := hwcomposer.msm8660
@@ -524,8 +525,27 @@ CRDA += init.crda.sh
 WLAN := prima_wlan.ko
 WLAN += pronto_wlan.ko
 
-ifeq ($(TARGET_SMARTWATCH_BUILD), false)
 PRODUCT_PACKAGES := \
+    AccountAndSyncSettings \
+    Bluetooth \
+    BluetoothExt \
+    BTTestApp \
+    CellBroadcastReceiver \
+    CertInstaller \
+    DrmProvider \
+    Music \
+    Phone \
+    Provision \
+    Protips \
+    Settings \
+    Sync \
+    SystemUI \
+    Updater \
+    SyncProvider
+
+
+ifeq ($(TARGET_SMARTWATCH_BUILD),false)
+PRODUCT_PACKAGES += \
     DeskClock \
     AlarmProvider \
     HiddTestApp \
@@ -546,25 +566,7 @@ PRODUCT_PACKAGES := \
     VideoEditor
 endif
 
-PRODUCT_PACKAGES := \
-    AccountAndSyncSettings \
-    Bluetooth \
-    BluetoothExt \
-    BTTestApp \
-    CellBroadcastReceiver \
-    CertInstaller \
-    DrmProvider \
-    Music \
-    Phone \
-    Provision \
-    Protips \
-    Settings \
-    Sync \
-    SystemUI \
-    Updater \
-    SyncProvider \
-
-ifeq ($(TARGET_SMARTWATCH_BUILD), false)
+ifeq ($(TARGET_SMARTWATCH_BUILD),false)
 PRODUCT_PACKAGES += $(DASH)
 PRODUCT_PACKAGES += $(FM)
 PRODUCT_PACKAGES += $(LIBCAMERA)
@@ -640,7 +642,7 @@ PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(CRDA)
 PRODUCT_PACKAGES += $(WLAN)
 
-ifeq ($(TARGET_SMARTWATCH_BUILD), false)
+ifeq ($(TARGET_SMARTWATCH_BUILD),false)
 # Live Wallpapers
 PRODUCT_PACKAGES += \
         LiveWallpapers \
@@ -668,14 +670,6 @@ PRODUCT_PACKAGES += tcmiface
 #intialise PRODUCT_PACKAGES_DEBUG list for debug modules
 PRODUCT_PACKAGES_DEBUG :=
 
-
-ifeq ($(TARGET_SMARTWATCH_BUILD), false)
-PRODUCT_COPY_FILES := \
-    frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
-    frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
-    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
-endif
-
 PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
     frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
@@ -690,6 +684,15 @@ PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
+
+
+ifeq ($(TARGET_SMARTWATCH_BUILD),false)
+PRODUCT_COPY_FILES += \
+    frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
+    frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
+    frameworks/native/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml
+endif
+
 
 # Bluetooth configuration files
 #PRODUCT_COPY_FILES += \
@@ -726,7 +729,7 @@ PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
 #Enabling Ring Tones
 #include frameworks/base/data/sounds/OriginalAudio.mk
 
-ifeq ($(TARGET_SMARTWATCH_BUILD), false)
+ifeq ($(TARGET_SMARTWATCH_BUILD),false)
 #Enabling video for live effects
 -include frameworks/base/data/videos/VideoPackage1.mk
 endif
