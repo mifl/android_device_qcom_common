@@ -64,4 +64,8 @@
 <pkg name="com.qualcomm.RIDL"/>
 <pkg name="com.qualcomm.launcherunreadservice"/>
 <pkg name="com.android.keyguard"/>
+<pkg name="com.android.wifi.cmcc"/>
+<pkg name="com.android.soundrecorder"/>
+<pkg name="com.android.email"/>
+<pkg name="com.android.dm"/>
 </whitelist-pkgs>
