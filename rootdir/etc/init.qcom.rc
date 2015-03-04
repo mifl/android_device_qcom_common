@@ -270,6 +270,9 @@ on property:init.svc.surfaceflinger=stopped
     stop ppd
     stop hdmid
 
+on property:radio.atfwd.start=false
+    stop atfwd
+
 # corefile limit and ETB enabling
 on property:persist.debug.trace=1
     mkdir /data/core 0777 root root
