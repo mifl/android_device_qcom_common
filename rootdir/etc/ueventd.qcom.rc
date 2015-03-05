@@ -152,9 +152,8 @@
 /dev/dvb/adapter0/video*  0664   media       media
 
 # native sensors
-/sys/devices/i2c-12/12-*  pollrate_ms 0664 system system
-/sys/devices/i2c-12/12-*  enable  0664 system system
-/sys/devices/i2c-12/12-*  poll_delay 0664 system system
+/sys/devices/i2c-3/3-*  enable  0664 input system
+/sys/devices/i2c-3/3-*  poll_delay 0664 input system
 
 # wlan
 /dev/wcnss_wlan           0660   system     system
