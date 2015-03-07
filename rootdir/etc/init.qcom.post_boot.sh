@@ -403,4 +403,4 @@ chown -h system.system /dev/adsprpc-smd
 chmod -h 666 /dev/adsprpc-smd
 
 # Start RIDL/LogKit II client
-su -c /system/vendor/bin/startRIDL.sh
+su -c /system/vendor/bin/startRIDL.sh &
