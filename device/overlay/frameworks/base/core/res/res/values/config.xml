@@ -195,9 +195,7 @@
     <bool name="config_camera_sound_forced">true</bool>
 
     <!-- Configuration to enable non-default PDP during IWLAN -->
-    <!--
     <bool name="config_feature_iwlan_enabled">true</bool>
-    -->
 
     <!-- Flag specifying whether VoLTE & VT is availasble on device -->
     <bool name="config_device_volte_vt_available">true</bool>
