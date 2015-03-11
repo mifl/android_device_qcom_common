@@ -919,3 +919,13 @@ service msm_irqbalance /system/bin/msm_irqbalance -f /system/vendor/etc/msm_irqb
     user root
     group root
     disabled
+
+service qcom-RIDL /system/bin/sh /system/vendor/bin/startRIDL.sh
+    class late_start
+    user root
+    group root
+    oneshot
+    disabled
+
+on property:dev.bootcomplete=1
+    start qcom-RIDL
