@@ -349,7 +349,7 @@ case "$target" in
 		echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
 	    ;;
-           "239" | "241" | "263" | "268" | "269" | "270" | "271")
+           "239" | "241" | "263" | "268" | "269" | "270" | "271" | "282")
 		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 		echo 10 > /sys/class/net/rmnet0/queues/rx-0/rps_cpus
 		if [ -f /sys/devices/soc0/platform_subtype_id ]; then
@@ -576,7 +576,7 @@ case "$target" in
 
         # Apply governor settings for 8939
         case "$soc_id" in
-            "239" | "241" | "263" | "268" | "269" | "270" | "271")
+            "239" | "241" | "263" | "268" | "269" | "270" | "271" | "282")
 
                 # HMP scheduler load tracking settings
                 echo 5 > /proc/sys/kernel/sched_ravg_hist_size
@@ -952,7 +952,7 @@ case "$target" in
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
         case $soc_id in
-            "239" | "241" | "263" | "268" | "269" | "270" | "271")
+            "239" | "241" | "263" | "268" | "269" | "270" | "271" | "282")
             setprop ro.min_freq_0 960000
             setprop ro.min_freq_4 800000
 	;;
