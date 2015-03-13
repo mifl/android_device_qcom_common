@@ -28,6 +28,11 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "vendor_init.h"
 #include "property_service.h"
@@ -42,7 +47,9 @@
 void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *board_type)
 {
     char platform[PROP_VALUE_MAX];
-    int rc;
+    char cpusys[BUF_SIZE];
+    char *pcpu;
+    int rc, cpuid, fd;
     unsigned long virtual_size = 0;
     char str[BUF_SIZE];
 
@@ -73,5 +80,30 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
          property_set("media.hwhevccodectype", "1");
     } else if (msm_id == 206) {
         property_set("media.swhevccodectype", "1");
+    }
+    switch (msm_id) {
+        case 239:
+            if (property_get("ro.earlyboot_cpus", platform)) {
+                pcpu = platform;
+                ERROR("ro.earlyboot_cpus:%s\n", pcpu);
+                while (*pcpu) {
+                    if (*pcpu > '0' && *pcpu < '8') {
+                        cpuid = *pcpu - '0';
+                        snprintf(cpusys, sizeof(cpusys), "/sys/devices/system/cpu/cpu%d/online", cpuid);
+                        fd = open(cpusys, O_RDWR);
+                        if (fd < 0) {
+                            ERROR("Failed to open %s\n", cpusys);
+                            return;
+                        }
+                        rc = write(fd, "1", 1);
+                        if (rc < 0) {
+                            ERROR("Failed to write %s\n", cpusys);
+                        }
+                        close(fd);
+                    }
+                    pcpu++;
+                }
+            }
+            break;
     }
 }
