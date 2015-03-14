@@ -350,6 +350,27 @@ case "$target" in
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
 	    ;;
            "239" | "241" | "263" | "268" | "269" | "270" | "271")
+		echo N > /sys/module/lpm_levels/system/performance/cpu0/standalone_pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/performance/cpu1/standalone_pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/performance/cpu2/standalone_pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/performance/cpu3/standalone_pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/power/cpu4/standalone_pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/power/cpu5/standalone_pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/power/cpu6/standalone_pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/power/cpu7/standalone_pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/performance/cpu0/pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/performance/cpu1/pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/performance/cpu2/pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/performance/cpu3/pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/power/cpu4/pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/power/cpu5/pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/power/cpu6/pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/power/cpu7/pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/power/power-l2-pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/performance/performance-l2-pc/idle_enabled
+		echo N > /sys/module/lpm_levels/system/system-cci-retention/idle_enabled
+		echo N > /sys/module/lpm_levels/system/system-cci-pc/idle_enabled
+
 		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 		echo 10 > /sys/class/net/rmnet0/queues/rx-0/rps_cpus
 		if [ -f /sys/devices/soc0/platform_subtype_id ]; then
