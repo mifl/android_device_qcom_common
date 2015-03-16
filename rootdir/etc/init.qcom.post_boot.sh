@@ -397,6 +397,8 @@ case "$target" in
      ;;
 esac
 
+#freeing highpages
+echo 1 > /sys/kernel/mm/memory/highmem/release
 #fastrpc permission setting
 insmod /system/lib/modules/adsprpc.ko
 chown -h system.system /dev/adsprpc-smd
