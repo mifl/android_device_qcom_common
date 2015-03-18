@@ -359,6 +359,7 @@ esac
 
 case "$target" in
     "msm8226")
+	echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled    
         echo 4 > /sys/module/lpm_levels/enable_low_power/l2
         echo 1 > /sys/module/msm_pm/modes/cpu0/power_collapse/suspend_enabled
         echo 1 > /sys/module/msm_pm/modes/cpu1/power_collapse/suspend_enabled
