@@ -368,7 +368,7 @@ case "$target" in
 	        echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
 		;;
-            "239" | "241")
+            "239" | "241" | "268" | "269" | "270" | "271" | "282")
 		echo Y > /sys/module/lpm_levels/system/performance/cpu0/wfi/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/performance/cpu1/wfi/idle_enabled
 		echo Y > /sys/module/lpm_levels/system/performance/cpu2/wfi/idle_enabled
@@ -575,10 +575,10 @@ case "$target" in
             ;;
         esac
 
-        # Apply governor settings for 8939
+        # Apply governor settings for 8939, 8929
         case "$soc_id" in
-            "239" | "241" | "263")
-	        # Apply HMP Task packing for 8939
+            "239" | "241" | "263" | "268" | "269" | "270" | "271" | "282")
+	        # Apply HMP Task packing for 8939, 8929
                 echo 20 > /proc/sys/kernel/sched_small_task
                 echo 30 > /proc/sys/kernel/sched_mostly_idle_load
                 echo 3 > /proc/sys/kernel/sched_mostly_idle_nr_run
@@ -805,14 +805,17 @@ case "$target" in
         else
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
-        if [ $soc_id = 239 ]; then # start perfd on 8939 and mpdecision on 8916
-	    setprop ro.min_freq_0 960000
-	    setprop ro.min_freq_4 800000
-	    start perfd
-        else
-	    setprop ro.min_freq_0 800000
-	    start mpdecision
-        fi
+        case "$soc_id" in
+            "239" | "268" | "269" | "270" | "271" | "282")
+	        setprop ro.min_freq_0 960000
+	        setprop ro.min_freq_4 800000
+	        start perfd
+            ;;
+            *)
+	        setprop ro.min_freq_0 800000
+	        start mpdecision
+            ;;
+        esac
     ;;
     "msm8974")
         start mpdecision
