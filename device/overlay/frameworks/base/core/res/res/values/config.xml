@@ -255,4 +255,6 @@
     <bool name="config_dreamsSupported">false</bool>
 
     <bool name="config_powerDecoupleAutoSuspendModeFromDisplay">true</bool>
+    <!--  Define Google play service package for FRP-->
+    <string name="config_persistentDataPackageName" translatable="false">com.google.android.gms</string>
 </resources>
