@@ -354,7 +354,7 @@ case "$target" in
         echo 0 > /sys/devices/system/cpu/cpu1/online
         echo 0 > /sys/devices/system/cpu/cpu2/online
         echo 0 > /sys/devices/system/cpu/cpu3/online
-        echo "ondemand" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+        echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
         echo 50000 > /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
         echo 90 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
         echo 1 > /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
@@ -365,6 +365,7 @@ case "$target" in
         echo 787200 > /sys/devices/system/cpu/cpufreq/ondemand/optimal_freq
         echo 300000 > /sys/devices/system/cpu/cpufreq/ondemand/sync_freq
         echo 80 > /sys/devices/system/cpu/cpufreq/ondemand/up_threshold_any_cpu_load
+        echo 787200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         echo 787200 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
         chown -h system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
