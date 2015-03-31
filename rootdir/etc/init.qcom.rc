@@ -405,7 +405,7 @@ service qmiproxy /system/bin/qmiproxy
 service qmuxd /system/bin/qmuxd
     class main
     user radio
-    group radio audio bluetooth gps qcom_diag
+    group radio audio bluetooth gps
     disabled
 
 service netmgrd /system/bin/netmgrd
