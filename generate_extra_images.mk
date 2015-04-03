@@ -187,10 +187,22 @@ ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_DISK_IMG_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DISK_IMG_TARGET)
 endif
 
+NAND_BOOTIMAGE_ARGS := \
+	--kernel $(INSTALLED_KERNEL_TARGET) \
+	--ramdisk $(INSTALLED_RAMDISK_TARGET) \
+	--cmdline "$(BOARD_KERNEL_CMDLINE)" \
+	--base $(BOARD_KERNEL_BASE)
+
+NAND_RECOVERYIMAGE_ARGS := \
+	--kernel $(INSTALLED_KERNEL_TARGET) \
+	--ramdisk $(recovery_ramdisk) \
+	--cmdline "$(BOARD_KERNEL_CMDLINE)" \
+	--base $(BOARD_KERNEL_BASE)
+
 #----------------------------------------------------------------------
 # Generate NAND images
 #----------------------------------------------------------------------
-ifeq ($(call is-board-platform-in-list,msm7627a msm7630_surf msm8909_nand),true)
+ifeq ($(call is-board-platform-in-list,msm7627a msm7630_surf msm8909),true)
 
 2K_NAND_OUT := $(PRODUCT_OUT)/2k_nand_images
 
@@ -241,18 +253,6 @@ INTERNAL_4K_RECOVERYIMAGE_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE)
 endif
 
 recovery_nand_fstab := $(TARGET_DEVICE_DIR)/recovery_nand.fstab
-
-NAND_BOOTIMAGE_ARGS := \
-	--kernel $(INSTALLED_KERNEL_TARGET) \
-	--ramdisk $(INSTALLED_RAMDISK_TARGET) \
-	--cmdline "$(BOARD_KERNEL_CMDLINE)" \
-	--base $(BOARD_KERNEL_BASE)
-
-NAND_RECOVERYIMAGE_ARGS := \
-	--kernel $(INSTALLED_KERNEL_TARGET) \
-	--ramdisk $(recovery_ramdisk) \
-	--cmdline "$(BOARD_KERNEL_CMDLINE)" \
-	--base $(BOARD_KERNEL_BASE)
 
 # Generate boot image for NAND
 ifeq ($(TARGET_BOOTIMG_SIGNED),true)
