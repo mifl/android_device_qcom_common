@@ -192,6 +192,18 @@ ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_DISK_IMG_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DISK_IMG_TARGET)
 endif
 
+NAND_BOOTIMAGE_ARGS := \
+	--kernel $(INSTALLED_KERNEL_TARGET) \
+	--ramdisk $(INSTALLED_RAMDISK_TARGET) \
+	--cmdline "$(BOARD_KERNEL_CMDLINE)" \
+	--base $(BOARD_KERNEL_BASE)
+
+NAND_RECOVERYIMAGE_ARGS := \
+	--kernel $(INSTALLED_KERNEL_TARGET) \
+	--ramdisk $(recovery_ramdisk) \
+	--cmdline "$(BOARD_KERNEL_CMDLINE)" \
+	--base $(BOARD_KERNEL_BASE)
+
 #----------------------------------------------------------------------
 # Generate NAND images
 #----------------------------------------------------------------------
@@ -260,6 +272,7 @@ INTERNAL_4K_RECOVERYIMAGE_ARGS += --pagesize $(BOARD_KERNEL_PAGESIZE)
 
 endif
 
+recovery_nand_fstab := $(TARGET_DEVICE_DIR)/recovery_nand.fstab
 
 # Generate boot image for NAND
 ifeq ($(TARGET_BOOTIMG_SIGNED),true)
