@@ -608,7 +608,15 @@ PRODUCT_PACKAGES += \
         LiveWallpapers \
         LiveWallpapersPicker \
         VisualizationWallpapers \
-        librs_jni
+        librs_jni \
+        BasicSmsReceiver \
+        Dialer \
+        Mms \
+        TelephonyProvider \
+        Telecom \
+        TeleService \
+        MmsService
+
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
