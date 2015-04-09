@@ -868,3 +868,23 @@ on property:persist.qm8626.usbclonly.enable=1
 on property:persist.qm8626.usbclonly.enable=0
     start qm8626-usb
 
+service qm8626-log-main /system/bin/logcat -r 1024 -n 9 -v threadtime -f /data/logs/log-main
+    user system
+    group system log
+    disabled
+
+service qm8626-log-radio /system/bin/logcat -b radio -r 1024 -n 9 -v threadtime -f /data/logs/log-radio
+    user system
+    group system log
+    disabled
+
+service qm8626-log-event /system/bin/logcat -b event -r 1024 -n 1 -v threadtime -f /data/logs/log-event
+    user system
+    group system log
+    disabled
+
+on post-fs
+    mkdir /data/logs 0775 system log
+    start qm8626-log-main
+    start qm8626-log-radio
+    start qm8626-log-event
