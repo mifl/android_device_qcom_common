@@ -432,7 +432,7 @@ LIBHWCOMPOSER += hwcomposer.msm7630_fusion
 LIBHWCOMPOSER += hwcomposer.msm7627_surf
 LIBHWCOMPOSER += hwcomposer.msm7627_6x
 LIBHWCOMPOSER += hwcomposer.msm7627a
-#LIBHWCOMPOSER += hwcomposer.msm8952
+LIBHWCOMPOSER += hwcomposer.msm8952
 
 #LIBAUDIOPARAM -- Exposing AudioParameter as dynamic library for SRS TruMedia to work
 LIBAUDIOPARAM := libaudioparameter
