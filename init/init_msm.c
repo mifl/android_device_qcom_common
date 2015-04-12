@@ -271,8 +271,8 @@ void vendor_load_properties()
 
     /* Define MSM family properties */
     init_msm_properties(msm_id, msm_ver, board_type);
+
     init_alarm_boot_properties();
-	property_set("persist.sys.force_sw_gles", "1");
 
     /* Set Display Node Permissions */
     set_display_node_perms();
