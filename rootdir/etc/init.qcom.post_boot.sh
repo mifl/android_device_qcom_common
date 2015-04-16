@@ -605,6 +605,12 @@ case "$target" in
 		echo 1 > /sys/module/msm_thermal/core_control/enabled
 
                 # Bring up all cores online
+                sleep 3
+                echo 0 > /sys/module/msm_thermal/core_control/enabled
+                echo 1113600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+                echo 800000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+                echo 1 > /sys/module/msm_thermal/core_control/enabled
+
 		echo 1 > /sys/devices/system/cpu/cpu1/online
 	        echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
@@ -626,6 +632,13 @@ case "$target" in
                 echo 30 > /sys/devices/system/cpu/cpu5/sched_mostly_idle_load
                 echo 30 > /sys/devices/system/cpu/cpu6/sched_mostly_idle_load
                 echo 30 > /sys/devices/system/cpu/cpu7/sched_mostly_idle_load
+
+                sleep 3
+                # echo 0xffffffff to cpu scaling_max_freq, it will fall back to max available freq
+                echo 0 > /sys/module/msm_thermal/core_control/enabled
+                echo 4294967295 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+                echo 4294967295 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+                echo 1 > /sys/module/msm_thermal/core_control/enabled
             ;;
         esac
     ;;
