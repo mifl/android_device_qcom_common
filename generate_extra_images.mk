@@ -15,6 +15,7 @@ INSTALLED_USERDATAIMAGE_TARGET := $(PRODUCT_OUT)/userdata.img
 INSTALLED_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img
 recovery_ramdisk := $(PRODUCT_OUT)/ramdisk-recovery.img
 INSTALLED_USBIMAGE_TARGET := $(PRODUCT_OUT)/usbdisk.img
+INSTALLED_CACHEIMAGE_TARGET := $(PRODUCT_OUT)/cache.img
 endif
 
 #---------------------------------------------------------------------
@@ -216,6 +217,7 @@ INSTALLED_2K_SYSTEMIMAGE_TARGET := $(2K_NAND_OUT)/system.img
 INSTALLED_2K_USERDATAIMAGE_TARGET := $(2K_NAND_OUT)/userdata.img
 INSTALLED_2K_PERSISTIMAGE_TARGET := $(2K_NAND_OUT)/persist.img
 INSTALLED_2K_RECOVERYIMAGE_TARGET := $(2K_NAND_OUT)/recovery.img
+INSTALLED_2K_CACHEIMAGE_TARGET := $(2K_NAND_OUT)/cache.img
 
 recovery_nand_fstab := $(TARGET_DEVICE_DIR)/recovery_nand.fstab
 
@@ -341,6 +343,15 @@ define build-nand-persistimage
   $(hide) $(call assert-max-image-size,$@,$(BOARD_PERSISTIMAGE_PARTITION_SIZE),yaffs)
 endef
 
+# Generate cache image for NAND
+define build-nand-cacheimage
+  @echo "target NAND cache image: $(3)"
+  $(hide) mkdir -p $(1)
+  $(hide) $(MKYAFFS2) $(2) $(TARGET_OUT_CACHE) $(3)
+  $(hide) chmod a+r $(3)
+  $(hide) $(call assert-max-image-size,$@,$(BOARD_CACHEIMAGE_PARTITION_SIZE),yaffs)
+endef
+
 ifeq ($(call is-board-platform,msm8909),true)
 
 $(INSTALLED_2K_BOOTIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_DTIMAGE_TARGET) $(BOOT_SIGNER)
@@ -355,6 +366,9 @@ $(INSTALLED_2K_USERDATAIMAGE_TARGET): $(MKYAFFS2) $(INSTALLED_USERDATAIMAGE_TARG
 $(INSTALLED_2K_PERSISTIMAGE_TARGET): $(MKYAFFS2) $(INSTALLED_PERSISTIMAGE_TARGET)
 	$(hide) $(call build-nand-persistimage,$(2K_NAND_OUT),$(INTERNAL_2K_MKYAFFS2_FLAGS),$(INSTALLED_2K_PERSISTIMAGE_TARGET))
 
+$(INSTALLED_2K_CACHEIMAGE_TARGET): $(MKYAFFS2) $(INSTALLED_CACHEIMAGE_TARGET)
+	$(hide) $(call build-nand-cacheimage,$(2K_NAND_OUT),$(INTERNAL_2K_MKYAFFS2_FLAGS),$(INSTALLED_2K_CACHEIMAGE_TARGET))
+
 $(INSTALLED_2K_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_RECOVERYIMAGE_TARGET) $(recovery_nand_fstab) $(INSTALLED_DTIMAGE_TARGET) $(BOOT_SIGNER)
 	$(hide) cp -f $(recovery_nand_fstab) $(TARGET_RECOVERY_ROOT_OUT)/etc
 	$(MKBOOTFS) $(TARGET_RECOVERY_ROOT_OUT) | $(MINIGZIP) > $(recovery_ramdisk)
@@ -364,7 +378,8 @@ ALL_DEFAULT_INSTALLED_MODULES += \
         $(INSTALLED_2K_BOOTIMAGE_TARGET) \
         $(INSTALLED_2K_SYSTEMIMAGE_TARGET) \
         $(INSTALLED_2K_USERDATAIMAGE_TARGET) \
-        $(INSTALLED_2K_PERSISTIMAGE_TARGET)
+        $(INSTALLED_2K_PERSISTIMAGE_TARGET) \
+        $(INSTALLED_2K_CACHEIMAGE_TARGET)
 
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += \
         $(INSTALLED_2K_BOOTIMAGE_TARGET) \
