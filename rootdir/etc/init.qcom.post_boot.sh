@@ -723,6 +723,7 @@ case "$target" in
         echo 30 > /sys/devices/system/cpu/cpu5/sched_mostly_idle_load
         echo 30 > /sys/devices/system/cpu/cpu6/sched_mostly_idle_load
         echo 30 > /sys/devices/system/cpu/cpu7/sched_mostly_idle_load
+
         echo 3 > /sys/devices/system/cpu/cpu0/sched_mostly_idle_nr_run
         echo 3 > /sys/devices/system/cpu/cpu1/sched_mostly_idle_nr_run
         echo 3 > /sys/devices/system/cpu/cpu2/sched_mostly_idle_nr_run
@@ -731,6 +732,15 @@ case "$target" in
         echo 3 > /sys/devices/system/cpu/cpu5/sched_mostly_idle_nr_run
         echo 3 > /sys/devices/system/cpu/cpu6/sched_mostly_idle_nr_run
         echo 3 > /sys/devices/system/cpu/cpu7/sched_mostly_idle_nr_run
+
+        echo 0 > /sys/devices/system/cpu/cpu0/sched_prefer_idle
+        echo 0 > /sys/devices/system/cpu/cpu1/sched_prefer_idle
+        echo 0 > /sys/devices/system/cpu/cpu2/sched_prefer_idle
+        echo 0 > /sys/devices/system/cpu/cpu3/sched_prefer_idle
+        echo 0 > /sys/devices/system/cpu/cpu4/sched_prefer_idle
+        echo 0 > /sys/devices/system/cpu/cpu5/sched_prefer_idle
+        echo 0 > /sys/devices/system/cpu/cpu6/sched_prefer_idle
+        echo 0 > /sys/devices/system/cpu/cpu7/sched_prefer_idle
 
         for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
         do
