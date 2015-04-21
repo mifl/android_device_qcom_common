@@ -107,10 +107,13 @@ on boot
     chown system system /sys/class/leds/green/device/engine2_load
     chown system system /sys/class/leds/blue/device/engine3_mode
     chown system system /sys/class/leds/blue/device/engine3_load
+    chown system system /sys/class/leds/lp5523:channel0/brightness
     chown system system /sys/class/leds/lp5523:channel0/device/engine1_mode
     chown system system /sys/class/leds/lp5523:channel0/device/engine1_load
+    chown system system /sys/class/leds/lp5523:channel1/brightness
     chown system system /sys/class/leds/lp5523:channel1/device/engine2_mode
     chown system system /sys/class/leds/lp5523:channel1/device/engine2_load
+    chown system system /sys/class/leds/lp5523:channel2/brightness
     chown system system /sys/class/leds/lp5523:channel2/device/engine3_mode
     chown system system /sys/class/leds/lp5523:channel2/device/engine3_load
 
