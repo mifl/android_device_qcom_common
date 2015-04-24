@@ -543,6 +543,8 @@ AUDIO_DECODERS += libstagefright_soft_mp3dec
 AUDIO_DECODERS += libstagefright_soft_mpeg4dec
 AUDIO_DECODERS += libstagefright_soft_rawdec
 AUDIO_DECODERS += libstagefright_soft_vorbisdec
+AUDIO_DECODERS += libstagefright_soft_g711dec
+AUDIO_DECODERS += libstagefright_soft_opusdec
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
