@@ -287,6 +287,9 @@ service usbhub_init /system/bin/usbhub_init
 service qcomsysd /system/bin/qcom-system-daemon
     class main
 
+on property:wifi.change_nv_owner=1
+    chown wifi wifi /persist/WCNSS_qcom_wlan_nv.bin
+
 on property:sys.boot_completed=1
     write /dev/kmsg "Boot completed "
 
