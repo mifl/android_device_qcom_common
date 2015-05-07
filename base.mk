@@ -792,3 +792,8 @@ PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
 # dm-verity definitions
 PRODUCT_VERITY_PARTITION=/dev/block/bootdevice/by-name/system
 $(call inherit-product-if-exists, build/target/product/verity.mk)
+
+ifeq ($(TARGET_BUILD_VARIANT),user)
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
+    ro.adb.secure=1
+endif
