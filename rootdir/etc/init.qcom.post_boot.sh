@@ -709,8 +709,10 @@ case "$target" in
                 else
 
                     # Apply 3.0 specific Sched & Governor settings
+                    # HMP scheduler settings for 8939 V3.0
                     echo 3 > /proc/sys/kernel/sched_window_stats_policy
                     echo 3 > /proc/sys/kernel/sched_ravg_hist_size
+                    echo 20000000 > /proc/sys/kernel/sched_ravg_window
 
                     # HMP Task packing settings for 8939 V3.0
                     echo 20 > /proc/sys/kernel/sched_small_task
@@ -832,6 +834,7 @@ case "$target" in
         # HMP scheduler settings for 8952 soc id is 264
         echo 3 > /proc/sys/kernel/sched_window_stats_policy
         echo 3 > /proc/sys/kernel/sched_ravg_hist_size
+        echo 20000000 > /proc/sys/kernel/sched_ravg_window
 
         # HMP Task packing settings for 8952
         echo 20 > /proc/sys/kernel/sched_small_task
@@ -955,7 +958,7 @@ case "$target" in
 
 	# HMP scheduler (big.Little cluster related) settings
         echo 93 > /proc/sys/kernel/sched_upmigrate
-        echo 70 > /proc/sys/kernel/sched_downmigrate
+        echo 83 > /proc/sys/kernel/sched_downmigrate
 
         # Enable sched guided freq control
         echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load
@@ -1160,7 +1163,7 @@ case "$target" in
 
         #Enable adaptive LMK and set vmpressure_file_min
         echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-        echo 69253 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+        echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 
         # HMP scheduler settings for 8909 similiar to 8916
         echo 3 > /proc/sys/kernel/sched_window_stats_policy
@@ -1281,9 +1284,11 @@ esac
 # Post-setup services
 case "$target" in
     "msm8660" | "msm8960" | "msm8226" | "msm8610" | "mpq8092" )
+        rm /data/system/perfd/default_values
         start mpdecision
     ;;
     "msm8916")
+        rm /data/system/perfd/default_values
         if [ -f /sys/devices/soc0/soc_id ]; then
            soc_id=`cat /sys/devices/soc0/soc_id`
         else
@@ -1302,9 +1307,11 @@ case "$target" in
         start perfd # start perfd on 8916, 8939 and 8929
     ;;
     "msm8909")
+        rm /data/system/perfd/default_values
 	start perfd
     ;;
     "msm8952")
+        rm /data/system/perfd/default_values
         start perfd
     ;;
     "msm8974")
