@@ -369,16 +369,18 @@ endef
 # Generate UBIFS images for NAND
 define build-nand-ubifs-systemimage
   @echo "target UBIFS NAND system image: $(3)"
+  (set -o pipefail; cd $(PRODUCT_OUT) && find system/ -mindepth 1 | $(CURDIR)/$(HOST_OUT_EXECUTABLES)/mkdevtbl > system.dt)
   $(hide) mkdir -p $(1)
-  $(MKFSUBIFS) $(2) $(3) -c 2555 -r $(PRODUCT_OUT)/system
+  $(MKFSUBIFS) $(2) $(3) -c 2555 -D $(PRODUCT_OUT)/system.dt -r $(PRODUCT_OUT)/system
   $(hide) chmod a+r $(3)
   $(hide) $(call assert-max-image-size,$@,$(BOARD_SYSTEMIMAGE_PARTITION_SIZE),ubifs)
 endef
 
 define build-nand-ubifs-userdataimage
   @echo "target UBIFS NAND userdata image: $(3)"
+  (set -o pipefail; cd $(PRODUCT_OUT) && find data/ -mindepth 1 | $(CURDIR)/$(HOST_OUT_EXECUTABLES)/mkdevtbl > data.dt)
   $(hide) mkdir -p $(1)
-  $(MKFSUBIFS) $(2) $(3) -c 562 -r $(PRODUCT_OUT)/data
+  $(MKFSUBIFS) $(2) $(3) -c 562 -D $(PRODUCT_OUT)/data.dt -r $(PRODUCT_OUT)/data
   $(hide) chmod a+r $(3)
   $(hide) $(call assert-max-image-size,$@,$(BOARD_USERDATAIMAGE_PARTITION_SIZE),ubifs)
 endef
@@ -432,10 +434,10 @@ endef
 
 ifeq ($(call is-board-platform,msm8909),true)
 
-$(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET): $(MKFSUBIFS) $(INSTALLED_SYSTEMIMAGE_TARGET)
+$(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET): $(MKFSUBIFS) $(MKDEVTBL) $(INSTALLED_SYSTEMIMAGE)
 	$(call build-nand-ubifs-systemimage,$(UBIFS_OUT),$(INTERNAL_MKFSUBIFS_FLAGS),$(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET))
 
-$(INSTALLED_UBIFS_USERDATAIMAGE_TARGET): $(MKFSUBIFS) $(INSTALLED_USERDATAIMAGE_TARGET)
+$(INSTALLED_UBIFS_USERDATAIMAGE_TARGET): $(MKFSUBIFS) $(MKDEVTBL) $(INSTALLED_USERDATAIMAGE_TARGET)
 	$(call build-nand-ubifs-userdataimage,$(UBIFS_OUT),$(INTERNAL_MKFSUBIFS_FLAGS),$(INSTALLED_UBIFS_USERDATAIMAGE_TARGET))
 
 $(INSTALLED_UBIFS_CACHEIMAGE_TARGET): $(MKFSUBIFS) $(INSTALLED_CACHEIMAGE_TARGET)
