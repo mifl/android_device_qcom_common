@@ -503,7 +503,7 @@ case "$target" in
         ProductName=`getprop ro.product.name`
         if [ "$ProductName" == "msm8916_32" ] || [ "$ProductName" == "msm8916_32_LMT" ]; then
             echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-            echo 69253 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+            echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
         elif [ "$ProductName" == "msm8916_64" ] || [ "$ProductName" == "msm8916_64_LMT" ]; then
             echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
             echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
@@ -775,7 +775,7 @@ case "$target" in
                     # enable governor for power cluster
                     echo 1 > /sys/devices/system/cpu/cpu4/online
                     echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-                    echo "39000 998400:19000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+                    echo 39000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
                     echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
                     echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
                     echo 800000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
@@ -830,6 +830,16 @@ esac
 
 case "$target" in
     "msm8952")
+
+        #Enable adaptive LMK and set vmpressure_file_min
+        ProductName=`getprop ro.product.name`
+        if [ "$ProductName" == "msm8952_32" ] || [ "$ProductName" == "msm8952_32_LMT" ]; then
+            echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+            echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+        elif [ "$ProductName" == "msm8952_64" ] || [ "$ProductName" == "msm8952_64_LMT" ]; then
+            echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+            echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+        fi
 
         # HMP scheduler settings for 8952 soc id is 264
         echo 3 > /proc/sys/kernel/sched_window_stats_policy
@@ -915,7 +925,7 @@ case "$target" in
         # enable governor for power cluster
         echo 1 > /sys/devices/system/cpu/cpu4/online
         echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-        echo "39000 998400:19000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+        echo 39000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
         echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
         echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
         echo 800000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
@@ -1206,8 +1216,11 @@ case "$target" in
 	# Enable core control
 	insmod /system/lib/modules/core_ctl.ko
 	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
-	echo 72 72 60 50 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
-	echo 30 > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
+        max_freq=`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq`
+        min_freq=800000
+        echo $((min_freq*100 / max_freq)) $((min_freq*100 / max_freq)) $((66*1000000 / max_freq)) \
+	$((55*1000000 / max_freq)) > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
+        echo $((33*1000000 / max_freq)) > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
 	echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
 
 

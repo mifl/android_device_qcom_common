@@ -250,13 +250,13 @@ else
 	soc_id=`cat /sys/devices/system/soc/soc0/id`
 fi
 
-# enable rps cpus on msm8939/msm8909 target
+# enable rps cpus on msm8939/msm8909/msm8929 target
 setprop sys.usb.rps_mask 0
 case "$soc_id" in
-	"239" | "241" | "263")
+	"239" | "241" | "263" | "268" | "269" | "270")
 		setprop sys.usb.rps_mask 10
 	;;
-	"245" | "260" | "261" | "262")
-		setprop sys.usb.rps_mask 2
+	"245" | "258" | "259" | "265" | "275")
+		setprop sys.usb.rps_mask 4
 	;;
 esac

@@ -181,6 +181,11 @@ on boot
     # Allow access for CCID command/response timeout configuration
     chown system system /sys/module/ccid_bridge/parameters/bulk_msg_timeout
 
+    # Mark the copy complete flag to not completed
+    write /data/misc/radio/copy_complete 0
+    chown radio radio /data/misc/radio/copy_complete
+    chmod 0660 /data/misc/radio/copy_complete
+
 # msm specific files that need to be created on /data
 on post-fs-data
     # Create directory for TZ Apps
@@ -919,15 +924,10 @@ on property:sys.wfdservice=enable
 on property:sys.wfdservice=disable
     stop wfdservice
 
-service qcom-RIDL /system/bin/sh /system/vendor/bin/startRIDL.sh
+service RIDL /system/vendor/bin/RIDLClient.exe
     class late_start
     user root
     group root
-    oneshot
-    disabled
-
-on property:dev.bootcomplete=1
-    start qcom-RIDL
 
 service fidodaemon /system/vendor/bin/fidodaemon
     class late_start
