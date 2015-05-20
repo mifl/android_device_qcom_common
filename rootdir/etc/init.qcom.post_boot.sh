@@ -1195,6 +1195,30 @@ case "$target" in
         do
         	echo "bw_hwmon" > $devfreq_gov
         done
+
+	# Disable all LPM modes by default
+	echo 0 > /sys/module/lpm_levels/system/pwr/cpu0/wfi/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/pwr/cpu0/fpc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/pwr/cpu1/wfi/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/pwr/cpu1/fpc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/perf/cpu2/wfi/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/perf/cpu2/fpc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/perf/cpu3/wfi/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/perf/cpu3/fpc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/pwr/pwr-l2-wfi/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/pwr/pwr-l2-gdhs/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/pwr/pwr-l2-fpc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/perf/perf-l2-wfi/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/perf/perf-l2-fpc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/system-fpc/idle_enabled
+	echo 0 > /sys/module/lpm_levels/system/system-wfi/idle_enabled
+
+	# Enable only C4 modes
+	echo 1 > /sys/module/lpm_levels/system/pwr/cpu0/fpc/idle_enabled
+	echo 1 > /sys/module/lpm_levels/system/pwr/cpu1/fpc/idle_enabled
+	echo 1 > /sys/module/lpm_levels/system/perf/cpu2/fpc/idle_enabled
+	echo 1 > /sys/module/lpm_levels/system/perf/cpu3/fpc/idle_enabled
     ;;
 esac
 
