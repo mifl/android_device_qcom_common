@@ -1050,6 +1050,3 @@ if [ ! -z "$root_tasks" ]
 then
 	echo "Error: Could not move all tasks to native cgroup"
 fi
-
-# Start RIDL/LogKit II client
-su -c /system/vendor/bin/startRIDL.sh
