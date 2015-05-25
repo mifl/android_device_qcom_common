@@ -324,31 +324,10 @@ on property:sys.boot_completed=1
 on property:persist.radio.atfwd.start=false
     stop atfwd
 
-service qcom-debug /system/bin/sh /system/etc/init.qcom.debug.sh
-    class core
-    user root
-    oneshot
-
-# corefile limit and ETB enabling
+# corefile limit
 on property:persist.debug.trace=1
     mkdir /data/core 0777 root root
     write /proc/sys/kernel/core_pattern "/data/core/%E.%p.%e"
-    write /sys/devices/system/cpu/cpu1/online 1
-    write /sys/devices/system/cpu/cpu2/online 1
-    write /sys/devices/system/cpu/cpu3/online 1
-    write /sys/bus/coresight/devices/coresight-etm0/enable 0
-    write /sys/bus/coresight/devices/coresight-etm1/enable 0
-    write /sys/bus/coresight/devices/coresight-etm2/enable 0
-    write /sys/bus/coresight/devices/coresight-etm3/enable 0
-    write /sys/bus/coresight/devices/coresight-etm0/reset 1
-    write /sys/bus/coresight/devices/coresight-etm1/reset 1
-    write /sys/bus/coresight/devices/coresight-etm2/reset 1
-    write /sys/bus/coresight/devices/coresight-etm3/reset 1
-    write /sys/bus/coresight/devices/coresight-etm0/enable 1
-    write /sys/bus/coresight/devices/coresight-etm1/enable 1
-    write /sys/bus/coresight/devices/coresight-etm2/enable 1
-    write /sys/bus/coresight/devices/coresight-etm3/enable 1
-    write /sys/module/coresight_event/parameters/event_abort_enable 1
 
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
@@ -933,3 +912,24 @@ service fidodaemon /system/vendor/bin/fidodaemon
     class late_start
     user system
     group system
+
+# Coresight early boot service
+service cs-early-boot /system/bin/sh /persist/coresight/qdss.agent.sh early-boot /system/etc/init.qcom.debug.sh
+    class core
+    user root
+    oneshot
+
+# Coresight post boot servive
+service cs-post-boot /system/bin/sh /persist/coresight/qdss.agent.sh
+    user root
+    disabled
+    oneshot
+
+on property:sys.boot_completed=1
+    start cs-post-boot
+
+on property:sys.dbg.coresight.enable=1
+    write /persist/coresight/enable 1
+
+on property:sys.dbg.coresight.enable=0
+    write /persist/coresight/enable 0
