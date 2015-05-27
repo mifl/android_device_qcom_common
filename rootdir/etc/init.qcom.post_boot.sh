@@ -610,8 +610,6 @@ case "$target" in
 
                 # HMP Task packing settings for 8939, 8929
                 echo 20 > /proc/sys/kernel/sched_small_task
-                echo 30 > /proc/sys/kernel/sched_mostly_idle_load
-                echo 3 > /proc/sys/kernel/sched_mostly_idle_nr_run
 
 		for devfreq_gov in /sys/class/devfreq/qcom,mincpubw*/governor
 		do
@@ -685,6 +683,17 @@ case "$target" in
                 echo 30 > /sys/devices/system/cpu/cpu5/sched_mostly_idle_load
                 echo 30 > /sys/devices/system/cpu/cpu6/sched_mostly_idle_load
                 echo 30 > /sys/devices/system/cpu/cpu7/sched_mostly_idle_load
+
+                # cpu idle nr run threshold
+                echo 3 > /sys/devices/system/cpu/cpu0/sched_mostly_idle_nr_run
+                echo 3 > /sys/devices/system/cpu/cpu1/sched_mostly_idle_nr_run
+                echo 3 > /sys/devices/system/cpu/cpu2/sched_mostly_idle_nr_run
+                echo 3 > /sys/devices/system/cpu/cpu3/sched_mostly_idle_nr_run
+                echo 3 > /sys/devices/system/cpu/cpu4/sched_mostly_idle_nr_run
+                echo 3 > /sys/devices/system/cpu/cpu5/sched_mostly_idle_nr_run
+                echo 3 > /sys/devices/system/cpu/cpu6/sched_mostly_idle_nr_run
+                echo 3 > /sys/devices/system/cpu/cpu7/sched_mostly_idle_nr_run
+
             else
                 # Apply 3.0 specific Sched & Governor settings
                 # HMP scheduler settings for 8939 V3.0
@@ -753,7 +762,7 @@ case "$target" in
                 # enable governor for power cluster
                 echo 1 > /sys/devices/system/cpu/cpu4/online
                 echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-                echo "39000 998400:19000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+                echo 39000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
                 echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
                 echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
                 echo 800000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
@@ -874,7 +883,7 @@ case "$target" in
         # enable governor for power cluster
         echo 1 > /sys/devices/system/cpu/cpu4/online
         echo "interactive" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-        echo "39000 998400:19000" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
+        echo 39000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
         echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
         echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
         echo 800000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
