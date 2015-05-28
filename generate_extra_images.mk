@@ -430,7 +430,7 @@ $(INSTALLED_2K_CACHEIMAGE_TARGET): $(MKYAFFS2) $(INSTALLED_CACHEIMAGE_TARGET)
 	$(hide) $(call build-nand-cacheimage,$(2K_NAND_OUT),$(INTERNAL_2K_MKYAFFS2_FLAGS),$(INSTALLED_2K_CACHEIMAGE_TARGET))
 
 $(INSTALLED_2K_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_RECOVERYIMAGE_TARGET) $(recovery_nand_fstab) $(INSTALLED_DTIMAGE_TARGET) $(BOOT_SIGNER)
-	$(hide) cp -f $(recovery_nand_fstab) $(TARGET_RECOVERY_ROOT_OUT)/etc
+	$(hide) cp -f $(recovery_nand_fstab) $(TARGET_RECOVERY_ROOT_OUT)/etc/recovery.fstab
 	$(MKBOOTFS) $(TARGET_RECOVERY_ROOT_OUT) | $(MINIGZIP) > $(recovery_ramdisk)
 	$(hide) $(call build-nand-recoveryimage,$(2K_NAND_OUT),$(INTERNAL_2K_RECOVERYIMAGE_ARGS),$(INSTALLED_2K_RECOVERYIMAGE_TARGET))
 
@@ -483,7 +483,7 @@ ifeq ($(call is-board-platform,msm7627a),true)
 endif # is-board-platform
 
 $(INSTALLED_4K_RECOVERYIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_RECOVERYIMAGE_TARGET) $(recovery_nand_fstab) $(INSTALLED_DTIMAGE_TARGET)
-	$(hide) cp -f $(recovery_nand_fstab) $(TARGET_RECOVERY_ROOT_OUT)/etc
+	$(hide) cp -f $(recovery_nand_fstab) $(TARGET_RECOVERY_ROOT_OUT)/etc/recovery.fstab
 	$(MKBOOTFS) $(TARGET_RECOVERY_ROOT_OUT) | $(MINIGZIP) > $(recovery_ramdisk)
 	$(hide) $(call build-nand-bootimage,$(4K_NAND_OUT),$(INTERNAL_4K_RECOVERYIMAGE_ARGS),$(INSTALLED_4K_RECOVERYIMAGE_TARGET))
 ifeq ($(call is-board-platform,msm7627a),true)
