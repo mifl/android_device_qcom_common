@@ -958,3 +958,8 @@ on property:sys.wfdservice=enable
 
 on property:sys.wfdservice=disable
     stop wfdservice
+
+service fidodaemon /system/vendor/bin/fidodaemon
+    class late_start
+    user system
+    group system
