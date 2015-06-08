@@ -527,11 +527,11 @@ case "$target" in
                 echo 3 > /proc/sys/kernel/sched_ravg_hist_size
 
                 # HMP Task packing settings for 8916
-                echo 30 > /proc/sys/kernel/sched_small_task
-                echo 50 > /sys/devices/system/cpu/cpu0/sched_mostly_idle_load
-                echo 50 > /sys/devices/system/cpu/cpu1/sched_mostly_idle_load
-                echo 50 > /sys/devices/system/cpu/cpu2/sched_mostly_idle_load
-                echo 50 > /sys/devices/system/cpu/cpu3/sched_mostly_idle_load
+                echo 20 > /proc/sys/kernel/sched_small_task
+                echo 30 > /sys/devices/system/cpu/cpu0/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu1/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu2/sched_mostly_idle_load
+                echo 30 > /sys/devices/system/cpu/cpu3/sched_mostly_idle_load
                 echo 3 > /sys/devices/system/cpu/cpu0/sched_mostly_idle_nr_run
                 echo 3 > /sys/devices/system/cpu/cpu1/sched_mostly_idle_nr_run
                 echo 3 > /sys/devices/system/cpu/cpu2/sched_mostly_idle_nr_run
@@ -883,8 +883,8 @@ case "$target" in
         echo 3 > /proc/sys/kernel/sched_ravg_hist_size
 
         # HMP Task packing settings for 8909 similiar to 8916
-        echo 30 > /proc/sys/kernel/sched_small_task
-        echo 50 > /proc/sys/kernel/sched_mostly_idle_load
+        echo 20 > /proc/sys/kernel/sched_small_task
+        echo 30 > /proc/sys/kernel/sched_mostly_idle_load
         echo 3 > /proc/sys/kernel/sched_mostly_idle_nr_run
 
         # disable thermal core_control to update scaling_min_freq
@@ -913,8 +913,11 @@ case "$target" in
 	# Enable core control
 	insmod /system/lib/modules/core_ctl.ko
 	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
-	echo 72 72 60 50 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
-	echo 30 > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
+        max_freq=`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq`
+        min_freq=800000
+        echo $((min_freq*100 / max_freq)) $((min_freq*100 / max_freq)) $((66*1000000 / max_freq)) \
+	$((55*1000000 / max_freq)) > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
+        echo $((33*1000000 / max_freq)) > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
 	echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
 
 
