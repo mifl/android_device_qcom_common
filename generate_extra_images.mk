@@ -389,6 +389,8 @@ define create_ubinize_config
   echo vol_id=0 >> "${UBINIZE_CFG}"
   echo vol_type=dynamic >> "${UBINIZE_CFG}"
   echo vol_name=system >> "${UBINIZE_CFG}"
+  # Reserve 5MB for pushing and syncing with adb
+  echo vol_size=$(shell expr `stat --printf %s $(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET)` + 5000000) >> "${UBINIZE_CFG}"
 
   echo \[userdata_volume\] >> "${UBINIZE_CFG}"
   echo mode=ubi >> "${UBINIZE_CFG}"
