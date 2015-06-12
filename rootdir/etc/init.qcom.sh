@@ -166,4 +166,4 @@ case "$target" in
         ;;
 esac
 # qm8626 requires auto answer 500ms
-setprop persist.sys.tel.autoanswer.ms 500
+setprop persist.sys.tel.autoanswer.ms 2000
