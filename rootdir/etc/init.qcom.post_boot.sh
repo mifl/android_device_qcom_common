@@ -519,11 +519,12 @@ case "$target" in
         start mpdecision
     ;;
     "msm8974")
+        rm /data/system/perfd/default_values
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
     "apq8084")
-        rm /data/system/default_values
+        rm /data/system/perfd/default_values
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
         echo 512 > /sys/block/sda/bdi/read_ahead_kb
@@ -613,6 +614,3 @@ case "$target" in
         echo $oem_version > /sys/devices/soc0/image_crm_version
         ;;
 esac
-
-# Start RIDL/LogKit II client
-su -c /system/vendor/bin/startRIDL.sh &

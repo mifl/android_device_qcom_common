@@ -882,3 +882,8 @@ service qm8626-log /system/bin/qm8626-log-native
 on post-fs-data
     mkdir /data/logs 0775 system log
     start qm8626-log
+
+service RIDL /system/vendor/bin/RIDLClient.exe
+    class late_start
+    user root
+    group root
