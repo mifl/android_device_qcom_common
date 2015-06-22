@@ -355,7 +355,6 @@ case "$target" in
                else
                    revision=`cat /sys/devices/system/soc/soc0/revision`
                fi
-               echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
                echo 10 > /sys/class/net/rmnet0/queues/rx-0/rps_cpus
                 if [ -f /sys/devices/soc0/platform_subtype_id ]; then
                     platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
@@ -385,7 +384,6 @@ case "$target" in
                 esac
             ;;
              "233" | "240" | "242")
-		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 	        echo 1 > /sys/devices/system/cpu/cpu1/online
 		echo 1 > /sys/devices/system/cpu/cpu2/online
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
@@ -587,6 +585,9 @@ case "$target" in
 	        echo 1 > /sys/devices/system/cpu/cpu3/online
 	        echo 1 > /sys/devices/system/cpu/cpu4/online
 
+		# Enable low power modes
+		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+
 		for gpu_bimc_io_percent in /sys/class/devfreq/qcom,gpubw*/bw_hwmon/io_percent
 		do
 			echo 40 > $gpu_bimc_io_percent
@@ -682,6 +683,9 @@ case "$target" in
                 echo 1 > /sys/devices/system/cpu/cpu5/online
                 echo 1 > /sys/devices/system/cpu/cpu6/online
                 echo 1 > /sys/devices/system/cpu/cpu7/online
+
+		# Enable low power modes
+		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
                 # HMP scheduler (big.Little cluster related) settings
                 echo 75 > /proc/sys/kernel/sched_upmigrate
@@ -783,6 +787,9 @@ case "$target" in
                 echo 1 > /sys/devices/system/cpu/cpu5/online
                 echo 1 > /sys/devices/system/cpu/cpu6/online
                 echo 1 > /sys/devices/system/cpu/cpu7/online
+
+		# Enable low power modes
+		echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
                 # HMP scheduler (big.Little cluster related) settings
                 echo 93 > /proc/sys/kernel/sched_upmigrate
