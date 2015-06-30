@@ -673,6 +673,15 @@ case "$target" in
                 echo 30 > /sys/devices/system/cpu/cpu5/sched_mostly_idle_load
                 echo 30 > /sys/devices/system/cpu/cpu6/sched_mostly_idle_load
                 echo 30 > /sys/devices/system/cpu/cpu7/sched_mostly_idle_load
+
+                # Enable core control
+                insmod /system/lib/modules/core_ctl.ko
+                echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+                echo 4 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
+                echo 68 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
+                echo 40 > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
+                echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
+
             else
                 # Apply 3.0 specific Sched & Governor settings
                 # HMP scheduler settings for 8939 V3.0
