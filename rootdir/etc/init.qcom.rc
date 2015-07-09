@@ -363,7 +363,7 @@ service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
 service qmuxd /system/bin/qmuxd
     class main
     user radio
-    group radio audio bluetooth gps qcom_diag
+    group radio audio bluetooth gps diag
     disabled
 
 service netmgrd /system/bin/netmgrd
@@ -475,7 +475,7 @@ service dhcpcd_bnep4 /system/bin/dhcpcd -BKLG
 service loc_launcher /system/bin/loc_launcher
     #loc_launcher will start as root and set its uid to gps
     class late_start
-    group gps qcom_oncrpc inet net_raw qcom_diag net_admin wifi
+    group gps qcom_oncrpc inet net_raw diag net_admin wifi
 
 service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
     class late_start
@@ -578,7 +578,7 @@ service ril-daemon1 /system/bin/rild -c 1
     socket rild-debug1 stream 660 radio system
     user root
     disabled
-    group radio cache inet misc audio sdcard_r sdcard_rw qcom_oncrpc diag qcom_diag log
+    group radio cache inet misc audio sdcard_r sdcard_rw qcom_oncrpc diag diag log
 
 service profiler_daemon /system/bin/profiler_daemon
     class late_start
@@ -660,13 +660,13 @@ on property:persist.sys.ssr.restart_level=3
 service diag_mdlog_start /system/bin/diag_mdlog
     class late_start
     user shell
-    group system qcom_diag sdcard_rw sdcard_r media_rw
+    group system diag sdcard_rw sdcard_r media_rw
     disabled
     oneshot
 
 service diag_mdlog_stop /system/bin/diag_mdlog -k
     class late_start
     user shell
-    group system qcom_diag sdcard_rw sdcard_r media_rw
+    group system diag sdcard_rw sdcard_r media_rw
     disabled
     oneshot
