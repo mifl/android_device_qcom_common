@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013, 2015 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -117,33 +117,53 @@ case "$1" in
         ;;
 esac
 
-# Setup HDMI related nodes & permissions
-# HDMI can be fb1 or fb2
+# Setup display nodes & permissions
+# HDMI can be fb0, fb1, fb2 or fb3
 # Loop through the sysfs nodes and determine
 # the HDMI(dtv panel)
-fb_cnt=0
-for file in /sys/class/graphics/fb*
+
+set_perms() {
+    #Usage set_perms <filename> <ownership> <permission>
+    chown -h $2 $1
+    chmod $3 $1
+}
+
+for fb_cnt in 0 1 2 3
 do
+file=/sys/class/graphics/fb$fb_cnt
+dev_file=/dev/graphics/fb$fb_cnt
+  if [ -d "$file" ]
+  then
     value=`cat $file/msm_fb_type`
     case "$value" in
             "dtv panel")
-        chown -h system.graphics $file/hpd
-        chown -h system.graphics $file/vendor_name
-        chown -h system.graphics $file/product_description
-        chmod -h 0664 $file/hpd
-        chmod -h 0664 $file/vendor_name
-        chmod -h 0664 $file/product_description
-        chmod -h 0664 $file/video_mode
-        chmod -h 0664 $file/format_3d
-        # create symbolic link
-        ln -s "/dev/graphics/fb"$fb_cnt /dev/graphics/hdmi
-        # Change owner and group for media server and surface flinger
-        chown -h system.system $file/format_3d;;
+        set_perms $file/hpd system.graphics 0664
+        set_perms $file/hdmi_feature_en system.graphics 0664
+        set_perms $file/res_info system.graphics 0664
+        set_perms $file/vendor_name system.graphics 0664
+        set_perms $file/product_description system.graphics 0664
+        set_perms $file/video_mode system.graphics 0664
+        set_perms $file/format_3d system.graphics 0664
+        set_perms $file/s3d_mode system.graphics 0664
+        set_perms $file/cec/enable system.graphics 0664
+        set_perms $file/cec/logical_addr system.graphics 0664
+        set_perms $file/cec/rd_msg system.graphics 0664
+        set_perms $file/pa system.graphics 0664
+        set_perms $file/cec/wr_msg system.graphics 0600
+        set_perms $file/hdcp/tp system.graphics 0664
+        ln -s $dev_file /dev/graphics/hdmi
     esac
-    fb_cnt=$(( $fb_cnt + 1))
+    if [ $fb_cnt -eq 0 ]
+    then
+        set_perms $file/idle_time system.graphics 0664
+        set_perms $file/dynamic_fps system.graphics 0664
+        set_perms $file/dyn_pu system.graphics 0664
+        set_perms $file/modes system.graphics 0664
+        set_perms $file/mode system.graphics 0664
+    fi
+  fi
 done
 
 # Set date to a time after 2008
 # This is a workaround for Zygote to preload time related classes properly
 date -s 20090102.130000
-
