@@ -899,3 +899,8 @@ service RIDL /system/vendor/bin/RIDLClient.exe
 
 chmod 0771 /data/qm8626/lp55231-test
 chmod 0771 /data/qm8626/piezo-test-gpmn
+
+on property:init.svc.fuse_usbdisk0=running
+    wait /storage/usbdisk0/usbctrlclientset.txt 5
+    start qm8626-usb
+
