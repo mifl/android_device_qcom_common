@@ -916,7 +916,7 @@ service bms-sh /system/bin/sh /init.qcom.bms.sh
     user root
     oneshot
 
-service vm_bms /system/bin/vm_bms
+service vm_bms /system/vendor/bin/vm_bms
     user root
     group root
     disabled
