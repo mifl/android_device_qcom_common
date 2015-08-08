@@ -634,7 +634,6 @@ PRODUCT_PACKAGES := \
     Email \
     Gallery2 \
     LatinIME \
-    Launcher2 \
     Mms \
     Music \
     Phone \
