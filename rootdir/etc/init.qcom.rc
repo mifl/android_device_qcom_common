@@ -322,11 +322,11 @@ service qcomsysd /system/vendor/bin/qcom-system-daemon
     user root
     group root qcom_diag
 
-service ssr_setup /system/bin/ssr_setup
+service ssr_setup /system/vendor/bin/ssr_setup
     oneshot
     disabled
 
-service ss_ramdump /system/bin/subsystem_ramdump
+service ss_ramdump /system/vendor/bin/subsystem_ramdump
     class main
     user system
     group system
@@ -407,11 +407,11 @@ service cnd /system/bin/cnd
     class late_start
     socket cnd stream 660 root inet
 
-service dpmd /system/bin/dpmd
+service dpmd /system/vendor/bin/dpmd
     class late_start
     socket dpmd stream 660 root system
 
-service irsc_util /system/bin/irsc_util "/etc/sec_config"
+service irsc_util /system/vendor/bin/irsc_util "/etc/sec_config"
     class main
     user root
     oneshot
@@ -425,7 +425,7 @@ service rfs_access /system/bin/rfs_access
    user root
    group system net_raw
 
-service tftp_server /system/bin/tftp_server
+service tftp_server /system/vendor/bin/tftp_server
    class core
    user root
 
@@ -466,14 +466,14 @@ service hciattach_ath3k /system/bin/sh /system/etc/init.ath3k.bt.sh
      disabled
      oneshot
 
-service bt-dun /system/bin/dun-server /dev/smd7 /dev/rfcomm0
+service bt-dun /system/vendor/bin/dun-server /dev/smd7 /dev/rfcomm0
     class late_start
     user bluetooth
     group bluetooth net_bt_admin inet
     disabled
     oneshot
 
-service bt-sap /system/bin/sapd 15
+service bt-sap /system/vendor/bin/sapd 15
     user bluetooth
     group bluetooth net_bt_admin
     class late_start
@@ -487,27 +487,27 @@ service btsnoop /system/bin/btsnoop
    disabled
    oneshot
 
-service ftmd /system/bin/logwrapper /system/bin/ftmdaemon
+service ftmd /system/bin/logwrapper /system/vendor/bin/ftmdaemon
     class late_start
     user root
     group bluetooth net_bt_admin misc net_bt_stack qcom_diag
     disabled
     oneshot
 
-service port-bridge /system/bin/port-bridge /dev/mhi_pipe_32 /dev/ttyGS0
+service port-bridge /system/vendor/bin/port-bridge /dev/mhi_pipe_32 /dev/ttyGS0
     class main
     user radio system
     group radio system inet
     disabled
 
 # QMUX must be in multiple groups to support external process connections
-service qmuxd /system/bin/qmuxd
+service qmuxd /system/vendor/bin/qmuxd
     class main
     user root
     group radio audio bluetooth gps qcom_diag
     disabled
 
-service netmgrd /system/bin/netmgrd
+service netmgrd /system/vendor/bin/netmgrd
     class main
     disabled
 
@@ -623,13 +623,13 @@ service iprenew_p2p /system/bin/dhcpcd -n
     disabled
     oneshot
 
-service ptt_socket_app /system/bin/ptt_socket_app -d
+service ptt_socket_app /system/vendor/bin/ptt_socket_app -d
     class late_start
     user root
     group root
     oneshot
 
-service ptt_ffbm /system/bin/ptt_socket_app -f -d
+service ptt_ffbm /system/vendor/bin/ptt_socket_app -f -d
     user root
     group root
     disabled
@@ -684,7 +684,7 @@ service dhcpcd_bnep4 /system/bin/dhcpcd -BKLG
     disabled
     oneshot
 
-service loc_launcher /system/bin/loc_launcher
+service loc_launcher /system/vendor/bin/loc_launcher
     #loc_launcher will start as root and set its uid to gps
     class late_start
     group gps inet net_raw qcom_diag net_admin wifi
@@ -745,7 +745,7 @@ on property:sys.boot_completed=1
     start qcom-post-boot
     start config-zram
 
-service atfwd /system/bin/ATFWD-daemon
+service atfwd /system/vendor/bin/ATFWD-daemon
     class late_start
     user system
     group system radio
@@ -847,7 +847,7 @@ service hcidump /system/bin/sh /system/etc/hcidump.sh
 service charger /charger
     class charger
 
-service ssr_diag /system/bin/ssr_diag
+service ssr_diag /system/vendor/bin/ssr_diag
     class late_start
     user system
     group system
@@ -864,7 +864,7 @@ on property:persist.usb.hvdcp.detect=true
 on property:persist.usb.hvdcp.detect=false
     stop hvdcp
 
-service charger_monitor /system/bin/charger_monitor
+service charger_monitor /system/vendor/bin/charger_monitor
     user root
     group root
     disabled
