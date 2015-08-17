@@ -132,6 +132,7 @@ case "$baseband" in
 esac
 
 start_sensors
+start_copying_prebuilt_qcril_db
 
 if [ -f /sys/class/graphics/fb0/modes ]; then
 	panel_res=`cat /sys/class/graphics/fb0/modes`
