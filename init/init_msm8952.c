@@ -37,6 +37,7 @@
 #include "init_msm.h"
 
 #define VIRTUAL_SIZE "/sys/class/graphics/fb0/virtual_size"
+#define BOARD_PLATFORM_SUBTYPE "/sys/devices/soc0/platform_subtype_id"
 #define BUF_SIZE 64
 
 void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *board_type)
@@ -45,14 +46,27 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
     int rc;
     unsigned long virtual_size = 0;
     char str[BUF_SIZE];
+    unsigned long subtype_id = -1;
+    const unsigned long POLARIS_ID = 64;
 
     UNUSED(msm_id);
     UNUSED(msm_ver);
-    UNUSED(board_type);
 
     rc = property_get("ro.board.platform", platform);
     if (!rc || !ISMATCH(platform, ANDROID_TARGET)){
         return;
+    }
+
+    if (strncmp(board_type, "QRD", 4) == 0) {
+        rc = read_file2(BOARD_PLATFORM_SUBTYPE, str,
+                        sizeof(str));
+        if (rc) {
+            subtype_id = strtoul(str, NULL, 0);
+        }
+        if (subtype_id == POLARIS_ID) {
+            property_set(PROP_LCDDENSITY, "280");
+            return;
+        }
     }
 
     rc = read_file2(VIRTUAL_SIZE, str, sizeof(str));
