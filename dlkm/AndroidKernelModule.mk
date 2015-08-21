@@ -105,6 +105,8 @@ $(KBUILD_TARGET)_RULE := 1
 # do not. Therefore, we need to explicitly include kernel/AndroidKernel.mk.
 # It is safe to include it more than once because the entire file is
 # guarded by "ifeq ($(TARGET_PREBUILT_KERNEL),) ... endif".
+
+TARGET_PREBUILT_KERNEL :=
 include kernel/AndroidKernel.mk
 
 # Kernel modules have to be built after:
@@ -131,7 +133,7 @@ $(KBUILD_TARGET): kbuild_options := $(KBUILD_OPTIONS)
 $(KBUILD_TARGET): $(TARGET_PREBUILT_INT_KERNEL)
 	@mkdir -p $(kbuild_out_dir)
 	$(hide) cp -f $(local_path)/Kbuild $(kbuild_out_dir)/Kbuild
-	$(MAKE) -C kernel M=../$(local_path) O=../$(KERNEL_OUT) ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(KERNEL_CROSS_COMPILE) modules $(kbuild_options)
+	$(MAKE) -C kernel M=../$(local_path) O=../$(KERNEL_OUT) ARCH=$(KERNEL_ARCH) CROSS_COMPILE=$(CROSS_COMPILE_PATH)arm-eabi- modules $(kbuild_options)
 
 # Once the KBUILD_OPTIONS variable has been used for the target
 # that's specific to the LOCAL_PATH, clear it. If this isn't done,
