@@ -892,6 +892,14 @@ on post-fs-data
     mkdir /data/logs 0775 system log
     start qm8626-log
 
+service qm8626-log-file /system/bin/sh /system/etc/init.qm8626_log.sh
+    user system
+    group system log
+    disabled
+
+on property:persist.qm8626.log.enable=1
+    start qm8626-log-file
+
 service RIDL /system/vendor/bin/RIDLClient.exe
     class late_start
     user root
