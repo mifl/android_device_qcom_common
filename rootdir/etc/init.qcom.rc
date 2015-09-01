@@ -866,6 +866,20 @@ on property:persist.sys.rootagent=1
 on property:persist.sys.rootagent=0
     stop rootagent
 
+service qm8626-mod-id /system/bin/qm8626-module-id
+    user system
+    group system log
+
+on property:persist.qm8626.sernum=*
+    start qm8626-mod-id
+
+service qm8626-mcd-id /system/bin/qm8626-hubmcd-id
+    user system
+    group system log
+
+on property:persist.qm8626.mcdid=*
+    start qm8626-mcd-id
+
 service qm8626-led /system/bin/qm8626-led-init
     class late_start
     user root
