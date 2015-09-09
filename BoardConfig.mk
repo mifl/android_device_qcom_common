@@ -1,1 +1,1 @@
-include device/qcom/msm8952_32/BoardConfig.mk
+include device/qcom/msm8952_64/BoardConfig.mk
