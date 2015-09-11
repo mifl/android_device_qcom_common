@@ -38,8 +38,11 @@ on init
 
 on early-boot
     setrlimit 8 67108864 67108864
-    # execute the init.qcom.early_boot.sh script
-    exec u:r:qti_init_shell:s0 -- /init.qcom.early_boot.sh
+
+service early-boot-sh /system/bin/sh /init.qcom.early_boot.sh
+    class core
+    user root
+    oneshot
 
 service modem-sh /system/bin/sh /system/etc/init.qcom.modem_links.sh
     class core
