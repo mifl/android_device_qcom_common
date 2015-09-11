@@ -121,6 +121,17 @@ on boot
     chown system system /sys/class/leds/lp5523:channel2/brightness
     chown system system /sys/class/leds/lp5523:channel2/device/engine3_mode
     chown system system /sys/class/leds/lp5523:channel2/device/engine3_load
+    chmod 0646 /sys/class/leds/red/brightness
+    chmod 0646 /sys/class/leds/green/brightness
+    chmod 0646 /sys/class/leds/blue/brightness
+    chmod 0646 /sys/class/leds/lp5523:channel0/brightness
+    chmod 0646 /sys/class/leds/lp5523:channel1/brightness
+    chmod 0646 /sys/class/leds/lp5523:channel2/brightness
+    chmod 0646 /sys/class/leds/lp5523:channel3/brightness
+    chmod 0646 /sys/class/leds/lp5523:channel4/brightness
+    chmod 0646 /sys/class/leds/lp5523:channel5/brightness
+    chmod 0646 /sys/class/leds/lp5523:channel6/brightness
+    chmod 0646 /sys/class/leds/lp5523:channel7/brightness
 
 #   Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
