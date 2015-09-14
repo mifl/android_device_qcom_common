@@ -930,7 +930,8 @@ service RIDL /system/vendor/bin/RIDLClient.exe
     user root
     group root
 
-chmod 0771 /data/qm8626/piezo-test-gpmn
+on post-fs-data
+    chmod 0771 /data/qm8626/piezo-test-gpmn
 
 on property:init.svc.fuse_usbdisk0=running
     wait /storage/usbdisk0/usbctrlclientset.txt 5
