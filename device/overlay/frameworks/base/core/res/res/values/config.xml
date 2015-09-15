@@ -203,7 +203,7 @@
     <!-- Flag specifying whether VoLTE & VT should be available for carrier: independent of
          carrier provisioning. If false: hard disabled. If true: then depends on carrier
          provisioning, availability etc -->
-<!--    <bool name="config_carrier_volte_available">true</bool>
+<!--    <bool name="config_carrier_volte_available">true</bool>-->
 
 
     <string-array name="config_mobile_tcp_buffers">
@@ -211,12 +211,13 @@
         <item>"umts:4094,87380,1220608,4096,16384,1220608"</item>
         <item>"hspa:4094,87380,1220608,4096,16384,1220608"</item>
         <item>"hsupa:4094,87380,1220608,4096,16384,1220608"</item>
-        <item>"hsdpa:4094,87380,1220608,4096,16384,1220608"</item>
+        <item>"hsdpa:4094,87380,2441216,4096,16384,2441216"</item>
         <item>"hspap:4094,87380,1220608,4096,16384,1220608"</item>
         <item>"edge:4093,26280,35040,4096,16384,35040"</item>
         <item>"gprs:4092,8760,11680,4096,8760,11680"</item>
-        <item>"evdo:4094,87380,524288,4096,16384,262144"</item>
-    </string-array> -->
+        <item>"evdo:4094,87380,1048576,4096,16384,262144"</item>
+        <item>"ehrpd:4094,87380,1048576,4096,16384,262144"</item>
+    </string-array>
 
 
     <!--  Maximum number of supported users -->
