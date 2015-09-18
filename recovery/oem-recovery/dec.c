@@ -30,9 +30,11 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <inttypes.h>
 #include <sys/mman.h>
 #include <linux/qseecom.h>
 #include <linux/msm_ion.h>
+#include <stdlib.h>
 
 /* Service IDs */
 #define SCM_SVC_SSD                 0x07

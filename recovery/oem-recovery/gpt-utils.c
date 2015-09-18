@@ -37,14 +37,16 @@
 #include <string.h>
 #include <errno.h>
 #include "gpt-utils.h"
-#include "sparse_crc32.h"
+#include "sparse/sparse_crc32.h"
+#include <stdlib.h>
+#include <inttypes.h>
 
 
 
 /******************************************************************************
  * DEFINE SECTION
  ******************************************************************************/
-#define BLK_DEV_FILE    "/dev/block/mmcblk0"
+#define BLK_DEV_FILE    "/dev/mmcblk0"
 
 /* list the names of the backed-up partitions to be swapped */
 #define PTN_SWAP_LIST       "sbl1", "rpm", "tz", "aboot"
