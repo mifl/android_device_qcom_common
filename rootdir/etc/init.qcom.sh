@@ -118,7 +118,6 @@ case "$baseband" in
 esac
 
 start_sensors
-start_copying_prebuilt_qcril_db
 
 case "$target" in
     "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
@@ -211,3 +210,9 @@ case "$emmc_boot"
         fi
     ;;
 esac
+
+#
+# Copy qcril.db if needed for RIL
+#
+start_copying_prebuilt_qcril_db
+echo 1 > /data/misc/radio/db_check_done
