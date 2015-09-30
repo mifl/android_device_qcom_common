@@ -165,5 +165,13 @@ case "$target" in
         start_charger_monitor
         ;;
 esac
+
+hw_platform=`cat /sys/devices/soc0/hw_platform`
+case "$hw_platform" in
+    "QM8626")
+        platform_subtype=`cat /sys/devices/soc0/platform_subtype`
+        setprop ro.qm8626.hwid "$platform_subtype"
+        ;;
+esac
 # qm8626 requires auto answer 500ms
 setprop persist.sys.tel.autoanswer.ms 2000
