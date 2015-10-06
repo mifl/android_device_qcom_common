@@ -141,7 +141,7 @@ case "$platform" in
         esac
         ;;
 
-    "msm8610" | "apq8084" | "mpq8092")
+    "msm8610" | "mpq8092")
         case "$soc_hwplatform" in
             *)
                 setprop ro.sf.lcd_density 240
