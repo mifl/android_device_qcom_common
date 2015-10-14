@@ -252,13 +252,14 @@ def InstallRawImage(script, f, dest, tf, sf):
 def InstallBootImages(script, files):
   bakExists = False
   # update main partitions
-  script.AppendExtra('ifelse(msm.boot_update("main"), (')
+  ## FIXME: Add back after fixing GPT code issue
+  ##script.AppendExtra('ifelse(msm.boot_update("main"), (')
   for f in files:
     dest, destBak, tf, sf = files[f]
     if destBak is not None:
       bakExists = True
     InstallRawImage(script, f, dest, tf, sf)
-  script.AppendExtra('), "");')
+  ##script.AppendExtra('), "");')
 
   # update backup partitions
   if bakExists:
@@ -269,11 +270,13 @@ def InstallBootImages(script, files):
         InstallRawImage(script, f, destBak, tf, sf)
     script.AppendExtra('), "");')
   # just finalize primary update stage
-  else:
-    script.AppendExtra('msm.boot_update("backup");')
+  ## FIXME: Add back after fixing GPT code issue
+  ##else:
+  ##  script.AppendExtra('msm.boot_update("backup");')
 
   # finalize partitions update
-  script.AppendExtra('msm.boot_update("finalize");')
+  ## FIXME: Add back after fixing GPT code issue
+  ##script.AppendExtra('msm.boot_update("finalize");')
   return
 
 
