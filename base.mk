@@ -18,6 +18,7 @@ QCOM_BOARD_PLATFORMS += msm8996
 QCOM_BOARD_PLATFORMS += msm8952
 QCOM_BOARD_PLATFORMS += thorium
 QCOM_BOARD_PLATFORMS += titanium
+QCOM_BOARD_PLATFORMS += msmcobalt
 
 QSD8K_BOARD_PLATFORMS := qsd8k
 
@@ -25,7 +26,7 @@ TARGET_USE_VENDOR_CAMERA_EXT := true
 ANDROID_COMPILE_WITH_JACK := false
 
 #List of targets that use video hw
-MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 thorium titanium
+MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 thorium titanium msmcobalt
 
 #List of targets that use master side content protection
 MASTER_SIDE_CP_TARGET_LIST := msm8996
@@ -345,9 +346,11 @@ LIBCAMERA += libcamera
 LIBCAMERA += libmmcamera_interface
 LIBCAMERA += libmmcamera_interface2
 LIBCAMERA += libmmjpeg_interface
+LIBCAMERA += libmmlib2d_interface
 LIBCAMERA += libqomx_core
 LIBCAMERA += mm-qcamera-app
 LIBCAMERA += camera_test
+LIBCAMERA += org.codeaurora.camera
 
 #LIBCOPYBIT
 LIBCOPYBIT := copybit.msm8660
@@ -653,7 +656,6 @@ PRODUCT_PACKAGES := \
     Email \
     Gallery2 \
     LatinIME \
-    Launcher2 \
     Mms \
     Music \
     Phone \
@@ -670,6 +672,7 @@ PRODUCT_PACKAGES := \
     VoiceDialer \
     FMRadio \
     FM2 \
+    FMRadio \
     FMRecord \
     VideoEditor
 
@@ -680,7 +683,9 @@ PRODUCT_PACKAGES += \
        BTTestApp \
        HiddTestApp \
        BTLogKit \
-       a4wpservice
+       a4wpservice \
+       BTLogSave \
+       wipowerservice
 endif
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
@@ -775,6 +780,9 @@ PRODUCT_PACKAGES += \
     make_ext4fs \
     setup_fs
 
+# Qcril configuration file
+PRODUCT_PACKAGES += qcril.db
+
 # Flatland
 PRODUCT_PACKAGES += flatland
 
@@ -856,3 +864,8 @@ $(call inherit-product, build/target/product/verity.mk)
 
 #skip boot jars check
 SKIP_BOOT_JARS_CHECK := true
+
+ifeq ($(TARGET_BUILD_VARIANT),user)
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
+    ro.adb.secure=1
+endif
