@@ -31,6 +31,9 @@
 #include <dlfcn.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <limits.h>
+#include <string.h>
+#include <stdlib.h>
 
 #include "utils.h"
 #include "list.h"
@@ -54,7 +57,7 @@ static void *get_qcopt_handle()
     dlerror();
 
     if (property_get("ro.vendor.extension_library", qcopt_lib_path,
-                NULL)) {
+                "/usr/lib/libqc-opt.so")) {
         handle = dlopen(qcopt_lib_path, RTLD_NOW);
         if (!handle) {
             ALOGE("Unable to open %s: %s\n", qcopt_lib_path,

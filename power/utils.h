@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2012, 2015, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -28,6 +28,16 @@
  */
 
 #include <cutils/properties.h>
+#include <syslog.h>
+#include <string.h>
+
+#define property_get(name, value_str, default_value) \
+    strncpy(value_str, default_value, PROPERTY_VALUE_MAX)
+
+#define ALOGE(fmt, args...) syslog(LOG_ERR, fmt, ##args)
+#define ALOGI(fmt, args...) syslog(LOG_INFO, fmt, ##args)
+#define ALOGW(fmt, args...) syslog(LOG_WARNING, fmt, ##args)
+#define ALOGD(fmt, args...) syslog(LOG_DEBUG, fmt, ##args)
 
 int sysfs_read(char *path, char *s, int num_bytes);
 int sysfs_write(char *path, char *s);

@@ -25,6 +25,5 @@
   )
 
   AC_OUTPUT([ \
-          Makefile \
-          dtbtool/Makefile 
+          Makefile
   ])
