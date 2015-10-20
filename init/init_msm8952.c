@@ -49,41 +49,40 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
     unsigned long subtype_id = -1;
     const unsigned long POLARIS_ID = 64;
 
-    UNUSED(msm_id);
     UNUSED(msm_ver);
 
     rc = property_get("ro.board.platform", platform);
     if (!rc || !ISMATCH(platform, ANDROID_TARGET)){
         return;
     }
-
-    if (strncmp(board_type, "QRD", 4) == 0) {
-        rc = read_file2(BOARD_PLATFORM_SUBTYPE, str,
-                        sizeof(str));
-        if (rc) {
-            subtype_id = strtoul(str, NULL, 0);
-        }
-        if (subtype_id == POLARIS_ID) {
-            property_set(PROP_LCDDENSITY, "280");
-            return;
-        }
-    }
-
-    rc = read_file2(VIRTUAL_SIZE, str, sizeof(str));
+    rc = read_file2(BOARD_PLATFORM_SUBTYPE, str, sizeof(str));
     if (rc) {
-        virtual_size = strtoul(str, NULL, 0);
+        subtype_id = strtoul(str, NULL, 0);
     }
 
-    if(virtual_size >= 1080) {
-        property_set(PROP_LCDDENSITY, "480");
-    } else if (virtual_size >= 720) {
-        // For 720x1280 resolution
-        property_set(PROP_LCDDENSITY, "320");
-    } else if (virtual_size >= 480) {
-        // For 480x854 resolution QRD.
-        property_set(PROP_LCDDENSITY, "240");
-    } else
-        property_set(PROP_LCDDENSITY, "320");
+   if (strncmp(board_type, "QRD", 4) == 0 && subtype_id == POLARIS_ID) {
+        if (msm_id == 278)
+            property_set(PROP_LCDDENSITY, "320");
+        else
+            property_set(PROP_LCDDENSITY, "280");
+    }
+    else {
+        rc = read_file2(VIRTUAL_SIZE, str, sizeof(str));
+        if (rc) {
+            virtual_size = strtoul(str, NULL, 0);
+        }
+
+        if(virtual_size >= 1080) {
+            property_set(PROP_LCDDENSITY, "480");
+        } else if (virtual_size >= 720) {
+            // For 720x1280 resolution
+            property_set(PROP_LCDDENSITY, "320");
+        } else if (virtual_size >= 480) {
+            // For 480x854 resolution QRD.
+            property_set(PROP_LCDDENSITY, "240");
+        } else
+            property_set(PROP_LCDDENSITY, "320");
+    }
 
     if (msm_id == 266 || msm_id == 278 || msm_id == 277 || msm_id == 274) {
         property_set("media.msm8956hw", "1");
