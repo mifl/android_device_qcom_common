@@ -1314,6 +1314,9 @@ case "$target" in
         bcl_soc_hotplug_mask=`cat /sys/devices/soc/soc:qcom,bcl/hotplug_soc_mask`
         echo 0 > /sys/devices/soc/soc:qcom,bcl/hotplug_soc_mask
         echo -n enable > /sys/devices/soc/soc:qcom,bcl/mode
+        # Enable adaptive LMK to help perf during low memory
+        echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
         # configure governor settings for little cluster
         echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
         echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load
