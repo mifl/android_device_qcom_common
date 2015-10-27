@@ -894,11 +894,24 @@ service qm8626-mcd-id /system/bin/qm8626-hubmcd-id
 on property:persist.qm8626.mcdid=*
     start qm8626-mcd-id
 
+# This should run before other qm8626 services that use
+# the properties setuo by this service
+service qm8626-misc /system/bin/qm8626-prop-misc
+   user root
+   group root
+   oneshot
+
+on property:persist.qm8626.andled_1.enable=*
+start qm8626-misc
+
+on property:persist.qm8626.andled_2.enable=*
+start qm8626-misc
+
 service qm8626-led /system/bin/qm8626-led-init
-    class late_start
-    user root
-    group root
-    oneshot
+   class late_start
+   user root
+   group root
+   oneshot
 
 service qm8626-usb /system/bin/qm8626-usb-ctrl
     disabled
@@ -939,3 +952,12 @@ on property:init.svc.fuse_usbdisk0=running
     wait /storage/usbdisk0/usbctrlclientset.txt 5
     start qm8626-usb
 
+on property:init.svc.qm8626-misc=running
+    wait /persist/qm8626/andled_1.txt 5
+    wait /persist/qm8626/andled_2.txt 5
+    chmod 0777 /persist/qm8626/andled_1.txt
+    chmod 0777 /persist/qm8626/andled_2.txt
+
+on property:init.svc.qm8626-usb=running
+    wait /persist/qm8626/usbclonly_enable.txt
+    chmod 0777 /persist/qm8626/usbclonly_enable.txt
