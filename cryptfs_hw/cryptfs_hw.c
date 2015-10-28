@@ -72,10 +72,19 @@ static unsigned int cpu_id[] = {
 
 #define KEYMASTER_PARTITION_NAME "/dev/block/bootdevice/by-name/keymaster"
 
+#define QSEECOM_UP_CHECK_COUNT 10
+
 static int loaded_library = 0;
 static int (*qseecom_create_key)(int, void*);
 static int (*qseecom_update_key)(int, void*, void*);
 static int (*qseecom_wipe_key)(int);
+
+inline void* secure_memset(void* v, int c , size_t n) {
+    volatile unsigned char* p = (volatile unsigned char* )v;
+    while (n--) *p++ = c;
+    return v;
+}
+
 
 static int map_usage(int usage)
 {
@@ -123,11 +132,31 @@ static void wipe_userdata()
     android_reboot(ANDROID_RB_RESTART2, 0, "recovery");
 }
 
+static int is_qseecom_up()
+{
+    int i = 0;
+    char value[PROPERTY_VALUE_MAX] = {0};
+
+    for (; i<QSEECOM_UP_CHECK_COUNT; i++) {
+        property_get("sys.keymaster.loaded", value, "");
+        if (!strncmp(value, "true", PROPERTY_VALUE_MAX))
+            return 1;
+        usleep(100000);
+    }
+    return 0;
+}
+
+
 static int load_qseecom_library()
 {
     const char *error = NULL;
     if (loaded_library)
         return loaded_library;
+
+    if (!is_qseecom_up()) {
+        SLOGE("Timed out waiting for QSEECom listeners..aborting FDE key operation");
+        return 0;
+    }
 
     void * handle = dlopen(QSEECOM_LIBRARY_PATH, RTLD_NOW);
     if(handle) {
@@ -172,8 +201,10 @@ static int set_key(const char* currentpasswd, const char* passwd, const char* en
         unsigned char* tmp_currentpasswd = get_tmp_passwd(currentpasswd);
         if(tmp_passwd) {
             if (operation == UPDATE_HW_DISK_ENC_KEY) {
-                if (tmp_currentpasswd)
+                if (tmp_currentpasswd) {
                    err = qseecom_update_key(map_usage(QSEECOM_DISK_ENCRYPTION), tmp_currentpasswd, tmp_passwd);
+                   secure_memset(tmp_currentpasswd, 0, MAX_PASSWORD_LEN);
+                }
             } else if (operation == SET_HW_DISK_ENC_KEY) {
                 err = qseecom_create_key(map_usage(QSEECOM_DISK_ENCRYPTION), tmp_passwd);
             }
@@ -181,6 +212,7 @@ static int set_key(const char* currentpasswd, const char* passwd, const char* en
                 if(ERR_MAX_PASSWORD_ATTEMPTS == err)
                     wipe_userdata();
             }
+            secure_memset(tmp_passwd, 0, MAX_PASSWORD_LEN);
             free(tmp_passwd);
             free(tmp_currentpasswd);
         }
