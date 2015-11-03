@@ -900,12 +900,12 @@ service qm8626-misc /system/bin/qm8626-prop-misc
    user root
    group root
    oneshot
-
 on property:persist.qm8626.andled_1.enable=*
-start qm8626-misc
-
+    start qm8626-misc
 on property:persist.qm8626.andled_2.enable=*
-start qm8626-misc
+    start qm8626-misc
+on property:persist.qm8626.product.manuf=*
+    start qm8626-misc
 
 service qm8626-led /system/bin/qm8626-led-init
    class late_start
