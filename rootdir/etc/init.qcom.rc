@@ -51,6 +51,8 @@ service modem-sh /system/bin/sh /system/etc/init.qcom.modem_links.sh
 
 on boot
     chown bluetooth bluetooth /dev/ttyHS0
+    chown bluetooth bluetooth /dev/dunBT
+    chown bluetooth bluetooth /dev/ttyDUN0
     chmod 0660 /dev/ttyHS0
     chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
@@ -250,6 +252,12 @@ on property:bluetooth.dun.status=running
 on property:bluetooth.dun.status=stopped
     stop bt-dun
 
+on property:bluetooth.dunclient.status=running
+   start bt-dunclient
+
+on property:bluetooth.dunclient.status=stopped
+   stop bt-dunclient
+
 service qcom-c_core-sh /system/bin/sh /init.qcom.class_core.sh
     class core
     user root
@@ -272,7 +280,7 @@ service dpmd /system/bin/dpmd
     class late_start
     socket dpmd stream 660 root system
 
-service irsc_util /system/bin/logwrapper /system/bin/irsc_util "/etc/sec_config"
+service irsc_util /system/bin/irsc_util "/etc/sec_config"
     class main
     user root
     oneshot
@@ -328,6 +336,13 @@ service bt-dun /system/bin/sh /system/etc/init.qcom.btdun.sh
     group bluetooth net_bt_admin inet
     disabled
     oneshot
+
+service bt-dunclient /system/bin/dun-terminal
+   class late-start
+   user bluetooth
+   group bluetooth net_bt_admin inet
+   disabled
+   oneshot
 
 service bt-sap /system/bin/sapd 15
     user bluetooth

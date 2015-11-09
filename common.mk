@@ -128,6 +128,12 @@ CURL += curl
 DASH := libdashplayer
 DASH += qcmediaplayer
 
+#EXTENDEDMEDIA_EXT
+EXTENDEDMEDIA_EXT := libextendedmediaextractor
+EXTENDEDMEDIA_EXT += libextendedmediaextractor_jni
+EXTENDEDMEDIA_EXT += extendedmediaextractor
+EXTENDEDMEDIA_EXT += ExtendedMediaPlayer
+
 #E2FSPROGS
 E2FSPROGS := e2fsck
 
@@ -536,6 +542,7 @@ PRODUCT_PACKAGES += $(DASH)
 PRODUCT_PACKAGES += $(E2FSPROGS)
 PRODUCT_PACKAGES += $(FM)
 PRODUCT_PACKAGES += $(EBTABLES)
+PRODUCT_PACKAGES += $(EXTENDEDMEDIA_EXT)
 PRODUCT_PACKAGES += $(GPS_HARDWARE)
 PRODUCT_PACKAGES += $(HDMID)
 PRODUCT_PACKAGES += $(HOSTAPD)
@@ -606,6 +613,7 @@ PRODUCT_PACKAGES += tcmiface
 PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
+    frameworks/native/data/etc/android.hardware.hdmi.cec.xml:system/etc/permissions/android.hardware.hdmi.cec.xml \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
     frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
