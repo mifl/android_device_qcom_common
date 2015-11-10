@@ -900,6 +900,10 @@ service qm8626-misc /system/bin/qm8626-prop-misc
    user root
    group root
    oneshot
+on property:persist.qm8626.extled1.pwrup=*
+    start qm8626-misc
+on property:persist.qm8626.extled2.pwrup=*
+    start qm8626-misc
 on property:persist.qm8626.andled_1.enable=*
     start qm8626-misc
 on property:persist.qm8626.andled_2.enable=*
