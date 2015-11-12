@@ -745,6 +745,11 @@ PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
 #Enabling video for live effects
 -include frameworks/base/data/videos/VideoPackage1.mk
 
+ifeq ($(TARGET_BUILD_VARIANT),user)
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
+    ro.adb.secure=1
+endif
+
 SKIP_BOOT_JARS_CHECK := true
 
 # For PRODUCT_COPY_FILES, the first instance takes precedence.
