@@ -172,7 +172,7 @@ case "$target" in
         ;;
       "msm8952")
         case "$soc_hwid" in
-                264)
+                264|277)
                     setprop ro.sf.lcd_density 480
                     ;;
                 278)
@@ -185,6 +185,7 @@ case "$target" in
                     setprop media.settings.xml /etc/media_profiles_8956.xml
                     ;;
                 266)
+                    setprop ro.sf.lcd_density 480
                     setprop media.msm8956hw 1
                     setprop media.settings.xml /etc/media_profiles_8956.xml
                     ;;
