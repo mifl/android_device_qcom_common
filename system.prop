@@ -16,7 +16,11 @@ persist.rild.nitz_short_ons_3=
 ril.subscription.types=NV,RUIM
 DEVICE_PROVISIONED=1
 # Start in cdma mode
-ro.telephony.default_network=5
+# ro.telephony.default_network=5
+
+# Polaris Change default rat type LTE only
+ro.telephony.default_network=11
+telephony.lteOnCdmaDevice=0
 
 debug.sf.hw=0
 debug.egl.hw=0
@@ -85,7 +89,7 @@ ro.qualcomm.cabl=2
 #
 # System props for telephony
 # System prop to turn on CdmaLTEPhone always
-telephony.lteOnCdmaDevice=1
+# telephony.lteOnCdmaDevice=1
 
 #
 # System props for bluetooh
