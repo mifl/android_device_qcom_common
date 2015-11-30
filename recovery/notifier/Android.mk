@@ -1,4 +1,4 @@
-ifeq ($(TARGET_RECOVERY_NOTIFIER_LIB),librecovery_notifier_qcom)
+ifeq ($(TARGET_RECOVERY_NOTIFIER_LIB),librecovery_notifier_qti)
 ifneq ($(TARGET_SIMULATOR),true)
 ifeq ($(TARGET_ARCH),arm)
 
