@@ -31,4 +31,5 @@
 
 #define BLE_VND_INCLUDED   FALSE
 #define BLE_PRIVACY_SPT    FALSE
+#define BT_CLEAN_TURN_ON_DISABLED 1
 #endif
