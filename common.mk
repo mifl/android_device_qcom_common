@@ -677,3 +677,8 @@ $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 #skip boot jars check
 SKIP_BOOT_JARS_CHECK := true
 
+ifeq ($(TARGET_BUILD_VARIANT),user)
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
+    ro.adb.secure=1
+endif
+
