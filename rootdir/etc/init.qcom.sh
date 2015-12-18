@@ -302,7 +302,7 @@ case "$target" in
                             ;;
                        "MTP")
                             case "$platform_subtype_id" in
-                                 "0")
+                                 "0" | "1")
                                       setprop qemu.hw.mainkeys 0
                                       ;;
                             esac
@@ -338,7 +338,7 @@ case "$target" in
                             ;;
                        "MTP")
                             case "$platform_subtype_id" in
-                                 "0")
+                                 "0" | "1")
                                       setprop qemu.hw.mainkeys 0
                                       ;;
                             esac
@@ -374,7 +374,7 @@ case "$target" in
                             ;;
                        "MTP")
                             case "$platform_subtype_id" in
-                                 "0")
+                                 "0" | "1")
                                       setprop qemu.hw.mainkeys 0
                                       ;;
                             esac
@@ -410,7 +410,7 @@ case "$target" in
                             ;;
                        "MTP")
                             case "$platform_subtype_id" in
-                                 "0")
+                                 "0" | "1")
                                       setprop qemu.hw.mainkeys 0
                                       ;;
                             esac
