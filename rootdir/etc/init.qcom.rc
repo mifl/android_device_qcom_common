@@ -612,6 +612,11 @@ service dhcpcd_p2p /system/bin/dhcpcd -ABKLG
     disabled
     oneshot
 
+service dhcpcd_eth0 /system/bin/dhcpcd -ABKLG
+    class late_start
+    disabled
+    oneshot
+
 service iprenew_wlan0 /system/bin/dhcpcd -n
     class late_start
     disabled
@@ -619,6 +624,11 @@ service iprenew_wlan0 /system/bin/dhcpcd -n
 
 service iprenew_p2p /system/bin/dhcpcd -n
     class late_start
+    disabled
+    oneshot
+
+service iprenew_eth0 /system/bin/dhcpcd -n
+   class late_start
     disabled
     oneshot
 
