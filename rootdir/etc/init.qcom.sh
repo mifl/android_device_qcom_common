@@ -82,7 +82,7 @@ start_msm_irqbalance_8939()
 {
 	if [ -f /system/bin/msm_irqbalance ]; then
 		case "$platformid" in
-		    "239")
+		    "239" | "294" | "295")
 			start msm_irqbalance;;
 		esac
 	fi
@@ -111,8 +111,6 @@ case "$baseband" in
         start bridgemgrd
         ;;
 esac
-
-start_copying_prebuilt_qcril_db
 
 case "$target" in
     "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
@@ -248,6 +246,35 @@ case "$target" in
     "msm8909")
         start_vm_bms
         ;;
+    "msm8937")
+        start_msm_irqbalance_8939
+        if [ -f /sys/devices/soc0/soc_id ]; then
+            soc_id=`cat /sys/devices/soc0/soc_id`
+        else
+            soc_id=`cat /sys/devices/system/soc/soc0/id`
+        fi
+
+        if [ -f /sys/devices/soc0/hw_platform ]; then
+             hw_platform=`cat /sys/devices/soc0/hw_platform`
+        else
+             hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
+        fi
+        case "$soc_id" in
+             "294" | "295")
+                  case "$hw_platform" in
+                       "Surf")
+                                    setprop qemu.hw.mainkeys 0
+                                    ;;
+                       "MTP")
+                                    setprop qemu.hw.mainkeys 0
+                                    ;;
+                       "RCM")
+                                    setprop qemu.hw.mainkeys 0
+                                    ;;
+                  esac
+                  ;;
+       esac
+        ;;
 esac
 
 bootmode=`getprop ro.bootmode`
@@ -262,11 +289,28 @@ case "$emmc_boot"
 esac
 
 #
-# Make modem config folder and copy firmware config to that folder
+# Copy qcril.db if needed for RIL
 #
-rm -rf /data/misc/radio/modem_config
-mkdir /data/misc/radio/modem_config
-chmod 770 /data/misc/radio/modem_config
-cp -r /firmware/image/modem_pr/mcfg/configs/* /data/misc/radio/modem_config
-chown -hR radio.radio /data/misc/radio/modem_config
+start_copying_prebuilt_qcril_db
+echo 1 > /data/misc/radio/db_check_done
+
+#
+# Make modem config folder and copy firmware config to that folder for RIL
+#
+if [ -f /data/misc/radio/ver_info.txt ]; then
+    prev_version_info=`cat /data/misc/radio/ver_info.txt`
+else
+    prev_version_info=""
+fi
+
+cur_version_info=`cat /firmware/verinfo/ver_info.txt`
+if [ "$prev_version_info" != "$cur_version_info" ]; then
+    rm -rf /data/misc/radio/modem_config
+    mkdir /data/misc/radio/modem_config
+    chmod 770 /data/misc/radio/modem_config
+    cp -r /firmware/image/modem_pr/mcfg/configs/* /data/misc/radio/modem_config
+    chown -hR radio.radio /data/misc/radio/modem_config
+    cp /firmware/verinfo/ver_info.txt /data/misc/radio/ver_info.txt
+    chown radio.radio /data/misc/radio/ver_info.txt
+fi
 echo 1 > /data/misc/radio/copy_complete
