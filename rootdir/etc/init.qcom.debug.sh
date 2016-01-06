@@ -137,6 +137,36 @@ enable_msm8996_dcc_config()
     echo  0x99A2030 > $DCC_PATH/config
     # APCS_APCC_SW_EN_VOTE
     echo  0x99E0020 > $DCC_PATH/config
+
+    #BMIC_M_XXX_MPORT
+    echo 0x00408400 34 > $DCC_PATH/config
+    echo 0x0040C400 34 > $DCC_PATH/config
+    echo 0x00410400 30 > $DCC_PATH/config
+    echo 0x00414400 30 > $DCC_PATH/config
+    echo 0x00418400 30 > $DCC_PATH/config
+
+    #BMIC_M_XXX_SHKE
+    echo 0x00435000 30 > $DCC_PATH/config
+    echo 0x00441000 30 > $DCC_PATH/config
+
+    #BMIC_M_XXX_SWAY
+    echo 0x00448400 7 > $DCC_PATH/config
+    echo 0x00450400 7 > $DCC_PATH/config
+    echo 0x00458400 7 > $DCC_PATH/config
+
+    #BMIC_M_XXX_SCM
+    echo 0x00430560 > $DCC_PATH/config
+    echo 0x0043C560 > $DCC_PATH/config
+    echo 0x004305A0 > $DCC_PATH/config
+    echo 0x0043C5A0 > $DCC_PATH/config
+    echo 0x00430520 > $DCC_PATH/config
+    echo 0x0043C520 > $DCC_PATH/config
+
+    #BMIC_M_XXX_DPE
+    echo 0x0043408C > $DCC_PATH/config
+    echo 0x0044008C > $DCC_PATH/config
+    echo 0x0043409C 3 > $DCC_PATH/config
+
     # pIMEM
     echo  0x0038070 > $DCC_PATH/config
     echo  0x0038074 > $DCC_PATH/config
@@ -146,6 +176,44 @@ enable_msm8996_dcc_config()
     echo  0x0038084 > $DCC_PATH/config
     echo  0x0038088 > $DCC_PATH/config
     echo  0x003808C > $DCC_PATH/config
+
+    #CNOC_ERROR_VLD
+    echo  0x0050000C > $DCC_PATH/config
+    echo  0x00500014 > $DCC_PATH/config
+    echo  0x00500018 > $DCC_PATH/config
+    echo  0x00500020 > $DCC_PATH/config
+    echo  0x00500024 > $DCC_PATH/config
+    echo  0x00500028 > $DCC_PATH/config
+
+    #SNOC_ERROR_VLD
+    echo  0x0052000C > $DCC_PATH/config
+    echo  0x00520014 > $DCC_PATH/config
+    echo  0x00520018 > $DCC_PATH/config
+    echo  0x00520020 > $DCC_PATH/config
+    echo  0x00520024 > $DCC_PATH/config
+    echo  0x00520028 > $DCC_PATH/config
+
+    #ABT Timeout
+    echo  0x00020000 14 > $DCC_PATH/config
+    echo  0x00021000 14 > $DCC_PATH/config
+    echo  0x00022000 14 > $DCC_PATH/config
+    echo  0x00023000 14 > $DCC_PATH/config
+    echo  0x00024000 14 > $DCC_PATH/config
+    echo  0x00025000 14 > $DCC_PATH/config
+
+    echo  0x00026000 14 > $DCC_PATH/config
+    echo  0x00027000 14 > $DCC_PATH/config
+    echo  0x00028000 14 > $DCC_PATH/config
+    echo  0x00029000 14 > $DCC_PATH/config
+
+    #M4M Error
+    echo  0x09A50000 > $DCC_PATH/config
+    echo  0x09A50038 > $DCC_PATH/config
+    echo  0x09A50030 > $DCC_PATH/config
+    echo  0x09A50040 > $DCC_PATH/config
+    echo  0x09A50048 > $DCC_PATH/config
+    echo  0x09A50050 > $DCC_PATH/config
+    echo  0x09A50058 > $DCC_PATH/config
 
     echo  1 > $DCC_PATH/enable
 }
