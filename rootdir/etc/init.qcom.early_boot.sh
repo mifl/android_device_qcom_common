@@ -45,6 +45,11 @@ else
     soc_hwver=`cat /sys/devices/system/soc/soc0/platform_version` 2> /dev/null
 fi
 
+if [ -f /sys/class/graphics/fb0/virtual_size ]; then
+    res=`cat /sys/class/graphics/fb0/virtual_size` 2> /dev/null
+    fb_width=${res%,*}
+fi
+
 log -t BOOT -p i "MSM target '$1', SoC '$soc_hwplatform', HwID '$soc_hwid', SoC ver '$soc_hwver'"
 
 target=`getprop ro.board.platform`
@@ -178,6 +183,20 @@ case "$target" in
                 ;;
         esac
         ;;
+     *)
+         if [ -z $fb_width ]; then
+             setprop ro.sf.lcd_density 320
+         else
+             if [ $fb_width -ge 1080 ]; then
+                 setprop ro.sf.lcd_density 480
+             elif [ $fb_width -ge 720 ]; then
+                 setprop ro.sf.lcd_density 320 #for 720X1280 resolution
+             elif [ $fb_width -ge 480 ]; then
+                 setprop ro.sf.lcd_density 240 #for 480X854 QRD resolution
+             else
+                 setprop ro.sf.lcd_density 160
+             fi
+        fi
 esac
 
 # Setup display nodes & permissions
@@ -213,7 +232,7 @@ dev_file=/dev/graphics/fb$fb_cnt
         set_perms $file/pa system.graphics 0664
         set_perms $file/cec/wr_msg system.graphics 0600
         set_perms $file/hdcp/tp system.graphics 0664
-        set_perms $file/hdmi_audio_cb system.graphics 0664
+        set_perms $file/hdmi_audio_cb media.system 0600
         set_perms $file/hdcp2p2/min_level_change system.graphics 0664
         ln -s $dev_file /dev/graphics/hdmi
     esac
@@ -224,7 +243,15 @@ dev_file=/dev/graphics/fb$fb_cnt
         set_perms $file/dyn_pu system.graphics 0664
         set_perms $file/modes system.graphics 0664
         set_perms $file/mode system.graphics 0664
+        set_perms $file/msm_cmd_autorefresh_en system.graphics 0664
     fi
   fi
 done
 
+reason_value=`cat /proc/sys/kernel/boot_reason`
+if [ "$reason_value" = "3" ]; then
+    setprop ro.alarm_boot true
+    setprop debug.sf.nobootanimation 1
+else
+    setprop ro.alarm_boot false
+fi

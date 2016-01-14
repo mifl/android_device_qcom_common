@@ -83,8 +83,7 @@ esac
 if [ -d /sys/bus/esoc/devices ]; then
 for f in /sys/bus/esoc/devices/*; do
     if [ -d $f ]; then
-        esoc_name=`cat $f/esoc_name`
-        if [ "$esoc_name" = "MDM9x25" -o "$esoc_name" = "MDM9x35" ]; then
+        if [ `grep "^MDM" $f/esoc_name` ]; then
             esoc_link=`cat $f/esoc_link`
             break
         fi
@@ -111,7 +110,7 @@ case "$usb_config" in
               setprop persist.sys.usb.config diag,diag_mdm,serial_hsic,rmnet_qti_ether,mass_storage,adb
           ;;
           "PCIe")
-              setprop persist.sys.usb.config diag,diag_mdm,serial_tty,rmnet_qti_ether,mass_storage,adb
+              setprop persist.sys.usb.config diag,diag_mdm,serial_cdev,rmnet_qti_ether,mass_storage,adb
           ;;
           *)
           case "$baseband" in
@@ -150,8 +149,11 @@ case "$usb_config" in
 			       setprop persist.sys.usb.config diag,serial_cdev,serial_tty,rmnet_ipa,mass_storage,adb
 			    fi
 			;;
-                        "msm8909")
+                        "msm8909" | "msm8937")
                             setprop persist.sys.usb.config diag,serial_smd,rmnet_qti_bam,adb
+                        ;;
+                        "msm8952" | "titanium")
+                            setprop persist.sys.usb.config diag,serial_smd,rmnet_ipa,adb
                         ;;
                         *)
                             setprop persist.sys.usb.config diag,adb
@@ -185,7 +187,7 @@ case "$target" in
              fi
          fi
     ;;
-    "msm8994" | "msm8992" | "msm8996")
+    "msm8994" | "msm8992" | "msm8996" | "titanium")
         echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
         echo 131072 > /sys/module/g_android/parameters/mtp_tx_req_len
         echo 131072 > /sys/module/g_android/parameters/mtp_rx_req_len
@@ -259,3 +261,18 @@ diag_extra=`getprop persist.sys.usb.config.extra`
 if [ "$diag_extra" == "" ]; then
 	setprop persist.sys.usb.config.extra none
 fi
+
+# soc_ids for 8937
+if [ -f /sys/devices/soc0/soc_id ]; then
+	soc_id=`cat /sys/devices/soc0/soc_id`
+else
+	soc_id=`cat /sys/devices/system/soc/soc0/id`
+fi
+
+# enable rps cpus on msm8937 target
+setprop sys.usb.rps_mask 0
+case "$soc_id" in
+	"294" | "295")
+		setprop sys.usb.rps_mask 10
+	;;
+esac
