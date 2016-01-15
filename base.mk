@@ -728,6 +728,9 @@ PRODUCT_PACKAGES += \
     make_ext4fs \
     setup_fs
 
+# Qcril configuration file
+PRODUCT_PACKAGES += qcril.db
+
 # Flatland
 PRODUCT_PACKAGES += flatland
 
