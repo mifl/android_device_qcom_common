@@ -801,6 +801,7 @@ service config-zram /system/bin/sh /system/etc/init.qcom.zram.sh
    oneshot
 
 on property:sys.boot_completed=1
+    write /sys/bootkpi/marker_entry "boot completed"
     start qcom-post-boot
     start qti-testscripts
     start config-zram
