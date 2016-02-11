@@ -270,6 +270,22 @@ do
     fi
 done
 
+
+
+# check for mdp caps
+setprop debug.gralloc.gfx_ubwc_disable 1
+file=/sys/class/graphics/fb0/mdp/caps
+if [ -f "$file" ]
+then
+    cat $file | while read line; do
+      case "$line" in
+                *"ubwc"*)
+                setprop debug.gralloc.enable_fb_ubwc 1
+                setprop debug.gralloc.gfx_ubwc_disable 0
+            esac
+    done
+fi
+
 file=/sys/class/graphics/fb0
 if [ -d "$file" ]
 then
@@ -278,6 +294,7 @@ then
         set_perms $file/dyn_pu system.graphics 0664
         set_perms $file/modes system.graphics 0664
         set_perms $file/mode system.graphics 0664
+        set_perms $file/msm_cmd_autorefresh_en system.graphics 0664
 fi
 
 boot_reason=`cat /proc/sys/kernel/boot_reason`

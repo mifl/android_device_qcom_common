@@ -165,6 +165,7 @@ CIMAX := libcimax_spi
 
 #CM
 CM :=CMFileManager
+CM += Trebuchet
 
 #CONNECTIVITY
 CONNECTIVITY := libcnefeatureconfig
@@ -351,6 +352,7 @@ LIBCAMERA += camera.msm8992
 LIBCAMERA += camera.msm8996
 LIBCAMERA += camera.msm8952
 LIBCAMERA += camera.msm8937
+LIBCAMERA += camera.titanium
 LIBCAMERA += libcamera
 LIBCAMERA += libmmcamera_interface
 LIBCAMERA += libmmcamera_interface2
@@ -650,6 +652,9 @@ RCS += rcs_service_api.xml
 #IMS SETTINGS
 IMS_SETTINGS := imssettings
 
+#IMS Extension module for Android Telephony
+IMS_EXT := ims-ext-common
+
 #CRDA
 CRDA := crda
 CRDA += regdbdump
@@ -792,6 +797,7 @@ PRODUCT_PACKAGES += $(CRDA)
 PRODUCT_PACKAGES += $(WLAN)
 PRODUCT_PACKAGES += $(IPACM)
 PRODUCT_PACKAGES += $(FSTMAN)
+PRODUCT_PACKAGES += $(IMS_EXT)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
@@ -832,6 +838,8 @@ PRODUCT_PACKAGES_DEBUG := init.qcom.testscripts.sh
 PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:system/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:system/etc/permissions/android.hardware.camera.front.xml \
+    frameworks/native/data/etc/android.hardware.camera.full.xml:system/etc/permissions/android.hardware.camera.full.xml\
+    frameworks/native/data/etc/android.hardware.camera.raw.xml:system/etc/permissions/android.hardware.camera.raw.xml\
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
     frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
     frameworks/native/data/etc/android.hardware.location.gps.xml:system/etc/permissions/android.hardware.location.gps.xml \
