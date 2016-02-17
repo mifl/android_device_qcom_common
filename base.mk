@@ -211,11 +211,10 @@ FM += libfmjni
 #GPS
 GPS_HARDWARE := gps.conf
 GPS_HARDWARE += gps.default
-GPS_HARDWARE += gps.mahimahi
-GPS_HARDWARE += libloc_adapter
 GPS_HARDWARE += libgps.utils
 GPS_HARDWARE += libloc_eng
 GPS_HARDWARE += libloc_api_v02
+GPS_HARDWARE += libloc_ds_api
 
 #HDMID
 HDMID := hdmid
@@ -698,9 +697,7 @@ PRODUCT_PACKAGES := \
     SyncProvider \
     IM \
     VoiceDialer \
-    FMRadio \
     FM2 \
-    FMRadio \
     FMRecord \
     VideoEditor
 
@@ -708,11 +705,7 @@ PRODUCT_PACKAGES := \
 ifneq ($(TARGET_USES_AOSP),true)
 PRODUCT_PACKAGES += \
        BluetoothExt \
-       BTTestApp \
-       HiddTestApp \
-       BTLogKit \
        a4wpservice \
-       BTLogSave \
        wipowerservice
 endif
 
