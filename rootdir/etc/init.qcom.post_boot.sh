@@ -1083,8 +1083,13 @@ case "$target" in
                 # Start Host based Touch processing
                 case "$hw_platform" in
                      "MTP" | "Surf" | "RCM" )
-                           start hbtp
-                           ;;
+                        #if this directory is present, it means that a
+                        #1200p panel is connected to the device.
+                        dir="/sys/bus/i2c/devices/3-0038"
+                        if [ ! -d "$dir" ]; then
+                              start hbtp
+                        fi
+                        ;;
                 esac
 
                 #scheduler settings
@@ -1131,6 +1136,29 @@ case "$target" in
                 do
                     echo 40 > $gpu_bimc_io_percent
                 done
+
+		# Configure DCC module to capture critical register contents when device crashes
+		for DCC_PATH in /sys/bus/platform/devices/*.dcc*
+		do
+			echo  0 > $DCC_PATH/enable
+			echo cap >  $DCC_PATH/func_type
+			echo sram > $DCC_PATH/data_sink
+
+			# Register specifies APC CPR closed-loop settled voltage for current voltage corner
+			echo 0xb1d2c18 1 > $DCC_PATH/config
+
+			# Register specifies SW programmed open-loop voltage for current voltage corner
+			echo 0xb1d2900 1 > $DCC_PATH/config
+
+			# Register specifies APM switch settings and APM FSM state
+			echo 0xb1112b0 1 > $DCC_PATH/config
+
+			# Register specifies CPR mode change state and also #online cores input to CPR HW
+			echo 0xb018798 1 > $DCC_PATH/config
+
+			echo  1 > $DCC_PATH/enable
+		done
+
                 # disable thermal & BCL core_control to update interactive gov settings
                 echo 0 > /sys/module/msm_thermal/core_control/enabled
                 for mode in /sys/devices/soc.0/qcom,bcl.*/mode
@@ -1866,6 +1894,11 @@ case "$target" in
 		echo 0 > /sys/module/lpm_levels/system/pwr/pwr-l2-gdhs/idle_enabled
 		echo 0 > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/idle_enabled
 		echo N > /sys/module/lpm_levels/parameters/sleep_disabled
+		# Disable DEF-FPC mode
+		echo N > /sys/module/lpm_levels/system/pwr/cpu0/fpc-def/idle_enabled
+		echo N > /sys/module/lpm_levels/system/pwr/cpu1/fpc-def/idle_enabled
+		echo N > /sys/module/lpm_levels/system/perf/cpu2/fpc-def/idle_enabled
+		echo N > /sys/module/lpm_levels/system/perf/cpu3/fpc-def/idle_enabled
 	elif [ "$soc_revision" == "3.0" ]; then
 		# Enable all LPMs by default
 		# This will enable C4, D4, D3, E4 and M3 LPMs
