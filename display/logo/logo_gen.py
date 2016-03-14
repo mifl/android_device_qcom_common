@@ -65,8 +65,11 @@ import sys,os
 import struct
 import StringIO
 from PIL import Image
+import math
+from os import walk
 
 SUPPORT_RLE24_COMPRESSIONT = 1
+ANIMATED_SPLASH = False
 
 ## get header
 def GetImgHeader(size, compressed=0, real_bytes=0):
@@ -242,7 +245,13 @@ def MakeLogoImage(logo, out):
 ## mian
 
 def ShowUsage():
+    print("For one display static splash")
     print(" usage: python logo_gen.py [logo.png]")
+    print("For multiple display animated splash")
+    print(" usage: python logo_gen.py -a primary_directory [secondary_direcotry] [tertiary_directory]")
+    print("For multiple display static splash")
+    print("Only have one frame in all folders")
+    print(" usage: python logo_gen.py -a primary_directory [secondary_direcotry] [tertiary_directory]")
 
 def GetPNGFile():
     infile = "logo.png" #default file name
@@ -259,5 +268,172 @@ def GetPNGFile():
         sys.exit(); # error file
     return infile
 
+#Animated Functions below
+def GetAnimatedPNGFiles():
+    infileLists = []
+    paths = []
+    num = len(sys.argv)
+    if num < 3 or num > 5:
+        ShowUsage()
+        sys.exit(); # error arg
+
+    for i in range(2, num):
+        paths.append(sys.argv[i])
+
+    for path in paths:
+        cur_dir = []
+        for (dirpath, dirnames, filenames) in walk(path):
+            for f in filenames:
+                fpath = path + "/" + f
+                cur_dir.append(fpath)
+            break
+        for f in cur_dir:
+            if os.access(f, os.R_OK) != True:
+                ShowUsage()
+                sys.exit(); # error file
+        infileLists.append(cur_dir)
+    return infileLists
+
+def GetASImgHeader(size, compressed=0, real_bytes=0, num_frames=1, one_size = 2768000):
+    SECTOR_SIZE_IN_BYTES = 512   # Header size
+    header = [0 for i in range(SECTOR_SIZE_IN_BYTES)]
+
+    width, height = size
+    real_size = (real_bytes  + 511) / 512
+    fps = 30
+
+    # magic
+    header[:8] = [ord('S'),ord('P'), ord('L'), ord('A'),
+                   ord('S'),ord('H'), ord('!'), ord('!')]
+    #display id
+    header[8] = 0
+    header[9] = 0
+    header[10] = 0
+    header[11] = 0
+
+    # width
+    header[12] = ( width        & 0xFF)
+    header[13] = ((width >> 8 ) & 0xFF)
+    header[14] = ((width >> 16) & 0xFF)
+    header[15] = ((width >> 24) & 0xFF)
+
+    # height
+    header[16] = ( height        & 0xFF)
+    header[17] = ((height >>  8) & 0xFF)
+    header[18] = ((height >> 16) & 0xFF)
+    header[19] = ((height >> 24) & 0xFF)
+
+    #fps
+    header[20] = ( fps        & 0xFF)
+    header[21] = ((fps >>  8) & 0xFF)
+    header[22] = ((fps >> 16) & 0xFF)
+    header[23] = ((fps >> 24) & 0xFF)
+
+    #num_frames
+    header[24] = ( num_frames        & 0xFF)
+    header[25] = ((num_frames >>  8) & 0xFF)
+    header[26] = ((num_frames >> 16) & 0xFF)
+    header[27] = ((num_frames >> 24) & 0xFF)
+    #type
+    header[28]= ( compressed    & 0xFF)
+    header[29]= 0
+    header[30]= 0
+    header[31]= 0
+
+    # block number
+    header[32] = ( real_size        & 0xFF)
+    header[33] = ((real_size >>  8) & 0xFF)
+    header[34] = ((real_size >> 16) & 0xFF)
+    header[35] = ((real_size >> 24) & 0xFF)
+
+    # frame size
+    header[36] = ( one_size        & 0xFF)
+    header[37] = ((one_size >>  8) & 0xFF)
+    header[38] = ((one_size >> 16) & 0xFF)
+    header[39] = ((one_size >> 24) & 0xFF)
+
+    output = StringIO.StringIO()
+    for i in header:
+        output.write(struct.pack("B", i))
+    content = output.getvalue()
+    output.close()
+    return content
+
+def GetImageSize(size):
+    img_size = [0 for i in range(4)]
+        # width
+    img_size[0] = ( size        & 0xFF)
+    img_size[1] = ((size >> 8 ) & 0xFF)
+    img_size[2] = ((size >> 16) & 0xFF)
+    img_size[3] = ((size >> 24) & 0xFF)
+
+    output = StringIO.StringIO()
+    for i in img_size:
+        output.write(struct.pack("B", i))
+    content = output.getvalue()
+    output.close()
+    return content
+
+def GetPad(size):
+    pad_img = [0 for i in range(size)]
+    output = StringIO.StringIO()
+    for i in pad_img:
+        output.write(struct.pack("B", i))
+    content = output.getvalue()
+    output.close()
+    return content
+
+def MakeAnimatedImage(files, out):
+    file = open(out, "ab+")
+    orig_size = os.stat("splash.img").st_size
+    img_list = []
+    total_size = 0
+    size = (0,0)
+    one_size = 0
+    pad_size = 0
+    for in_file in files:
+        in_img = Image.open(in_file)
+        size = in_img.size
+        body = GetImageBody(in_img, 0)
+        img_list.append(body)
+        one_size = len(body)
+        # total_size += len(body) + 4
+    if one_size % 4096 == 0:
+        pad_size = 0
+    else:
+        pad_size = (math.ceil(one_size / 4096.0)) * 4096 - one_size
+    one_size += pad_size
+    one_size = int(one_size)
+    for img in img_list:
+        total_size += one_size
+    file.write(GetASImgHeader(size, 0, total_size, len(files), one_size))
+
+    for img in img_list:
+        # file.write(GetImageSize(len(img)))
+        file.write(img)
+        file.write(GetPad(int(pad_size)))
+
+    file_size = total_size + 512
+    pad = 512 - (file_size % 512)
+    if pad == 512:
+        pad = 0
+    file.write(GetPad(pad))
+    file.close()
+#Animated functions end
+
 if __name__ == "__main__":
-    MakeLogoImage(GetPNGFile(), "splash.img")
+    #Check if request is for static splash or animated
+    num = len(sys.argv)
+    for i in range(1, num):
+        if sys.argv[i] == "-a":
+            ANIMATED_SPLASH = True
+
+    if ANIMATED_SPLASH == False:
+        #one image static splash
+        MakeLogoImage(GetPNGFile(), "splash.img")
+    else:
+        #multiple display animated splash
+        open("splash.img", 'w').close()
+        dirLists = GetAnimatedPNGFiles()
+        for dir in dirLists:
+            MakeAnimatedImage(dir, "splash.img")
