@@ -49,6 +49,14 @@ service modem-sh /system/bin/sh /system/etc/init.qcom.modem_links.sh
     user root
     oneshot
 
+# NativeHMI replacing bootanim
+service nativehmi /system/bin/nativehmi disclaimer.bmp new_welcome_screen.bmp new_welcome_screen_loading.bmp 1
+    class core
+    user graphics
+    group graphics input audio
+    oneshot
+    disabled
+
 on boot
     chown bluetooth bluetooth /dev/ttyHS0
     chown bluetooth bluetooth /dev/dunBT
