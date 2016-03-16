@@ -1307,6 +1307,15 @@ case "$target" in
 
                 # Set Memory parameters
                 configure_memory_parameters
+
+                #Frequency Aggregation and Sched Colocation enabled by default
+                #Disable Sched Colocation and Enable Sched Group Inheritance
+                #Set Frequency Aggregation Threhold to 50% load at max_clock
+                echo 0 > /proc/sys/kernel/sched_enable_colocation
+                echo 1 > /proc/sys/kernel/sched_enable_thread_grouping
+                echo 50 > /proc/sys/kernel/sched_freq_aggregate_threshold
+                #Disable Frequency Aggregation, will be enabled later
+                echo 0 > /proc/sys/kernel/sched_freq_aggregate
 	;;
 	esac
 	;;
