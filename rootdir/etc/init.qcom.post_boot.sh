@@ -743,6 +743,11 @@ case "$target" in
         echo "4:960000 5:960000" > /sys/module/msm_performance/parameters/cpu_max_freq
         # disable thermal bcl hotplug to switch governor
         echo 0 > /sys/module/msm_thermal/core_control/enabled
+
+        # Enable adaptive lmk (ALMK)
+        echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+
         for mode in /sys/devices/soc.0/qcom,bcl.*/mode
         do
             echo -n disable > $mode
@@ -874,6 +879,11 @@ case "$target" in
         echo "4:960000 5:960000 6:960000 7:960000" > /sys/module/msm_performance/parameters/cpu_max_freq
         # disable thermal bcl hotplug to switch governor
         echo 0 > /sys/module/msm_thermal/core_control/enabled
+
+        # Enable adaptive lmk (ALMK)
+        echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+
         for mode in /sys/devices/soc.0/qcom,bcl.*/mode
         do
             echo -n disable > $mode
