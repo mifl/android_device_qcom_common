@@ -87,6 +87,40 @@ function configure_memory_parameters() {
     clearPercent=$((((adjZeroMinFree * 100) / MemTotalPg) + 1))
     echo $clearPercent > /sys/module/zcache/parameters/clear_percent
     echo 30 >  /sys/module/zcache/parameters/max_pool_percent
+
+    # Zram disk - 512MB size
+    zram_enable=`getprop ro.config.zram`
+    if [ "$zram_enable" == "true" ]; then
+        echo 536870912 > /sys/block/zram0/disksize
+        mkswap /dev/block/zram0
+        swapon /dev/block/zram0 -p 32758
+    fi
+
+    SWAP_ENABLE_THRESHOLD=1048576
+    swap_enable=`getprop ro.config.swap`
+
+    if [ -f /sys/devices/soc0/soc_id ]; then
+        soc_id=`cat /sys/devices/soc0/soc_id`
+    else
+        soc_id=`cat /sys/devices/system/soc/soc0/id`
+    fi
+
+    # Enable swap initially only for 8917
+    case "$soc_id" in
+         "303" | "307" | "308" | "309" )
+        if [ "$MemTotal" -le "$SWAP_ENABLE_THRESHOLD" ] && [ "$swap_enable" == "true" ]; then
+            # Static swiftness
+            echo 1 > /proc/sys/vm/swap_ratio_enable
+            echo 70 > /proc/sys/vm/swap_ratio
+
+            # Swap disk - 200MB size
+            if [ ! -f /data/system/swap/swapfile ]; then
+                dd if=/dev/zero of=/data/system/swap/swapfile bs=1m count=200
+            fi
+            mkswap /data/system/swap/swapfile
+            swapon /data/system/swap/swapfile -p 32758
+        fi
+    esac
 }
 
 case "$target" in
@@ -1063,7 +1097,7 @@ case "$target" in
 esac
 
 case "$target" in
-    "titanium")
+    "msm8953")
 
         if [ -f /sys/devices/soc0/soc_id ]; then
             soc_id=`cat /sys/devices/soc0/soc_id`
@@ -1124,11 +1158,47 @@ case "$target" in
                     echo "bw_hwmon" > $devfreq_gov
                     for cpu_io_percent in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/io_percent
                     do
-                        echo 20 > $cpu_io_percent
+                        echo 34 > $cpu_io_percent
                     done
-                for cpu_guard_band in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/guard_band_mbps
+                    for cpu_guard_band in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/guard_band_mbps
                     do
-                        echo 30 > $cpu_guard_band
+                        echo 0 > $cpu_guard_band
+                    done
+                    for cpu_hist_memory in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/hist_memory
+                    do
+                        echo 20 > $cpu_hist_memory
+                    done
+                    for cpu_hyst_length in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/hyst_length
+                    do
+                        echo 10 > $cpu_hyst_length
+                    done
+                    for cpu_idle_mbps in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/idle_mbps
+                    do
+                        echo 1600 > $cpu_idle_mbps
+                    done
+                    for cpu_low_power_delay in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_delay
+                    do
+                        echo 20 > $cpu_low_power_delay
+                    done
+                    for cpu_low_power_io_percent in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/low_power_io_percent
+                    do
+                        echo 34 > $cpu_low_power_io_percent
+                    done
+                    for cpu_mbps_zones in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/mbps_zones
+                    do
+                        echo "1611 3221 5859 6445 7104" > $cpu_mbps_zones
+                    done
+                    for cpu_sample_ms in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/sample_ms
+                    do
+                        echo 4 > $cpu_sample_ms
+                    done
+                    for cpu_up_scale in /sys/class/devfreq/soc:qcom,cpubw/bw_hwmon/up_scale
+                    do
+                        echo 250 > $cpu_up_scale
+                    done
+                    for cpu_min_freq in /sys/class/devfreq/soc:qcom,cpubw/min_freq
+                    do
+                        echo 1611 > $cpu_min_freq
                     done
                 done
 
@@ -1136,6 +1206,30 @@ case "$target" in
                 do
                     echo 40 > $gpu_bimc_io_percent
                 done
+
+		# Configure DCC module to capture critical register contents when device crashes
+		for DCC_PATH in /sys/bus/platform/devices/*.dcc*
+		do
+			echo  0 > $DCC_PATH/enable
+			echo cap >  $DCC_PATH/func_type
+			echo sram > $DCC_PATH/data_sink
+			echo  1 > $DCC_PATH/config_reset
+
+			# Register specifies APC CPR closed-loop settled voltage for current voltage corner
+			echo 0xb1d2c18 1 > $DCC_PATH/config
+
+			# Register specifies SW programmed open-loop voltage for current voltage corner
+			echo 0xb1d2900 1 > $DCC_PATH/config
+
+			# Register specifies APM switch settings and APM FSM state
+			echo 0xb1112b0 1 > $DCC_PATH/config
+
+			# Register specifies CPR mode change state and also #online cores input to CPR HW
+			echo 0xb018798 1 > $DCC_PATH/config
+
+			echo  1 > $DCC_PATH/enable
+		done
+
                 # disable thermal & BCL core_control to update interactive gov settings
                 echo 0 > /sys/module/msm_thermal/core_control/enabled
                 for mode in /sys/devices/soc.0/qcom,bcl.*/mode
@@ -1166,7 +1260,7 @@ case "$target" in
                 echo 1401600 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
                 echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
                 echo "85 1401600:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
-                echo 40000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+                echo 39000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
                 echo 40000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
                 echo 652800 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
@@ -1213,9 +1307,6 @@ case "$target" in
 
                 # Set Memory parameters
                 configure_memory_parameters
-
-                # start energy-awareness service
-                start energy-awareness
 	;;
 	esac
 	;;
@@ -1871,6 +1962,11 @@ case "$target" in
 		echo 0 > /sys/module/lpm_levels/system/pwr/pwr-l2-gdhs/idle_enabled
 		echo 0 > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/idle_enabled
 		echo N > /sys/module/lpm_levels/parameters/sleep_disabled
+		# Disable DEF-FPC mode
+		echo N > /sys/module/lpm_levels/system/pwr/cpu0/fpc-def/idle_enabled
+		echo N > /sys/module/lpm_levels/system/pwr/cpu1/fpc-def/idle_enabled
+		echo N > /sys/module/lpm_levels/system/perf/cpu2/fpc-def/idle_enabled
+		echo N > /sys/module/lpm_levels/system/perf/cpu3/fpc-def/idle_enabled
 	elif [ "$soc_revision" == "3.0" ]; then
 		# Enable all LPMs by default
 		# This will enable C4, D4, D3, E4 and M3 LPMs
@@ -1996,8 +2092,11 @@ case "$target" in
         #start perfd after setprop
         start perfd # start perfd on 8916 and 8939
     ;;
-    "msm8937" | "titanium")
+    "msm8937" | "msm8953")
         echo 128 > /sys/block/mmcblk0/bdi/read_ahead_kb
+        echo 128 > /sys/block/mmcblk0/queue/read_ahead_kb
+        echo 128 > /sys/block/dm-0/queue/read_ahead_kb
+        echo 128 > /sys/block/dm-1/queue/read_ahead_kb
         rm /data/system/perfd/default_values
         start perfd
     ;;
