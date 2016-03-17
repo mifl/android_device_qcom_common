@@ -182,6 +182,10 @@ case "$target" in
                 setprop ro.sf.lcd_density 160
                 setprop qemu.hw.mainkeys 0
                 ;;
+            "Surf")
+                setprop ro.sf.lcd_density 300
+                setprop qemu.hw.mainkeys 0
+                ;;
             *)
                 setprop ro.sf.lcd_density 480
                 ;;
