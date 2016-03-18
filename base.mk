@@ -628,37 +628,18 @@ WLAN := prima_wlan.ko
 WLAN += pronto_wlan.ko
 
 PRODUCT_PACKAGES := \
-    AccountAndSyncSettings \
-    DeskClock \
-    AlarmProvider \
     Bluetooth \
-    Calculator \
-    Calendar \
     Camera \
     CellBroadcastReceiver \
     CertInstaller \
     DrmProvider \
-    Email \
-    Gallery2 \
     LatinIME \
-    Mms \
-    Music \
     Phone \
     Provision \
-    Protips \
     QuickSearchBox \
     Settings \
     Sync \
-    SystemUI \
-    Updater \
-    CalendarProvider \
-    SyncProvider \
-    IM \
-    VoiceDialer \
-    FM2 \
-    FMRadio \
-    FMRecord \
-    VideoEditor
+    SystemUI
 
 
 ifneq ($(TARGET_USES_AOSP),true)
@@ -753,9 +734,6 @@ PRODUCT_PACKAGES += $(IPACM)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
-        LiveWallpapers \
-        LiveWallpapersPicker \
-        VisualizationWallpapers \
         librs_jni
 
 # Filesystem management tools
