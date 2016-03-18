@@ -31,6 +31,9 @@
 
     <!-- RJIL specific settings -->
 
+    <!-- display for radio tech -->
+    <bool name="config_display_rat">false</bool>
+
     <!-- Config to show/hide Video quality toast -->
     <bool name="config_display_video_quality_toast">false</bool>
 
