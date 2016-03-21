@@ -44,11 +44,6 @@ service early-boot-sh /system/bin/sh /init.qcom.early_boot.sh
     user root
     oneshot
 
-service modem-sh /system/bin/sh /system/etc/init.qcom.modem_links.sh
-    class core
-    user root
-    oneshot
-
 # NativeHMI replacing bootanim
 service nativehmi /system/bin/nativehmi disclaimer.bmp new_welcome_screen.bmp new_welcome_screen_loading.bmp 1
     class core
