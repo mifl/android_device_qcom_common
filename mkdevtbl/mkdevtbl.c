@@ -37,6 +37,7 @@
 int main() {
   char path[1024];
   struct stat s;
+  const char* product_out_path = NULL;
 
   while (fgets(path, sizeof(path), stdin) != NULL) {
     // Remove trailing newline and terminate path
@@ -48,7 +49,7 @@ int main() {
     }
 
     uint64_t capabilities;
-    fs_config(path, S_ISDIR(s.st_mode), &s.st_uid, &s.st_gid, &s.st_mode, &capabilities);
+    fs_config(path, S_ISDIR(s.st_mode), product_out_path, &s.st_uid, &s.st_gid, &s.st_mode, &capabilities);
 
     // Remove top directory from output. Leading slash is kept for mkfsubifs
     // e.g. data/local/tmp -> /local/tmp

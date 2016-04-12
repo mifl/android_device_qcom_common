@@ -31,5 +31,6 @@ include $(CLEAR_VARS)
 LOCAL_SRC_FILES := mkdevtbl.c
 LOCAL_CFLAGS += -Wall -Werror
 LOCAL_MODULE := mkdevtbl
+LOCAL_SHARED_LIBRARIES := libcutils
 
 include $(BUILD_HOST_EXECUTABLE)
