@@ -53,6 +53,14 @@ on early-boot
     write /sys/kernel/boot_slpi/boot 1
     exec u:r:qti_init_shell:s0 -- /init.qcom.early_boot.sh
 
+# NativeHMI replacing bootanim
+service nativehmi /system/bin/nativehmi disclaimer.bmp new_welcome_screen.bmp new_welcome_screen_loading.bmp 1
+    class core
+    user graphics
+    group graphics input audio
+    oneshot
+    disabled
+
 on boot
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth net_bt /sys/class/rfkill/rfkill0/type
