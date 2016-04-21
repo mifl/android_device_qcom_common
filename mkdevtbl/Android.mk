@@ -29,8 +29,10 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := mkdevtbl.c
+LOCAL_CXX_STL := libc++_static
 LOCAL_CFLAGS += -Wall -Werror
 LOCAL_MODULE := mkdevtbl
-LOCAL_SHARED_LIBRARIES := libcutils
+LOCAL_STATIC_LIBRARIES := libcutils liblog
+LOCAL_FORCE_STATIC_EXECUTABLE := true
 
 include $(BUILD_HOST_EXECUTABLE)
