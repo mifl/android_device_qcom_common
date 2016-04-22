@@ -403,25 +403,3 @@ echo 1 > /sys/kernel/mm/memory/highmem/release
 insmod /system/lib/modules/adsprpc.ko
 chown -h system.system /dev/adsprpc-smd
 chmod -h 666 /dev/adsprpc-smd
-# bluetooth module
-insmod /system/lib/modules/bluetooth.ko
-insmod /system/lib/modules/hci_smd.ko
-insmod /system/lib/modules/hci_uart.ko
-insmod /system/lib/modules/bluetooth-power.ko
-insmod /system/lib/modules/rfcomm.ko
-insmod /system/lib/modules/bnep.ko
-insmod /system/lib/modules/hidp.ko
-insmod /system/lib/modules/hid-magicmouse.ko
-insmod /system/lib/modules/hid-elecom.ko
-chown bluetooth.bluetooth /sys/module/bluetooth_power/parameters/power
-chown bluetooth.bluetooth /sys/class/rfkill/rfkill0/type
-chown bluetooth.bluetooth /sys/class/rfkill/rfkill0/state
-chown bluetooth.bluetooth /sys/class/rfkill/rfkill1/state
-chown bluetooth.bluetooth /proc/bluetooth/sleep/proto
-chmod 0660 /sys/module/bluetooth_power/parameters/power
-chmod 0660 /sys/class/rfkill/rfkill0/state
-chmod 0660 /proc/bluetooth/sleep/proto
-chown bluetooth.bluetooth /dev/ttyHS0
-chmod 0660 /dev/ttyHS0
-chown bluetooth.bluetooth /sys/devices/platform/msm_serial_hs.0/clock
-chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
