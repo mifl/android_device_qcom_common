@@ -140,7 +140,7 @@ case "$usb_config" in
 	          "msm8909" | "msm8937")
 		      setprop persist.sys.usb.config diag,serial_smd,rmnet_qti_bam,adb
 		  ;;
-	          "msm8952" | "msm8953")
+	          "msm8952" | "msm8953" | "msm8940")
 		      setprop persist.sys.usb.config diag,serial_smd,rmnet_ipa,adb
 		  ;;
 	          *)
@@ -175,7 +175,7 @@ case "$target" in
              fi
          fi
     ;;
-    "msm8994" | "msm8992" | "msm8996" | "msm8953")
+    "msm8994" | "msm8992" | "msm8996" | "msm8953" | "msm8940")
         echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
         echo 131072 > /sys/module/g_android/parameters/mtp_tx_req_len
         echo 131072 > /sys/module/g_android/parameters/mtp_rx_req_len
