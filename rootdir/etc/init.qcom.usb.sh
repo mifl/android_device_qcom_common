@@ -92,22 +92,6 @@ done
 fi
 
 target=`getprop ro.board.platform`
-# set USB controller's device node
-case "$target" in
-    "msm8996")
-        setprop sys.usb.controller "6a00000.dwc3"
-	;;
-    "msmcobalt")
-        setprop sys.usb.controller "a800000.dwc3"
-	;;
-    *)
-	;;
-esac
-
-# check configfs is mounted or not
-if [ -d /config/usb_gadget ]; then
-	setprop sys.usb.configfs 1
-fi
 
 #
 # Allow USB enumeration with default PID/VID
@@ -140,7 +124,7 @@ case "$usb_config" in
 	          "msm8909" | "msm8937")
 		      setprop persist.sys.usb.config diag,serial_smd,rmnet_qti_bam,adb
 		  ;;
-	          "msm8952" | "msm8953")
+	          "msm8952" | "msm8953" | "msm8940")
 		      setprop persist.sys.usb.config diag,serial_smd,rmnet_ipa,adb
 		  ;;
 	          *)
@@ -154,6 +138,23 @@ case "$usb_config" in
       ;;
   * ) ;; #USB persist config exists, do nothing
 esac
+
+# set USB controller's device node
+case "$target" in
+    "msm8996")
+        setprop sys.usb.controller "6a00000.dwc3"
+	;;
+    "msmcobalt")
+        setprop sys.usb.controller "a800000.dwc3"
+	;;
+    *)
+	;;
+esac
+
+# check configfs is mounted or not
+if [ -d /config/usb_gadget ]; then
+	setprop sys.usb.configfs 1
+fi
 
 #
 # Do target specific things
@@ -175,7 +176,7 @@ case "$target" in
              fi
          fi
     ;;
-    "msm8994" | "msm8992" | "msm8996" | "msm8953")
+    "msm8994" | "msm8992" | "msm8996" | "msm8953" | "msm8940")
         echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
         echo 131072 > /sys/module/g_android/parameters/mtp_tx_req_len
         echo 131072 > /sys/module/g_android/parameters/mtp_rx_req_len

@@ -1333,6 +1333,17 @@ case "$target" in
         fi
 
         case "$soc_id" in
+           "313")
+                  # Start Host based Touch processing
+                  case "$hw_platform" in
+                    "MTP" | "Surf" | "RCM" )
+                        start hbtp
+                        ;;
+                  esac
+                  ;;
+        esac
+
+        case "$soc_id" in
            "303" | "307" | "308" | "309" )
 
                   # Start Host based Touch processing
@@ -1347,6 +1358,7 @@ case "$target" in
                 echo 3 > /proc/sys/kernel/sched_window_stats_policy
                 echo 3 > /proc/sys/kernel/sched_ravg_hist_size
                 echo 20000000 > /proc/sys/kernel/sched_ravg_window
+                echo 1 > /proc/sys/kernel/sched_restrict_tasks_spread
 
                 #disable sched_boost in 8917
                 echo 0 > /proc/sys/kernel/sched_boost
