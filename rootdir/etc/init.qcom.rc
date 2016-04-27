@@ -275,10 +275,6 @@ on property:vold.decrypt=trigger_restart_framework
     start qcom-c_main-sh
     start config_bluetooth
 
-service cnd /system/bin/cnd
-    class late_start
-    socket cnd stream 660 root inet
-
 service irsc_util /system/bin/irsc_util "/etc/sec_config"
     class main
     user root
