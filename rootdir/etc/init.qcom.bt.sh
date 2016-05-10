@@ -161,10 +161,10 @@ config_bt ()
        fi
        ;;
     "apq8084" | "mpq8092" | "msm8994" | "msm8992" | "msm8996" )
-       if [ "$btsoc" != "rome" ]
+       if [ "$btsoc" != "rome" ] && [ "$btsoc" != "cherokee" ]
        then
            setprop ro.qualcomm.bt.hci_transport smd
-       elif [ "$btsoc" = "rome" ]
+       elif [ "$btsoc" = "rome" ] && [ "$btsoc" != "cherokee" ]
        then
            setprop ro.bluetooth.hfp.ver 1.6
        fi
