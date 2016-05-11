@@ -27,12 +27,12 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-ip link set can0 type can bitrate 500000
+ip link set can0 type can bitrate 250000
 ip link set up can0
 ip link set can1 type can bitrate 500000
 ip link set up can1
-ip link set can2 type can bitrate 500000
+ip link set can2 type can bitrate 1000000
 ip link set up can2
-ip link set can3 type can bitrate 500000
+ip link set can3 type can bitrate 125000
 ip link set up can3
 
