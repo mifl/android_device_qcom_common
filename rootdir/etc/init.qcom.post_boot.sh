@@ -27,6 +27,41 @@
 #
 
 target=`getprop ro.board.platform`
+
+function configure_memory_parameters() {
+# Set Memory paremeters.
+#
+# Set Low memory killer minfree parameters
+# 64 bit all memory configurations will use 18K series
+#
+# Set ALMK parameters (usually above the highest minfree values)
+# 64 bit will have 81K
+#
+
+    arch_type=`uname -m`
+    MemTotalStr=`cat /proc/meminfo | grep MemTotal`
+    MemTotal=${MemTotalStr:16:8}
+
+    echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+
+    if [ "$arch_type" == "aarch64" ] && [ $MemTotal -gt 2097152 ]; then
+        echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
+        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+    else [ "$arch_type" == "aarch64" ] && [ $MemTotal -gt 1048576 ]; then
+        echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+        echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
+        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+    fi
+
+    # Zram disk - 512MB size
+    zram_enable=`getprop ro.config.zram`
+    if [ "$zram_enable" == "true" ]; then
+        echo 536870912 > /sys/block/zram0/disksize
+        mkswap /dev/block/zram0
+        swapon /dev/block/zram0 -p 32758
+    fi
+}
+
 case "$target" in
     "msm7201a_ffa" | "msm7201a_surf" | "msm7627_ffa" | "msm7627_6x" | "msm7627a"  | "msm7627_surf" | \
     "qsd8250_surf" | "qsd8250_ffa" | "msm7630_surf" | "msm7630_1x" | "msm7630_fusion" | "qsd8650a_st1x")
@@ -861,6 +896,9 @@ case "$target" in
         done
         # Disable sched_boost
         echo 0 > /proc/sys/kernel/sched_boost
+
+        # Set Memory parameters
+        configure_memory_parameters
     ;;
 esac
 
@@ -976,6 +1014,9 @@ case "$target" in
         do
             echo "cpufreq" > $devfreq_gov
         done
+
+        # Set Memory parameters
+        configure_memory_parameters
     ;;
 esac
 
