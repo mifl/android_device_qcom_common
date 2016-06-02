@@ -32,6 +32,7 @@ import init.qcom.factory.rc
 on early-init
     mount debugfs debugfs /sys/kernel/debug
     chmod 0755 /sys/kernel/debug
+    write /sys/kernel/debug/bootkpi/kpi_values "UserSpace Start"
 
 on init
     # Set permissions for persist partition
