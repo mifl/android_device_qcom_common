@@ -109,6 +109,13 @@ if [ -d /config/usb_gadget ]; then
 	setprop sys.usb.configfs 1
 fi
 
+# soc_ids for 8937
+if [ -f /sys/devices/soc0/soc_id ]; then
+	soc_id=`cat /sys/devices/soc0/soc_id`
+else
+	soc_id=`cat /sys/devices/system/soc/soc0/id`
+fi
+
 #
 # Allow USB enumeration with default PID/VID
 #
@@ -137,10 +144,20 @@ case "$usb_config" in
 	          "msm8996")
 	              setprop persist.sys.usb.config diag,serial_cdev,serial_tty,rmnet_ipa,mass_storage,adb
 		  ;;
-	          "msm8909" | "msm8937")
+	          "msm8909")
 		      setprop persist.sys.usb.config diag,serial_smd,rmnet_qti_bam,adb
 		  ;;
-	          "msm8952" | "msm8953" | "msm8940")
+	          "msm8937")
+			case "$soc_id" in
+				"313")
+				   setprop persist.sys.usb.config diag,serial_smd,rmnet_ipa,adb
+				;;
+				*)
+				   setprop persist.sys.usb.config diag,serial_smd,rmnet_qti_bam,adb
+				;;
+			esac
+		  ;;
+	          "msm8952" | "msm8953")
 		      setprop persist.sys.usb.config diag,serial_smd,rmnet_ipa,adb
 		  ;;
 	          *)
@@ -175,11 +192,18 @@ case "$target" in
              fi
          fi
     ;;
-    "msm8994" | "msm8992" | "msm8996" | "msm8953" | "msm8940")
+    "msm8994" | "msm8992" | "msm8996" | "msm8953")
         echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
         echo 131072 > /sys/module/g_android/parameters/mtp_tx_req_len
         echo 131072 > /sys/module/g_android/parameters/mtp_rx_req_len
     ;;
+    "msm8937")
+	case "$soc_id" in
+		"313")
+		   echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
+		;;
+	esac
+   ;;
 esac
 
 #
