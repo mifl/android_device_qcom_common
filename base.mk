@@ -151,7 +151,7 @@ BT := javax.btobex
 BT += libattrib_static
 BT += hcidump.sh
 BT += libbt-vendor
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(DEVICE_DIR)/qcom/common
 
 #C2DColorConvert
 C2DCC := libc2dcolorconvert
@@ -869,19 +869,19 @@ PRODUCT_COPY_FILES := \
 
 # gps/location secuity configuration file
 PRODUCT_COPY_FILES += \
-    device/qcom/common/sec_config:system/etc/sec_config
+    $(DEVICE_DIR)/qcom/common/sec_config:system/etc/sec_config
 
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:system/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:system/etc/media_codecs_google_video.xml \
-    device/qcom/common/media/media_profiles.xml:system/etc/media_profiles.xml \
-    device/qcom/common/media/media_codecs.xml:system/etc/media_codecs.xml
+    $(DEVICE_DIR)/qcom/common/media/media_profiles.xml:system/etc/media_profiles.xml \
+    $(DEVICE_DIR)/qcom/common/media/media_codecs.xml:system/etc/media_codecs.xml
 
 # enable overlays to use our version of
 # source/resources etc.
-DEVICE_PACKAGE_OVERLAYS += device/qcom/common/device/overlay
-PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
+DEVICE_PACKAGE_OVERLAYS += $(DEVICE_DIR)/qcom/common/device/overlay
+PRODUCT_PACKAGE_OVERLAYS += $(DEVICE_DIR)/qcom/common/product/overlay
 # Set up flags to determine the kernel version
 ifeq ($(TARGET_KERNEL_VERSION),)
      TARGET_KERNEL_VERSION := 3.18
@@ -897,7 +897,7 @@ else
      TARGET_KERNEL_SOURCE := kernel/msm-$(TARGET_KERNEL_VERSION)
 endif
 # include additional build utilities
--include device/qcom/common/utils.mk
+-include $(DEVICE_DIR)/qcom/common/utils.mk
 
 #Enabling Ring Tones
 #include frameworks/base/data/sounds/OriginalAudio.mk
@@ -907,7 +907,7 @@ endif
 
 # dm-verity definitions
 PRODUCT_SYSTEM_VERITY_PARTITION=/dev/block/bootdevice/by-name/system
-$(call inherit-product, build/target/product/verity.mk)
+$(call inherit-product-if-exists, $(BUILD_DIR)/target/product/verity.mk)
 
 #skip boot jars check
 SKIP_BOOT_JARS_CHECK := true
