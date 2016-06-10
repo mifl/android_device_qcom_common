@@ -42,6 +42,7 @@ service qcom-usb-sh /system/bin/sh /init.qcom.usb.sh
     class main
     user root
     oneshot
+    seclabel u:r:usb_config:s0
 
 # Following are the parameters required for usb functionality. They provide configurable options like
 # product_id/vendor id and allows specifying required functions:
