@@ -28,6 +28,9 @@ TINY_ALSA_TEST_APPS += tinymix
 TINY_ALSA_TEST_APPS += tinypcminfo
 TINY_ALSA_TEST_APPS += cplay
 
+#C2DColorConvert
+C2DCC := libc2dcolorconvert
+
 #INIT
 INIT := init.qcom.composition_type.sh
 INIT += init.qcom.sensor.sh
@@ -141,6 +144,9 @@ MM_CORE += libOmxCore
 #MM_VIDEO
 MM_VIDEO := mm-vdec-omx-test
 MM_VIDEO += mm-venc-omx-test
+MM_VIDEO += libstagefrighthw
+MM_VIDEO += libOmxVdec
+MM_VIDEO += libOmxVenc
 
 #WLAN
 WLAN := prima_wlan.ko
@@ -151,6 +157,7 @@ PRODUCT_PACKAGES := \
 
 PRODUCT_PACKAGES += $(AUDIO_HARDWARE)
 PRODUCT_PACKAGES += $(AUDIO_POLICY)
+PRODUCT_PACKAGES += $(C2DCC)
 PRODUCT_PACKAGES += $(INIT)
 PRODUCT_PACKAGES += $(LIBCAMERA)
 PRODUCT_PACKAGES += $(LIBGRALLOC)
