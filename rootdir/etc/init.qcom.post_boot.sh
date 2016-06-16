@@ -1381,6 +1381,7 @@ case "$target" in
     ;;
     "msm8909")
 	start perfd
+        setprop sys.post_boot.parsed 1
     ;;
     "msm8974")
         start mpdecision
