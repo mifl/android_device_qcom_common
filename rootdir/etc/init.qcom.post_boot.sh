@@ -843,7 +843,7 @@ case "$target" in
         if [ "$ProductName" == "msm8952_32" ] || [ "$ProductName" == "msm8952_32_LMT" ]; then
             echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
             echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-        elif [ "$ProductName" == "msm8952_64" ] || [ "$ProductName" == "msm8952_64_LMT" ]; then
+        elif [ "$ProductName" == "msm8952_64" ] || [ "$ProductName" == "msm8952_64_LMT" ] || [ "$ProductName" == "msm8952_ipc" ]; then
             echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
             echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
             MemTotalStr=`cat /proc/meminfo | grep MemTotal`
