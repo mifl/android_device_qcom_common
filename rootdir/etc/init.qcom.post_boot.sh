@@ -840,17 +840,33 @@ case "$target" in
 
         #Enable adaptive LMK and set vmpressure_file_min
         ProductName=`getprop ro.product.name`
+        MemTotalStr=`cat /proc/meminfo | grep MemTotal`
+        MemTotal=${MemTotalStr:16:8}
+        if [ $MemTotal -le 2097152 ]; then
+            #Enable B service adj transition for 2GB or less memory
+            setprop ro.sys.fw.bservice_enable true
+            setprop ro.sys.fw.bservice_limit 5
+            setprop ro.sys.fw.bservice_age 5000
+            #Enable Delay Service Restart
+            setprop ro.am.reschedule_service true
+        fi
         if [ "$ProductName" == "msm8952_32" ] || [ "$ProductName" == "msm8952_32_LMT" ]; then
             echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
             echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
         elif [ "$ProductName" == "msm8952_64" ] || [ "$ProductName" == "msm8952_64_LMT" ]; then
             echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
             echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-            MemTotalStr=`cat /proc/meminfo | grep MemTotal`
-            MemTotal=${MemTotalStr:16:8}
             if [ $MemTotal -le 2097152 ]; then
                 chmod 660 /sys/module/lowmemorykiller/parameters/minfree
                 echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
+            fi
+            #Set background app limit to 60 for 64 bit config with memory greater than 3.5 GB
+            #Also set swappiness to 60
+            #Disable process reclaim on 64 bit config with memory greater than 3.5 GB
+            if [ $MemTotal -gt 3670016 ]; then
+                setprop ro.sys.fw.bg_apps_limit 60
+                echo 60 > /proc/sys/vm/swappiness
+                echo 0 > /sys/module/process_reclaim/parameters/enable_process_reclaim
             fi
         fi
 
