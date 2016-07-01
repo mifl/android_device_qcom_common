@@ -9,7 +9,7 @@ QSD8K_BOARD_PLATFORMS := qsd8k
 TARGET_USE_VENDOR_CAMERA_EXT := false
 
 #List of targets that use video hw
-#MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909
+MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8909w
 
 # Below projects/packages with LOCAL_MODULEs will be used by
 # PRODUCT_PACKAGES to build LOCAL_MODULEs that are tagged with
@@ -306,6 +306,22 @@ MM_AUDIO += libOmxMp3Dec
 MM_CORE := libmm-omxcore
 MM_CORE += libOmxCore
 
+#MM_VIDEO
+MM_VIDEO := ast-mm-vdec-omx-test
+MM_VIDEO += liblasic
+MM_VIDEO += libOmxVdec
+MM_VIDEO += libOmxVdecHevc
+MM_VIDEO += libOmxVdpp
+MM_VIDEO += libOmxVenc
+MM_VIDEO += libOmxVidEnc
+MM_VIDEO += libstagefrighthw
+MM_VIDEO += mm-vdec-omx-property-mgr
+MM_VIDEO += mm-vdec-omx-test
+MM_VIDEO += mm-venc-omx-test
+MM_VIDEO += mm-venc-omx-test720p
+MM_VIDEO += mm-video-driver-test
+MM_VIDEO += mm-video-encdrv-test
+MM_VIDEO += ExoplayerDemo
 
 #OPENCORE
 OPENCORE := libomx_aacdec_sharedlibrary
@@ -499,6 +515,7 @@ PRODUCT_PACKAGES += $(LOC_API)
 PRODUCT_PACKAGES += $(MEDIA_PROFILES)
 PRODUCT_PACKAGES += $(MM_AUDIO)
 PRODUCT_PACKAGES += $(MM_CORE)
+PRODUCT_PACKAGES += $(MM_VIDEO)
 PRODUCT_PACKAGES += $(OPENCORE)
 PRODUCT_PACKAGES += $(PVOMX)
 PRODUCT_PACKAGES += $(PPP)
