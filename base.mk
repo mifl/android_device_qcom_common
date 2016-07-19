@@ -140,6 +140,10 @@ CONNECTIVITY += services-ext
 CURL := libcurl
 CURL += curl
 
+#CM
+CM := CMFileManager
+#CM += Trebuchet
+
 #Default Launcher
 DELAUN := Launcher3
 
@@ -655,8 +659,10 @@ PRODUCT_PACKAGES := \
     FMRadio \
     FM2 \
     FMRecord \
-    VideoEditor
-
+    VideoEditor \
+    SnapdragonGallery \
+    SnapdragonLauncher \
+    SnapdragonMusic
 
 ifneq ($(TARGET_USES_AOSP),true)
 PRODUCT_PACKAGES += \
@@ -687,6 +693,7 @@ PRODUCT_PACKAGES += $(CIMAX)
 PRODUCT_PACKAGES += $(CONNECTIVITY)
 PRODUCT_PACKAGES += $(CHARGER)
 PRODUCT_PACKAGES += $(CURL)
+PRODUCT_PACKAGES += $(CM)
 PRODUCT_PACKAGES += $(DELAUN)
 PRODUCT_PACKAGES += $(DASH)
 PRODUCT_PACKAGES += $(DATA_OS)
