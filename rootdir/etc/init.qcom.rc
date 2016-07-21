@@ -176,6 +176,7 @@ on post-fs-data
     # We chown/chmod /persist again so because mount is run as root + defaults
     chown system system /persist
     chmod 0771 /persist
+    chmod 0640 /persist/.bt_nv.bin
     chmod 0664 /sys/devices/platform/msm_sdcc.1/polling
     chmod 0664 /sys/devices/platform/msm_sdcc.4/polling
 
@@ -316,6 +317,12 @@ service start_hci_filter /system/bin/wcnss_filter
 service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
     class core
     user root
+    oneshot
+
+service bt_fwd_service /system/bin/bt-fwd-service
+    class late_start
+    user bluetooth system
+    group bluetooth
     oneshot
 
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
