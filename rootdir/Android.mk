@@ -43,3 +43,11 @@ LOCAL_MODULE_TAGS  := optional eng
 LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := etc/init.qcom.zram.sh
 include $(BUILD_PREBUILT)
+
+include $(CLEAR_VARS)
+LOCAL_MODULE       := tests.txt
+LOCAL_MODULE_TAGS  := optional
+LOCAL_MODULE_CLASS := ETC
+LOCAL_SRC_FILES := tests.txt
+LOCAL_MODULE_PATH := $(TARGET_OUT_DATA)/nativetest
+include $(BUILD_PREBUILT)

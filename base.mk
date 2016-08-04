@@ -148,6 +148,8 @@ MM_VIDEO += libstagefrighthw
 MM_VIDEO += libOmxVdec
 MM_VIDEO += libOmxVenc
 
+# Test Artifacts
+TEST_ARTIFACTS := tests.txt
 #WLAN
 WLAN := prima_wlan.ko
 
@@ -164,6 +166,11 @@ PRODUCT_PACKAGES += $(LIBGRALLOC)
 PRODUCT_PACKAGES += $(MM_AUDIO)
 PRODUCT_PACKAGES += $(MM_CORE)
 PRODUCT_PACKAGES += $(MM_VIDEO)
+
+# Test product artifact
+ifeq ($(BOARD_PRODUCT_TEST_ARTIFACT),true)
+PRODUCT_PACKAGES += $(TEST_ARTIFACTS)
+endif
 
 PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_audio.xml:system/etc/media_codecs_google_audio.xml \

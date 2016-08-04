@@ -1,0 +1,23 @@
+# List of whitelisted unit tests to run for Brillo.
+# The format is two column CSV with:
+# * first column is the binary name (the binary path is
+#   /data/nativetest/<name>/<name>
+# * second column is "yes" or "no" whether we want to run the test as root or
+#   not.
+# Everything after a # is ignored.
+libchrome_test, yes,
+libminijail_unittest, no,
+libperipheralman_tests, no, -j1
+backtrace_test, no,
+firewalld_unittest, no,
+memory_replay_tests, no,
+syscall_filter_unittest, no,
+apmanager_test, no,
+crash_reporter_tests, yes,
+libnativepower_tests, no,
+libweave_test, no,
+metrics_collector_tests, no,
+metricsd_tests, no,
+nativepowerman_tests, no,
+shill_test, no,
+weaved_test, no,
