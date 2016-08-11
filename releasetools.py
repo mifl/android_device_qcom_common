@@ -18,7 +18,7 @@
 
 import common
 import re
-
+import os
 
 bootImages = {}
 binImages = {}
@@ -261,7 +261,19 @@ def InstallRawImage(type, script, f, dest, tf, sf):
     if type == 'MMC':
       script.AppendExtra('package_extract_file("%s", "%s");' % (f, dest))
     elif type == 'MTD':
-      script.AppendExtra('write_raw_image(package_extract_file("%s"), "%s");' % (f, dest))
+      front,extension = os.path.splitext(f)
+      print "extension: ", extension
+      if extension == ".ubi":
+        print "extension is ubi!"
+        file = "/dev/shm/tmp_modem.ubi"
+        print "script: package_extract_file: %s, dest:%s" % (f, file)
+        script.AppendExtra('package_extract_file("%s", "%s");' % (f,file))
+        print "script: write_formatted_raw_image(file: %s, dest:%s, ubi)" % (file, dest)
+        script.AppendExtra('write_formatted_raw_image("%s", "%s", "ubi");' % (file, dest))
+      else:
+        print "extension is NOT ubi!"
+        print "script: write_raw_image(package_extract_file: %s), dest:%s" % (f, dest)
+        script.AppendExtra('write_raw_image(package_extract_file("%s"), "%s");' % (f, dest))
   return
 
 
