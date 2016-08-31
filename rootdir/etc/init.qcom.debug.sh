@@ -32,12 +32,6 @@ HERE=/system/etc
 source $HERE/init.qcom.debug-8976.sh
 debug_8976=`getprop persist.debug.8976.config`
 
-if [ -f /sys/devices/soc0/soc_id ]; then
-    soc_id=`cat /sys/devices/soc0/soc_id`
-else
-    soc_id=`cat /sys/devices/system/soc/soc0/id`
-fi
-
 enable_stm_events()
 {
     # bail out if its perf config
@@ -164,12 +158,7 @@ enable_dcc_config()
 }
 
 if [ $target == "msm8952" ] && $debug_8976; then
-case "$soc_id" in
-      "266" | "274" | "277" | "278")
-      echo "Enabling Debug config for 8976."
       enable_msm8976_debug
-      ;;
-esac
 else
 coresight_config=`getprop persist.debug.coresight.config`
 enable_dcc_config

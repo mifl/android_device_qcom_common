@@ -28,6 +28,12 @@
 #
 # Debug configuration for 8976
 # Function MSM8976 DCC configuration
+
+if [ -f /sys/devices/soc0/soc_id ]; then
+    soc_id=`cat /sys/devices/soc0/soc_id`
+else
+    soc_id=`cat /sys/devices/system/soc/soc0/id`
+fi
 enable_msm8976_dcc_config()
 {
     DCC_PATH="/sys/bus/platform/devices/b3000.dcc"
@@ -164,17 +170,28 @@ enable_stm_events_8976()
     echo 0 > /sys/kernel/debug/tracing/events/enable
     echo 1 > /sys/bus/coresight/devices/coresight-tmc-etf/curr_sink
     echo mem > /sys/bus/coresight/devices/coresight-tmc-etr/out_mode
+    echo 0x2000000 > /sys/bus/coresight/devices/coresight-tmc-etr/mem_size
     echo 1 > /sys/bus/coresight/devices/coresight-tmc-etr/curr_sink
     #IRQs
-    echo 1 > /sys/kernel/debug/tracing/events/irq/irq_handler_entry/enable
-    echo 1 > /sys/kernel/debug/tracing/events/irq/irq_handler_exit/enable
+    echo 1 > /sys/kernel/debug/tracing/events/irq/enable
+    #Workqueue
+    echo 1 > /sys/kernel/debug/tracing/events/workqueue/enable
+    echo 1 > /sys/kernel/debug/tracing/events/workqueue/filter
+    echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_activate_work/enable
+    echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_execute_end/enable
+    echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_execute_start/enable
+    echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_queue_work/enable
     #Scheduler
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_cpu_hotplug/enable
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_migrate_task/enable
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_switch/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_enq_deq_task/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup/enable
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup_new/enable
+    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup/enable
+    #mmc
+    echo 1 > /sys/kernel/debug/tracing/events/block/block_rq_insert/enable
+    echo 1 > /sys/kernel/debug/tracing/events/block/block_rq_issue/enable
+    echo 1 > /sys/kernel/debug/tracing/events/block/block_rq_complete/enable
+    echo 1 > /sys/kernel/debug/tracing/events/mmc/mmc_cmd_rw_start/enable
     # sound
     echo 1 > /sys/kernel/debug/tracing/events/asoc/snd_soc_reg_read/enable
     echo 1 > /sys/kernel/debug/tracing/events/asoc/snd_soc_reg_write/enable
@@ -214,7 +231,10 @@ enable_stm_events_8976()
     echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_pre_frequency_mit/enable
     echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_post_frequency_mit/enable
     echo 1 > /sys/kernel/debug/tracing/events/thermal/lmh_sensor_interrupt/enable
-    #HW Events
+}
+#Enable Hardware events for 8976
+enable_hw_events_8976()
+{
     echo 0 > /sys/bus/coresight/devices/coresight-hwevent/enable
     echo 0 > /sys/bus/coresight/devices/coresight-stm/hwevent_enable
     echo 1 > /sys/bus/coresight/devices/coresight-hwevent/enable
@@ -277,7 +297,13 @@ echo 1 > /sys/bus/coresight/devices/coresight-dbgui/capture_enable
 
 enable_msm8976_debug()
 {
-enable_msm8976_dcc_config
 enable_stm_events_8976
-dump_debugui_regs
+case "$soc_id" in
+      "266" | "274" | "277" | "278")
+      echo "Enabling Debug config for 8976."
+      enable_msm8976_dcc_config
+      enable_hw_events_8976()
+      dump_debugui_regs
+      ;;
+esac
 }
