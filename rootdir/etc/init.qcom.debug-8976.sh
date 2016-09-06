@@ -129,6 +129,10 @@ enable_msm8976_dcc_config()
     echo 0x0B1D1058 2  > $DCC_PATH/config
     echo 0x0B1D200C 1  > $DCC_PATH/config
     echo 0x0B1D2030 1  > $DCC_PATH/config
+    #BIMC_S_DDR0_SCMO_SLV_STATUS
+    echo 0x00448450 1  > $DCC_PATH/config
+    #BIMC_S_DDR0_DPE_MEMC_STATUS_0
+    echo 0x0044C09C 1  > $DCC_PATH/config
 
     echo  1 > $DCC_PATH/enable
 }
