@@ -35,7 +35,7 @@ datamode=`getprop persist.data.mode`
 netmgr=`getprop ro.use_data_netmgrd`
 
 case "$baseband" in
-    "apq")
+    "apq"|"baseband_apq_nowgr")
     setprop ro.radio.noril yes
     stop ril-daemon
 esac
