@@ -29,4 +29,7 @@
 <resources>
     <!-- To disable/enable CallForwardUnconditional Timer -->
     <bool name="config_enable_cfu_time">true</bool>
+
+    <!-- To disable clir query when ut enable under CMCC -->
+    <bool name="config_disable_clir_over_ut">true</bool>
 </resources>
