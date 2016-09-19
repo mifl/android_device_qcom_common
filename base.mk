@@ -234,6 +234,19 @@ LIB_NL := libnl_2
 #LIB_XML2
 LIB_XML2 := libxml2
 
+#LIBCAMERA
+LIBCAMERA := camera.msm8909
+LIBCAMERA += camera.msm8909w
+LIBCAMERA += libcamera
+LIBCAMERA += libmmcamera_interface
+LIBCAMERA += libmmcamera_interface2
+LIBCAMERA += libmmjpeg_interface
+LIBCAMERA += libmmlib2d_interface
+LIBCAMERA += libqomx_core
+LIBCAMERA += mm-qcamera-app
+LIBCAMERA += camera_test
+LIBCAMERA += org.codeaurora.camera
+
 #LIBCOPYBIT
 LIBCOPYBIT := copybit.msm8909
 
@@ -513,6 +526,7 @@ PRODUCT_PACKAGES += $(KEYPAD)
 PRODUCT_PACKAGES += $(KS)
 PRODUCT_PACKAGES += $(LIB_NL)
 PRODUCT_PACKAGES += $(LIB_XML2)
+PRODUCT_PACKAGES += $(LIBCAMERA)
 PRODUCT_PACKAGES += $(LIBGESTURES)
 PRODUCT_PACKAGES += $(LIBCOPYBIT)
 PRODUCT_PACKAGES += $(LIBGRALLOC)
