@@ -39,6 +39,7 @@ INIT += init.qcom.bt.sh
 INIT += hsic.control.bt.sh
 INIT += init.qcom.early_boot.sh
 INIT += init.qcom.post_boot.sh
+INIT += init.msmirqbalance.sh
 INIT += init.qcom.rc
 INIT += init.qcom.sdio.sh
 INIT += init.qcom.sh
