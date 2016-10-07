@@ -604,6 +604,8 @@ PRODUCT_PACKAGES_DEBUG := init.qcom.testscripts.sh
 # ITE tech firmware
 PRODUCT_PACKAGES += it7260_cfg_62011E01.bin
 PRODUCT_PACKAGES += it7260_fw_050D0014.bin
+PRODUCT_PACKAGES += it7262_cfg_6602780D.bin
+PRODUCT_PACKAGES += it7262_fw_050F0302.bin
 
 PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
