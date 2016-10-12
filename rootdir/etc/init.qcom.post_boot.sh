@@ -1396,7 +1396,8 @@ case "$target" in
         start perfd # start perfd on 8916, 8939 and 8929
     ;;
     "msm8909")
-	start perfd
+        start perfd
+        start perffeedbackd
         setprop sys.post_boot.parsed 1
     ;;
     "msm8974")
