@@ -692,3 +692,7 @@ ifeq ($(TARGET_BUILD_VARIANT),user)
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
     ro.adb.secure=1
 endif
+
+# PixArt Rotating Switch configuration
+PRODUCT_COPY_FILES += \
+    device/qcom/msm8909w/pixart_pat9125.idc:system/usr/idc/pixart_pat9125.idc
