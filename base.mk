@@ -113,6 +113,13 @@ EBTABLES += libebtc
 #FASTPOWERON
 FASTPOWERON := FastBoot
 
+#FM
+FM := qcom.fmradio
+FM += libqcomfm_jni
+FM += libfmjni
+FM += fm_helium
+FM += libfm-hci
+FM += fmhal_service
 
 #GPS
 GPS_HARDWARE := gps.conf
@@ -433,7 +440,9 @@ PRODUCT_PACKAGES := \
     CalendarProvider \
     SyncProvider \
     IM \
-    VoiceDialer
+    VoiceDialer \
+    FM2 \
+    FMRecord
 
 
 ifneq ($(TARGET_USES_AOSP),true)
@@ -469,6 +478,7 @@ PRODUCT_PACKAGES += $(E2FSPROGS)
 PRODUCT_PACKAGES += $(EBTABLES)
 PRODUCT_PACKAGES += $(EXTENDEDMEDIA_EXT)
 PRODUCT_PACKAGES += $(FASTPOWERON)
+PRODUCT_PACKAGES += $(FM)
 PRODUCT_PACKAGES += $(GPS_HARDWARE)
 PRODUCT_PACKAGES += $(HOSTAPD)
 PRODUCT_PACKAGES += $(I420CC)
