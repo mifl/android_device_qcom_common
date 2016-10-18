@@ -1259,9 +1259,13 @@ case "$target" in
         echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
         echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         echo 800000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+        echo 800000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+        echo 800000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
         echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
         echo 800000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-        #Below entries are to set the GPU frequency and DCVS governor 
+        echo 800000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+        echo 800000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+        #Below entries are to set the GPU frequency and DCVS governor
         echo 200000000 > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
         echo 200000000 > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
         echo performance > /sys/class/kgsl/kgsl-3d0/devfreq/governor
