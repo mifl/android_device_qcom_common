@@ -607,6 +607,9 @@ PRODUCT_PACKAGES += it7260_fw_050D0014.bin
 PRODUCT_PACKAGES += it7262_cfg_6602780D.bin
 PRODUCT_PACKAGES += it7262_fw_050F0302.bin
 
+# IDC file for rotating switch
+PRODUCT_PACKAGES += pixart_pat9125.idc
+
 PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml \
     frameworks/native/data/etc/android.hardware.telephony.cdma.xml:system/etc/permissions/android.hardware.telephony.cdma.xml \
