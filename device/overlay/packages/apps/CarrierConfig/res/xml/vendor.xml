@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) 2016, The Linux Foundation. All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are
+  met:
+       * Redistributions of source code must retain the above copyright
+         notice, this list of conditions and the following disclaimer.
+       * Redistributions in binary form must reproduce the above
+         copyright notice, this list of conditions and the following
+         disclaimer in the documentation and/or other materials provided
+         with the distribution.
+       * Neither the name of The Linux Foundation nor the names of its
+         contributors may be used to endorse or promote products derived
+         from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED "AS IS" AND ANY EXPRESS OR IMPLIED
+  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT
+  ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
+  BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+  WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
+  OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
+  IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+<carrier_config_list>
+
+    <carrier_config>
+        <!-- default Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="false"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="840">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="854">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="855">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="856">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="857">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="858">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="859">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="860">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="861">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="862">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="863">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="864">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="865">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="866">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="867">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="868">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="869">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="870">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="871">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="872">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="873">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+    <carrier_config mcc="405" mnc="874">
+        <!-- Config to validate RCS enriched call capability -->
+        <boolean name="config_enriched_call_capable" value="true"/>
+    </carrier_config>
+
+</carrier_config_list>
