@@ -1256,18 +1256,16 @@ case "$target" in
         #echo 30 > /proc/sys/kernel/sched_mostly_idle_load
         #echo 3 > /proc/sys/kernel/sched_mostly_idle_nr_run
 
-        echo 1 > /sys/devices/system/cpu/cpu0/online
-        echo 1 > /sys/devices/system/cpu/cpu1/online
-        echo 0 > /sys/devices/system/cpu/cpu2/online
-        echo 0 > /sys/devices/system/cpu/cpu3/online
-
-        echo "performance" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-        echo "performance" > /sys/devices/system/cpu/cpu1/cpufreq/scaling_governor
-        echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-        echo 800000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+        echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
         echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
         echo 800000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-        #Below entries are to set the GPU frequency and DCVS governor 
+        echo 800000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+        echo 800000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+        echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+        echo 800000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+        echo 800000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+        echo 800000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+        #Below entries are to set the GPU frequency and DCVS governor
         echo 200000000 > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
         echo 200000000 > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
         echo performance > /sys/class/kgsl/kgsl-3d0/devfreq/governor
@@ -1284,15 +1282,13 @@ case "$target" in
 
         # disable thermal core_control to update scaling_min_freq
         echo 0 > /sys/module/msm_thermal/core_control/enabled
-	#insmod /system/lib/modules/core_ctl.ko
-	#echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
-        #max_freq=`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq`
-        #min_freq=800000
-        #echo $((min_freq*100 / max_freq)) $((min_freq*100 / max_freq)) $((66*1000000 / max_freq)) \
-	#$((55*1000000 / max_freq)) > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
-        #echo $((33*1000000 / max_freq)) > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
-	#echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
 
+        #Update Core Control parameters
+        echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+        echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
+        echo 73 73 60 50 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
+        echo 30 > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
+        echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
 
         # Apply governor settings for 8909
 	for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
@@ -1389,6 +1385,7 @@ case "$target" in
     ;;
     "msm8909")
 	start perfd
+        setprop sys.post_boot.parsed 1
     ;;
     "msm8974")
         start mpdecision
