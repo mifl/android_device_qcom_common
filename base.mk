@@ -477,7 +477,8 @@ PRODUCT_PACKAGES := \
     CalendarProvider \
     SyncProvider \
     IM \
-    VoiceDialer
+    VoiceDialer \
+    SnapdragonGallery
 
 
 ifneq ($(TARGET_USES_AOSP),true)
