@@ -1231,8 +1231,20 @@ case "$target" in
 		echo "8192,11264,14336,17408,20480,26624" > /sys/module/lowmemorykiller/parameters/minfree
 		echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 		echo 268435456 > /sys/block/zram0/disksize
-		mkswap /dev/block/zram0
-		swapon /dev/block/zram0
+		#Enable zram, swap with same priority and set PPR aggressive
+                mkswap /dev/block/zram0
+                swapon /dev/block/zram0 -p 32758
+                if [ ! -f /data/system/swap/swapfile ]; then
+                        dd if=/dev/zero of=/data/system/swap/swapfile bs=1m count=256
+                fi
+                mkswap /data/system/swap/swapfile
+                swapon /data/system/swap/swapfile -p 32758
+                echo 1 > /proc/sys/vm/swap_ratio_enable
+                echo 70 > /proc/sys/vm/swap_ratio
+                echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
+                echo 50 > /sys/module/process_reclaim/parameters/pressure_min
+                echo 70 > /sys/module/process_reclaim/parameters/pressure_max
+                echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
 	elif  [ "$MemTotal" -le "786432" ] && [ $MemTotal -gt "524288" ]; then #768MB target
 		echo "12288,15360,18432,21504,24576,30720" > /sys/module/lowmemorykiller/parameters/minfree
 		echo 36864 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
