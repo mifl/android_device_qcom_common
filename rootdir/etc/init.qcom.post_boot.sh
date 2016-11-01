@@ -772,6 +772,11 @@ case "$target" in
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
 
+	#Enable zRam
+	echo 157286400 > /sys/block/zram0/disksize
+	mkswap /dev/block/zram0
+	swapon -p 32758 /dev/block/zram0
+
         # HMP scheduler settings for 8909 similiar to 8916
         echo 3 > /proc/sys/kernel/sched_window_stats_policy
         echo 3 > /proc/sys/kernel/sched_ravg_hist_size
