@@ -159,6 +159,7 @@ enable_dcc_config()
 
 if [ $target == "msm8952" ] && $debug_8976; then
       enable_msm8976_debug
+      echo 9 > /proc/sys/net/core/netdev_budget
 else
 coresight_config=`getprop persist.debug.coresight.config`
 enable_dcc_config
