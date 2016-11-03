@@ -772,10 +772,36 @@ case "$target" in
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
 
-	#Enable zRam
-	echo 157286400 > /sys/block/zram0/disksize
+	MemTotalStr=`cat /proc/meminfo | grep MemTotal`
+	MemTotal=${MemTotalStr:16:8}
+	if [ "$MemTotal" -gt "262144" ]; then #512Mb target
+		echo 157286400 > /sys/block/zram0/disksize
+		mkdir /data/system/swap
+	        dd if=/dev/zero of=/data/system/swap/swapfile bs=1048576 count=100
+	else #256MB target
+		echo 104857600 > /sys/block/zram0/disksize
+		mkdir /data/system/swap
+		dd if=/dev/zero of=/data/system/swap/swapfile bs=1048576 count=50
+	fi
 	mkswap /dev/block/zram0
 	swapon -p 32758 /dev/block/zram0
+	mkswap /data/system/swap/swapfile
+	swapon -p 32758 /data/system/swap/swapfile
+
+	#swap_ratio
+	echo 1 > /proc/sys/vm/swap_ratio_enable
+	echo 70 > /proc/sys/vm/swap_ratio
+
+	#Set PPR Parameters
+	echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
+	echo 70 > /sys/module/process_reclaim/parameters/pressure_max
+	echo 50 > /sys/module/process_reclaim/parameters/pressure_min
+	echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
+	echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
+
+	echo 3072,5120,8192,10240,12288,14336 > /sys/module/lowmemorykiller/parameters/minfree
+
+	echo 1024 > /proc/sys/vm/extra_free_kbytes
 
         # HMP scheduler settings for 8909 similiar to 8916
         echo 3 > /proc/sys/kernel/sched_window_stats_policy
