@@ -1397,7 +1397,10 @@ case "$target" in
     ;;
     "msm8909")
         start perfd
-        start perffeedbackd
+        fdcc_prop=`getprop ro.qti.userspacectl`
+        if [ "$fdcc_prop" == "true" ]; then
+           start perffeedbackd
+        fi
         setprop sys.post_boot.parsed 1
     ;;
     "msm8974")
