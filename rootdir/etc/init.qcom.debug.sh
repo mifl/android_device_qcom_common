@@ -73,6 +73,8 @@ enable_stm_events()
     echo 1 > /sys/kernel/debug/tracing/events/regulator/enable
     # power
     echo 1 > /sys/kernel/debug/tracing/events/msm_low_power/enable
+    # mdss
+    echo 1 > /sys/kernel/debug/tracing/events/mdss/enable
 }
 
 coresight_config=`getprop persist.debug.coresight.config`
