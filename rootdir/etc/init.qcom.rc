@@ -321,8 +321,8 @@ service config_bluetooth /system/bin/sh /system/etc/init.qcom.bt.sh "onboot"
 
 service bt_fwd_service /system/bin/bt-fwd-service
     class late_start
-    user bluetooth system
-    group bluetooth
+    user bluetooth
+    group net_admin
     oneshot
 
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
