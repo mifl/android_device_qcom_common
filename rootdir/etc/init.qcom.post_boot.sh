@@ -831,8 +831,8 @@ case "$target" in
 
         # Bring up all cores online
         echo 1 > /sys/devices/system/cpu/cpu1/online
-	echo 1 > /sys/devices/system/cpu/cpu2/online
-	echo 1 > /sys/devices/system/cpu/cpu3/online
+	echo 0 > /sys/devices/system/cpu/cpu2/online
+	echo 0 > /sys/devices/system/cpu/cpu3/online
 	echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
         # Apply governor settings for 8909
