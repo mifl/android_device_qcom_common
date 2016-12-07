@@ -1302,6 +1302,12 @@ case "$target" in
         echo 30 > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
         echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
 
+        # Disable CPU online uevent
+        echo 1 > /sys/devices/system/cpu/cpu0/uevent_suppress
+        echo 1 > /sys/devices/system/cpu/cpu1/uevent_suppress
+        echo 1 > /sys/devices/system/cpu/cpu2/uevent_suppress
+        echo 1 > /sys/devices/system/cpu/cpu3/uevent_suppress
+
         # Apply governor settings for 8909
 	for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
 	do
