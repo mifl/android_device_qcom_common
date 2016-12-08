@@ -27,6 +27,7 @@
    IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "vendor_init.h"
@@ -71,6 +72,37 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
     } else
         property_set(PROP_LCDDENSITY, "320");
 
+    FILE * fp;
+    char * line = NULL;
+    size_t len = 0;
+    ssize_t read;
+
+    fp = fopen("/proc/meminfo", "r");
+    if (fp != NULL) {
+        if ((read = getline(&line, &len, fp)) != -1) {
+            int i = 0;
+            while ((line[i] > '9') || (line[i] < '0')) {
+                i++;
+            }
+            double memory_in_kb = 0, memory_in_mb = 0;
+            while ((line[i] <= '9') && (line[i] >= '0')) {
+                memory_in_kb = memory_in_kb*10 + (line[i]-'0');
+                i++;
+            }
+            memory_in_mb = memory_in_kb/1024;
+            ERROR("memory: %f, %f\n", memory_in_kb, memory_in_mb);
+            if (memory_in_mb <= 256) {
+                ERROR("Found 256MB memory device");
+                property_set("ro.device.ram", "256");
+            } else if ((memory_in_mb > 256) && (memory_in_mb <= 512)) {
+                ERROR("Found 512MB memory device");
+                property_set("ro.device.ram", "512");
+            }
+        }
+        fclose(fp);
+    } else {
+        ERROR("failed to open /proc/meminfo");
+    }
     if (msm_id == 206) {
         property_set("media.swhevccodectype", "1");
         property_set("vidc.enc.narrow.searchrange", "0");
