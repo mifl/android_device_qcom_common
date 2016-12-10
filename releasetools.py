@@ -97,7 +97,7 @@ def SplitFwTypes(files):
       boot[f] = files[f]
     elif dotSeparated[extIdx] == 'bin':
       dest, destBak, x, y = files[f]
-      if dest is not None and dest.startswith("/"):
+      if dest is not None and dest.startswith("/") and not dest.startswith ("/dev/block/bootdevice/by-name/"):
         fw[f] = files[f]
       else:
         bin[f] = files[f]
@@ -151,6 +151,15 @@ def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
       sf = src_files.get(fn, None)
 
     full = sf is None or fn.endswith('.enc')
+
+    # Currently, we use full update for non-HLOS whole partition images
+    if dest.startswith("/dev/block/bootdevice/by-name/"):
+      print 'file: %s has destination: %s. Using full update' % (fn, dest)
+      full = True;
+    elif not dest.startswith("/"):
+      print 'file: %s has destination: %s. Using full update' % (fn, dest)
+      full = True;
+
     if not full:
       # no difference - skip this file
       if tf.sha1 == sf.sha1:
@@ -168,6 +177,7 @@ def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
         update_list[f] = (dest, destBak, tf, sf)
         largest_source_size = max(largest_source_size, sf.size)
     if full:
+      print "Installing full update for: %s" % (fn)
       f = "firmware-update/" + fn
       common.ZipWriteStr(info.output_zip, f, tf.data)
       update_list[f] = (dest, destBak, None, None)
@@ -237,8 +247,7 @@ def IncrementalOTA_Assertions(info):
 
 
 def IncrementalOTA_VerifyEnd(info):
-  if info.type == 'MMC':
-    OTA_VerifyEnd(info, info.target_version, info.target_zip, info.source_zip)
+  OTA_VerifyEnd(info, info.target_version, info.target_zip, info.source_zip)
   return
 
 
@@ -375,7 +384,7 @@ def IncrementalOTA_InstallEnd_MMC(info):
 
 
 def IncrementalOTA_InstallEnd_MTD(info):
-  print "warning radio-update: radio update for NAND devices not supported"
+  OTA_InstallEnd(info)
   return
 
 
