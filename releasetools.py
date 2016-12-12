@@ -226,8 +226,9 @@ def IncrementalOTA_Assertions(info):
 
 
 def IncrementalOTA_VerifyEnd(info):
- OTA_VerifyEnd(info, info.target_version, info.target_zip, info.source_zip)
- return
+  if info.type == 'MMC':
+    OTA_VerifyEnd(info, info.target_version, info.target_zip, info.source_zip)
+  return
 
 
 # This function handles only non-HLOS whole partition images
@@ -345,8 +346,12 @@ def FullOTA_InstallEnd_MTD(info):
 
 
 def FullOTA_InstallEnd(info):
-  FullOTA_InstallEnd_MMC(info)
+  if info.type == 'MMC':
+    FullOTA_InstallEnd_MMC(info)
+  elif info.type == 'MTD':
+    FullOTA_InstallEnd_MTD(info)
   return
+
 
 def IncrementalOTA_InstallEnd_MMC(info):
   OTA_InstallEnd(info)
@@ -357,6 +362,10 @@ def IncrementalOTA_InstallEnd_MTD(info):
   print "warning radio-update: radio update for NAND devices not supported"
   return
 
+
 def IncrementalOTA_InstallEnd(info):
-  IncrementalOTA_InstallEnd_MMC(info)
+  if info.type == 'MMC':
+    IncrementalOTA_InstallEnd_MMC(info)
+  elif info.type == 'MTD':
+    IncrementalOTA_InstallEnd_MTD(info)
   return
