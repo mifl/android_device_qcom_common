@@ -1235,7 +1235,7 @@ case "$target" in
                 mkswap /dev/block/zram0
                 swapon /dev/block/zram0 -p 32758
                 if [ ! -f /data/system/swap/swapfile ]; then
-                        dd if=/dev/zero of=/data/system/swap/swapfile bs=1m count=256
+                        dd if=/dev/zero of=/data/system/swap/swapfile bs=1m count=75
                 fi
                 mkswap /data/system/swap/swapfile
                 swapon /data/system/swap/swapfile -p 32758
