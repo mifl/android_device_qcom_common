@@ -56,26 +56,11 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
         return;
     }
 
-    rc = read_file2(VIRTUAL_SIZE, str, sizeof(str));
-    if (rc) {
-        virtual_size = strtoul(str, NULL, 0);
-    }
-
-    if(virtual_size >= 1080) {
-        property_set(PROP_LCDDENSITY, "480");
-    } else if (virtual_size >= 720) {
-        // For 720x1280 resolution
-        property_set(PROP_LCDDENSITY, "320");
-    } else if (virtual_size >= 480) {
-        // For 480x854 resolution QRD.
-        property_set(PROP_LCDDENSITY, "240");
-    } else
-        property_set(PROP_LCDDENSITY, "320");
-
     FILE * fp;
     char * line = NULL;
     size_t len = 0;
     ssize_t read;
+    double memory_in_mb = 0;
 
     fp = fopen("/proc/meminfo", "r");
     if (fp != NULL) {
@@ -84,7 +69,7 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
             while ((line[i] > '9') || (line[i] < '0')) {
                 i++;
             }
-            double memory_in_kb = 0, memory_in_mb = 0;
+            double memory_in_kb = 0;
             while ((line[i] <= '9') && (line[i] >= '0')) {
                 memory_in_kb = memory_in_kb*10 + (line[i]-'0');
                 i++;
@@ -103,6 +88,27 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
     } else {
         ERROR("failed to open /proc/meminfo");
     }
+
+    rc = read_file2(VIRTUAL_SIZE, str, sizeof(str));
+    if (rc) {
+        virtual_size = strtoul(str, NULL, 0);
+    }
+
+    if(virtual_size >= 1080) {
+        property_set(PROP_LCDDENSITY, "480");
+    } else if (virtual_size >= 720) {
+        // For 720x1280 resolution
+        property_set(PROP_LCDDENSITY, "320");
+    } else if (virtual_size >= 480) {
+        if (memory_in_mb <= 256) {
+            property_set(PROP_LCDDENSITY, "120");
+        } else {
+            // For 480x854 resolution QRD.
+            property_set(PROP_LCDDENSITY, "240");
+        }
+    } else
+        property_set(PROP_LCDDENSITY, "320");
+
     if (msm_id == 206) {
         property_set("media.swhevccodectype", "1");
         property_set("vidc.enc.narrow.searchrange", "0");
