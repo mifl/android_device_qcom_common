@@ -782,6 +782,8 @@ case "$target" in
 		echo 104857600 > /sys/block/zram0/disksize
 		mkdir /data/system/swap
 		dd if=/dev/zero of=/data/system/swap/swapfile bs=1048576 count=50
+                wm size reset
+                wm size 240x320
 	fi
 	mkswap /dev/block/zram0
 	swapon -p 32758 /dev/block/zram0
