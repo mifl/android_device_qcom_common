@@ -614,6 +614,11 @@ RCS += rcs_service_aidl_static
 RCS += rcs_service_api
 RCS += rcs_service_api.xml
 
+#CARRIER ONE RCS
+CARRIER_ONE_RCS := rcscommon
+CARRIER_ONE_RCS += rcscommon.xml
+CARRIER_ONE_RCS += RCSService
+
 #CRDA
 CRDA := crda
 CRDA += regdbdump
@@ -754,6 +759,7 @@ PRODUCT_PACKAGES += $(IMS_SETTINGS)
 PRODUCT_PACKAGES += $(CRDA)
 PRODUCT_PACKAGES += $(WLAN)
 PRODUCT_PACKAGES += $(IMS_EXT)
+PRODUCT_PACKAGES += $(CARRIER_ONE_RCS)
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
