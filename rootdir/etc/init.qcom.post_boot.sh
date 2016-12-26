@@ -2001,6 +2001,34 @@ case "$target" in
 esac
 
 case "$target" in
+    "msmfalcon")
+
+	if [ -f /sys/devices/soc0/soc_id ]; then
+		soc_id=`cat /sys/devices/soc0/soc_id`
+	else
+		soc_id=`cat /sys/devices/system/soc/soc0/id`
+	fi
+
+	if [ -f /sys/devices/soc0/hw_platform ]; then
+		hw_platform=`cat /sys/devices/soc0/hw_platform`
+	else
+		hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
+	fi
+
+	case "$soc_id" in
+		"317")
+		# Start Host based Touch processing
+		case "$hw_platform" in
+                     "MTP" | "Surf" | "RCM" )
+			start hbtp
+			;;
+		esac
+	    ;;
+	esac
+    ;;
+esac
+
+case "$target" in
     "msm8998")
 
 	echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
@@ -2014,6 +2042,8 @@ case "$target" in
 	echo 1 > /proc/sys/kernel/sched_migration_fixup
 	echo 95 > /proc/sys/kernel/sched_upmigrate
 	echo 90 > /proc/sys/kernel/sched_downmigrate
+	echo 100 > /proc/sys/kernel/sched_group_upmigrate
+	echo 95 > /proc/sys/kernel/sched_group_downmigrate
 	echo 0 > /proc/sys/kernel/sched_select_prev_cpu_us
 	echo 400000 > /proc/sys/kernel/sched_freq_inc_notify
 	echo 400000 > /proc/sys/kernel/sched_freq_dec_notify

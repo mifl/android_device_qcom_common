@@ -30,7 +30,7 @@ TARGET_USE_VENDOR_CAMERA_EXT := true
 MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 msmfalcon msmskunk
 
 #List of targets that use master side content protection
-MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998
+MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 msmfalcon
 
 # Below projects/packages with LOCAL_MODULEs will be used by
 # PRODUCT_PACKAGES to build LOCAL_MODULEs that are tagged with
@@ -102,6 +102,7 @@ AUDIO_HARDWARE += audio.primary.msm8937
 AUDIO_HARDWARE += audio.primary.msm8953
 AUDIO_HARDWARE += audio.primary.msmgold
 AUDIO_HARDWARE += audio.primary.msm8998
+AUDIO_HARDWARE += audio.primary.msmfalcon
 #
 AUDIO_POLICY := audio_policy.mpq8064
 AUDIO_POLICY += audio_policy.apq8084
@@ -182,12 +183,6 @@ CONNECTIVITY += services-ext
 #CURL
 CURL := libcurl
 CURL += curl
-
-#DASH
-DASH := libdashplayer
-DASH += libqcmediaplayer
-DASH += qcmediaplayer
-DASH += libextmedia_jni
 
 #EXTENDEDMEDIA_EXT
 EXTENDEDMEDIA_EXT := libextendedmediaextractor
@@ -581,6 +576,7 @@ NQ_NFC += libnfc-nxp_default.conf
 NQ_NFC += nqnfcee_access.xml
 NQ_NFC += nqnfcse_access.xml
 NQ_NFC += Tag
+NQ_NFC += nqnfcinfo
 NQ_NFC += com.android.nfc_extras
 
 #OPENCORE
@@ -765,7 +761,6 @@ PRODUCT_PACKAGES += $(RCS)
 PRODUCT_PACKAGES += $(CONNECTIVITY)
 PRODUCT_PACKAGES += $(CHARGER)
 PRODUCT_PACKAGES += $(CURL)
-PRODUCT_PACKAGES += $(DASH)
 PRODUCT_PACKAGES += $(DATA_OS)
 PRODUCT_PACKAGES += $(E2FSPROGS)
 PRODUCT_PACKAGES += $(EBTABLES)
@@ -858,6 +853,9 @@ PRODUCT_PACKAGES += tcmiface
 
 # healthd libaray expanded for mode charger
 PRODUCT_PACKAGES += libhealthd.msm
+
+# UI Enhancements for ECT and Deflect feature
+PRODUCT_PACKAGES += qtiImsInCallUi
 
 #intialise PRODUCT_PACKAGES_DEBUG list for debug modules
 PRODUCT_PACKAGES_DEBUG := init.qcom.testscripts.sh
