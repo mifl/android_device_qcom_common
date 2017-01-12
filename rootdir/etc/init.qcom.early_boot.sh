@@ -242,6 +242,8 @@ esac
 #property, it will not overwrite previous set
 #property if any target is setting forcefully.
 set_density_by_fb
+setprop sdm.debug.rotator_downscale 1
+
 
 # Setup display nodes & permissions
 # HDMI can be fb1 or fb2
