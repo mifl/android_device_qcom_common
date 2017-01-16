@@ -139,7 +139,7 @@ static bool is_hvdcp_inserted()
 
     fd = open(CHARGER_TYPE_PATH, O_RDONLY);
     if (fd >= 0) {
-        cnt = read(fd, buff, sizeof(buff));
+        cnt = read(fd, buff, (sizeof(buff) - 1));
         if (cnt > 0 && !strncmp(buff, HVDCP_CHARGER, 9))
             hvdcp = true;
         close(fd);
@@ -306,9 +306,10 @@ void healthd_board_mode_charger_init()
     fd = open(CHARGING_ENABLED_PATH, O_RDONLY);
     if (fd < 0)
         return;
-    ret = read(fd, buff, sizeof(buff));
+    ret = read(fd, buff, (sizeof(buff) - 1));
     close(fd);
     if (ret > 0) {
+        buff[ret] = '\0';
         sscanf(buff, "%d\n", &charging_enabled);
         LOGW("android charging is %s\n",
                 !!charging_enabled ? "enabled" : "disabled");
@@ -320,11 +321,13 @@ void healthd_board_mode_charger_init()
     if (fd < 0)
             return;
     while (1) {
-        ret = read(fd, buff, sizeof(buff));
-        if (ret >= 0)
+        ret = read(fd, buff, (sizeof(buff) - 1));
+        if (ret > 0) {
+            buff[ret] = '\0';
             sscanf(buff, "%d\n", &bms_ready);
-        else
+	} else {
             LOGE("read soc-ready failed, ret=%d\n", ret);
+	}
 
         if ((bms_ready > 0) || (wait_count++ > WAIT_BMS_READY_TIMES_MAX))
             break;
