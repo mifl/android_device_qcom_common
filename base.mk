@@ -478,7 +478,8 @@ PRODUCT_PACKAGES := \
     SyncProvider \
     IM \
     VoiceDialer \
-    SnapdragonGallery
+    SnapdragonGallery \
+    VoiceInteraction
 
 
 ifneq ($(TARGET_USES_AOSP),true)
