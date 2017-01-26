@@ -662,9 +662,8 @@ PRODUCT_PACKAGES := \
     FMRecord \
     VideoEditor \
     SnapdragonGallery \
-    SnapdragonLauncher \
     SnapdragonMusic
-
+   #SnapdragonLauncher \
 
 ifneq ($(TARGET_USES_AOSP),true)
 PRODUCT_PACKAGES += \
