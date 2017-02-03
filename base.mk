@@ -731,13 +731,14 @@ QMMF_SDK += libqmmf_camera_adaptor
 QMMF_SDK += libqmmf_av_queue
 QMMF_SDK += libqmmf_audio_client
 QMMF_SDK += libqmmf_audio_service
+QMMF_SDK += libqmmf_system_client
+QMMF_SDK += libqmmf_system_service
 
 #QMMF_SDK_DEBUG
 QMMF_SDK_DEBUG = qmmf_av_codec_test
 QMMF_SDK_DEBUG += qmmf_av_codec_gtest
 QMMF_SDK_DEBUG += qmmf_av_codec_audio_decode_test
 QMMF_SDK_DEBUG += qmmf_recorder_gtest
-QMMF_SDK_DEBUG += qmmf_recorder_360cam_gtest
 QMMF_SDK_DEBUG += qmmf_recorder_test
 QMMF_SDK_DEBUG += qmmf_recorder_timelapse
 QMMF_SDK_DEBUG += qmmf_player_gtest
@@ -749,6 +750,8 @@ QMMF_SDK_DEBUG += qmmf_overlay_test
 QMMF_SDK_DEBUG += qmmf_camera_adaptor_gtest
 QMMF_SDK_DEBUG += qmmf_camera_dual_adaptor_gtest
 QMMF_SDK_DEBUG += qmmf_audio_test
+QMMF_SDK_DEBUG += qmmf_system_test
+QMMF_SDK_DEBUG += qmmf_recorder_360cam_gtest
 
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
