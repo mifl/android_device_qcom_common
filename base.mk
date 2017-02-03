@@ -712,6 +712,43 @@ WLAN += qca_cld_wlan.ko
 FSTMAN := fstman
 FSTMAN += fstman.ini
 
+#JSONCPP
+JSONCPP := libjsoncpp
+
+#QMMF_SDK
+QMMF_SDK = qmmf-server
+QMMF_SDK += libqmmf_av_codec
+QMMF_SDK += libqmmf_recorder_client
+QMMF_SDK += libqmmf_recorder_service
+QMMF_SDK += libqmmf_demuxer
+QMMF_SDK += libqmmf_player_client
+QMMF_SDK += libqmmf_player_service
+QMMF_SDK += libqmmf_display_client
+QMMF_SDK += libqmmf_display_service
+QMMF_SDK += libqmmf_overlay
+QMMF_SDK += libqmmf_codec_adaptor
+QMMF_SDK += libqmmf_camera_adaptor
+QMMF_SDK += libqmmf_av_queue
+QMMF_SDK += libqmmf_audio_client
+QMMF_SDK += libqmmf_audio_service
+
+#QMMF_SDK_DEBUG
+QMMF_SDK_DEBUG = qmmf_av_codec_test
+QMMF_SDK_DEBUG += qmmf_av_codec_gtest
+QMMF_SDK_DEBUG += qmmf_av_codec_audio_decode_test
+QMMF_SDK_DEBUG += qmmf_recorder_gtest
+QMMF_SDK_DEBUG += qmmf_recorder_test
+QMMF_SDK_DEBUG += qmmf_recorder_timelapse
+QMMF_SDK_DEBUG += qmmf_player_gtest
+QMMF_SDK_DEBUG += qmmf_player_test
+QMMF_SDK_DEBUG += qmmf_player_parser_test
+QMMF_SDK_DEBUG += qmmf_display_gtest
+QMMF_SDK_DEBUG += qmmf_display_test
+QMMF_SDK_DEBUG += qmmf_overlay_test
+QMMF_SDK_DEBUG += qmmf_camera_adaptor_gtest
+QMMF_SDK_DEBUG += qmmf_camera_dual_adaptor_gtest
+QMMF_SDK_DEBUG += qmmf_audio_test
+
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
@@ -823,6 +860,8 @@ PRODUCT_PACKAGES += $(OPENCORE)
 PRODUCT_PACKAGES += $(PPP)
 PRODUCT_PACKAGES += $(PROTOBUF)
 PRODUCT_PACKAGES += $(PVOMX)
+PRODUCT_PACKAGES += $(JSONCPP)
+PRODUCT_PACKAGES += $(QMMF_SDK)
 PRODUCT_PACKAGES += $(RF4CE)
 PRODUCT_PACKAGES += $(SENSORS_HARDWARE)
 #PRODUCT_PACKAGES += $(SOFTAP)
@@ -878,6 +917,9 @@ PRODUCT_PACKAGES_DEBUG := init.qcom.testscripts.sh
 #Add init.qcom.test.rc to PRODUCT_PACKAGES_DEBUG list
 PRODUCT_PACKAGES_DEBUG += init.qcom.test.rc
 PRODUCT_PACKAGES_DEBUG += init.qcom.debug.sh
+
+#Add QMMF tests
+PRODUCT_PACKAGES_DEBUG += $(QMMF_SDK_DEBUG)
 
 #NANOPB_LIBRARY_NAME := libnanopb-c-2.8.0
 
