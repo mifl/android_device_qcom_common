@@ -20,6 +20,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.radio.sib16_support=1 \
     persist.radio.custom_ecc=1 \
     persist.radio.multisim.config=dsds \
+    persist.radio.VT_CAM_INTERFACE=1 \
     ro.frp.pst=/dev/block/bootdevice/by-name/config
 
 PRODUCT_PRIVATE_KEY := device/qcom/common/qcom.key
