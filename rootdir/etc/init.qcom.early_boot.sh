@@ -197,9 +197,10 @@ case "$platform" in
         # MSM8939 variants supports OpenGLES 3.1
         # 196608 is decimal for 0x30000 to report version 3.0
         # 196609 is decimal for 0x30001 to report version 3.1
+        # 196610 is decimal for 0x30002 to report version 3.2
         case "$soc_hwid" in
             233|239|240|241|242|243|263|268|269|270|271)
-                setprop ro.opengles.version 196609
+                setprop ro.opengles.version 196610
                 if [ $soc_hwid -ge "239" ] && [ $soc_hwid -le "243" ]
                 then
                     setprop media.msm8939hw 1
