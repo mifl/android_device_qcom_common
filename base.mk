@@ -737,6 +737,7 @@ QMMF_SDK_DEBUG = qmmf_av_codec_test
 QMMF_SDK_DEBUG += qmmf_av_codec_gtest
 QMMF_SDK_DEBUG += qmmf_av_codec_audio_decode_test
 QMMF_SDK_DEBUG += qmmf_recorder_gtest
+QMMF_SDK_DEBUG += qmmf_recorder_360cam_gtest
 QMMF_SDK_DEBUG += qmmf_recorder_test
 QMMF_SDK_DEBUG += qmmf_recorder_timelapse
 QMMF_SDK_DEBUG += qmmf_player_gtest
