@@ -1280,7 +1280,7 @@ case "$target" in
         echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
         echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
 
-	if [ "$ProductName" == "msm8909w" ]; then
+	if [ "$ProductName" == "msm8909w" ] || [ "$ProductName" == "msm8909_512" ]; then
 		# Post boot, have cpu0 and cpu1 online. Make all other cores go offline
 		echo 0 > /sys/devices/system/cpu/cpu2/online
 		echo 0 > /sys/devices/system/cpu/cpu3/online
@@ -1294,7 +1294,7 @@ case "$target" in
 	echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
 	# Enable core control
-	if [ "$ProductName" != "msm8909w" ]; then
+	if [ "$ProductName" != "msm8909w" ] && [ "$ProductName" != "msm8909_512" ]; then
 		insmod /system/lib/modules/core_ctl.ko
 		echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
 		max_freq=`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq`
