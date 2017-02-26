@@ -1728,6 +1728,8 @@ case "$target" in
                 echo 4 > $cpubw/bw_hwmon/sample_ms
                 echo 50 > $cpubw/bw_hwmon/io_percent
                 echo 20 > $cpubw/bw_hwmon/hist_memory
+                echo 100 > $cpubw/bw_hwmon/decay_rate
+                echo 50 > $cpubw/bw_hwmon/bw_step
                 echo 0 > $cpubw/bw_hwmon/hyst_length
                 echo 80 > $cpubw/bw_hwmon/down_thres
                 echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
