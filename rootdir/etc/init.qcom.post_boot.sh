@@ -782,11 +782,7 @@ case "$target" in
                 wm size 240x320
 	fi
 	mkswap /dev/block/zram0
-	swapon -p 32758 /dev/block/zram0
-
-	#swap_ratio
-	echo 1 > /proc/sys/vm/swap_ratio_enable
-	echo 70 > /proc/sys/vm/swap_ratio
+	swapon /dev/block/zram0
 
 	#Set PPR Parameters
 	echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
