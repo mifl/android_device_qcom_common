@@ -40,6 +40,9 @@
 #define VIRTUAL_SIZE "/sys/class/graphics/fb0/virtual_size"
 #define BUF_SIZE 64
 
+#define SUBTYPE_ID "/sys/devices/soc0/platform_subtype_id"
+#define HW_PLATFORM "/sys/devices/soc0/hw_platform"
+
 void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *board_type)
 {
     char platform[PROP_VALUE_MAX];
@@ -107,10 +110,40 @@ void init_msm_properties(unsigned long msm_id, unsigned long msm_ver, char *boar
             property_set(PROP_LCDDENSITY, "160");
         }
     } else
-        property_set(PROP_LCDDENSITY, "320");
+        property_set(PROP_LCDDENSITY, "160");
 
     if (msm_id == 206) {
         property_set("media.swhevccodectype", "1");
         property_set("vidc.enc.narrow.searchrange", "0");
     }
+
+    // set property to autoload the packs for MTP/QRD for feature phone
+    property_set("persist.radio.trigger.autoload", "true");
+
+    char subtype[PROP_VALUE_MAX] = "";
+    char hwplatform[PROP_VALUE_MAX] = "";
+
+    memset(subtype, 0, PROP_VALUE_MAX);
+    memset(hwplatform, 0, PROP_VALUE_MAX);
+
+#if FEATURE_PHONE_FLAG
+
+    rc = read_file2(SUBTYPE_ID, subtype, sizeof(subtype));
+    if (rc) {
+        subtype[1] = '\0'; // Assuming the subtype is of length 1.
+        property_set("persist.subtype", subtype);
+    }
+
+    rc = read_file2(HW_PLATFORM, hwplatform, sizeof(hwplatform));
+    if (rc) {
+        hwplatform[3] = '\0'; // Assuming the hw_platform is of length 3.
+        property_set("persist.hwplatform", hwplatform);
+    }
+    //Set properties for FeaturePhone
+    if ((strtoul(subtype, NULL, 0) == 2) && ISMATCH(hwplatform ,"QRD"))
+    {
+        property_set("persist.isruggedphone", "1");
+    }
+
+#endif
 }

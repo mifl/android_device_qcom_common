@@ -16,6 +16,11 @@ else
   LOCAL_SRC_FILES += init_$(TARGET_BOARD_PLATFORM).c
 endif
 LOCAL_MODULE := libinit_msm
+
+ifeq ($(FEATURE_PHONE),true)
+ LOCAL_CFLAGS += -DFEATURE_PHONE_FLAG
+endif
+
 include $(BUILD_STATIC_LIBRARY)
 
 endif

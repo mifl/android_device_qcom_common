@@ -776,23 +776,13 @@ case "$target" in
 	MemTotal=${MemTotalStr:16:8}
 	if [ "$MemTotal" -gt "262144" ]; then #512Mb target
 		echo 157286400 > /sys/block/zram0/disksize
-		mkdir /data/system/swap
-	        dd if=/dev/zero of=/data/system/swap/swapfile bs=1048576 count=100
 	else #256MB target
 		echo 104857600 > /sys/block/zram0/disksize
-		mkdir /data/system/swap
-		dd if=/dev/zero of=/data/system/swap/swapfile bs=1048576 count=50
                 wm size reset
                 wm size 240x320
 	fi
 	mkswap /dev/block/zram0
-	swapon -p 32758 /dev/block/zram0
-	mkswap /data/system/swap/swapfile
-	swapon -p 32758 /data/system/swap/swapfile
-
-	#swap_ratio
-	echo 1 > /proc/sys/vm/swap_ratio_enable
-	echo 70 > /proc/sys/vm/swap_ratio
+	swapon /dev/block/zram0
 
 	#Set PPR Parameters
 	echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
