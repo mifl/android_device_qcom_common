@@ -62,11 +62,11 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
              TRUE - remove modify call capabilities which will hide modify call button -->
         <boolean name="remove_modify_call_capability" value="false" />
         <!-- Config to show/hide Video quality toast -->
-        <boolean name="show_video_quality_toast" value="true"/>
+        <boolean name="show_video_quality_toast" value="false"/>
         <!-- Config to show/hide call session event toast like player start/stop -->
-        <boolean name="show_call_session_event_toast" value="true"/>
+        <boolean name="show_call_session_event_toast" value="false"/>
         <!-- Config to show/hide data usage toast -->
-        <boolean name="show_data_usage_toast" value="true"/>
+        <boolean name="show_data_usage_toast" value="false"/>
         <!-- Config to enable video conference call suuport -->
         <boolean name="support_video_conference_call_bool" value="true"/>
         <!-- Config that controls whether to show static image related UI elements or not
