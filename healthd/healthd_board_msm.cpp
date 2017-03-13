@@ -35,6 +35,7 @@
 #include <cutils/klog.h>
 #include <batteryservice/BatteryService.h>
 #include <cutils/android_reboot.h>
+#include <cutils/properties.h>
 #include <healthd.h>
 #include "minui/minui.h"
 #include "healthd_msm.h"
@@ -58,7 +59,7 @@
 #define BMS_BATT_RES_ID_PATH    "/sys/class/power_supply/bms/resistance_id"
 #define PERSIST_BATT_INFO_PATH  "/persist/bms/batt_info.txt"
 
-#define USB_MAX_CURRENT_PATH    "/sys/class/power_supply/usb/max_current"
+#define USB_MAX_CURRENT_PATH    "/sys/class/power_supply/usb/current_max"
 #define USB_TYPEC_MODE_PATH     "/sys/class/power_supply/usb/typec_mode"
 
 #define USB500_UA               500000
@@ -110,6 +111,7 @@ struct soc_led_color_mapping soc_leds[3] = {
 
 static int batt_info_cached[BATT_INFO_MAX];
 static bool healthd_msm_err_log_once;
+static int8_t healthd_msm_log_en;
 
 static int read_file(char const* path, char* buff, ssize_t size)
 {
@@ -331,6 +333,11 @@ void healthd_board_mode_charger_set_backlight(bool en)
     LOGV(CHGR_TAG, "set backlight status to %d\n", en);
 }
 
+static inline void get_healthd_log_status()
+{
+    healthd_msm_log_en = property_get_bool("persist.healthd_msm.log_en", 0);
+}
+
 #define WAIT_BMS_READY_TIMES_MAX	200
 #define WAIT_BMS_READY_INTERVAL_USEC	200000
 void healthd_board_mode_charger_init()
@@ -361,7 +368,7 @@ void healthd_board_mode_charger_init()
     memset(buff, 0, sizeof(buff));
     ret = read_file(USB_TYPEC_MODE_PATH, buff, sizeof(buff));
     if (ret >= 0) {
-        if (!strcmp(buff, "Source attached (default current)"))
+        if (strstr(buff, "Source attached (default current)"))
             typec_default_src = true;
     }
 
@@ -397,6 +404,7 @@ void healthd_board_mode_charger_init()
     }
     close(fd);
     LOGV(CHGR_TAG, "Checking BMS SoC ready done %d!\n", bms_ready);
+    get_healthd_log_status();
 }
 
 static void healthd_batt_info_notify()
@@ -521,6 +529,7 @@ void healthd_board_init(struct healthd_config*)
     // use defaults
     power_off_alarm_init();
     healthd_batt_info_notify();
+    get_healthd_log_status();
 }
 
 static void healthd_store_batt_props(const struct android::BatteryProperties* props)
@@ -613,5 +622,7 @@ int healthd_board_battery_update(struct android::BatteryProperties* props)
 {
     // return 0 to log periodic polled battery status to kernel log
     healthd_store_batt_props(props);
+    if (healthd_msm_log_en)
+        return 0;
     return 1;
 }

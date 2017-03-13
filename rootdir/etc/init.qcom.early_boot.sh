@@ -57,7 +57,9 @@ function set_density_by_fb() {
     if [ -z $fb_width ]; then
         setprop ro.sf.lcd_density 320
     else
-        if [ $fb_width -ge 1080 ]; then
+        if [ $fb_width -ge 1440 ]; then
+           setprop ro.sf.lcd_density 560
+        elif [ $fb_width -ge 1080 ]; then
            setprop ro.sf.lcd_density 480
         elif [ $fb_width -ge 720 ]; then
            setprop ro.sf.lcd_density 320 #for 720X1280 resolution
@@ -275,6 +277,7 @@ function setHDMIPermission() {
    set_perms $file/pa system.graphics 0664
    set_perms $file/cec/wr_msg system.graphics 0600
    set_perms $file/hdcp/tp system.graphics 0664
+   set_perms $file/hdcp2p2/min_level_change system.graphics 0660
    set_perms $file/hdmi_audio_cb audioserver.audio 0600
    ln -s $dev_file $dev_gfx_hdmi
 }
