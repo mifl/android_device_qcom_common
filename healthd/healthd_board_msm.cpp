@@ -138,7 +138,7 @@ static bool is_hvdcp_inserted()
 
     fd = open(CHARGER_TYPE_PATH, O_RDONLY);
     if (fd >= 0) {
-        cnt = read(fd, buff, sizeof(buff));
+        cnt = read(fd, buff, (sizeof(buff) - 1));
         if (cnt > 0 && !strncmp(buff, HVDCP_CHARGER, 9))
             hvdcp = true;
         close(fd);
@@ -301,9 +301,10 @@ void healthd_board_mode_charger_init()
     fd = open(CHARGING_ENABLED_PATH, O_RDONLY);
     if (fd < 0)
         return;
-    ret = read(fd, buff, sizeof(buff));
+    ret = read(fd, buff, (sizeof(buff) - 1));
     close(fd);
     if (ret > 0 && sscanf(buff, "%d\n", &charging_enabled)) {
+        buff[ret] = '\0';
         /* if charging is disabled, reboot and exit power off charging */
         if (charging_enabled)
             return;
