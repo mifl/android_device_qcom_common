@@ -42,7 +42,9 @@ endif
 ifeq ($(TARGET_USES_INTERACTION_BOOST),true)
     LOCAL_CFLAGS += -DINTERACTION_BOOST
 endif
-
+ifneq ($(strip $(TOUCH_IDLE_PATH)),)
+LOCAL_CFLAGS += -DTOUCH_PATH="\"$(TOUCH_IDLE_PATH)\""
+endif
 LOCAL_MODULE := power.qcom
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_SHARED_LIBRARY)
