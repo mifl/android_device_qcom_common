@@ -132,7 +132,8 @@ BT := javax.btobex
 BT += libattrib_static
 BT += hcidump.sh
 BT += libbt-vendor
-BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
+BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common \
+  hardware/libhardware_moz/include/hardware_moz/bluetooth/bluedroid
 
 #C2DColorConvert
 C2DCC := libc2dcolorconvert
