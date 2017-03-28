@@ -47,6 +47,11 @@
 #include "performance.h"
 #include "power-common.h"
 
+#ifdef TOUCH_PATH
+#define TOUCH_IDLE_PATH TOUCH_PATH
+#else
+#define TOUCH_IDLE_PATH "/sys/bus/i2c/devices/5-0046/enable_wakeup"
+#endif
 
 static void process_video_encode_hint(void *metadata)
 {
@@ -96,6 +101,13 @@ int power_hint_override(struct power_module *module, power_hint_t hint, void *da
         case POWER_HINT_VIDEO_ENCODE:
         {
           process_video_encode_hint(data);
+          return HINT_HANDLED;
+        }
+        case POWER_HINT_DISABLE_TOUCH:
+        {
+          char *on = (data != 0 && *(int *)data > 0) ?  "0" : "1";
+          sysfs_write(TOUCH_IDLE_PATH, on);
+          ALOGD("IDLE_MODE(touch) -> %s\n", on);
           return HINT_HANDLED;
         }
         default:
