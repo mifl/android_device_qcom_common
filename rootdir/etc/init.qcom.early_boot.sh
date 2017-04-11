@@ -325,6 +325,7 @@ then
         set_perms $file/modes system.graphics 0664
         set_perms $file/mode system.graphics 0664
         set_perms $file/msm_cmd_autorefresh_en system.graphics 0664
+        set_perms $file/panel_bl_extn system.graphics 0664
 fi
 
 # set lineptr permissions for all displays
