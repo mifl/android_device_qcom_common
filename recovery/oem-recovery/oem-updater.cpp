@@ -30,18 +30,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 #include "edify/expr.h"
 #include "dec.h"
 #include "gpt-utils.h"
 
-Value* DecryptFn(const char* name, State* state, int argc, Expr* argv[]) {
+Value* DecryptFn(const char* name, State* state, const std::vector<std::unique_ptr<Expr>>& argv) {
     int rc = -1;
 
-    if (argc != 2)
-        return ErrorAbort(state, "%s expects 2 args, got %d", name, argc);
+    if (argv.size() != 2)
+        return ErrorAbort(state, "%s expects 2 args, got %d", name, argv.size());
 
     std::vector<std::string> args;
-    if (ReadArgs(state, 2, argv, &args))
+    if (ReadArgs(state, argv, &args))
         return NULL;
 
     const std::string& src_file = args[0];
@@ -52,16 +53,16 @@ Value* DecryptFn(const char* name, State* state, int argc, Expr* argv[]) {
     return StringValue(strdup(rc >= 0 ? "t" : ""));
 }
 
-Value* BootUpdateFn(const char* name, State* state, int argc, Expr* argv[])
+Value* BootUpdateFn(const char* name, State* state, const std::vector<std::unique_ptr<Expr>>& argv)
 {
     int rc = 0;
     enum boot_update_stage stage;
 
-    if (argc != 1)
-        return ErrorAbort(state, "%s() expects 1 args, got %d", name, argc);
+    if (argv.size() != 1)
+        return ErrorAbort(state, "%s() expects 1 args, got %d", name, argv.size());
 
     std::vector<std::string> args;
-    if (ReadArgs(state, 1, argv, &args))
+    if (ReadArgs(state, argv, &args))
         return NULL;
 
     const std::string& stageStr = args[0];
