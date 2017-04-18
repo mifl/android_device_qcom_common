@@ -708,39 +708,43 @@ FSTMAN += fstman.ini
 
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
-    DeskClock \
-    AlarmProvider \
     Bluetooth \
-    Calculator \
-    Calendar \
-    Camera \
-    CellBroadcastReceiver \
     CertInstaller \
     DrmProvider \
-    Email \
-    Gallery2 \
     LatinIME \
-    Mms \
-    Music \
-    Phone \
     Provision \
-    Protips \
-    QuickSearchBox \
     Settings \
     Sync \
     SystemUI \
     Updater \
-    CalendarProvider \
     SyncProvider \
-    SoundRecorder \
     IM \
     VoiceDialer \
     FM2 \
-    FMRecord \
     VideoEditor \
     SnapdragonGallery \
     SnapdragonLauncher \
     SnapdragonMusic
+
+ifneq ($(strip $(TARGET_ENABLE_OPTIMIZATION)),true)
+PRODUCT_PACKAGES += \
+	Music \
+	AlarmProvider \
+	Gallery2 \
+	Calendar \
+	CalendarProvider \
+	DeskClock \
+	Email \
+	Phone \
+	Calculator \
+	SoundRecorder \
+	CellBroadcastReceiver \
+	QuickSearchBox \
+	Camera \
+	Mms \
+	FMRecord \
+	Protips
+endif
 
 ifneq ($(TARGET_USES_AOSP),true)
 PRODUCT_PACKAGES += \
@@ -765,7 +769,9 @@ PRODUCT_PACKAGES += $(C2DCC)
 PRODUCT_PACKAGES += $(CHROMIUM)
 PRODUCT_PACKAGES += $(CIMAX)
 PRODUCT_PACKAGES += $(CM)
+ifneq ($(strip $(TARGET_ENABLE_OPTIMIZATION)),true)
 PRODUCT_PACKAGES += $(DELAUN)
+endif
 PRODUCT_PACKAGES += $(RCS)
 PRODUCT_PACKAGES += $(CONNECTIVITY)
 PRODUCT_PACKAGES += $(CHARGER)
@@ -821,7 +827,9 @@ PRODUCT_PACKAGES += $(PVOMX)
 PRODUCT_PACKAGES += $(RF4CE)
 PRODUCT_PACKAGES += $(SENSORS_HARDWARE)
 #PRODUCT_PACKAGES += $(SOFTAP)
+ifneq ($(strip $(TARGET_ENABLE_OPTIMIZATION)),true)
 PRODUCT_PACKAGES += $(STK)
+endif
 PRODUCT_PACKAGES += $(STMLOG)
 PRODUCT_PACKAGES += $(TSLIB_EXTERNAL)
 PRODUCT_PACKAGES += $(QRGND)
@@ -838,6 +846,7 @@ PRODUCT_PACKAGES += $(FSTMAN)
 PRODUCT_PACKAGES += $(IMS_EXT)
 PRODUCT_PACKAGES += $(CARRIER_ONE_RCS)
 
+ifneq ($(strip $(TARGET_ENABLE_OPTIMIZATION)),true)
 # Live Wallpapers
 PRODUCT_PACKAGES += \
         LiveWallpapers \
@@ -845,6 +854,7 @@ PRODUCT_PACKAGES += \
         VisualizationWallpapers \
         librs_jni
 
+endif
 # Filesystem management tools
 PRODUCT_PACKAGES += \
     make_ext4fs \
