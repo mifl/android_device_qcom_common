@@ -208,12 +208,13 @@ case "$target" in
         # MSM8937 and MSM8940  variants supports OpenGLES 3.1
         # 196608 is decimal for 0x30000 to report version 3.0
         # 196609 is decimal for 0x30001 to report version 3.1
+        # 196610 is decimal for 0x30002 to report version 3.2
         case "$soc_hwid" in
             294|295|296|297|298|313)
-                setprop ro.opengles.version 196609
+                setprop ro.opengles.version 196610
                 ;;
-            303|307|308|309)
-                # Vulkan is not supported for 8917 variants
+            303|307|308|309|320)
+                # Vulkan is not supported for 8917 & 8920 variants
                 setprop ro.opengles.version 196608
                 setprop persist.graphics.vulkan.disable true
                 ;;
@@ -222,7 +223,7 @@ case "$target" in
                 ;;
         esac
         ;;
-    "msmcobalt")
+    "msm8998")
         case "$soc_hwplatform" in
             *)
                 setprop ro.sf.lcd_density 560
@@ -234,6 +235,13 @@ case "$target" in
                 fi
                 ;;
         esac
+        ;;
+    "msm8953")
+        cap_ver=`cat /sys/devices/soc/1d00000.qcom,vidc/capability_version` 2> /dev/null
+        if [ $cap_ver -eq 1 ]; then
+            setprop media.msm8953.version 1
+            setprop media.settings.xml /etc/media_profiles_8953_v1.xml
+        fi
         ;;
 esac
 #set default lcd density
@@ -273,6 +281,7 @@ function setHDMIPermission() {
    set_perms $file/pa system.graphics 0664
    set_perms $file/cec/wr_msg system.graphics 0600
    set_perms $file/hdcp/tp system.graphics 0664
+   set_perms $file/hdmi_audio_cb audioserver.audio 0600
    ln -s $dev_file $dev_gfx_hdmi
 }
 
