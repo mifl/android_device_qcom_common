@@ -48,8 +48,8 @@
 /******************************************************************************
  * DEFINE SECTION
  ******************************************************************************/
-#define BLK_DEV_FILE    "/dev/block/mmcblk0"
-#define UFS_DEV_DIR     "/dev/block/sda"
+#define BLK_DEV_FILE    "/dev/mmcblk0"
+#define UFS_DEV_DIR     "/dev/sda"
 #define BOOT_DEV_DIR    "/dev/block/bootdevice/by-name"
 /* list the names of the backed-up partitions to be swapped */
 #define PTN_SWAP_LIST       "sbl1", "rpm", "tz", "aboot", "hyp", "lksecapp", "keymaster", "cmnlib", "cmnlib64", "pmic", "devcfg"
