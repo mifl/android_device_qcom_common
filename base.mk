@@ -304,7 +304,7 @@ KEYPAD += samsung_remote_ir.kl
 KEYPAD += surf_keypad.kl
 KEYPAD += ue_rf4ce_remote.kl
 KEYPAD += qpnp_pon.kl
-KEYPAD += matrix_keypad_69.kl
+KEYPAD += matrix_keypad.kl
 
 #KS
 KS := ks
