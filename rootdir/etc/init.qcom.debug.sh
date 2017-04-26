@@ -203,23 +203,23 @@ enable_msm8998_dcc_config()
     echo 0x17811218 > $DCC_PATH/config
     echo 0x179D2000 > $DCC_PATH/config
     echo 0x179D2C0C > $DCC_PATH/config
-    echo 0x17904008 > $DCC_PATH/config
-    echo 0x1790400C > $DCC_PATH/config
-    echo 0x17904010 > $DCC_PATH/config
-    echo 0x17904014 > $DCC_PATH/config
+    echo 0x7ba4008 > $DCC_PATH/config
+    echo 0x7ba400C > $DCC_PATH/config
+    echo 0x7ba4010 > $DCC_PATH/config
+    echo 0x7ba4014 > $DCC_PATH/config
 
     # CCI ACE / Stalled Transaction
-    echo 0x179082B0 > $DCC_PATH/config
+    echo 0x7ba82B0 > $DCC_PATH/config
 
     # 8 times, same register
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
 
     echo  1 > $DCC_PATH/enable
 }
@@ -492,6 +492,32 @@ enable_sdm660_dcc_config()
     echo 0x179D2C0C 2 > $DCC_PATH/config    #SPM_STS and #SPM_STS2
     echo 0x179D2C20 > $DCC_PATH/config    #SPM_STS3
     echo 0x179D2C18 > $DCC_PATH/config    #PMIC_STS
+
+    #LMH_PERF
+    echo 0x179CD0C0 > $DCC_PATH/config  #TSense0_Reg
+    echo 0x179CD0C4 > $DCC_PATH/config  #Tsense1_Reg
+    echo 0x179CD0CC > $DCC_PATH/config  #Tsense2_Reg
+    echo 0x179CD0CD > $DCC_PATH/config  #Tsense3_Reg
+    echo 0x179CD03C > $DCC_PATH/config  #TTL_WORD_REG
+    echo 0x179CD300 > $DCC_PATH/config  #FIFO0
+    echo 0x179CD310 > $DCC_PATH/config  #FIFO1
+    echo 0x179CD320 > $DCC_PATH/config  #FIFO2
+    echo 0x179CD330 > $DCC_PATH/config  #FIFO2
+    echo 0x179CD810 > $DCC_PATH/config  #LMH_DCVS_CS_STATUS
+    echo 0x179CD814 > $DCC_PATH/config  #LMH_DCVS_THERMAL_STATUS
+    echo 0x179CD81C > $DCC_PATH/config  #LMH_DCVS_BCL_STATUS
+
+    #LMH_PWR
+    echo 0x179CF0C0 > $DCC_PATH/config  #TSense0_Reg
+    echo 0x179CF0C4 > $DCC_PATH/config  #Tsense1_Reg
+    echo 0x179CF03C > $DCC_PATH/config  #TTL_WORD_REG
+    echo 0x179CF300 > $DCC_PATH/config  #FIFO0
+    echo 0x179CF310 > $DCC_PATH/config  #FIFO1
+    echo 0x179CF814 > $DCC_PATH/config  #LMH_DCVS_THERMAL_STATUS
+
+    #ISENSE
+    echo 0x179DC10C > $DCC_PATH/config  #Isense core01
+    echo 0x179DC110 > $DCC_PATH/config  #Isense core23
 
     #BIMC_GLOBAL2
     echo 0x010021F0 4 > $DCC_PATH/config    #BIMC_BRIC_DEFAULT_SEGMENT
