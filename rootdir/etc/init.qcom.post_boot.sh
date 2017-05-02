@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2012-2013, 2016, The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013, 2016-2017 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -130,6 +130,31 @@ function configure_memory_parameters() {
         mkswap /data/system/swap/swapfile
         swapon /data/system/swap/swapfile -p 32758
     fi
+}
+
+function set_rt_bandwidth()
+{
+        # The default RT bandwidth setttings for bg_non_interactive cgroup
+        # is 10 msec/1 sec. There should not be any active RT tasks in this
+        # cgroup, so the limited bandwidth is not a concern. But the tasks
+        # in this cgroup can be boosted to RT priority when they acquire a
+        # RT mutex. The RT throttling is exempted for boosted tasks, but when
+        # a kernel debug feature is turned on, we hit panic. We can opt out
+        # of  panic when a RT runqueue has boosted tasks, but that would mean
+        # a task acquiring a RT mutex can run for a very long time without
+        # getting noticed. Instead set the bg_non_interactive cgroup RT
+        # bandwidth settings to same as the root cgroup settings.
+
+        if [ ! -f /dev/cpuctl/bg_non_interactive/cpu.rt_runtime_us ]; then
+              return
+        fi
+
+        if [ ! -f /dev/cpuctl/cpu.rt_runtime_us ]; then
+              return
+        fi
+
+        rt_runtime=`cat /dev/cpuctl/cpu.rt_runtime_us`
+        echo $rt_runtime > /dev/cpuctl/bg_non_interactive/cpu.rt_runtime_us
 }
 
 case "$target" in
@@ -1105,6 +1130,8 @@ esac
 case "$target" in
     "msm8953")
 
+        set_rt_bandwidth
+
         if [ -f /sys/devices/soc0/soc_id ]; then
             soc_id=`cat /sys/devices/soc0/soc_id`
         else
@@ -1118,7 +1145,7 @@ case "$target" in
         fi
 
         case "$soc_id" in
-            "293" | "304" )
+            "293" | "304" | "338" )
 
                 # Start Host based Touch processing
                 case "$hw_platform" in
@@ -1320,6 +1347,8 @@ esac
 
 case "$target" in
     "msm8937")
+
+        set_rt_bandwidth
 
         if [ -f /sys/devices/soc0/soc_id ]; then
             soc_id=`cat /sys/devices/soc0/soc_id`
@@ -1889,6 +1918,8 @@ esac
 
 case "$target" in
     "msm8996")
+        set_rt_bandwidth
+
         # disable thermal bcl hotplug to switch governor
         echo 0 > /sys/module/msm_thermal/core_control/enabled
         echo -n disable > /sys/devices/soc/soc:qcom,bcl/mode
@@ -2002,6 +2033,8 @@ esac
 
 case "$target" in
     "msm8998")
+
+        set_rt_bandwidth
 
 	echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
 	echo 60 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
@@ -2130,6 +2163,8 @@ esac
 
 case "$target" in
     "msm8909")
+
+        set_rt_bandwidth
 
         if [ -f /sys/devices/soc0/soc_id ]; then
            soc_id=`cat /sys/devices/soc0/soc_id`
