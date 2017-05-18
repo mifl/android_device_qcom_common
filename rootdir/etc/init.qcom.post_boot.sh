@@ -1273,10 +1273,6 @@ case "$target" in
         echo 800000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
         echo 800000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
         echo 800000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-        echo 800000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-        echo 800000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-        echo 800000 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-        echo 800000 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
         #Below entries are to set the GPU frequency and DCVS governor
         echo 200000000 > /sys/class/kgsl/kgsl-3d0/devfreq/max_freq
         echo 200000000 > /sys/class/kgsl/kgsl-3d0/devfreq/min_freq
@@ -1285,10 +1281,10 @@ case "$target" in
         echo "30000 1094400:50000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
         echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
         echo 30000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
-        echo 998400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+        echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
         echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
-     	echo "1 800000:85 998400:90 1094400:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
-    	echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
+        echo "90" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+        echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
         echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
         echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
