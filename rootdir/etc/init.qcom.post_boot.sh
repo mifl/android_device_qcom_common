@@ -1221,7 +1221,7 @@ case "$target" in
 		echo 128 > /sys/block/mmcblk0/queue/read_ahead_kb
 	fi
 
-        #Enable adaptive LMK and set vmpressure_file_min
+        #Enable adaptive LMK, zram and set vmpressure_file_min
         ProductName=`getprop ro.product.name`
 	if [ "$ProductName" == "msm8909" ] || [ "$ProductName" == "msm8909_LMT" ]; then
 		echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
@@ -1230,6 +1230,9 @@ case "$target" in
 		echo "8192,11264,14336,17408,20480,26624" > /sys/module/lowmemorykiller/parameters/minfree
 		echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 		echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+                echo 157286400 > /sys/block/zram0/disksize
+                mkswap /dev/block/zram0
+                swapon /dev/block/zram0
 	fi
 
 	if [ "$ProductName" != "msm8909w" ]; then
