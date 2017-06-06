@@ -24,45 +24,11 @@
 # WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 # IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-###############################################################################################
-# This init.qcom.vendor.rc script is similar to init.qcom.rc, but is intended to contain      #
-# vendor specific service definitions, triggers etc. This goes into /vendor/etc/init.         #
-###############################################################################################
-
-on early-init
-    # Add on early-init events here
-
-on init
-    # Add on init events here
-
-on late-init
-    # Add on late-init events here
-
-on fs
-    # Add on fs events here
-
-on post-fs
-    # Add on post-fs events here
-
-on post-fs-data
-    # Add on post-fs-data events here
-
-    # Create directory used by display clients
-    mkdir /data/vendor/display 0770 system graphics
-
-on early-boot
-    # Add on early-boot events here
-
-on boot
-    # Add on boot events here
-
-    # Create directory used for display
-    mkdir /persist/display 0770 system graphics
-
-# Add Vendor service definitions, triggers from here on.
-
-service dpmQmiMgr /vendor/bin/dpmQmiMgr
-    class main
-    user system
-    group system qcom_diag
+#
+# Empty content Android.mk to step Android build
+# system from scanning deeper into subdirectories
+# for Android.mk's
+#
+# This file will be linked from any directories
+# where scanning should be stopped as Android.mk
+$(info Skipping Android.mk under $(call my-dir))
