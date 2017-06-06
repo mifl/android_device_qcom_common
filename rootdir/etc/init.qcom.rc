@@ -118,6 +118,56 @@ on boot
     #For bridgemgr daemon to inform the USB driver of the correct transport
     chown radio radio /sys/class/android_usb/f_rmnet_smd_sdio/transport
 
+
+    setprop persist.sys.kaiosgeckolog.enable    0
+    setprop persist.sys.kaioslogcat.enable    0
+    setprop persist.sys.kaiosdmesg.enable    0
+    setprop persist.sys.kaiosqxdm.enable    0
+    setprop persist.sys.kaiostcpdump.enable    0
+
+    service lmlogcatservice /system/bin/sh /system/bin/lmlogcatservice
+        oneshot
+        disabled
+    on property:persist.sys.kaioslogcat.enable=1
+        start lmlogcatservice
+    on property:persist.sys.kaioslogcat.enable=0
+        stop lmlogcatservice
+    service lmgeckologsvc /system/bin/sh /system/bin/lmhttpgeckolog
+        oneshot
+        disabled
+    on property:persist.sys.kaiosgeckolog.enable=1
+        start lmgeckologsvc
+    on property:persist.sys.kaiosgeckolog.enable=0
+        stop lmgeckologsvc
+    service lmdmesgservice /system/bin/sh /system/bin/lmdmesgservice
+        oneshot
+        disabled
+    on property:persist.sys.kaiosdmesg.enable=1
+        start lmdmesgservice
+    on property:persist.sys.kaiosdmesg.enable=0
+        stop lmdmesgservice
+    service lmqxdmservice /system/bin/sh /system/bin/lmqxdmservice
+        oneshot
+        disabled
+    on property:persist.sys.kaiosqxdm.enable=1
+        start lmqxdmservice
+    on property:persist.sys.kaiosqxdm.enable=0
+        stop lmqxdmservice
+    service lmtcpdpservice /system/bin/sh /system/bin/lmtcpdumpservice
+        oneshot
+        disabled
+    on property:persist.sys.kaiostcpdump.enable=1
+        start lmtcpdpservice
+    on property:persist.sys.kaiostcpdump.enable=0
+        stop lmtcpdpservice
+    service lmitlogservice /system/bin/sh /system/bin/lminitlogservice
+        oneshot
+        disabled
+    on property:persist.sys.kaiosinitlog.enable=1
+        start lmitlogservice
+    on property:persist.sys.kaiosinitlog.enable=0
+        stop lmitlogservice
+
 #   Define TCP buffer sizes for various networks
 #   ReadMin, ReadInitial, ReadMax, WriteMin, WriteInitial, WriteMax,
     setprop net.tcp.buffersize.default 4096,87380,524288,4096,16384,110208
@@ -273,6 +323,15 @@ on post-fs-data
 
     #Create folder for mm-qcamera-daemon
     mkdir /data/camera 0770 media camera
+
+    mkdir /data/logmanager/ 0777 shell shell
+    mkdir /data/logmanager/initlog 0777 shell shell
+    chmod -R 0777 /data/logmanager
+    mkdir /data/testbox_log 0777 shell shell
+    chmod -R 0777 /data/testbox_log
+    mkdir /data/kaioslog/ 0777 shell shell
+    mkdir /data/kaioslog/initlog 0777 shell shell
+    chmod -R 0777 /data/kaioslog
 
     #Create PERFD deamon related dirs
     mkdir /data/system/perfd 0770 root system
