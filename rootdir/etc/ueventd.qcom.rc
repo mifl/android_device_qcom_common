@@ -229,6 +229,23 @@
 /sys/devices/soc/c179000.i2c/i2c-5/5-0020/input/input*    secure_touch         0440   system  drmrpc
 /sys/devices/soc/c179000.i2c/i2c-5/5-0020/input/input*    secure_touch_enable  0660   system  drmrpc
 
+#sensors device
+/dev/iio:device0                                   0660   system     system
+/dev/iio:device1                                   0660   system     system
+
+# native sensors iio
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   acc_op_mode      0660   system     system
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   fifo_data_sel    0660   system     system
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   acc_odr          0660   system     system
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   acc_range        0660   system     system
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   enable_int       0660   system     system
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   fifo_watermark   0660   system     system
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   gyro_op_mode     0660   system     system
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   gyro_odr         0660   system     system
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   gyro_range       0660   system     system
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   buffer/enable    0660   system     system
+/sys/devices/soc/75b8000.i2c/i2c-10/10-*   buffer/length    0660   system     system
+
 # laser sensor access
 /sys/devices/virtual/input/input*                   enable_ps_sensor 0660  system   system
 /sys/devices/virtual/input/input*                   set_delay_ms     0660  system   system
