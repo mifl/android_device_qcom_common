@@ -28,6 +28,16 @@
 
 target=`getprop ro.board.platform`
 
+function configure_zram_parameters() {
+    # Zram disk - 512MB size
+    zram_enable=`getprop ro.vendor.qti.config.zram`
+    if [ "$zram_enable" == "true" ]; then
+        echo 536870912 > /sys/block/zram0/disksize
+        mkswap /dev/block/zram0
+        swapon /dev/block/zram0 -p 32758
+    fi
+}
+
 function configure_memory_parameters() {
     # Set Memory paremeters.
     #
@@ -50,16 +60,28 @@ function configure_memory_parameters() {
     # evicting compressed pages. This should be slighlty above adj0 value.
     # clear_percent = (adj0 * 100 / avalible memory in pages)+1
     #
+
+ProductName=`getprop ro.product.name`
+
+if [ "$ProductName" == "msm8996" ]; then
+      # Enable Adaptive LMK
+      echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+      echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+
+      configure_zram_parameters
+else
     arch_type=`uname -m`
     MemTotalStr=`cat /proc/meminfo | grep MemTotal`
     MemTotal=${MemTotalStr:16:8}
     MemTotalPg=$((MemTotal / 4))
     adjZeroMinFree=18432
+
     # Read adj series and set adj threshold for PPR and ALMK.
     # This is required since adj values change from framework to framework.
     adj_series=`cat /sys/module/lowmemorykiller/parameters/adj`
     adj_1="${adj_series#*,}"
     set_almk_ppr_adj="${adj_1%%,*}"
+
     # PPR and ALMK should not act on HOME adj and below.
     # Normalized ADJ for HOME is 6. Hence multiply by 6
     # ADJ score represented as INT in LMK params, actual score can be in decimal
@@ -67,6 +89,8 @@ function configure_memory_parameters() {
     set_almk_ppr_adj=$(((set_almk_ppr_adj * 6) + 6))
     echo $set_almk_ppr_adj > /sys/module/lowmemorykiller/parameters/adj_max_shift
     echo $set_almk_ppr_adj > /sys/module/process_reclaim/parameters/min_score_adj
+
+    #Set other memory parameters
     echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
     echo 70 > /sys/module/process_reclaim/parameters/pressure_max
     echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
@@ -100,16 +124,10 @@ function configure_memory_parameters() {
     echo $clearPercent > /sys/module/zcache/parameters/clear_percent
     echo 30 >  /sys/module/zcache/parameters/max_pool_percent
 
-    # Zram disk - 512MB size
-    zram_enable=`getprop ro.config.zram`
-    if [ "$zram_enable" == "true" ]; then
-        echo 536870912 > /sys/block/zram0/disksize
-        mkswap /dev/block/zram0
-        swapon /dev/block/zram0 -p 32758
-    fi
+    configure_zram_parameters
 
     SWAP_ENABLE_THRESHOLD=1048576
-    swap_enable=`getprop ro.config.swap`
+    swap_enable=`getprop ro.vendor.qti.config.swap`
 
     if [ -f /sys/devices/soc0/soc_id ]; then
         soc_id=`cat /sys/devices/soc0/soc_id`
@@ -130,6 +148,7 @@ function configure_memory_parameters() {
         mkswap /data/system/swap/swapfile
         swapon /data/system/swap/swapfile -p 32758
     fi
+fi
 }
 
 case "$target" in
@@ -2221,9 +2240,6 @@ case "$target" in
         echo 0 > /sys/devices/soc/soc:qcom,bcl/hotplug_soc_mask
         echo -n enable > /sys/devices/soc/soc:qcom,bcl/mode
 
-        # Enable Adaptive LMK
-        echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
         # configure governor settings for little cluster
         echo "interactive" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
         echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/use_sched_load
@@ -2320,6 +2336,9 @@ case "$target" in
 	echo N > /sys/module/lpm_levels/parameters/sleep_disabled
         # Starting io prefetcher service
         start iop
+
+        # Set Memory parameters
+        configure_memory_parameters
     ;;
 esac
 
@@ -2399,17 +2418,21 @@ case "$target" in
             echo 400 > $memlat/mem_latency/ratio_ceil
         done
 
+	echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
+
 	# cpuset parameters
         echo 0 > /dev/cpuset/background/cpus
         echo 0-2 > /dev/cpuset/system-background/cpus
 
 	# Turn off scheduler boost at the end
         echo 0 > /proc/sys/kernel/sched_boost
+        # Turn on sleep modes.
+        echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
     ;;
 esac
 
 case "$target" in
-    "msm8998")
+    "msm8998" | "apq8098_latv")
 
 	echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
 	echo 60 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
@@ -2422,6 +2445,8 @@ case "$target" in
 	echo 1 > /proc/sys/kernel/sched_migration_fixup
 	echo 95 > /proc/sys/kernel/sched_upmigrate
 	echo 90 > /proc/sys/kernel/sched_downmigrate
+	echo 100 > /proc/sys/kernel/sched_group_upmigrate
+	echo 95 > /proc/sys/kernel/sched_group_downmigrate
 	echo 0 > /proc/sys/kernel/sched_select_prev_cpu_us
 	echo 400000 > /proc/sys/kernel/sched_freq_inc_notify
 	echo 400000 > /proc/sys/kernel/sched_freq_dec_notify
@@ -2441,7 +2466,7 @@ case "$target" in
 	echo 19000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/above_hispeed_delay
 	echo 90 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/go_hispeed_load
 	echo 20000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/timer_rate
-	echo 1190400 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
+	echo 1248000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/hispeed_freq
 	echo 1 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/io_is_busy
 	echo "83 1804800:95" > /sys/devices/system/cpu/cpu0/cpufreq/interactive/target_loads
 	echo 19000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/min_sample_time
@@ -2457,7 +2482,7 @@ case "$target" in
 	echo 19000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/above_hispeed_delay
 	echo 90 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/go_hispeed_load
 	echo 20000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/timer_rate
-	echo 1536000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
+	echo 1574400 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/hispeed_freq
 	echo 1 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/io_is_busy
 	echo "83 1939200:90 2016000:95" > /sys/devices/system/cpu/cpu4/cpufreq/interactive/target_loads
 	echo 19000 > /sys/devices/system/cpu/cpu4/cpufreq/interactive/min_sample_time
@@ -2509,12 +2534,27 @@ case "$target" in
 		hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
 	fi
 
+	if [ -f /sys/devices/soc0/platform_version ]; then
+		platform_version=`cat /sys/devices/soc0/platform_version`
+		platform_major_version=$((10#${platform_version}>>16))
+	fi
+
 	case "$soc_id" in
-		"292") #msm8998
+		"292") #msm8998 apq8098_latv
 		# Start Host based Touch processing
 		case "$hw_platform" in
 		"QRD")
-			start hbtp
+			case "$platform_subtype_id" in
+				"0")
+					start hbtp
+					;;
+				"16")
+					if [ $platform_major_version -lt 6 ]; then
+						start hbtp
+					fi
+					;;
+			esac
+
 			;;
 		esac
 	    ;;
@@ -2533,6 +2573,9 @@ case "$target" in
 	echo N > /sys/module/lpm_levels/system/perf/perf-l2-dynret/idle_enabled
 	echo N > /sys/module/lpm_levels/system/perf/perf-l2-ret/idle_enabled
 	echo N > /sys/module/lpm_levels/parameters/sleep_disabled
+
+        echo 0-3 > /dev/cpuset/background/cpus
+        echo 0-3 > /dev/cpuset/system-background/cpus
     ;;
 esac
 
@@ -2575,14 +2618,17 @@ case "$target" in
 
         # Bring up all cores online
         echo 1 > /sys/devices/system/cpu/cpu1/online
-	echo 1 > /sys/devices/system/cpu/cpu2/online
-	echo 1 > /sys/devices/system/cpu/cpu3/online
-	echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+        echo 1 > /sys/devices/system/cpu/cpu2/online
+        echo 1 > /sys/devices/system/cpu/cpu3/online
+        echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
-	for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
-	do
-		echo "bw_hwmon" > $devfreq_gov
-	done
+        for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
+        do
+            echo "bw_hwmon" > $devfreq_gov
+        done
+
+        # Set Memory parameters
+        configure_memory_parameters
 	;;
 esac
 
@@ -2647,7 +2693,7 @@ case "$target" in
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
-    "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660")
+    "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv")
         setprop sys.post_boot.parsed 1
     ;;
     "apq8084")
