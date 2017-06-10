@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2012-2013,2016 The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013,2016-2017 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -226,7 +226,7 @@ case "$target" in
                 ;;
         esac
         ;;
-    "msm8998")
+    "msm8998" | "apq8098_latv")
         case "$soc_hwplatform" in
             *)
                 setprop ro.sf.lcd_density 560
@@ -284,6 +284,7 @@ function setHDMIPermission() {
    set_perms $file/s3d_mode system.graphics 0664
    set_perms $file/dynamic_fps system.graphics 0664
    set_perms $file/msm_fb_dfps_mode system.graphics 0664
+   set_perms $file/hdr_stream system.graphics 0664
    set_perms $file/cec/enable system.graphics 0664
    set_perms $file/cec/logical_addr system.graphics 0664
    set_perms $file/cec/rd_msg system.graphics 0664
@@ -315,10 +316,10 @@ done
 
 
 # check for mdp caps
-setprop debug.gralloc.gfx_ubwc_disable 1
 file=/sys/class/graphics/fb0/mdp/caps
 if [ -f "$file" ]
 then
+    setprop debug.gralloc.gfx_ubwc_disable 1
     cat $file | while read line; do
       case "$line" in
                 *"ubwc"*)

@@ -19,6 +19,7 @@ QCOM_BOARD_PLATFORMS += msm8952
 QCOM_BOARD_PLATFORMS += msm8937
 QCOM_BOARD_PLATFORMS += msm8953
 QCOM_BOARD_PLATFORMS += msm8998
+QCOM_BOARD_PLATFORMS += apq8098_latv
 QCOM_BOARD_PLATFORMS += sdm660
 QCOM_BOARD_PLATFORMS += sdm845
 
@@ -27,10 +28,10 @@ QSD8K_BOARD_PLATFORMS := qsd8k
 TARGET_USE_VENDOR_CAMERA_EXT := true
 
 #List of targets that use video hw
-MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 sdm660 sdm845
+MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845
 
 #List of targets that use master side content protection
-MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845
+MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845 apq8098_latv
 
 # Below projects/packages with LOCAL_MODULEs will be used by
 # PRODUCT_PACKAGES to build LOCAL_MODULEs that are tagged with
@@ -104,6 +105,7 @@ AUDIO_HARDWARE += audio.primary.msmgold
 AUDIO_HARDWARE += audio.primary.msm8998
 AUDIO_HARDWARE += audio.primary.sdm660
 AUDIO_HARDWARE += audio.primary.sdm845
+AUDIO_HARDWARE += audio.primary.apq8098_latv
 #
 AUDIO_POLICY := audio_policy.mpq8064
 AUDIO_POLICY += audio_policy.apq8084
@@ -153,7 +155,6 @@ BSON := libbson
 #BT
 BT := javax.btobex
 BT += libattrib_static
-BT += hcidump.sh
 BT += libbt-vendor
 BT += libbthost_if
 BT += libbt-logClient
@@ -220,7 +221,6 @@ FM += libqcomfm_jni
 FM += libfmjni
 FM += fm_helium
 FM += libfm-hci
-FM += fmhal_service
 
 #GPS
 GPS_HARDWARE := gps.conf
@@ -259,10 +259,7 @@ INIT += init.qcom.modem_links.sh
 INIT += init.qcom.sensor.sh
 INIT += init.target.rc
 INIT += init.qti.ims.sh
-INIT += init.qcom.bt.sh
-INIT += hsic.control.bt.sh
 INIT += init.qcom.coex.sh
-INIT += init.qcom.fm.sh
 INIT += init.qcom.early_boot.sh
 INIT += init.qcom.post_boot.sh
 INIT += init.qcom.syspart_fixup.sh
@@ -282,7 +279,6 @@ INIT += init.qcom.usb.sh
 INIT += usf_post_boot.sh
 INIT += init.qcom.efs.sync.sh
 INIT += ueventd.qcom.rc
-INIT += init.ath3k.bt.sh
 INIT += qca6234-service.sh
 INIT += init.qcom.audio.sh
 INIT += ssr_setup
@@ -371,6 +367,7 @@ LIBCAMERA += camera.msm8994
 LIBCAMERA += camera.msm8992
 LIBCAMERA += camera.msm8996
 LIBCAMERA += camera.msm8998
+LIBCAMERA += camera.apq8098_latv
 LIBCAMERA += camera.sdm660
 LIBCAMERA += camera.msm8952
 LIBCAMERA += camera.msm8937
@@ -411,6 +408,7 @@ LIBCOPYBIT += copybit.msm8998
 LIBCOPYBIT += copybit.sdm630
 LIBCOPYBIT += copybit.sdm660
 LIBCOPYBIT += copybit.sda630
+LIBCOPYBIT += copybit.apq8098_latv
 
 #LIBGESTURES
 LIBGESTURES := libgestures
@@ -441,6 +439,7 @@ LIBGRALLOC += gralloc.msm8937
 LIBGRALLOC += gralloc.msm8953
 LIBGRALLOC += gralloc.msm8998
 LIBGRALLOC += gralloc.sdm845
+LIBGRALLOC += gralloc.apq8098_latv
 LIBGRALLOC += libmemalloc
 LIBGRALLOC += gralloc.sdm630
 LIBGRALLOC += gralloc.sdm660
@@ -462,6 +461,7 @@ LIBMEMTRACK += memtrack.msm8953
 LIBMEMTRACK += memtrack.msm8998
 LIBMEMTRACK += memtrack.sdm660
 LIBMEMTRACK += memtrack.sdm845
+LIBMEMTRACK += memtrack.apq8098_latv
 
 #LIBLIGHTS
 LIBLIGHTS := lights.msm8660
@@ -487,6 +487,7 @@ LIBLIGHTS += lights.msm8953
 LIBLIGHTS += lights.msm8998
 LIBLIGHTS += lights.sdm660
 LIBLIGHTS += lights.sdm845
+LIBLIGHTS += lights.apq8098_latv
 
 #LIBHWCOMPOSER
 LIBHWCOMPOSER := hwcomposer.msm8660
@@ -513,6 +514,7 @@ LIBHWCOMPOSER += hwcomposer.msm8953
 LIBHWCOMPOSER += hwcomposer.msm8998
 LIBHWCOMPOSER += hwcomposer.sdm660
 LIBHWCOMPOSER += hwcomposer.sdm845
+LIBHWCOMPOSER += hwcomposer.apq8098_latv
 
 #LIBAUDIOPARAM -- Exposing AudioParameter as dynamic library for SRS TruMedia to work
 LIBAUDIOPARAM := libaudioparameter
@@ -541,6 +543,7 @@ LIBQDUTILS := libqdutils
 
 #LIBQDMETADATA
 LIBQDMETADATA := libqdMetaData
+LIBQDMETADATA += libqdMetaData.system
 
 #LIBPOWER
 LIBPOWER := power.qcom
@@ -711,6 +714,7 @@ IMS_SETTINGS := imssettings
 
 #IMS Extension module for Android Telephony
 IMS_EXT := ims-ext-common
+IMS_EXT += ConfURIDialer
 
 #CRDA
 CRDA := crda
@@ -745,6 +749,7 @@ PRODUCT_PACKAGES := \
     LatinIME \
     Mms \
     Music \
+    netutils-wrapper-1.0 \
     Phone \
     Provision \
     Protips \
@@ -763,13 +768,9 @@ PRODUCT_PACKAGES := \
     VideoEditor \
     SnapdragonGallery \
     SnapdragonLauncher \
-    SnapdragonMusic
-
-ifneq ($(TARGET_USES_AOSP),true)
-PRODUCT_PACKAGES += \
-       a4wpservice \
-       wipowerservice
-endif
+    SnapdragonMusic \
+    a4wpservice \
+    wipowerservice
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
@@ -995,4 +996,9 @@ SKIP_BOOT_JARS_CHECK := true
 ifeq ($(TARGET_BUILD_VARIANT),user)
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
     ro.adb.secure=1
+endif
+
+#Camera QC extends API
+ifeq ($(strip $(TARGET_USES_QTIC_EXTENSION)),true)
+PRODUCT_BOOT_JARS += com.qualcomm.qti.camera
 endif
