@@ -1227,7 +1227,6 @@ case "$target" in
 		echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 		echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 	elif [ "$ProductName" == "msm8909_512" ] || [ "$ProductName" == "msm8909w" ]; then
-		echo "8192,11264,14336,17408,20480,26624" > /sys/module/lowmemorykiller/parameters/minfree
 		echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 		echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
                 echo 157286400 > /sys/block/zram0/disksize
