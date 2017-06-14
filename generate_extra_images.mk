@@ -14,7 +14,7 @@ INSTALLED_SYSTEMIMAGE := $(PRODUCT_OUT)/system.img
 INSTALLED_USERDATAIMAGE_TARGET := $(PRODUCT_OUT)/userdata.img
 INSTALLED_RECOVERYIMAGE_TARGET := $(PRODUCT_OUT)/recovery.img
 recovery_ramdisk := $(PRODUCT_OUT)/ramdisk-recovery.img
-INSTALLED_USBIMAGE_TARGET := $(PRODUCT_OUT)/usbdisk.img
+INSTALLED_USBIMAGE_TARGET := $(PRODUCT_OUT)/usbmsc.img
 INSTALLED_CACHEIMAGE_TARGET := $(PRODUCT_OUT)/cache.img
 endif
 
@@ -122,22 +122,36 @@ endif
 endif
 
 #---------------------------------------------------------------------
-# Generate usbdisk.img FAT32 image
-# Please NOTICE: the valid max size of usbdisk.bin is 10GB
+# Generate usbmsc.img image
+# Please NOTICE: the valid max size of usbmsc.bin is 1GB
 #---------------------------------------------------------------------
-ifneq ($(strip $(BOARD_USBIMAGE_PARTITION_SIZE_KB)),)
-define build-usbimage-target
-	$(hide) mkfs.vfat -n "Internal SD" -F 32 -C $(PRODUCT_OUT)/usbdisk.tmp $(BOARD_USBIMAGE_PARTITION_SIZE_KB)
-	$(hide) dd if=$(PRODUCT_OUT)/usbdisk.tmp of=$(INSTALLED_USBIMAGE_TARGET) bs=1024 count=20480
-	$(hide) rm -f $(PRODUCT_OUT)/usbdisk.tmp
+
+ifneq ($(strip $(TARGET_NO_KERNEL)),true)
+ifneq ($(strip $(BOARD_USBIMAGE_PARTITION_SIZE)),)
+
+TARGET_OUT_USBMSC := $(PRODUCT_OUT)/usbmsc
+
+INTERNAL_USBMSC_FILES := \
+	$(filter $(TARGET_OUT_USBMSC)/%,$(ALL_DEFAULT_INSTALLED_MODULES))
+
+INSTALLED_USBIMAGE_TARGET := $(PRODUCT_OUT)/usbmsc.img
+
+define build-usbmscimage-target
+    $(call pretty,"Target usbmsc fs image: $(INSTALLED_USBIMAGE_TARGET)")
+    @mkdir -p $(TARGET_OUT_USBMSC)
+    $(hide) $(MKEXTUSERIMG) -s $(TARGET_OUT_USBMSC) $@ ext4 usbmsc $(BOARD_USBIMAGE_PARTITION_SIZE)
+    $(hide) chmod a+r $@
+    $(hide) $(call assert-max-image-size,$@,$(BOARD_USBIMAGE_PARTITION_SIZE),yaffs)
 endef
 
-$(INSTALLED_USBIMAGE_TARGET):
-	$(build-usbimage-target)
-ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_USBIMAGE_TARGET)
-ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DTIMAGE_TARGET)
-endif
+$(INSTALLED_USBIMAGE_TARGET): $(MKEXTUSERIMG) $(MAKE_EXT4FS) $(INTERNAL_USBMSC_FILES)
+	$(build-usbmscimage-target)
 
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_USBIMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_USBIMAGE_TARGET)
+
+endif
+endif
 #----------------------------------------------------------------------
 # Generate CDROM image
 #----------------------------------------------------------------------
