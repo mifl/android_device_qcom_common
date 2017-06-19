@@ -1740,6 +1740,9 @@ case "$target" in
             # re-enable thermal and BCL hotplug
             echo 1 > /sys/module/msm_thermal/core_control/enabled
 
+            #Enable input boost configuration
+            echo "0:1401600" > /sys/module/cpu_boost/parameters/input_boost_freq
+            echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
             # Set Memory parameters
             configure_memory_parameters
 
