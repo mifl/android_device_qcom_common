@@ -51,6 +51,9 @@ on post-fs-data
     # Create directory used by display clients
     mkdir /data/vendor/display 0770 system graphics
 
+    # Create directory used by media clients
+    mkdir /data/vendor/media 0770 mediacodec media
+
 on early-boot
     # Add on early-boot events here
 
@@ -62,7 +65,3 @@ on boot
 
 # Add Vendor service definitions, triggers from here on.
 
-service dpmQmiMgr /vendor/bin/dpmQmiMgr
-    class main
-    user system
-    group system qcom_diag

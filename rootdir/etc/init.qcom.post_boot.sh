@@ -53,13 +53,6 @@ function configure_memory_parameters() {
     # Set ALMK parameters (usually above the highest minfree values)
     # 32 bit will have 53K & 64 bit will have 81K
     #
-    # Set ZCache parameters
-    # max_pool_percent is the percentage of memory that the compressed pool
-    # can occupy.
-    # clear_percent is the percentage of memory at which zcache starts
-    # evicting compressed pages. This should be slighlty above adj0 value.
-    # clear_percent = (adj0 * 100 / avalible memory in pages)+1
-    #
 
 ProductName=`getprop ro.product.name`
 
@@ -73,8 +66,6 @@ else
     arch_type=`uname -m`
     MemTotalStr=`cat /proc/meminfo | grep MemTotal`
     MemTotal=${MemTotalStr:16:8}
-    MemTotalPg=$((MemTotal / 4))
-    adjZeroMinFree=18432
 
     # Read adj series and set adj threshold for PPR and ALMK.
     # This is required since adj values change from framework to framework.
@@ -100,29 +91,22 @@ else
         echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-        adjZeroMinFree=18432
     elif [ "$arch_type" == "aarch64" ] && [ $MemTotal -gt 1048576 ]; then
         echo 10 > /sys/module/process_reclaim/parameters/pressure_min
         echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-        adjZeroMinFree=14746
     elif [ "$arch_type" == "aarch64" ]; then
         echo 50 > /sys/module/process_reclaim/parameters/pressure_min
         echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-        adjZeroMinFree=14746
     else
         echo 50 > /sys/module/process_reclaim/parameters/pressure_min
         echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "15360,19200,23040,26880,34415,43737" > /sys/module/lowmemorykiller/parameters/minfree
         echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-        adjZeroMinFree=15360
     fi
-    clearPercent=$((((adjZeroMinFree * 100) / MemTotalPg) + 1))
-    echo $clearPercent > /sys/module/zcache/parameters/clear_percent
-    echo 30 >  /sys/module/zcache/parameters/max_pool_percent
 
     configure_zram_parameters
 
@@ -149,6 +133,15 @@ else
         swapon /data/system/swap/swapfile -p 32758
     fi
 fi
+}
+
+function start_hbtp()
+{
+        # Start the Host based Touch processing but not in the power off mode.
+        bootmode=`getprop ro.bootmode`
+        if [ "charger" != $bootmode ]; then
+                start hbtp
+        fi
 }
 
 case "$target" in
@@ -488,14 +481,14 @@ case "$target" in
                         "Surf")
                             case "$platform_subtype_id" in
                                 "1")
-                                    start hbtp
+                                    start_hbtp
                                 ;;
                             esac
                         ;;
                         "MTP")
                             case "$platform_subtype_id" in
                                 "3")
-                                    start hbtp
+                                    start_hbtp
                                 ;;
                             esac
                         ;;
@@ -1146,7 +1139,7 @@ case "$target" in
                         #1200p panel is connected to the device.
                         dir="/sys/bus/i2c/devices/3-0038"
                         if [ ! -d "$dir" ]; then
-                              start hbtp
+                              start_hbtp
                         fi
                         ;;
                 esac
@@ -1358,7 +1351,7 @@ case "$target" in
                   # Start Host based Touch processing
                   case "$hw_platform" in
                     "MTP" | "Surf" | "RCM" )
-                        start hbtp
+                        start_hbtp
                         ;;
                   esac
                 # Apply Scheduler and Governor settings for 8917 / 8920
@@ -1471,7 +1464,7 @@ case "$target" in
                   # Start Host based Touch processing
                   case "$hw_platform" in
                     "MTP" | "Surf" | "RCM" )
-                        start hbtp
+                        start_hbtp
                         ;;
                   esac
 
@@ -1781,7 +1774,7 @@ case "$target" in
             # Start Host based Touch processing
                 case "$hw_platform" in
                         "MTP" | "Surf" | "RCM" | "QRD" )
-                        start hbtp
+                        start_hbtp
                         ;;
                 esac
             ;;
@@ -1793,7 +1786,7 @@ case "$target" in
             # Start Host based Touch processing
             case "$hw_platform" in
                 "MTP" | "Surf" | "RCM" | "QRD" )
-                start hbtp
+                start_hbtp
                 ;;
             esac
 
@@ -2360,7 +2353,7 @@ case "$target" in
 
 	case "$soc_id" in
 		"321") #sdm845
-		start hbtp
+		start_hbtp
 		;;
 	esac
 	# Core control parameters
@@ -2547,6 +2540,10 @@ case "$target" in
 		platform_major_version=$((10#${platform_version}>>16))
 	fi
 
+	if [ -f /sys/devices/soc0/platform_subtype_id ]; then
+		platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
+	fi
+
 	case "$soc_id" in
 		"292") #msm8998 apq8098_latv
 		# Start Host based Touch processing
@@ -2554,11 +2551,11 @@ case "$target" in
 		"QRD")
 			case "$platform_subtype_id" in
 				"0")
-					start hbtp
+					start_hbtp
 					;;
 				"16")
 					if [ $platform_major_version -lt 6 ]; then
-						start hbtp
+						start_hbtp
 					fi
 					;;
 			esac
@@ -2689,6 +2686,9 @@ case "$target" in
     "msm8916")
         setprop sys.post_boot.parsed 1
     ;;
+    "msm8909")
+        setprop sys.post_boot.parsed 1
+    ;;
     "msm8937" | "msm8953")
         echo 128 > /sys/block/mmcblk0/bdi/read_ahead_kb
         echo 128 > /sys/block/mmcblk0/queue/read_ahead_kb
@@ -2701,7 +2701,7 @@ case "$target" in
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
-    "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv")
+    "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv" | "sdm845")
         setprop sys.post_boot.parsed 1
     ;;
     "apq8084")
