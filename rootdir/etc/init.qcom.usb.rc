@@ -1175,6 +1175,19 @@ on property:sys.usb.config=diag,qdss,adb && property:sys.usb.configfs=0
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
+on property:sys.usb.config=diag,qdss_pcie,adb && property:sys.usb.configfs=0
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/iSerial ${ro.serialno}
+    write /sys/class/android_usb/android0/idVendor 05C6
+    write /sys/class/android_usb/android0/idProduct 9060
+    write /sys/class/android_usb/android0/f_diag/clients diag
+    write /sys/class/android_usb/android0/f_qdss/debug_intf 0
+    write /sys/class/android_usb/android0/f_qdss/transports pcie
+    write /sys/class/android_usb/android0/functions diag,qdss,adb
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state ${sys.usb.config}
+
 on property:sys.usb.config=diag,diag_mdm,qdss && property:sys.usb.configfs=0
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/iSerial ${ro.serialno}
