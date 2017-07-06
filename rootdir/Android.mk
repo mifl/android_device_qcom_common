@@ -72,7 +72,12 @@ LOCAL_MODULE       := init.qcom.rc
 LOCAL_MODULE_TAGS  := optional eng
 LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := etc/init.qcom.rc
-LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR_ETC)/init/hw
+# TODO: This file must be in 'root' for treble right now until
+# this is fixed for O (which is incoming).
+# The reason is because default platform init.rc currently
+# only imports /init.${ro.hardware}.rc. Moving this to /vendor/etc/init
+# will affect the import order and possible USB configfs override anomalies.
+LOCAL_MODULE_PATH  := $(TARGET_ROOT_OUT)
 include $(BUILD_PREBUILT)
 
 include $(CLEAR_VARS)
