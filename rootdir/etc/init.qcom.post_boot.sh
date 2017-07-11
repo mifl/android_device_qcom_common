@@ -2624,8 +2624,21 @@ case "$target" in
 					fi
 					;;
 			esac
-
 			;;
+		"MTP")
+			case "$platform_subtype_id" in
+				"5" | "6")
+					start_hbtp
+					;;
+			esac
+			;;
+                "Surf")
+                        case "$platform_subtype_id" in
+                                "2" | "3")
+                                        start_hbtp
+                                        ;;
+                        esac
+                        ;;
 		esac
 	    ;;
 	esac
