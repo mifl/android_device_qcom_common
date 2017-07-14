@@ -284,7 +284,6 @@ INIT += qca6234-service.sh
 INIT += ssr_setup
 INIT += enable_swap.sh
 INIT += init.mdm.sh
-INIT += init.qcom.uicc.sh
 INIT += fstab.qcom
 INIT += init.qcom.sensors.sh
 INIT += init.qcom.vendor.rc
@@ -943,7 +942,7 @@ PRODUCT_COPY_FILES := \
 
 # gps/location secuity configuration file
 PRODUCT_COPY_FILES += \
-    device/qcom/common/sec_config:vendor/etc/sec_config
+    device/qcom/common/sec_config:$(TARGET_COPY_OUT_VENDOR)/etc/sec_config
 
 #copy codecs_xxx.xml to (TARGET_COPY_OUT_VENDOR)/etc/
 PRODUCT_COPY_FILES += \
@@ -1017,4 +1016,8 @@ endif
 #Camera QC extends API
 ifeq ($(strip $(TARGET_USES_QTIC_EXTENSION)),true)
 PRODUCT_BOOT_JARS += com.qualcomm.qti.camera
+endif
+
+ifeq ($(TARGET_USES_QCOM_BSP_ATEL),true)
+    PRODUCT_PROPERTY_OVERRIDES += persist.radio.multisim.config=dsds
 endif

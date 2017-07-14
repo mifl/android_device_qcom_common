@@ -1130,7 +1130,7 @@ case "$target" in
         fi
 
         case "$soc_id" in
-            "293" | "304" )
+            "293" | "304" | "338" )
 
                 # Start Host based Touch processing
                 case "$hw_platform" in
@@ -1616,6 +1616,11 @@ esac
 
 case "$target" in
     "sdm660")
+
+        # Set the default IRQ affinity to the primary cluster. When a
+        # CPU is isolated/hotplugged, the IRQ affinity is adjusted
+        # to one of the CPU from the default IRQ affinity mask.
+        echo f > /proc/irq/default_smp_affinity
 
         if [ -f /sys/devices/soc0/soc_id ]; then
                 soc_id=`cat /sys/devices/soc0/soc_id`
@@ -2345,6 +2350,12 @@ esac
 
 case "$target" in
     "sdm845")
+
+        # Set the default IRQ affinity to the silver cluster. When a
+        # CPU is isolated/hotplugged, the IRQ affinity is adjusted
+        # to one of the CPU from the default IRQ affinity mask.
+        echo f > /proc/irq/default_smp_affinity
+
 	if [ -f /sys/devices/soc0/soc_id ]; then
                 soc_id=`cat /sys/devices/soc0/soc_id`
         else
@@ -2366,7 +2377,7 @@ case "$target" in
 
 	# Setting b.L scheduler parameters
 	echo 95 > /proc/sys/kernel/sched_upmigrate
-	echo 90 > /proc/sys/kernel/sched_downmigrate
+	echo 85 > /proc/sys/kernel/sched_downmigrate
 	echo 100 > /proc/sys/kernel/sched_group_upmigrate
 	echo 95 > /proc/sys/kernel/sched_group_downmigrate
 	echo 0 > /proc/sys/kernel/sched_select_prev_cpu_us
@@ -2390,17 +2401,34 @@ case "$target" in
         do
             echo "bw_hwmon" > $cpubw/governor
             echo 50 > $cpubw/polling_interval
-            echo "1720 2929 4943 5931 6881" > $cpubw/bw_hwmon/mbps_zones
+            echo "2288 4577 6500 8132 9155 10681" > $cpubw/bw_hwmon/mbps_zones
             echo 4 > $cpubw/bw_hwmon/sample_ms
-            echo 68 > $cpubw/bw_hwmon/io_percent
+            echo 34 > $cpubw/bw_hwmon/io_percent
             echo 20 > $cpubw/bw_hwmon/hist_memory
             echo 10 > $cpubw/bw_hwmon/hyst_length
             echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
-            echo 68 > $cpubw/bw_hwmon/low_power_io_percent
+            echo 34 > $cpubw/bw_hwmon/low_power_io_percent
             echo 20 > $cpubw/bw_hwmon/low_power_delay
             echo 0 > $cpubw/bw_hwmon/guard_band_mbps
             echo 250 > $cpubw/bw_hwmon/up_scale
             echo 1600 > $cpubw/bw_hwmon/idle_mbps
+        done
+
+        for llccbw in /sys/class/devfreq/*qcom,llccbw*
+        do
+            echo "bw_hwmon" > $llccbw/governor
+            echo 50 > $llccbw/polling_interval
+            echo "1720 2929 4943 5931 6881" > $llccbw/bw_hwmon/mbps_zones
+            echo 4 > $llccbw/bw_hwmon/sample_ms
+            echo 68 > $llccbw/bw_hwmon/io_percent
+            echo 20 > $llccbw/bw_hwmon/hist_memory
+            echo 10 > $llccbw/bw_hwmon/hyst_length
+            echo 0 > $llccbw/bw_hwmon/low_power_ceil_mbps
+            echo 68 > $llccbw/bw_hwmon/low_power_io_percent
+            echo 20 > $llccbw/bw_hwmon/low_power_delay
+            echo 0 > $llccbw/bw_hwmon/guard_band_mbps
+            echo 250 > $llccbw/bw_hwmon/up_scale
+            echo 1600 > $llccbw/bw_hwmon/idle_mbps
         done
 
 	#Enable mem_latency governor for DDR scaling
@@ -2422,13 +2450,13 @@ case "$target" in
 	echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
 
 	# cpuset parameters
-        echo 0 > /dev/cpuset/background/cpus
-        echo 0-2 > /dev/cpuset/system-background/cpus
+        echo 0-3 > /dev/cpuset/background/cpus
+        echo 0-3 > /dev/cpuset/system-background/cpus
 
 	# Turn off scheduler boost at the end
         echo 0 > /proc/sys/kernel/sched_boost
         # Turn on sleep modes.
-        echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+        echo 1 > /sys/module/lpm_levels/parameters/sleep_disabled
     ;;
 esac
 
@@ -2627,7 +2655,7 @@ case "$target" in
         echo 1 > /sys/devices/system/cpu/cpu3/online
         echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
-        for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
+        for devfreq_gov in /sys/class/devfreq/*qcom,cpubw*/governor
         do
             echo "bw_hwmon" > $devfreq_gov
         done
