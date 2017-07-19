@@ -243,6 +243,7 @@ case "$target" in
         esac
         ;;
     "msm8998" | "apq8098_latv")
+        touch /dev/dvb0.frontend0
         case "$soc_hwplatform" in
             *)
                 setprop ro.sf.lcd_density 560
