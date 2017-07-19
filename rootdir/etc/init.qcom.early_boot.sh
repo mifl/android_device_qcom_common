@@ -255,6 +255,14 @@ case "$target" in
                 fi
                 ;;
         esac
+        case "$soc_hwid" in
+                "319") #apq8098_latv
+                echo "\n==Loading ALX module==\n"
+                insmod /system/lib/modules/alx.ko
+                echo "\n==Loading Ethernet Driver==\n"
+                /system/bin/dhcpcd-6.8.2 eth0 -t0 -b
+		;;
+	esac
         ;;
     "sdm845")
         case "$soc_hwplatform" in
