@@ -22,6 +22,8 @@
 #ifndef _BDROID_BUILDCFG_H
 #define _BDROID_BUILDCFG_H
 #define BTM_DEF_LOCAL_NAME   "QCOM-BTD"
+// Enable A2DP(SNK) and AVRCP(CT) for car-kit
+#define BTA_AV_SINK_INCLUDED  TRUE
 // Disables read remote device feature
 #define MAX_ACL_CONNECTIONS   16
 #define MAX_L2CAP_CHANNELS    16
