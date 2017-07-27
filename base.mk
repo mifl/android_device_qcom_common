@@ -22,13 +22,14 @@ QCOM_BOARD_PLATFORMS += msm8998
 QCOM_BOARD_PLATFORMS += apq8098_latv
 QCOM_BOARD_PLATFORMS += sdm660
 QCOM_BOARD_PLATFORMS += sdm845
+QCOM_BOARD_PLATFORMS += msmpeafowl
 
 QSD8K_BOARD_PLATFORMS := qsd8k
 
 TARGET_USE_VENDOR_CAMERA_EXT := true
 
 #List of targets that use video hw
-MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845
+MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845 msmpeafowl
 
 #List of targets that use master side content protection
 MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845 apq8098_latv
@@ -202,7 +203,6 @@ EXTENDEDMEDIA_EXT += ExtendedMediaPlayer
 
 #DATA_OS
 DATA_OS := librmnetctl
-DATA_OS += rmnetcli
 
 #E2FSPROGS
 E2FSPROGS := e2fsck
@@ -280,11 +280,9 @@ INIT += usf_post_boot.sh
 INIT += init.qcom.efs.sync.sh
 INIT += ueventd.qcom.rc
 INIT += qca6234-service.sh
-INIT += init.qcom.audio.sh
 INIT += ssr_setup
 INIT += enable_swap.sh
 INIT += init.mdm.sh
-INIT += init.qcom.uicc.sh
 INIT += fstab.qcom
 INIT += init.qcom.sensors.sh
 INIT += init.qcom.vendor.rc
@@ -867,6 +865,9 @@ PRODUCT_PACKAGES += $(IMS_EXT)
 # Temp workarround for b/36603742
 PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 
+PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
+PRODUCT_PACKAGES += android.hardware.drm@1.0-service
+
 # Live Wallpapers
 PRODUCT_PACKAGES += \
         LiveWallpapers \
@@ -922,6 +923,8 @@ PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.usb.host.xml:system/etc/permissions/android.hardware.usb.host.xml \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:system/etc/permissions/android.hardware.bluetooth.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:system/etc/permissions/android.hardware.bluetooth_le.xml \
+    frameworks/native/data/etc/android.hardware.wifi.aware.xml:system/etc/permissions/android.hardware.wifi.aware.xml \
+
 
 # Bluetooth configuration files
 #PRODUCT_COPY_FILES += \
@@ -938,7 +941,7 @@ PRODUCT_COPY_FILES := \
 
 # gps/location secuity configuration file
 PRODUCT_COPY_FILES += \
-    device/qcom/common/sec_config:system/etc/sec_config
+    device/qcom/common/sec_config:$(TARGET_COPY_OUT_VENDOR)/etc/sec_config
 
 #copy codecs_xxx.xml to (TARGET_COPY_OUT_VENDOR)/etc/
 PRODUCT_COPY_FILES += \
@@ -946,7 +949,12 @@ PRODUCT_COPY_FILES += \
     frameworks/av/media/libstagefright/data/media_codecs_google_telephony.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_telephony.xml \
     frameworks/av/media/libstagefright/data/media_codecs_google_video.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs_google_video.xml \
     device/qcom/common/media/media_profiles.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles.xml \
+    device/qcom/common/media/media_profiles.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_profiles_V1_0.xml
+
+ifneq ($(TARGET_ENABLE_QC_AV_ENHANCEMENTS),true)
+PRODUCT_COPY_FILES += \
     device/qcom/common/media/media_codecs.xml:$(TARGET_COPY_OUT_VENDOR)/etc/media_codecs.xml
+endif
 
 ifeq ($(strip $(TARGET_USES_NQ_NFC)),true)
 PRODUCT_COPY_FILES += \
@@ -989,11 +997,13 @@ endif
 -include frameworks/base/data/videos/VideoPackage1.mk
 
 # dm-verity definitions
-PRODUCT_SYSTEM_VERITY_PARTITION=/dev/block/bootdevice/by-name/system
-ifeq ($(ENABLE_VENDOR_IMAGE), true)
-PRODUCT_VENDOR_VERITY_PARTITION=/dev/block/bootdevice/by-name/vendor
+ifneq ($(BOARD_AVB_ENABLE), true)
+   PRODUCT_SYSTEM_VERITY_PARTITION=/dev/block/bootdevice/by-name/system
+   ifeq ($(ENABLE_VENDOR_IMAGE), true)
+      PRODUCT_VENDOR_VERITY_PARTITION=/dev/block/bootdevice/by-name/vendor
+   endif
+   $(call inherit-product, build/target/product/verity.mk)
 endif
-$(call inherit-product, build/target/product/verity.mk)
 
 #skip boot jars check
 SKIP_BOOT_JARS_CHECK := true
@@ -1006,4 +1016,31 @@ endif
 #Camera QC extends API
 ifeq ($(strip $(TARGET_USES_QTIC_EXTENSION)),true)
 PRODUCT_BOOT_JARS += com.qualcomm.qti.camera
+endif
+
+# OEM Unlock reporting
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
+    ro.oem_unlock_supported=true
+
+PRODUCT_PACKAGES += \
+    android.hardware.renderscript@1.0.vndk-sp\
+    android.hardware.graphics.allocator@2.0.vndk-sp\
+    android.hardware.graphics.mapper@2.0.vndk-sp\
+    android.hardware.graphics.common@1.0.vndk-sp\
+    android.hidl.base@1.0.vndk-sp\
+    libhwbinder.vndk-sp\
+    libbase.vndk-sp\
+    libcutils.vndk-sp\
+    libhardware.vndk-sp\
+    libhidlbase.vndk-sp\
+    libhidltransport.vndk-sp\
+    libutils.vndk-sp\
+    libc++.vndk-sp\
+    libsync.vndk-sp\
+    libbacktrace.vndk-sp\
+    libunwind.vndk-sp\
+    liblzma.vndk-sp\
+
+ifeq ($(TARGET_USES_QCOM_BSP_ATEL),true)
+    PRODUCT_PROPERTY_OVERRIDES += persist.radio.multisim.config=dsds
 endif

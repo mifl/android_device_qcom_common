@@ -1,4 +1,5 @@
-#!/system/bin/sh
+#! /vendor/bin/sh
+
 # Copyright (c) 2012-2013, 2016, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -53,13 +54,6 @@ function configure_memory_parameters() {
     # Set ALMK parameters (usually above the highest minfree values)
     # 32 bit will have 53K & 64 bit will have 81K
     #
-    # Set ZCache parameters
-    # max_pool_percent is the percentage of memory that the compressed pool
-    # can occupy.
-    # clear_percent is the percentage of memory at which zcache starts
-    # evicting compressed pages. This should be slighlty above adj0 value.
-    # clear_percent = (adj0 * 100 / avalible memory in pages)+1
-    #
 
 ProductName=`getprop ro.product.name`
 
@@ -73,8 +67,6 @@ else
     arch_type=`uname -m`
     MemTotalStr=`cat /proc/meminfo | grep MemTotal`
     MemTotal=${MemTotalStr:16:8}
-    MemTotalPg=$((MemTotal / 4))
-    adjZeroMinFree=18432
 
     # Read adj series and set adj threshold for PPR and ALMK.
     # This is required since adj values change from framework to framework.
@@ -100,29 +92,22 @@ else
         echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-        adjZeroMinFree=18432
     elif [ "$arch_type" == "aarch64" ] && [ $MemTotal -gt 1048576 ]; then
         echo 10 > /sys/module/process_reclaim/parameters/pressure_min
         echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-        adjZeroMinFree=14746
     elif [ "$arch_type" == "aarch64" ]; then
         echo 50 > /sys/module/process_reclaim/parameters/pressure_min
         echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-        adjZeroMinFree=14746
     else
         echo 50 > /sys/module/process_reclaim/parameters/pressure_min
         echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "15360,19200,23040,26880,34415,43737" > /sys/module/lowmemorykiller/parameters/minfree
         echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-        adjZeroMinFree=15360
     fi
-    clearPercent=$((((adjZeroMinFree * 100) / MemTotalPg) + 1))
-    echo $clearPercent > /sys/module/zcache/parameters/clear_percent
-    echo 30 >  /sys/module/zcache/parameters/max_pool_percent
 
     configure_zram_parameters
 
@@ -149,6 +134,15 @@ else
         swapon /data/system/swap/swapfile -p 32758
     fi
 fi
+}
+
+function start_hbtp()
+{
+        # Start the Host based Touch processing but not in the power off mode.
+        bootmode=`getprop ro.bootmode`
+        if [ "charger" != $bootmode ]; then
+                start hbtp
+        fi
 }
 
 case "$target" in
@@ -488,14 +482,14 @@ case "$target" in
                         "Surf")
                             case "$platform_subtype_id" in
                                 "1")
-                                    start hbtp
+                                    start_hbtp
                                 ;;
                             esac
                         ;;
                         "MTP")
                             case "$platform_subtype_id" in
                                 "3")
-                                    start hbtp
+                                    start_hbtp
                                 ;;
                             esac
                         ;;
@@ -1137,7 +1131,7 @@ case "$target" in
         fi
 
         case "$soc_id" in
-            "293" | "304" )
+            "293" | "304" | "338" )
 
                 # Start Host based Touch processing
                 case "$hw_platform" in
@@ -1146,7 +1140,7 @@ case "$target" in
                         #1200p panel is connected to the device.
                         dir="/sys/bus/i2c/devices/3-0038"
                         if [ ! -d "$dir" ]; then
-                              start hbtp
+                              start_hbtp
                         fi
                         ;;
                 esac
@@ -1358,7 +1352,7 @@ case "$target" in
                   # Start Host based Touch processing
                   case "$hw_platform" in
                     "MTP" | "Surf" | "RCM" )
-                        start hbtp
+                        start_hbtp
                         ;;
                   esac
                 # Apply Scheduler and Governor settings for 8917 / 8920
@@ -1471,7 +1465,7 @@ case "$target" in
                   # Start Host based Touch processing
                   case "$hw_platform" in
                     "MTP" | "Surf" | "RCM" )
-                        start hbtp
+                        start_hbtp
                         ;;
                   esac
 
@@ -1624,6 +1618,11 @@ esac
 case "$target" in
     "sdm660")
 
+        # Set the default IRQ affinity to the primary cluster. When a
+        # CPU is isolated/hotplugged, the IRQ affinity is adjusted
+        # to one of the CPU from the default IRQ affinity mask.
+        echo f > /proc/irq/default_smp_affinity
+
         if [ -f /sys/devices/soc0/soc_id ]; then
                 soc_id=`cat /sys/devices/soc0/soc_id`
         else
@@ -1672,6 +1671,10 @@ case "$target" in
             echo 5 > /proc/sys/kernel/sched_spill_nr_run
             echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
             echo 100000 > /proc/sys/kernel/sched_short_burst_ns
+
+            # cpuset settings
+            echo 0-3 > /dev/cpuset/background/cpus
+            echo 0-3 > /dev/cpuset/system-background/cpus
 
             # disable thermal bcl hotplug to switch governor
             echo 0 > /sys/module/msm_thermal/core_control/enabled
@@ -1777,7 +1780,7 @@ case "$target" in
             # Start Host based Touch processing
                 case "$hw_platform" in
                         "MTP" | "Surf" | "RCM" | "QRD" )
-                        start hbtp
+                        start_hbtp
                         ;;
                 esac
             ;;
@@ -1789,7 +1792,7 @@ case "$target" in
             # Start Host based Touch processing
             case "$hw_platform" in
                 "MTP" | "Surf" | "RCM" | "QRD" )
-                start hbtp
+                start_hbtp
                 ;;
             esac
 
@@ -1807,6 +1810,10 @@ case "$target" in
             echo 15 > /proc/sys/kernel/sched_init_task_load
             echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
             echo 50000 > /proc/sys/kernel/sched_short_burst_ns
+
+            # cpuset settings
+            echo 0-3 > /dev/cpuset/background/cpus
+            echo 0-3 > /dev/cpuset/system-background/cpus
 
             # disable thermal bcl hotplug to switch governor
             echo 0 > /sys/module/msm_thermal/core_control/enabled
@@ -2344,6 +2351,12 @@ esac
 
 case "$target" in
     "sdm845")
+
+        # Set the default IRQ affinity to the silver cluster. When a
+        # CPU is isolated/hotplugged, the IRQ affinity is adjusted
+        # to one of the CPU from the default IRQ affinity mask.
+        echo f > /proc/irq/default_smp_affinity
+
 	if [ -f /sys/devices/soc0/soc_id ]; then
                 soc_id=`cat /sys/devices/soc0/soc_id`
         else
@@ -2352,7 +2365,7 @@ case "$target" in
 
 	case "$soc_id" in
 		"321") #sdm845
-		start hbtp
+		start_hbtp
 		;;
 	esac
 	# Core control parameters
@@ -2365,7 +2378,7 @@ case "$target" in
 
 	# Setting b.L scheduler parameters
 	echo 95 > /proc/sys/kernel/sched_upmigrate
-	echo 90 > /proc/sys/kernel/sched_downmigrate
+	echo 85 > /proc/sys/kernel/sched_downmigrate
 	echo 100 > /proc/sys/kernel/sched_group_upmigrate
 	echo 95 > /proc/sys/kernel/sched_group_downmigrate
 	echo 0 > /proc/sys/kernel/sched_select_prev_cpu_us
@@ -2389,17 +2402,34 @@ case "$target" in
         do
             echo "bw_hwmon" > $cpubw/governor
             echo 50 > $cpubw/polling_interval
-            echo "1720 2929 4943 5931 6881" > $cpubw/bw_hwmon/mbps_zones
+            echo "2288 4577 6500 8132 9155 10681" > $cpubw/bw_hwmon/mbps_zones
             echo 4 > $cpubw/bw_hwmon/sample_ms
-            echo 68 > $cpubw/bw_hwmon/io_percent
+            echo 34 > $cpubw/bw_hwmon/io_percent
             echo 20 > $cpubw/bw_hwmon/hist_memory
             echo 10 > $cpubw/bw_hwmon/hyst_length
             echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
-            echo 68 > $cpubw/bw_hwmon/low_power_io_percent
+            echo 34 > $cpubw/bw_hwmon/low_power_io_percent
             echo 20 > $cpubw/bw_hwmon/low_power_delay
             echo 0 > $cpubw/bw_hwmon/guard_band_mbps
             echo 250 > $cpubw/bw_hwmon/up_scale
             echo 1600 > $cpubw/bw_hwmon/idle_mbps
+        done
+
+        for llccbw in /sys/class/devfreq/*qcom,llccbw*
+        do
+            echo "bw_hwmon" > $llccbw/governor
+            echo 50 > $llccbw/polling_interval
+            echo "1720 2929 4943 5931 6881" > $llccbw/bw_hwmon/mbps_zones
+            echo 4 > $llccbw/bw_hwmon/sample_ms
+            echo 68 > $llccbw/bw_hwmon/io_percent
+            echo 20 > $llccbw/bw_hwmon/hist_memory
+            echo 10 > $llccbw/bw_hwmon/hyst_length
+            echo 0 > $llccbw/bw_hwmon/low_power_ceil_mbps
+            echo 68 > $llccbw/bw_hwmon/low_power_io_percent
+            echo 20 > $llccbw/bw_hwmon/low_power_delay
+            echo 0 > $llccbw/bw_hwmon/guard_band_mbps
+            echo 250 > $llccbw/bw_hwmon/up_scale
+            echo 1600 > $llccbw/bw_hwmon/idle_mbps
         done
 
 	#Enable mem_latency governor for DDR scaling
@@ -2421,13 +2451,13 @@ case "$target" in
 	echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
 
 	# cpuset parameters
-        echo 0 > /dev/cpuset/background/cpus
-        echo 0-2 > /dev/cpuset/system-background/cpus
+        echo 0-3 > /dev/cpuset/background/cpus
+        echo 0-3 > /dev/cpuset/system-background/cpus
 
 	# Turn off scheduler boost at the end
         echo 0 > /proc/sys/kernel/sched_boost
         # Turn on sleep modes.
-        echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+        echo 1 > /sys/module/lpm_levels/parameters/sleep_disabled
     ;;
 esac
 
@@ -2539,6 +2569,10 @@ case "$target" in
 		platform_major_version=$((10#${platform_version}>>16))
 	fi
 
+	if [ -f /sys/devices/soc0/platform_subtype_id ]; then
+		platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
+	fi
+
 	case "$soc_id" in
 		"292") #msm8998 apq8098_latv
 		# Start Host based Touch processing
@@ -2546,11 +2580,11 @@ case "$target" in
 		"QRD")
 			case "$platform_subtype_id" in
 				"0")
-					start hbtp
+					start_hbtp
 					;;
 				"16")
 					if [ $platform_major_version -lt 6 ]; then
-						start hbtp
+						start_hbtp
 					fi
 					;;
 			esac
@@ -2576,6 +2610,7 @@ case "$target" in
 
         echo 0-3 > /dev/cpuset/background/cpus
         echo 0-3 > /dev/cpuset/system-background/cpus
+        echo 0 > /proc/sys/kernel/sched_boost
     ;;
 esac
 
@@ -2622,7 +2657,7 @@ case "$target" in
         echo 1 > /sys/devices/system/cpu/cpu3/online
         echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
-        for devfreq_gov in /sys/class/devfreq/qcom,cpubw*/governor
+        for devfreq_gov in /sys/class/devfreq/*qcom,cpubw*/governor
         do
             echo "bw_hwmon" > $devfreq_gov
         done
@@ -2681,6 +2716,9 @@ case "$target" in
     "msm8916")
         setprop sys.post_boot.parsed 1
     ;;
+    "msm8909")
+        setprop sys.post_boot.parsed 1
+    ;;
     "msm8937" | "msm8953")
         echo 128 > /sys/block/mmcblk0/bdi/read_ahead_kb
         echo 128 > /sys/block/mmcblk0/queue/read_ahead_kb
@@ -2693,7 +2731,7 @@ case "$target" in
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
-    "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv")
+    "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv" | "sdm845")
         setprop sys.post_boot.parsed 1
     ;;
     "apq8084")
