@@ -230,6 +230,7 @@ UBINIZE_CFG := $(2K_NAND_OUT)/ubinize.cfg
 
 INSTALLED_UBIFS_SYSTEMIMAGE_TARGET := $(2K_NAND_OUT)/system.ubifs
 INSTALLED_UBIFS_USERDATAIMAGE_TARGET := $(2K_NAND_OUT)/userdata.ubifs
+INSTALLED_UBIFS_PERSISTIMAGE_TARGET := $(2K_NAND_OUT)/persist.ubifs
 
 #-F: allow space-fixup during first boot
 #ref: http://www.linux-mtd.infradead.org/faq/ubifs.html#L_free_space_fixup
@@ -373,6 +374,17 @@ define build-nand-cacheimage
   $(hide) $(call assert-max-image-size,$@,$(BOARD_CACHEIMAGE_PARTITION_SIZE),yaffs)
 endef
 
+
+# Generate persist.ubifs image for NAND
+define build-nand-ubifs-persistimage
+  @echo "target NAND persist image: $(3)"
+  (set -o pipefail; cd $(PRODUCT_OUT) && find persist/ -mindepth 1 | $(CURDIR)/$(HOST_OUT_EXECUTABLES)/mkdevtbl > persist.dt)
+  $(hide) mkdir -p $(1)
+  $(hide) $(MKFSUBIFS) --jrn-size 5000000 $(2) $(3) -c 562 -D $(PRODUCT_OUT)/persist.dt -r $(PRODUCT_OUT)/persist
+  $(hide) chmod a+r $(3)
+  $(hide) $(call assert-max-image-size,$@,$(BOARD_PERSISTIMAGE_PARTITION_SIZE),yaffs)
+endef
+
 # Generate UBIFS images for NAND
 define build-nand-ubifs-systemimage
   @echo "target UBIFS NAND system image: $(3)"
@@ -409,6 +421,21 @@ define create_ubinize_config
   echo vol_type=dynamic >> "${UBINIZE_CFG}"
   echo vol_name=userdata >> "${UBINIZE_CFG}"
   echo vol_flags=autoresize >> "${UBINIZE_CFG}"
+
+  echo \[cache_volume\] >> "${UBINIZE_CFG}"
+  echo mode=ubi >> "${UBINIZE_CFG}"
+  echo vol_id=2 >> "${UBINIZE_CFG}"
+  echo vol_type=dynamic >> "${UBINIZE_CFG}"
+  echo vol_name=cache >> "${UBINIZE_CFG}"
+  echo vol_size=4MiB >> "${UBINIZE_CFG}"
+
+  echo \[persist_volume\] >> "${UBINIZE_CFG}"
+  echo mode=ubi >> "${UBINIZE_CFG}"
+  echo vol_id=3 >> "${UBINIZE_CFG}"
+  echo image="${INSTALLED_UBIFS_PERSISTIMAGE_TARGET}" >> "${UBINIZE_CFG}"
+  echo vol_type=dynamic >> "${UBINIZE_CFG}"
+  echo vol_name=persist >> "${UBINIZE_CFG}"
+  echo vol_size=6MiB >> "${UBINIZE_CFG}"
 endef
 
 ifeq ($(call is-board-platform,msm8909),true)
@@ -419,7 +446,10 @@ $(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET): $(MKFSUBIFS) $(MKDEVTBL) $(INSTALLED_SYST
 $(INSTALLED_UBIFS_USERDATAIMAGE_TARGET): $(MKFSUBIFS) $(MKDEVTBL) $(INSTALLED_USERDATAIMAGE_TARGET)
 	$(call build-nand-ubifs-userdataimage,$(2K_NAND_OUT),$(INTERNAL_MKFSUBIFS_FLAGS),$(INSTALLED_UBIFS_USERDATAIMAGE_TARGET))
 
-$(INSTALLED_UBINIZE_TARGET): $(UBINIZE) $(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET) $(INSTALLED_UBIFS_USERDATAIMAGE_TARGET)
+$(INSTALLED_UBIFS_PERSISTIMAGE_TARGET): $(MKFSUBIFS) $(MKDEVTBL) $(INSTALLED_PERSISTIMAGE_TARGET)
+	$(call build-nand-ubifs-persistimage,$(2K_NAND_OUT),$(INTERNAL_MKFSUBIFS_FLAGS),$(INSTALLED_UBIFS_PERSISTIMAGE_TARGET))
+
+$(INSTALLED_UBINIZE_TARGET): $(UBINIZE) $(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET) $(INSTALLED_UBIFS_USERDATAIMAGE_TARGET) $(INSTALLED_UBIFS_PERSISTIMAGE_TARGET)
 	$(call create_ubinize_config)
 	$(UBINIZE) -o $@ $(INTERNAL_UBINIZE_FLAGS) $(UBINIZE_CFG)
 
