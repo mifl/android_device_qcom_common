@@ -30,10 +30,10 @@ def LoadFilesMap(zip, name="RADIO/filesmap"):
   try:
     data = zip.read(name)
   except KeyError:
-    print "Warning: could not find %s in %s." % (name, zip)
+    print ("Warning: could not find %s in %s." % (name, zip))
     data = ""
   d = {}
-  for line in data.split("\n"):
+  for line in data.decode().split("\n"):
     line = line.strip()
     if not line or line.startswith("#"):
       continue
@@ -74,7 +74,7 @@ def GetFileDestination(fn, filesmap):
   if fn not in filesmap:
     fn = fn.split(".")[0] + ".*"
     if fn not in filesmap:
-      print "warning radio-update: '%s' not found in filesmap" % (fn)
+      print ("warning radio-update: '%s' not found in filesmap" % (fn))
       return None, backup
   return filesmap[fn], backup
 
@@ -111,24 +111,24 @@ def SplitFwTypes(files):
 # Prepare radio-update files and verify them
 def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
   if api_version < 3:
-    print "warning radio-update: no support for api_version less than 3"
+    print ("warning radio-update: no support for api_version less than 3")
     return False
 
-  print "Loading radio filesmap..."
+  print ("Loading radio filesmap...")
   filesmap = LoadFilesMap(target_zip)
   if filesmap == {}:
-    print "warning radio-update: no or invalid filesmap file found"
+    print ("warning radio-update: no or invalid filesmap file found")
     return False
 
-  print "Loading radio target..."
+  print ("Loading radio target...")
   tgt_files = GetRadioFiles(target_zip)
   if tgt_files == {}:
-    print "warning radio-update: no radio images in input target_files"
+    print ("warning radio-update: no radio images in input target_files")
     return False
 
   src_files = None
   if source_zip is not None:
-    print "Loading radio source..."
+    print ("Loading radio source...")
     src_files = GetRadioFiles(source_zip)
 
   update_list = {}
@@ -139,7 +139,7 @@ def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
   else:
     part = "MTD"
 
-  print "Preparing radio-update files..."
+  print ("Preparing radio-update files...")
   for fn in tgt_files:
     dest, destBak = GetFileDestination(fn, filesmap)
     if dest is None:
@@ -154,10 +154,10 @@ def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
 
     # Currently, we use full update for non-HLOS whole partition images
     if dest.startswith("/dev/block/bootdevice/by-name/"):
-      print 'file: %s has destination: %s. Using full update' % (fn, dest)
+      print ('file: %s has destination: %s. Using full update' % (fn, dest))
       full = True;
     elif not dest.startswith("/"):
-      print 'file: %s has destination: %s. Using full update' % (fn, dest)
+      print ('file: %s has destination: %s. Using full update' % (fn, dest))
       full = True;
 
     if not full:
@@ -177,7 +177,7 @@ def OTA_VerifyEnd(info, api_version, target_zip, source_zip=None):
         update_list[f] = (dest, destBak, tf, sf)
         largest_source_size = max(largest_source_size, sf.size)
     if full:
-      print "Installing full update for: %s" % (fn)
+      print ("Installing full update for: %s" % (fn))
       f = "firmware-update/" + fn
       common.ZipWriteStr(info.output_zip, f, tf.data)
       update_list[f] = (dest, destBak, None, None)
@@ -359,7 +359,7 @@ def InstallFwImages(type, script, files):
 
 
 def OTA_InstallEnd(info):
-  print "Applying radio-update script modifications..."
+  print ("Applying radio-update script modifications...")
   info.script.Comment("---- radio update tasks ----")
   info.script.Print("Patching firmware images...")
 
