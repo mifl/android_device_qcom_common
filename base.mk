@@ -753,6 +753,15 @@ QMMF_SDK_DEBUG += qmmf_audio_test
 QMMF_SDK_DEBUG += qmmf_system_test
 QMMF_SDK_DEBUG += qmmf_recorder_360cam_gtest
 
+#QMMF_WEBSERVER
+QMMF_WEBSERVER = libqmmf_vam_interface
+QMMF_WEBSERVER += libqmmf_mux_interface
+QMMF_WEBSERVER += libhttp_interface
+QMMF_WEBSERVER += libqmmf_live555rtsp_in
+
+#QMMF_WEBSERVER_DEBUG
+QMMF_WEBSERVER_DEBUG += qmmf_http_interface_gtest
+
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
@@ -866,6 +875,7 @@ PRODUCT_PACKAGES += $(PROTOBUF)
 PRODUCT_PACKAGES += $(PVOMX)
 PRODUCT_PACKAGES += $(JSONCPP)
 PRODUCT_PACKAGES += $(QMMF_SDK)
+PRODUCT_PACKAGES += $(QMMF_WEBSERVER)
 PRODUCT_PACKAGES += $(RF4CE)
 PRODUCT_PACKAGES += $(SENSORS_HARDWARE)
 #PRODUCT_PACKAGES += $(SOFTAP)
@@ -924,6 +934,7 @@ PRODUCT_PACKAGES_DEBUG += init.qcom.debug.sh
 
 #Add QMMF tests
 PRODUCT_PACKAGES_DEBUG += $(QMMF_SDK_DEBUG)
+PRODUCT_PACKAGES_DEBUG += $(QMMF_WEBSERVER_DEBUG)
 
 #NANOPB_LIBRARY_NAME := libnanopb-c-2.8.0
 
