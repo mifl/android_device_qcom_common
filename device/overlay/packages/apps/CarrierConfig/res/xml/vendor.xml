@@ -528,6 +528,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="show_call_session_event_toast" value="false"/>
         <boolean name="show_data_usage_toast" value="false"/>
         <boolean name="carrier_parse_number_on_forward_call_bool" value="true" />
+        <boolean name="config_enable_video_crbt" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="01">
@@ -547,6 +548,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="show_call_session_event_toast" value="false"/>
         <boolean name="show_data_usage_toast" value="false"/>
         <boolean name="carrier_parse_number_on_forward_call_bool" value="true" />
+        <boolean name="config_enable_video_crbt" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="03">
@@ -584,6 +586,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="show_call_session_event_toast" value="false"/>
         <boolean name="show_data_usage_toast" value="false"/>
         <boolean name="carrier_parse_number_on_forward_call_bool" value="true" />
+        <boolean name="config_enable_video_crbt" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="08">
@@ -596,6 +599,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="show_call_session_event_toast" value="false"/>
         <boolean name="show_data_usage_toast" value="false"/>
         <boolean name="carrier_parse_number_on_forward_call_bool" value="true" />
+        <boolean name="config_enable_video_crbt" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="09">
