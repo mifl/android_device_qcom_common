@@ -158,7 +158,7 @@ CM := CMFileManager
 CM += Eleven
 
 #Default Launcher
-DELAUN := Launcher3
+#DELAUN := Launcher3
 
 #DASH
 DASH := libdashplayer
@@ -484,10 +484,10 @@ MM_VIDEO := ast-mm-vdec-omx-test
 MM_VIDEO += libdivxdrmdecrypt
 MM_VIDEO += libavenhancements
 MM_VIDEO += liblasic
-MM_VIDEO += libOmxSwVencMpeg4
+#MM_VIDEO += libOmxSwVencMpeg4
 MM_VIDEO += libOmxVdec
 MM_VIDEO += libOmxVdecHevc
-MM_VIDEO += libOmxSwVdec
+#MM_VIDEO += libOmxSwVdec
 MM_VIDEO += libOmxVenc
 MM_VIDEO += libOmxVidEnc
 MM_VIDEO += libstagefrighthw
@@ -714,7 +714,7 @@ PRODUCT_PACKAGES += $(KEYPAD)
 PRODUCT_PACKAGES += $(KS)
 PRODUCT_PACKAGES += $(LIB_NL)
 PRODUCT_PACKAGES += $(LIB_XML2)
-PRODUCT_PACKAGES += $(LIBCAMERA)
+#PRODUCT_PACKAGES += $(LIBCAMERA)
 PRODUCT_PACKAGES += $(LIBGESTURES)
 PRODUCT_PACKAGES += $(LIBCOPYBIT)
 PRODUCT_PACKAGES += $(LIBGRALLOC)
