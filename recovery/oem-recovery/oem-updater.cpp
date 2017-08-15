@@ -39,7 +39,7 @@ Value* DecryptFn(const char* name, State* state, const std::vector<std::unique_p
     int rc = -1;
 
     if (argv.size() != 2)
-        return ErrorAbort(state, "%s expects 2 args, got %d", name, argv.size());
+        return ErrorAbort(state,kArgsParsingFailure, "%s() expects 2 arg, got %zu", name, argv.size());
 
     std::vector<std::string> args;
     if (ReadArgs(state, argv, &args))
@@ -53,16 +53,16 @@ Value* DecryptFn(const char* name, State* state, const std::vector<std::unique_p
     return StringValue(strdup(rc >= 0 ? "t" : ""));
 }
 
-Value* BootUpdateFn(const char* name, State* state, const std::vector<std::unique_ptr<Expr>>& argv)
+Value* BootUpdateFn(const char* name, State* state,  const std::vector<std::unique_ptr<Expr>>& argv)
 {
     int rc = 0;
     enum boot_update_stage stage;
 
     if (argv.size() != 1)
-        return ErrorAbort(state, "%s() expects 1 args, got %d", name, argv.size());
+        return ErrorAbort(state,kArgsParsingFailure, "%s() expects 1 arg, got %zu", name, argv.size());
 
     std::vector<std::string> args;
-    if (ReadArgs(state, argv, &args))
+    if (ReadArgs(state,  argv, &args))
         return NULL;
 
     const std::string& stageStr = args[0];

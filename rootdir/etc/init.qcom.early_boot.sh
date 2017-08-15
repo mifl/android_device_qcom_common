@@ -1,5 +1,6 @@
-#!/system/bin/sh
-# Copyright (c) 2012-2013,2016-2017 The Linux Foundation. All rights reserved.
+#! /vendor/bin/sh
+
+# Copyright (c) 2012-2013,2016 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -26,7 +27,7 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-export PATH=/system/bin
+export PATH=/vendor/bin
 
 # Set platform variables
 if [ -f /sys/devices/soc0/hw_platform ]; then
@@ -267,6 +268,33 @@ case "$target" in
                 ;;
         esac
         ;;
+    "sdm660")
+        if [ -f /firmware/verinfo/ver_info.txt ]; then
+            Meta_Build_ID=`cat /firmware/verinfo/ver_info.txt |
+                    sed -n 's/^[^:]*Meta_Build_ID[^:]*:[[:blank:]]*//p' |
+                    sed 's/.*LA.\(.*\)/\1/g' | cut -d \- -f 1`
+            # In SDM660 if meta version is greater than 2.1, need
+            # to use the new vendor-ril which supports L+L feature
+            # otherwise use the existing old one.
+            product=`getprop ro.product.device`
+            case "$product" in
+            "sdm660_64")
+                if [ "$Meta_Build_ID" \< "2.1" ]; then
+                    setprop vendor.rild.libpath "/vendor/lib64/libril-qc-qmi-1.so"
+                else
+                    setprop vendor.rild.libpath "/vendor/lib64/libril-qc-hal-qmi.so"
+                fi
+                ;;
+            "sdm660_32")
+                if [ "$Meta_Build_ID" \< "2.1" ]; then
+                    setprop vendor.rild.libpath "/vendor/lib/libril-qc-qmi-1.so"
+                else
+                    setprop vendor.rild.libpath "/vendor/lib/libril-qc-hal-qmi.so"
+                fi
+                ;;
+            esac
+        fi
+        ;;
 esac
 #set default lcd density
 #Since lcd density has read only
@@ -360,9 +388,12 @@ then
     # set lineptr permissions for all displays
     for fb_cnt in 0 1 2 3
     do
-        file=/sys/class/graphics/fb$fb_cnt/lineptr_value
-        if [ -f "$file" ]; then
-            set_perms $file system.graphics 0664
+        file=/sys/class/graphics/fb$fb_cnt
+        if [ -f "$file/lineptr_value" ]; then
+            set_perms $file/lineptr_value system.graphics 0664
+        fi
+        if [ -f "$file/msm_fb_persist_mode" ]; then
+            set_perms $file/msm_fb_persist_mode system.graphics 0664
         fi
     done
 fi

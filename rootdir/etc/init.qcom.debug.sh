@@ -1,4 +1,5 @@
-#!/system/bin/sh
+#! /vendor/bin/sh
+
 # Copyright (c) 2014-2017, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -428,23 +429,23 @@ enable_msm8998_dcc_config()
     echo 0x17811218 > $DCC_PATH/config
     echo 0x179D2000 > $DCC_PATH/config
     echo 0x179D2C0C > $DCC_PATH/config
-    echo 0x17904008 > $DCC_PATH/config
-    echo 0x1790400C > $DCC_PATH/config
-    echo 0x17904010 > $DCC_PATH/config
-    echo 0x17904014 > $DCC_PATH/config
+    echo 0x7ba4008 > $DCC_PATH/config
+    echo 0x7ba400C > $DCC_PATH/config
+    echo 0x7ba4010 > $DCC_PATH/config
+    echo 0x7ba4014 > $DCC_PATH/config
 
     # CCI ACE / Stalled Transaction
-    echo 0x179082B0 > $DCC_PATH/config
+    echo 0x7ba82B0 > $DCC_PATH/config
 
     # 8 times, same register
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
+    echo 0x7ba1000 > $DCC_PATH/config
 
     #SCMO STATUS
     echo 0x01030560  1 > $DCC_PATH/config
@@ -478,6 +479,18 @@ enable_msm8998_dcc_config()
     echo 0x01041074 1 > $DCC_PATH/config
     echo 0x01030450 1 > $DCC_PATH/config
     echo 0x0103C450 1 > $DCC_PATH/config
+
+    # APCS_ALIAS0_CPU_PWR_CTL
+    echo 0x17988004 2 > $DCC_PATH/config
+    echo 0x17998004 2 > $DCC_PATH/config
+    echo 0x179A8004 2 > $DCC_PATH/config
+    echo 0x179B8004 2 > $DCC_PATH/config
+    echo 0x17888004 2 > $DCC_PATH/config
+    echo 0x17898004 2 > $DCC_PATH/config
+    echo 0x178A8004 2 > $DCC_PATH/config
+    echo 0x178B8004 2 > $DCC_PATH/config
+    echo 0x17911014 2 > $DCC_PATH/config
+    echo 0x17811014 2 > $DCC_PATH/config
 
     echo  1 > $DCC_PATH/enable
 }
@@ -1156,19 +1169,6 @@ enable_sdm660_dcc_config()
     echo 0x17BF0200 > $DCC_PATH/config
     echo 0x17BF0100 > $DCC_PATH/config
 
-    # CCI ACE / Stalled Transaction
-    echo 0x179082B0 > $DCC_PATH/config
-
-    # 8 times, same register
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-    echo 0x17901000 > $DCC_PATH/config
-
     echo  1 > $DCC_PATH/enable
 }
 
@@ -1479,6 +1479,7 @@ enable_dcc_config()
             echo "Enabling DCC config for sdm660."
             enable_sdm660_dcc_config
             ;;
+
         "apq8098_latv")
             echo "Enabling DCC config for apq8098_latv."
             enable_msm8998_dcc_config

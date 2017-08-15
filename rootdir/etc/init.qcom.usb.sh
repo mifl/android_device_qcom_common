@@ -1,5 +1,5 @@
-#!/system/bin/sh
-# Copyright (c) 2012-2016, The Linux Foundation. All rights reserved.
+#!/vendor/bin/sh
+# Copyright (c) 2012-2017, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -197,6 +197,7 @@ case "$target" in
         setprop sys.usb.controller "a800000.dwc3"
         setprop sys.usb.rndis.func.name "rndis_bam"
 	setprop sys.usb.rmnet.func.name "rmnet_bam"
+	echo 15916 > /sys/module/usb_f_qcrndis/parameters/rndis_dl_max_xfer_size
         ;;
     "sdm845")
         setprop sys.usb.controller "a600000.dwc3"
