@@ -113,6 +113,9 @@ on boot
     mkdir /persist/alarm 0770 system system
     mkdir /persist/time 0770 system system
 
+    # Create directory used for display
+    mkdir /persist/display 0770 system graphics
+
     #Create NETMGR daemon socket area
     mkdir /dev/socket/netmgr 0750 radio radio
 
