@@ -194,12 +194,21 @@ on boot
     # Create directory used for display
     mkdir /persist/display 0770 system graphics
 
+    # Create vpp directory
+    mkdir /persist/vpp 0770 media media
+
+    # load WIGIG platform driver
+    insmod /vendor/lib/modules/msm_11ad_proxy.ko
+
 # msm specific files that need to be created on /data
 on post-fs-data
-    mkdir /data/vendor/misc 0770 system system
+    mkdir /data/vendor/misc 01771 system system
 
     # Create directory used by display clients
     mkdir /data/vendor/display 0770 system graphics
+
+    # Change lm related dirs
+    mkdir /data/vendor/lm 0700 root root
 
     # Create directory used by media clients
     mkdir /data/vendor/media 0770 mediacodec media
@@ -217,13 +226,20 @@ on post-fs-data
     # Create directory for TZ Apps
     mkdir /data/misc/qsee 0770 system system
 
+    # Create directory for apps access via QTEEConnector
+    mkdir /data/vendor/qtee 0770 system system
+
+    # Create directory for voiceprint
+    mkdir /data/misc/qvop 0771 system system
+
     #Create folder for mm-qcamera-daemon
     mkdir /data/misc/camera 0770 camera camera
 
     mkdir /data/media 0770 media_rw media_rw
     chown media_rw media_rw /data/media
 
-    mkdir /data/misc/ipa 0700 net_admin net_admin
+    #Create directory for tftp
+    mkdir /data/vendor/tombstones 0771 system system
 
     mkdir /data/vendor/ramdump 0771 root system
     mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
@@ -233,8 +249,10 @@ on post-fs-data
     # Create the directories used by the Wireless subsystem
     mkdir /data/vendor/wifi 0770 wifi wifi
     mkdir /data/vendor/wifi/sockets 0770 wifi wifi
+    mkdir /data/vendor/wifi/hostapd 0770 wifi wifi
     mkdir /data/vendor/wifi/hostapd/ctrl 0770 wifi wifi
     mkdir /data/vendor/wifi/wpa_supplicant 0770 wifi wifi
+    mkdir /data/vendor/wifi/wigig_hostapd 0770 wifi wifi
     mkdir /data/misc/wifi 0770 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
@@ -248,6 +266,10 @@ on post-fs-data
     #create netmgr log dir
     mkdir /data/vendor/netmgr 0770 radio radio
     chmod 0770 /data/vendor/netmgr
+
+    #create ipacm log dir
+    mkdir /data/vendor/ipa 0770 radio radio
+    chmod 0770 /data/vendor/ipa
 
     # Create the directories used by CnE subsystem
     mkdir /data/connectivity 0771 system system
@@ -328,17 +350,16 @@ on post-fs-data
     chmod 0770 /data/misc/fm
 
     #Create PERFD deamon related dirs
-    mkdir /data/system/perfd 0770 root system
-    chmod 2770 /data/system/perfd
-    rm /data/system/perfd/default_values
-    start perfd
+    mkdir /data/vendor/perfd 0770 root system
+    chmod 2770 /data/vendor/perfd
+    rm /data/vendor/perfd/default_values
 
     # NFC local data and nfcee xml storage
     mkdir /data/nfc 0770 nfc nfc
     mkdir /data/nfc/param 0770 nfc nfc
 
     #Create IOP  deamon related dirs
-    mkdir /data/misc/iop 0770 root system
+    mkdir /data/vendor/iop 0770 root system
 
     # Mark the copy complete flag to not completed
     write /data/vendor/radio/copy_complete 0
@@ -373,18 +394,17 @@ on post-fs-data
     write /sys/block/dm-0/queue/read_ahead_kb 2048
     write /sys/block/dm-1/queue/read_ahead_kb 2048
 
+    # Create vpp directory
+    mkdir /data/vendor/vpp 0770 media media
+
+    #Create FTM_AP dir for factory test
+    mkdir /data/FTM_AP 0775 system system
+
 service nqnfcinfo /system/vendor/bin/nqnfcinfo
     class late_start
     group nfc
     user system
     oneshot
-
-service perfd /system/vendor/bin/perfd
-   class main
-   user root
-   group root readproc
-   disabled
-   socket perfd seqpacket 0666 root system
 
 service iop /system/vendor/bin/iop
     class main
@@ -439,7 +459,7 @@ on property:sys.boot_completed=1
     write /sys/block/dm-1/queue/read_ahead_kb 512
     #WDSP FW boot sysfs node used by STHAL
     chown media audio /sys/kernel/wdsp0/boot
-
+    chown media audio /sys/kernel/wcd_cpe0/fw_name
 on property:persist.radio.atfwd.start=false
     stop atfwd
 
@@ -504,15 +524,10 @@ service cnd /system/vendor/bin/cnd
     user system
     group system wifi inet radio wakelock net_admin
 
-service dpmd /system/bin/dpmd
-    class late_start
-    socket dpmd stream 660 root system
-    socket tcm  stream 660 root inet
-    socket dpmwrapper stream 660 root inet
-    group system readproc inet
-
 service dpmQmiMgr /system/vendor/bin/dpmQmiMgr
     class main
+    user system
+    group system
 
 service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
     class core
@@ -522,6 +537,8 @@ service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
 service rmt_storage /vendor/bin/rmt_storage
     class core
     user root
+    shutdown critical
+    ioprio rt 0
 
 service tftp_server /vendor/bin/tftp_server
    class core
@@ -603,17 +620,17 @@ service netmgrd /system/vendor/bin/netmgrd
     class main
     disabled
 
-service ipacm-diag /system/bin/ipacm-diag
+service ipacm-diag /system/vendor/bin/ipacm-diag
     class main
-    user system
-    socket ipacm_log_file dgram 660 system net_admin
-    group net_admin diag
+    user radio
+    socket ipacm_log_file dgram 660 radio radio
+    group radio diag
     disabled
 
-service ipacm /system/bin/ipacm
+service ipacm /system/vendor/bin/ipacm
     class main
-    user net_admin
-    group net_admin inet
+    user radio
+    group radio inet
     disabled
 
 service qti /system/vendor/bin/qti
@@ -674,11 +691,12 @@ service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
     disabled
     oneshot
 
-service wigig_supplicant /vendor/bin/hw/wpa_supplicant \
-    -iwigig0 -Dnl80211 -c/data/misc/wifi/wigig_supplicant.conf \
-    -m/data/misc/wifi/wigig_p2p_supplicant.conf \
-    -O/data/misc/wifi/wigig_sockets -dd \
-    -e/data/misc/wifi/wigig_entropy.bin -g@android:wpa_wigig0
+service vendor.wigig_supplicant /vendor/bin/hw/wpa_supplicant \
+    -iwigig0 -Dnl80211 -c/data/vendor/wifi/wigig_supplicant.conf \
+    -m/data/vendor/wifi/wigig_p2p_supplicant.conf \
+    -O/data/vendor/wifi/wigig_sockets -dd \
+    -e/data/vendor/wifi/wigig_entropy.bin -g@android:wpa_wigig0 \
+    -S wigigsvc
     #   we will start as root and wpa_supplicant will switch to user wifi
     #   after setting up the capabilities required for WEXT
     #   user wifi
@@ -689,7 +707,7 @@ service wigig_supplicant /vendor/bin/hw/wpa_supplicant \
     oneshot
 
 # FST Manager with hostapd (softap) - all settings inside ini file
-service fstman /system/vendor/bin/fstman -B -ddd -c /data/misc/wifi/fstman.ini
+service fstman /vendor/bin/fstman -B -ddd -c /data/vendor/wifi/fstman.ini
     user wifi
     group wifi net_admin net_raw
     class main
@@ -697,7 +715,7 @@ service fstman /system/vendor/bin/fstman -B -ddd -c /data/misc/wifi/fstman.ini
     oneshot
 
 # FST Manager with supplicant - connect to supplicant socket
-service fstman_wlan0 /system/vendor/bin/fstman -B -ddd -c /data/misc/wifi/fstman.ini @android:wpa_wlan0
+service fstman_wlan0 /vendor/bin/fstman -B -ddd -c /data/vendor/wifi/fstman.ini @android:wpa_wlan0
     user wifi
     group wifi net_admin net_raw
     class main
@@ -709,6 +727,16 @@ on property:netd.fstman.start=true
 
 on property:netd.fstman.start=false
     stop fstman
+
+service wigighalsvc /vendor/bin/wigighalsvc
+    class main
+    user system
+    group wifi
+    disabled
+
+on property:persist.vendor.wigig.enable=1
+    insmod /vendor/lib/modules/wil6210.ko alt_ifname=1
+    start wigighalsvc
 
 service dhcpcd_wlan0 /system/bin/dhcpcd -ABKLG
     class late_start
@@ -816,6 +844,12 @@ service dhcpcd_bnep4 /system/bin/dhcpcd -BKLG
     disabled
     oneshot
 
+service ssgqmigd /vendor/bin/ssgqmigd
+    class late_start
+    user radio
+    group radio
+    socket ssgqmig seqpacket 0660 radio inet
+
 service mlid /vendor/bin/mlid
     class late_start
     user gps
@@ -882,10 +916,29 @@ on property:sys.boot_completed=1
     start qcom-post-boot
     start qti-testscripts
 
+service qvop-daemon /vendor/bin/qvop-daemon
+    class late_start
+    user system
+    group system drmrpc
+
 service atfwd /vendor/bin/ATFWD-daemon
     class late_start
     user system
     group system radio
+
+service hostapd_fst /vendor/bin/hostapd -dd -g /data/vendor/wifi/hostapd/global /data/vendor/wifi/hostapd.conf
+    class late_start
+    user wifi
+    group wifi inet keystore net_admin net_raw
+    oneshot
+    disabled
+
+service vendor.wigig_hostapd /vendor/bin/hostapd -dd /data/vendor/wifi/wigig_hostapd.conf
+    class late_start
+    user wifi
+    group wifi inet keystore net_admin net_raw
+    oneshot
+    disabled
 
 service ims_regmanager /system/vendor/bin/exe-ims-regmanagerprocessnative
     class late_start
@@ -910,7 +963,7 @@ service ril-daemon2 /vendor/bin/hw/rild -c 2
     socket rild-debug2 stream 660 radio system
     user radio
     disabled
-    group radio cache inet misc audio sdcard_r sdcard_rw diag qcom_diag log
+    group radio cache inet misc audio sdcard_r sdcard_rw diag oem_2901 log
     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
 
 service ril-daemon3 /vendor/bin/hw/rild -c 3
@@ -919,7 +972,7 @@ service ril-daemon3 /vendor/bin/hw/rild -c 3
     socket rild-debug3 stream 660 radio system
     user radio
     disabled
-    group radio cache inet misc audio sdcard_r sdcard_rw diag qcom_diag log
+    group radio cache inet misc audio sdcard_r sdcard_rw diag oem_2901 log
     capabilities BLOCK_SUSPEND NET_ADMIN NET_RAW
 
 service profiler_daemon /system/bin/profiler_daemon
@@ -993,12 +1046,17 @@ service vm_bms /system/bin/vm_bms
     group root
     disabled
 
-service msm_irqbalance /vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance.conf
+service vendor.msm_irqbalance /vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance.conf
     class core
     user root
     group root
     disabled
 
+service vendor.msm_irqbl_sdm630 /vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance_sdm630.conf
+    class core
+    user root
+    group root
+    disabled
 
 # service for USERDEBUG
 service vendor.LKCore-dbg /vendor/bin/LKCore
@@ -1059,3 +1117,12 @@ service qdmastatsd /system/vendor/bin/qdmastatsd
     class late_start
     user system
     group readproc system net_bw_stats radio
+
+service vppservice /vendor/bin/vppservice
+    class main
+    user media
+    group camera
+
+# Set vendor-ril lib path based on Meta version
+on property:vendor.rild.libpath=*
+    setprop rild.libpath ${vendor.rild.libpath}
