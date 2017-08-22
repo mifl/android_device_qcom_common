@@ -260,6 +260,7 @@ INIT += init.qcom.zram.sh
 INIT += init.qti.memcheck.sh
 INIT += init.qti.synaptics_dsx_qhd.sh
 INIT += init.qcom.bms.sh
+INIT += init.qcom.modem_ubi_mount.sh
 
 #IPROUTE2
 IPROUTE2 := ip
