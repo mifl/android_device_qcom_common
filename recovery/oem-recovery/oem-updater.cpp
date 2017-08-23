@@ -42,7 +42,7 @@ Value* DecryptFn(const char* name, State* state, const std::vector<std::unique_p
         return ErrorAbort(state,kArgsParsingFailure, "%s() expects 2 arg, got %zu", name, argv.size());
 
     std::vector<std::string> args;
-    if (ReadArgs(state, argv, &args))
+    if (!ReadArgs(state,  argv, &args))
         return NULL;
 
     const std::string& src_file = args[0];
@@ -62,7 +62,7 @@ Value* BootUpdateFn(const char* name, State* state,  const std::vector<std::uniq
         return ErrorAbort(state,kArgsParsingFailure, "%s() expects 1 arg, got %zu", name, argv.size());
 
     std::vector<std::string> args;
-    if (ReadArgs(state,  argv, &args))
+    if (!ReadArgs(state,  argv, &args))
         return NULL;
 
     const std::string& stageStr = args[0];

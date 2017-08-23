@@ -26,6 +26,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+
 target=`getprop ro.board.platform`
 
 function configure_zram_parameters() {
@@ -2411,6 +2412,8 @@ case "$target" in
 	echo "schedutil" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
 	echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/schedutil/rate_limit_us
 	echo 1574400 > /sys/devices/system/cpu/cpu4/cpufreq/schedutil/hispeed_freq
+	echo "0:1324800" > /sys/module/cpu_boost/parameters/input_boost_freq
+	echo 120 > /sys/module/cpu_boost/parameters/input_boost_ms
 
         # Enable bus-dcvs
         for cpubw in /sys/class/devfreq/*qcom,cpubw*
@@ -2471,11 +2474,18 @@ case "$target" in
 
 	# Turn off scheduler boost at the end
         echo 0 > /proc/sys/kernel/sched_boost
+	# Disable CPU Retention
+        echo N > /sys/module/lpm_levels/L3/cpu0/ret/idle_enabled
+        echo N > /sys/module/lpm_levels/L3/cpu1/ret/idle_enabled
+        echo N > /sys/module/lpm_levels/L3/cpu2/ret/idle_enabled
+        echo N > /sys/module/lpm_levels/L3/cpu3/ret/idle_enabled
+        echo N > /sys/module/lpm_levels/L3/cpu4/ret/idle_enabled
+        echo N > /sys/module/lpm_levels/L3/cpu5/ret/idle_enabled
+        echo N > /sys/module/lpm_levels/L3/cpu6/ret/idle_enabled
+        echo N > /sys/module/lpm_levels/L3/cpu7/ret/idle_enabled
         # Turn on sleep modes.
         echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
-	#Disable CX PC
-	echo 49 385 > /d/regulator/soc:rpmh-regulator-cxlvl-pm8998_s9_level/voltage
-        echo 1 > /d/regulator/soc:rpmh-regulator-cxlvl-pm8998_s9_level/enable
+	echo 100 > /proc/sys/vm/swappiness
     ;;
 esac
 
