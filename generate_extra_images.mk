@@ -226,7 +226,8 @@ ifeq ($(call is-board-platform-in-list,msm7627a msm7630_surf msm8909),true)
 
 2K_NAND_OUT := $(PRODUCT_OUT)/2k_nand_images
 
-UBINIZE_CFG := $(2K_NAND_OUT)/ubinize.cfg
+UBINIZE_SYSTEM_CFG := $(2K_NAND_OUT)/ubinize_system.cfg
+UBINIZE_USERDATA_CFG := $(2K_NAND_OUT)/ubinize_userdata.cfg
 
 INSTALLED_UBIFS_SYSTEMIMAGE_TARGET := $(2K_NAND_OUT)/system.ubifs
 INSTALLED_UBIFS_USERDATAIMAGE_TARGET := $(2K_NAND_OUT)/userdata.ubifs
@@ -235,7 +236,8 @@ INSTALLED_UBIFS_PERSISTIMAGE_TARGET := $(2K_NAND_OUT)/persist.ubifs
 #-F: allow space-fixup during first boot
 #ref: http://www.linux-mtd.infradead.org/faq/ubifs.html#L_free_space_fixup
 INTERNAL_MKFSUBIFS_FLAGS := -m 2048 -e 126976 -v -F
-INSTALLED_UBINIZE_TARGET := $(2K_NAND_OUT)/rootfs.ubi
+INSTALLED_UBINIZE_SYSTEM_TARGET := $(2K_NAND_OUT)/system.ubi
+INSTALLED_UBINIZE_USERDATA_TARGET := $(2K_NAND_OUT)/userdata.ubi
 INTERNAL_UBINIZE_FLAGS := -m 2048 -p 128KiB -s 2048 -v
 
 INSTALLED_2K_BOOTIMAGE_TARGET := $(2K_NAND_OUT)/boot.img
@@ -404,38 +406,40 @@ define build-nand-ubifs-userdataimage
   $(hide) $(call assert-max-image-size,$@,$(BOARD_USERDATAIMAGE_PARTITION_SIZE),ubifs)
 endef
 
-define create_ubinize_config
-  echo \[system_volume\] > "${UBINIZE_CFG}"
-  echo mode=ubi >> "${UBINIZE_CFG}"
-  echo image="${INSTALLED_UBIFS_SYSTEMIMAGE_TARGET}" >> "${UBINIZE_CFG}"
-  echo vol_id=0 >> "${UBINIZE_CFG}"
-  echo vol_type=dynamic >> "${UBINIZE_CFG}"
-  echo vol_name=system >> "${UBINIZE_CFG}"
+define create_system_ubinize_config
+  echo \[system_volume\] > "${UBINIZE_SYSTEM_CFG}"
+  echo mode=ubi >> "${UBINIZE_SYSTEM_CFG}"
+  echo image="${INSTALLED_UBIFS_SYSTEMIMAGE_TARGET}" >> "${UBINIZE_SYSTEM_CFG}"
+  echo vol_id=0 >> "${UBINIZE_SYSTEM_CFG}"
+  echo vol_type=dynamic >> "${UBINIZE_SYSTEM_CFG}"
+  echo vol_name=system >> "${UBINIZE_SYSTEM_CFG}"
   # Reserve 5MB for pushing and syncing with adb
-  echo vol_size=$(shell expr `stat --printf %s $(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET)` + 5000000) >> "${UBINIZE_CFG}"
+  echo vol_size=$(shell expr `stat --printf %s $(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET)` + 5000000) >> "${UBINIZE_SYSTEM_CFG}"
+endef
 
-  echo \[userdata_volume\] >> "${UBINIZE_CFG}"
-  echo mode=ubi >> "${UBINIZE_CFG}"
-  echo image="${INSTALLED_UBIFS_USERDATAIMAGE_TARGET}" >> "${UBINIZE_CFG}"
-  echo vol_id=1 >> "${UBINIZE_CFG}"
-  echo vol_type=dynamic >> "${UBINIZE_CFG}"
-  echo vol_name=userdata >> "${UBINIZE_CFG}"
-  echo vol_flags=autoresize >> "${UBINIZE_CFG}"
+define create_userdata_ubinize_config
+  echo \[userdata_volume\] > "${UBINIZE_USERDATA_CFG}"
+  echo mode=ubi >> "${UBINIZE_USERDATA_CFG}"
+  echo image="${INSTALLED_UBIFS_USERDATAIMAGE_TARGET}" >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_id=0 >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_type=dynamic >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_name=userdata >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_flags=autoresize >> "${UBINIZE_USERDATA_CFG}"
 
-  echo \[cache_volume\] >> "${UBINIZE_CFG}"
-  echo mode=ubi >> "${UBINIZE_CFG}"
-  echo vol_id=2 >> "${UBINIZE_CFG}"
-  echo vol_type=dynamic >> "${UBINIZE_CFG}"
-  echo vol_name=cache >> "${UBINIZE_CFG}"
-  echo vol_size=4MiB >> "${UBINIZE_CFG}"
+  echo \[cache_volume\] >> "${UBINIZE_USERDATA_CFG}"
+  echo mode=ubi >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_id=1 >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_type=dynamic >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_name=cache >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_size=4MiB >> "${UBINIZE_USERDATA_CFG}"
 
-  echo \[persist_volume\] >> "${UBINIZE_CFG}"
-  echo mode=ubi >> "${UBINIZE_CFG}"
-  echo vol_id=3 >> "${UBINIZE_CFG}"
-  echo image="${INSTALLED_UBIFS_PERSISTIMAGE_TARGET}" >> "${UBINIZE_CFG}"
-  echo vol_type=dynamic >> "${UBINIZE_CFG}"
-  echo vol_name=persist >> "${UBINIZE_CFG}"
-  echo vol_size=6MiB >> "${UBINIZE_CFG}"
+  echo \[persist_volume\] >> "${UBINIZE_USERDATA_CFG}"
+  echo mode=ubi >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_id=2 >> "${UBINIZE_USERDATA_CFG}"
+  echo image="${INSTALLED_UBIFS_PERSISTIMAGE_TARGET}" >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_type=dynamic >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_name=persist >> "${UBINIZE_USERDATA_CFG}"
+  echo vol_size=6MiB >> "${UBINIZE_USERDATA_CFG}"
 endef
 
 ifeq ($(call is-board-platform,msm8909),true)
@@ -449,12 +453,17 @@ $(INSTALLED_UBIFS_USERDATAIMAGE_TARGET): $(MKFSUBIFS) $(MKDEVTBL) $(INSTALLED_US
 $(INSTALLED_UBIFS_PERSISTIMAGE_TARGET): $(MKFSUBIFS) $(MKDEVTBL) $(INSTALLED_PERSISTIMAGE_TARGET)
 	$(call build-nand-ubifs-persistimage,$(2K_NAND_OUT),$(INTERNAL_MKFSUBIFS_FLAGS),$(INSTALLED_UBIFS_PERSISTIMAGE_TARGET))
 
-$(INSTALLED_UBINIZE_TARGET): $(UBINIZE) $(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET) $(INSTALLED_UBIFS_USERDATAIMAGE_TARGET) $(INSTALLED_UBIFS_PERSISTIMAGE_TARGET)
-	$(call create_ubinize_config)
-	$(UBINIZE) -o $@ $(INTERNAL_UBINIZE_FLAGS) $(UBINIZE_CFG)
+$(INSTALLED_UBINIZE_SYSTEM_TARGET): $(UBINIZE) $(INSTALLED_UBIFS_SYSTEMIMAGE_TARGET)
+	$(call create_system_ubinize_config)
+	$(UBINIZE) -o $@ $(INTERNAL_UBINIZE_FLAGS) $(UBINIZE_SYSTEM_CFG)
+
+$(INSTALLED_UBINIZE_USERDATA_TARGET): $(UBINIZE) $(INSTALLED_UBIFS_USERDATAIMAGE_TARGET) $(INSTALLED_UBIFS_PERSISTIMAGE_TARGET)
+	$(call create_userdata_ubinize_config)
+	$(UBINIZE) -o $@ $(INTERNAL_UBINIZE_FLAGS) $(UBINIZE_USERDATA_CFG)
 
 ALL_DEFAULT_INSTALLED_MODULES += \
-        $(INSTALLED_UBINIZE_TARGET)
+        $(INSTALLED_UBINIZE_SYSTEM_TARGET) \
+	$(INSTALLED_UBINIZE_USERDATA_TARGET)
 
 $(INSTALLED_2K_BOOTIMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_BOOTIMAGE_TARGET) $(BOOT_SIGNER)
 	$(hide) $(call build-nand-bootimage,$(2K_NAND_OUT),$(INTERNAL_2K_BOOTIMAGE_ARGS),$(INSTALLED_2K_BOOTIMAGE_TARGET))
