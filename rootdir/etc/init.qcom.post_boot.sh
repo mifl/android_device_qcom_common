@@ -44,63 +44,54 @@ function configure_memory_parameters() {
 # 32 bit will have 53K & 64 bit will have 81K
 #
 
-ProductName=`getprop ro.product.name`
+        ProductName=`getprop ro.product.name`
+        echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+        echo 0 > /sys/module/process_reclaim/parameters/enable_process_reclaim
+        echo 100 > /proc/sys/vm/swappiness
+	echo 0 > /sys/module/vmpressure/parameters/allocstall_threshold
+        # Read adj series and set adj threshold for PPR and ALMK.
+        # This is required since adj values change from framework to framework.
+        adj_series=`cat /sys/module/lowmemorykiller/parameters/adj`
+        adj_1="${adj_series#*,}"
+        set_almk_ppr_adj="${adj_1%%,*}"
 
-if [ "$ProductName" == "msm8909_512" ] || [ "$ProductName" == "msm8909w" ]; then
-      echo "8192,11264,14336,17408,20480,26624" > /sys/module/lowmemorykiller/parameters/minfree
-      echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-      echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-else
-    arch_type=`uname -m`
-    MemTotalStr=`cat /proc/meminfo | grep MemTotal`
-    MemTotal=${MemTotalStr:16:8}
+        # PPR and ALMK should not act on HOME adj and below.
+        # Normalized ADJ for HOME is 6. Hence multiply by 6
+        # ADJ score represented as INT in LMK params, actual score can be in decimal
+        # Hence add 6 considering a worst case of 0.9 conversion to INT (0.9*6).
+        set_almk_ppr_adj=$(((set_almk_ppr_adj * 6) + 6))
+        echo $set_almk_ppr_adj > /sys/module/lowmemorykiller/parameters/adj_max_shift
+        echo $set_almk_ppr_adj > /sys/module/process_reclaim/parameters/min_score_adj
 
-    # Read adj series and set adj threshold for PPR and ALMK.
-    # This is required since adj values change from framework to framework.
-    adj_series=`cat /sys/module/lowmemorykiller/parameters/adj`
-    adj_1="${adj_series#*,}"
-    set_almk_ppr_adj="${adj_1%%,*}"
+	MemTotalStr=`cat /proc/meminfo | grep MemTotal`
+	MemTotal=${MemTotalStr:16:8}
+	if [ "$MemTotal" -le "524288" ]; then #512Mb target
+		setprop ro.config.low_ram true
+		echo "8192,11264,14336,17408,20480,26624" > /sys/module/lowmemorykiller/parameters/minfree
+		echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+		echo 268435456 > /sys/block/zram0/disksize
+		#Enable zram and set PPR parameters
+                mkswap /dev/block/zram0
+                swapon /dev/block/zram0
+                echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
+                echo 50 > /sys/module/process_reclaim/parameters/pressure_min
+                echo 70 > /sys/module/process_reclaim/parameters/pressure_max
+                echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
+	elif  [ "$MemTotal" -le "786432" ] && [ $MemTotal -gt "524288" ]; then #768MB target
+		echo "12288,15360,18432,21504,24576,30720" > /sys/module/lowmemorykiller/parameters/minfree
+		echo 36864 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+		echo 402653184 > /sys/block/zram0/disksize
+		mkswap /dev/block/zram0
+		swapon /dev/block/zram0
+	else #1GB target
+		echo "15360,19200,23040,26880,34415,43737" > /sys/module/lowmemorykiller/parameters/minfree
+		echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+		echo 536870912 > /sys/block/zram0/disksize
+		mkswap /dev/block/zram0
+		swapon /dev/block/zram0
+	fi
 
-    # PPR and ALMK should not act on HOME adj and below.
-    # Normalized ADJ for HOME is 6. Hence multiply by 6
-    # ADJ score represented as INT in LMK params, actual score can be in decimal
-    # Hence add 6 considering a worst case of 0.9 conversion to INT (0.9*6).
-    set_almk_ppr_adj=$(((set_almk_ppr_adj * 6) + 6))
-    echo $set_almk_ppr_adj > /sys/module/lowmemorykiller/parameters/adj_max_shift
-    echo $set_almk_ppr_adj > /sys/module/process_reclaim/parameters/min_score_adj
-
-    echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
-    echo 70 > /sys/module/process_reclaim/parameters/pressure_max
-    echo 30 > /sys/module/process_reclaim/parameters/swap_opt_eff
-    echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-
-    if [ "$arch_type" == "aarch64" ] && [ $MemTotal -gt 1048576 ]; then
-        echo 10 > /sys/module/process_reclaim/parameters/pressure_min
-        echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
-        echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
-        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-    elif [ "$arch_type" == "aarch64" ] && [ $MemTotal -lt 1048576 ]; then
-        echo 50 > /sys/module/process_reclaim/parameters/pressure_min
-        echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
-        echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
-        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-    else
-        echo 50 > /sys/module/process_reclaim/parameters/pressure_min
-        echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
-        echo "15360,19200,23040,26880,34415,43737" > /sys/module/lowmemorykiller/parameters/minfree
-        echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-    fi
-
-    # Zram disk - 512MB size
-    zram_enable=`getprop ro.config.zram`
-    if [ "$zram_enable" == "true" ]; then
-        echo 536870912 > /sys/block/zram0/disksize
-        mkswap /dev/block/zram0
-        swapon /dev/block/zram0 -p 32758
-    fi
-fi
 }
-
 case "$target" in
     "msm7201a_ffa" | "msm7201a_surf" | "msm7627_ffa" | "msm7627_6x" | "msm7627a"  | "msm7627_surf" | \
     "qsd8250_surf" | "qsd8250_ffa" | "msm7630_surf" | "msm7630_1x" | "msm7630_fusion" | "qsd8650a_st1x")
