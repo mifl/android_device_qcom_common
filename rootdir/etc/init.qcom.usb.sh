@@ -162,8 +162,11 @@ case "$usb_config" in
 	              "msm8952" | "msm8953")
 		          setprop persist.sys.usb.config diag,serial_smd,rmnet_ipa,adb
 		      ;;
-	              "msm8998" | "sdm660" | "sdm845" | "apq8098_latv")
+	              "msm8998" | "sdm660" | "apq8098_latv")
 		          setprop persist.sys.usb.config diag,serial_cdev,rmnet,adb
+		      ;;
+	              "sdm845")
+		          setprop persist.sys.usb.config diag,serial_cdev,rmnet,dpl,adb
 		      ;;
 	              *)
 		          setprop persist.sys.usb.config diag,adb
@@ -234,6 +237,15 @@ if [ -d /config/usb_gadget ]; then
 	fi
 
 	setprop sys.usb.configfs 1
+else
+	persist_comp=`getprop persist.sys.usb.config`
+	comp=`getprop sys.usb.config`
+	echo $persist_comp
+	echo $comp
+	if [ "$comp" != "$persist_comp" ]; then
+		echo "setting sys.usb.config"
+		setprop sys.usb.config $persist_comp
+	fi
 fi
 
 #
