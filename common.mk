@@ -20,7 +20,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.radio.custom_ecc=1 \
     persist.radio.multisim.config=dsds \
     persist.radio.VT_CAM_INTERFACE=1 \
-    ro.frp.pst=/dev/block/bootdevice/by-name/config
+    ro.frp.pst=/dev/block/bootdevice/by-name/config \
+    dalvik.vm.heapgrowthlimit=96m \
+    dalvik.vm.heapsize=256m \
+    dalvik.vm.heapstartsize=8m \
+    dalvik.vm.heapmaxfree=8m
 
 PRODUCT_PRIVATE_KEY := device/qcom/common/qcom.key
 
