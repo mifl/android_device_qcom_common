@@ -994,6 +994,9 @@ $(call inherit-product, build/target/product/verity.mk)
 #skip boot jars check
 SKIP_BOOT_JARS_CHECK := true
 
+PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
+    ro.oem_unlock_supported=1
+
 ifeq ($(TARGET_BUILD_VARIANT),user)
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
     ro.adb.secure=1
