@@ -289,6 +289,7 @@ INIT += init.qcom.sensors.sh
 INIT += init.qcom.vendor.rc
 INIT += init.target.vendor.rc
 INIT += init.qti.fm.sh
+INIT += init.qti.can.sh
 
 #IPROUTE2
 IPROUTE2 := ip

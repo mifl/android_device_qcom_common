@@ -980,7 +980,7 @@ service profiler_daemon /system/bin/profiler_daemon
     group root
     disabled
 
-service can /system/bin/sh /init.qti.can.sh
+service can /vendor/bin/init.qti.can.sh
    class late_start
    user root
    disabled
