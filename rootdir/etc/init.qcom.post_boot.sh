@@ -1665,9 +1665,9 @@ case "$target" in
             echo 3 > /proc/sys/kernel/sched_window_stats_policy
             echo 3 > /proc/sys/kernel/sched_ravg_hist_size
         fi
-        #Apply settings for sdm660
+        #Apply settings for sdm660, sdm636,sda636
         case "$soc_id" in
-                "317" | "324" | "325" | "326" )
+                "317" | "324" | "325" | "326" | "345" | "346" )
 
             echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
             echo 60 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
@@ -2510,6 +2510,7 @@ case "$target" in
 	echo 400000 > /proc/sys/kernel/sched_freq_dec_notify
 	echo 5 > /proc/sys/kernel/sched_spill_nr_run
 	echo 1 > /proc/sys/kernel/sched_restrict_cluster_spill
+        echo 1 > /proc/sys/kernel/sched_prefer_sync_wakee_to_waker
 	start iop
 
         # disable thermal bcl hotplug to switch governor
