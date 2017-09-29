@@ -550,6 +550,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="allow_emergency_numbers_in_call_log_bool" value="true"/>
         <boolean name="config_show_orig_dial_string_for_cdma" value="true" />
         <boolean name="carrier_parse_number_on_forward_call_bool" value="true" />
+        <boolean name="config_enable_vt_with_mobile_data_off" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="04">
@@ -560,6 +561,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
     <carrier_config mcc="460" mnc="05">
         <boolean name="allow_emergency_numbers_in_call_log_bool" value="true"/>
         <boolean name="carrier_parse_number_on_forward_call_bool" value="true" />
+        <boolean name="config_enable_vt_with_mobile_data_off" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="06">
@@ -621,6 +623,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="allow_emergency_numbers_in_call_log_bool" value="true"/>
         <boolean name="config_show_orig_dial_string_for_cdma" value="true" />
         <boolean name="carrier_parse_number_on_forward_call_bool" value="true" />
+        <boolean name="config_enable_vt_with_mobile_data_off" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="12">
@@ -629,6 +632,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="allow_emergency_numbers_in_call_log_bool" value="true"/>
         <boolean name="config_show_orig_dial_string_for_cdma" value="true" />
         <boolean name="carrier_parse_number_on_forward_call_bool" value="true" />
+        <boolean name="config_enable_vt_with_mobile_data_off" value="true" />
     </carrier_config>
 
     <carrier_config mcc="310" mnc="030">
