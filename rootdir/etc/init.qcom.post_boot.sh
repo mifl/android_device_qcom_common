@@ -1324,6 +1324,7 @@ case "$target" in
 	do
 		echo 30 > $gpu_bimc_guard_band_mbps
 	done
+        echo 0 > /sys/module/process_reclaim/parameters/enable_process_reclaim
 	;;
 esac
 
