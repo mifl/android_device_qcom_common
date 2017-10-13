@@ -1632,6 +1632,36 @@ case "$target" in
 esac
 
 case "$target" in
+    "sdm670")
+
+        if [ -f /sys/devices/soc0/soc_id ]; then
+            soc_id=`cat /sys/devices/soc0/soc_id`
+        else
+            soc_id=`cat /sys/devices/system/soc/soc0/id`
+        fi
+
+        if [ -f /sys/devices/soc0/hw_platform ]; then
+            hw_platform=`cat /sys/devices/soc0/hw_platform`
+        else
+            hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
+        fi
+
+        case "$soc_id" in
+           "336" | "337" )
+
+                  # Start Host based Touch processing
+                  case "$hw_platform" in
+                    "MTP" | "Surf" | "RCM" )
+                        start_hbtp
+                        ;;
+                  esac
+           ;;
+       esac
+    ;;
+esac
+
+
+case "$target" in
     "sdm660")
 
         # Set the default IRQ affinity to the primary cluster. When a
@@ -2414,6 +2444,8 @@ case "$target" in
 	echo 1574400 > /sys/devices/system/cpu/cpu4/cpufreq/schedutil/hispeed_freq
 	echo "0:1324800" > /sys/module/cpu_boost/parameters/input_boost_freq
 	echo 120 > /sys/module/cpu_boost/parameters/input_boost_ms
+	# Limit the min frequency to 825MHz
+	echo 825000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
         # Enable bus-dcvs
         for cpubw in /sys/class/devfreq/*qcom,cpubw*
@@ -2422,11 +2454,11 @@ case "$target" in
             echo 50 > $cpubw/polling_interval
             echo "2288 4577 6500 8132 9155 10681" > $cpubw/bw_hwmon/mbps_zones
             echo 4 > $cpubw/bw_hwmon/sample_ms
-            echo 34 > $cpubw/bw_hwmon/io_percent
+            echo 40 > $cpubw/bw_hwmon/io_percent
             echo 20 > $cpubw/bw_hwmon/hist_memory
             echo 10 > $cpubw/bw_hwmon/hyst_length
             echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
-            echo 34 > $cpubw/bw_hwmon/low_power_io_percent
+            echo 40 > $cpubw/bw_hwmon/low_power_io_percent
             echo 20 > $cpubw/bw_hwmon/low_power_delay
             echo 0 > $cpubw/bw_hwmon/guard_band_mbps
             echo 250 > $cpubw/bw_hwmon/up_scale
@@ -2439,11 +2471,11 @@ case "$target" in
             echo 50 > $llccbw/polling_interval
             echo "1720 2929 4943 5931 6881" > $llccbw/bw_hwmon/mbps_zones
             echo 4 > $llccbw/bw_hwmon/sample_ms
-            echo 68 > $llccbw/bw_hwmon/io_percent
+            echo 80 > $llccbw/bw_hwmon/io_percent
             echo 20 > $llccbw/bw_hwmon/hist_memory
             echo 10 > $llccbw/bw_hwmon/hyst_length
             echo 0 > $llccbw/bw_hwmon/low_power_ceil_mbps
-            echo 68 > $llccbw/bw_hwmon/low_power_io_percent
+            echo 80 > $llccbw/bw_hwmon/low_power_io_percent
             echo 20 > $llccbw/bw_hwmon/low_power_delay
             echo 0 > $llccbw/bw_hwmon/guard_band_mbps
             echo 250 > $llccbw/bw_hwmon/up_scale
@@ -2465,6 +2497,9 @@ case "$target" in
             echo 10 > $memlat/polling_interval
             echo 400 > $memlat/mem_latency/ratio_ceil
         done
+
+	#Gold L3 ratio ceil
+        echo 4000 > /sys/class/devfreq/soc:qcom,l3-cpu4/mem_latency/ratio_ceil
 
 	echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
 

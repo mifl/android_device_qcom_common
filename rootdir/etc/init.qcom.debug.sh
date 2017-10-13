@@ -29,33 +29,9 @@
 
 HERE=/system/etc
 source $HERE/init.qcom.debug-sdm660.sh
-# function to enable ftrace events to CoreSight STM
-enable_stm_events()
+enable_tracing_events()
 {
-    # bail out if its perf config
-    if [ ! -d /sys/module/msm_rtb ]
-    then
-        return
-    fi
-    # bail out if coresight isn't present
-    if [ ! -d /sys/bus/coresight ]
-    then
-        return
-    fi
-    # bail out if ftrace events aren't present
-    if [ ! -d /sys/kernel/debug/tracing/events ]
-    then
-        return
-    fi
-
-    echo 0x2000000 > /sys/bus/coresight/devices/coresight-tmc-etr/mem_size
-    echo 1 > /sys/bus/coresight/devices/coresight-tmc-etr/$sinkenable
-    echo 1 > /sys/bus/coresight/devices/coresight-stm/$srcenable
-    echo 1 > /sys/kernel/debug/tracing/tracing_on
-    echo 0 > /sys/bus/coresight/devices/coresight-stm/hwevent_enable
     # timer
-    echo 1 > /sys/kernel/debug/tracing/events/timer/enable
-    echo 1 > /sys/kernel/debug/tracing/events/timer/filter
     echo 1 > /sys/kernel/debug/tracing/events/timer/timer_cancel/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/timer_expire_entry/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/timer_expire_exit/enable
@@ -68,21 +44,15 @@ enable_stm_events()
     echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_init/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_start/enable
     #enble FTRACE for softirq events
-    echo 1 > /sys/kernel/debug/tracing/events/irq/enable
-    echo 1 > /sys/kernel/debug/tracing/events/irq/filter
     echo 1 > /sys/kernel/debug/tracing/events/irq/softirq_entry/enable
     echo 1 > /sys/kernel/debug/tracing/events/irq/softirq_exit/enable
     echo 1 > /sys/kernel/debug/tracing/events/irq/softirq_raise/enable
     #enble FTRACE for Workqueue events
-    echo 1 > /sys/kernel/debug/tracing/events/workqueue/enable
-    echo 1 > /sys/kernel/debug/tracing/events/workqueue/filter
     echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_activate_work/enable
     echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_execute_end/enable
     echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_execute_start/enable
     echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_queue_work/enable
     # schedular
-    echo 1 > /sys/kernel/debug/tracing/events/sched/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/filter
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_cpu_hotplug/enable
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_cpu_load/enable
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_enq_deq_task/enable
@@ -131,10 +101,57 @@ enable_stm_events()
     echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_post_core_online/enable
     echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_pre_frequency_mit/enable
     echo 1 > /sys/kernel/debug/tracing/events/thermal/thermal_post_frequency_mit/enable
+
+    echo 1 > /sys/kernel/debug/tracing/tracing_on
 }
 
-# Function msmpeafowl DCC configuration
-enable_msmpeafowl_dcc_config()
+# function to enable ftrace events
+enable_ftrace_event_tracing()
+{
+    # bail out if its perf config
+    if [ ! -d /sys/module/msm_rtb ]
+    then
+        return
+    fi
+
+    # bail out if ftrace events aren't present
+    if [ ! -d /sys/kernel/debug/tracing/events ]
+    then
+        return
+    fi
+
+    enable_tracing_events
+}
+
+# function to enable ftrace event transfer to CoreSight STM
+enable_stm_events()
+{
+    # bail out if its perf config
+    if [ ! -d /sys/module/msm_rtb ]
+    then
+        return
+    fi
+    # bail out if coresight isn't present
+    if [ ! -d /sys/bus/coresight ]
+    then
+        return
+    fi
+    # bail out if ftrace events aren't present
+    if [ ! -d /sys/kernel/debug/tracing/events ]
+    then
+        return
+    fi
+
+    echo 0x2000000 > /sys/bus/coresight/devices/coresight-tmc-etr/mem_size
+    echo 1 > /sys/bus/coresight/devices/coresight-tmc-etr/$sinkenable
+    echo 1 > /sys/bus/coresight/devices/coresight-stm/$srcenable
+    echo 1 > /sys/kernel/debug/tracing/tracing_on
+    echo 0 > /sys/bus/coresight/devices/coresight-stm/hwevent_enable
+    enable_tracing_events
+}
+
+# Function sdm670 DCC configuration
+enable_sdm670_dcc_config()
 {
     DCC_PATH="/sys/bus/platform/devices/10a2000.dcc_v2"
 
@@ -268,6 +285,23 @@ enable_sdm845_dcc_config()
     echo 0x179E0FFC 1 > $DCC_PATH/config
     echo 0x179E1000 1 > $DCC_PATH/config
     echo 0x179E1004 1 > $DCC_PATH/config
+
+    echo 0x179E1A5C 1 > $DCC_PATH/config
+    echo 0x179E1A70 1 > $DCC_PATH/config
+    echo 0x179E1A84 1 > $DCC_PATH/config
+    echo 0x179E1A98 1 > $DCC_PATH/config
+    echo 0x179E1AAC 1 > $DCC_PATH/config
+    echo 0x179E1AC0 1 > $DCC_PATH/config
+    echo 0x179E1AD4 1 > $DCC_PATH/config
+    echo 0x179E1AE8 1 > $DCC_PATH/config
+    echo 0x179E1AFC 1 > $DCC_PATH/config
+    echo 0x179E1B10 1 > $DCC_PATH/config
+    echo 0x179E1B24 1 > $DCC_PATH/config
+    echo 0x179E1B38 1 > $DCC_PATH/config
+    echo 0x179E1B4C 1 > $DCC_PATH/config
+    echo 0x179E1B60 1 > $DCC_PATH/config
+    echo 0x179E1B74 1 > $DCC_PATH/config
+    echo 0x179E1B88 1 > $DCC_PATH/config
 
     echo 0x17D45F00 1 > $DCC_PATH/config
     echo 0x17D45F08 1 > $DCC_PATH/config
@@ -716,6 +750,70 @@ enable_sdm845_dcc_config()
     echo 0x12C2084 1 > $DCC_PATH/config
     echo 0x12C2088 1 > $DCC_PATH/config
     echo 0x12C208C 1 > $DCC_PATH/config
+
+    #LLCC ACT/ALLOCATION STATUS
+    echo 0x01301000 1 > $DCC_PATH/config
+    echo 0x01301004 1 > $DCC_PATH/config
+    echo 0x01302000 1 > $DCC_PATH/config
+    echo 0x01302004 1 > $DCC_PATH/config
+    echo 0x01303000 1 > $DCC_PATH/config
+    echo 0x01303004 1 > $DCC_PATH/config
+    echo 0x01304000 1 > $DCC_PATH/config
+    echo 0x01304004 1 > $DCC_PATH/config
+    echo 0x01305000 1 > $DCC_PATH/config
+    echo 0x01305004 1 > $DCC_PATH/config
+    echo 0x01306000 1 > $DCC_PATH/config
+    echo 0x01306004 1 > $DCC_PATH/config
+    echo 0x01307000 1 > $DCC_PATH/config
+    echo 0x01307004 1 > $DCC_PATH/config
+    echo 0x01308000 1 > $DCC_PATH/config
+    echo 0x01308004 1 > $DCC_PATH/config
+    echo 0x01309000 1 > $DCC_PATH/config
+    echo 0x01309004 1 > $DCC_PATH/config
+    echo 0x0130A000 1 > $DCC_PATH/config
+    echo 0x0130A004 1 > $DCC_PATH/config
+    echo 0x0130B000 1 > $DCC_PATH/config
+    echo 0x0130B004 1 > $DCC_PATH/config
+    echo 0x0130C000 1 > $DCC_PATH/config
+    echo 0x0130C004 1 > $DCC_PATH/config
+    echo 0x0130D000 1 > $DCC_PATH/config
+    echo 0x0130D004 1 > $DCC_PATH/config
+    echo 0x0130E000 1 > $DCC_PATH/config
+    echo 0x0130E004 1 > $DCC_PATH/config
+    echo 0x0130F000 1 > $DCC_PATH/config
+    echo 0x0130F004 1 > $DCC_PATH/config
+    echo 0x01310000 1 > $DCC_PATH/config
+    echo 0x01310004 1 > $DCC_PATH/config
+    echo 0x01311000 1 > $DCC_PATH/config
+    echo 0x01311004 1 > $DCC_PATH/config
+    echo 0x01312000 1 > $DCC_PATH/config
+    echo 0x01312004 1 > $DCC_PATH/config
+    echo 0x01313000 1 > $DCC_PATH/config
+    echo 0x01313004 1 > $DCC_PATH/config
+    echo 0x01314000 1 > $DCC_PATH/config
+    echo 0x01314004 1 > $DCC_PATH/config
+    echo 0x01315000 1 > $DCC_PATH/config
+    echo 0x01315004 1 > $DCC_PATH/config
+    echo 0x01316000 1 > $DCC_PATH/config
+    echo 0x01316004 1 > $DCC_PATH/config
+    echo 0x01317000 1 > $DCC_PATH/config
+    echo 0x01317004 1 > $DCC_PATH/config
+    echo 0x01318000 1 > $DCC_PATH/config
+    echo 0x01318004 1 > $DCC_PATH/config
+    echo 0x01319000 1 > $DCC_PATH/config
+    echo 0x01319004 1 > $DCC_PATH/config
+    echo 0x0131A000 1 > $DCC_PATH/config
+    echo 0x0131A004 1 > $DCC_PATH/config
+    echo 0x0131B000 1 > $DCC_PATH/config
+    echo 0x0131B004 1 > $DCC_PATH/config
+    echo 0x0131C000 1 > $DCC_PATH/config
+    echo 0x0131C004 1 > $DCC_PATH/config
+    echo 0x0131D000 1 > $DCC_PATH/config
+    echo 0x0131D004 1 > $DCC_PATH/config
+    echo 0x0131E000 1 > $DCC_PATH/config
+    echo 0x0131E004 1 > $DCC_PATH/config
+    echo 0x0131F000 1 > $DCC_PATH/config
+    echo 0x0131F004 1 > $DCC_PATH/config
 
     #CX and MX voltage
     echo 0x0C201244 1 > $DCC_PATH/config
@@ -1866,9 +1964,9 @@ enable_dcc_config()
             enable_sdm845_dcc_config
             ;;
 
-        "msmpeafowl")
-            echo "Enabling DCC config for msmpeafowl."
-            enable_msmpeafowl_dcc_config
+        "sdm670")
+            echo "Enabling DCC config for sdm670."
+            enable_sdm670_dcc_config
             ;;
     esac
 }
@@ -1978,6 +2076,7 @@ enable_core_gladiator_hang_config()
 
 coresight_config=`getprop persist.debug.coresight.config`
 coresight_stm_cfg_done=`getprop ro.dbg.coresight.stm_cfg_done`
+ftrace_disable=`getprop persist.debug.ftrace_events_disable`
 srcenable="enable"
 sinkenable="curr_sink"
 
@@ -1991,6 +2090,10 @@ fi
 enable_dcc_config
 enable_core_gladiator_hang_config
 enable_osm_wdog_status_config
+
+if [ "$ftrace_disable" != "Yes" ]; then
+    enable_ftrace_event_tracing
+fi
 
 case "$coresight_config" in
     "stm-events")
