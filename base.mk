@@ -457,6 +457,7 @@ LIBMEMTRACK += memtrack.msm8610
 LIBMEMTRACK += memtrack.apq8084
 LIBMEMTRACK += memtrack.mpq8092
 LIBMEMTRACK += memtrack.msm8996
+LIBMEMTRACK += memtrack.msm8996_gvmq
 LIBMEMTRACK += memtrack.msm8952
 LIBMEMTRACK += memtrack.msm8937
 LIBMEMTRACK += memtrack.msm8953
