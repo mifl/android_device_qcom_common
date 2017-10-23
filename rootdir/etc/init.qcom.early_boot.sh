@@ -283,3 +283,33 @@ if [ "$boot_reason" = "3" ] || [ "$reboot_reason" = "true" ]; then
 else
     setprop ro.alarm_boot false
 fi
+
+# Set property to enable/disable GPS based on
+# whether "gpsconfig" partition is present or not
+emmc_dir=/dev/block/bootdevice/by-name
+nand_file=/proc/mtd
+partition_name=gpsconfig
+
+# set gps to disabled state by default
+gps_enabled=false
+
+if [ -d $emmc_dir ]
+then
+    # emmc/ufs configuration
+    emmc_partition="${emmc_dir}/${partition_name}"
+    if [ -e $emmc_partition ]
+    then
+        gps_enabled=true
+    fi
+else
+    # nand configuration
+    if [ -e $nand_file ]
+    then
+        if grep ${partition_name} $nand_file
+        then
+           gps_enabled=true
+        fi
+    fi
+fi
+
+setprop ro.gps.enabled $gps_enabled
