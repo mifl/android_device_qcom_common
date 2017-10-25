@@ -347,8 +347,8 @@ on post-fs-data
     #Create directory for hostapd
     mkdir /data/hostapd 0770 system wifi
 
-    # Create /data/vendor/time folder for time-services
-    mkdir /data/vendor/time/ 0700 system system
+    # Create /data/time folder for time-services
+    mkdir /data/time/ 0700 system system
 
     mkdir /data/vendor/audio/ 0770 media audio
 
@@ -604,7 +604,7 @@ service bt_logger /system/bin/bt_logger
 service ftmd /system/bin/logwrapper /system/bin/ftmdaemon
     class late_start
     user root
-    group bluetooth net_bt_admin misc net_bt_stack diag net_bt
+    group bluetooth net_bt_admin misc diag net_bt
     disabled
     oneshot
 
