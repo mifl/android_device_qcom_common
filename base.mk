@@ -178,7 +178,7 @@ CM :=CMFileManager
 #CM += Trebuchet
 
 #Default Launcher
-DELAUN := Launcher3
+DELAUN := Launcher3Go
 
 #CONNECTIVITY
 CONNECTIVITY := libcnefeatureconfig
