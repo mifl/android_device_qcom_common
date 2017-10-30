@@ -31,7 +31,7 @@ QSD8K_BOARD_PLATFORMS := qsd8k
 TARGET_USE_VENDOR_CAMERA_EXT := true
 
 #List of targets that use video hw
-MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845 sdm670 msmnile qcs605
+MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845 sdm670 qcs605
 
 #List of targets that use master side content protection
 MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845 apq8098_latv sdm670 qcs605
@@ -681,6 +681,7 @@ STMLOG := libstm-log
 
 #THERMAL_HAL
 THERMAL_HAL := thermal.msm8998
+THERMAL_HAL += thermal.sdm845
 
 #TSLIB_EXTERNAL
 TSLIB_EXTERNAL := corgi
@@ -698,6 +699,7 @@ TSLIB_EXTERNAL += ts
 
 #VR_HAL
 VR_HAL := vr.msm8998
+VR_HAL += vr.sdm845
 
 #QRGND
 QRGND := qrngd
@@ -903,6 +905,7 @@ PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 
 PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
+PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \

@@ -92,7 +92,7 @@ start_msm_irqbalance_8939()
 start_msm_irqbalance()
 {
 	if [ -f /vendor/bin/msm_irqbalance ]; then
-		start msm_irqbalance
+		start vendor.msm_irqbalance
 	fi
 }
 
@@ -253,7 +253,7 @@ case "$target" in
                   ;;
         esac
         ;;
-    "msm8994" | "msm8992" | "msm8998" | "apq8098_latv" | "sdm845")
+    "msm8994" | "msm8992" | "msm8998" | "apq8098_latv" | "sdm845" | "sdm670")
         start_msm_irqbalance
         ;;
     "msm8996")

@@ -227,9 +227,14 @@ on post-fs-data
     # create QDMA dropbox
     mkdir /data/vendor/qdmastats 0700 system system
     mkdir /data/vendor/qdma 0770 system system
+    mkdir /dev/socket/qdma 0770 system system
+    chmod 2770 /dev/socket/qdma
 
     # Create directory for TZ Apps
     mkdir /data/misc/qsee 0770 system system
+
+    # Create /data/vendor/tzstorage directory for SFS listener
+    mkdir /data/vendor/tzstorage 0770 system system
 
     # Create directory for apps access via QTEEConnector
     mkdir /data/vendor/qtee 0770 system system
@@ -336,8 +341,8 @@ on post-fs-data
     #Create directory for hostapd
     mkdir /data/hostapd 0770 system wifi
 
-    # Create /data/vendor/time folder for time-services
-    mkdir /data/vendor/time/ 0700 system system
+    # Create /data/time folder for time-services
+    mkdir /data/time/ 0700 system system
 
     mkdir /data/vendor/audio/ 0770 media audio
 
@@ -825,6 +830,7 @@ service cnss-daemon /system/vendor/bin/cnss-daemon -n -l
     class late_start
     user system
     group system inet net_admin wifi
+    capabilities NET_ADMIN
 
 on property:sys.shutdown.requested=*
     stop cnss-daemon
@@ -862,7 +868,7 @@ service dhcpcd_bnep4 /system/bin/dhcpcd -BKLG
 service ssgqmigd /vendor/bin/ssgqmigd
     class late_start
     user radio
-    group radio
+    group radio gps
     socket ssgqmig seqpacket 0660 radio inet
 
 service ssgtzd /vendor/bin/ssgtzd
@@ -1067,7 +1073,7 @@ service vm_bms /system/bin/vm_bms
     group root
     disabled
 
-service msm_irqbalance /vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance.conf
+service vendor.msm_irqbalance /vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance.conf
     class core
     user root
     group root
@@ -1123,21 +1129,6 @@ service logdumpd /system/bin/logcat -b all -v threadtime -D -w /dev/block/bootde
 # Logdumpd is enabled only for userdebug non-perf build
 on property:ro.logdumpd.enabled=1
     start logdumpd
-
-on property:init.svc.surfaceflinger=stopped
-    stop hwcomposer-2-1
-    stop gralloc-2-0
-    stop light-hal-2-0
-
-on property:init.svc.surfaceflinger=restarting
-    stop hwcomposer-2-1
-    stop gralloc-2-0
-    stop light-hal-2-0
-
-on property:init.svc.surfaceflinger=running
-    start hwcomposer-2-1
-    start gralloc-2-0
-    start light-hal-2-0
 
 service time_daemon /system/vendor/bin/time_daemon
     class main

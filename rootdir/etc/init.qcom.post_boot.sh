@@ -1,6 +1,6 @@
 #! /vendor/bin/sh
 
-# Copyright (c) 2012-2013, 2016, The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013, 2016-2017, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -1631,35 +1631,6 @@ case "$target" in
     ;;
 esac
 
-case "$target" in
-    "sdm670")
-
-        if [ -f /sys/devices/soc0/soc_id ]; then
-            soc_id=`cat /sys/devices/soc0/soc_id`
-        else
-            soc_id=`cat /sys/devices/system/soc/soc0/id`
-        fi
-
-        if [ -f /sys/devices/soc0/hw_platform ]; then
-            hw_platform=`cat /sys/devices/soc0/hw_platform`
-        else
-            hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
-        fi
-
-        case "$soc_id" in
-           "336" | "337" )
-
-                  # Start Host based Touch processing
-                  case "$hw_platform" in
-                    "MTP" | "Surf" | "RCM" )
-                        start_hbtp
-                        ;;
-                  esac
-           ;;
-       esac
-    ;;
-esac
-
 
 case "$target" in
     "sdm660")
@@ -1992,6 +1963,118 @@ case "$target" in
             done
 
             echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
+            ;;
+        esac
+    ;;
+esac
+
+case "$target" in
+    "sdm670")
+
+        #Apply settings for sdm670
+        # Set the default IRQ affinity to the silver cluster. When a
+        # CPU is isolated/hotplugged, the IRQ affinity is adjusted
+        # to one of the CPU from the default IRQ affinity mask.
+        echo 3f > /proc/irq/default_smp_affinity
+
+        if [ -f /sys/devices/soc0/soc_id ]; then
+                soc_id=`cat /sys/devices/soc0/soc_id`
+        else
+                soc_id=`cat /sys/devices/system/soc/soc0/id`
+        fi
+
+        if [ -f /sys/devices/soc0/hw_platform ]; then
+            hw_platform=`cat /sys/devices/soc0/hw_platform`
+        else
+            hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
+        fi
+
+        case "$soc_id" in
+            "336" | "337" )
+
+            # Start Host based Touch processing
+            case "$hw_platform" in
+              "MTP" | "Surf" | "RCM" )
+                  start_hbtp
+                  ;;
+            esac
+
+      # Core control parameters on silver
+      echo 4 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+      echo 60 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
+      echo 40 > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
+      echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
+      echo 0 > /sys/devices/system/cpu/cpu0/core_ctl/is_big_cluster
+      echo 8 > /sys/devices/system/cpu/cpu0/core_ctl/task_thres
+
+      # Setting b.L scheduler parameters
+      echo 96 > /proc/sys/kernel/sched_upmigrate
+      echo 90 > /proc/sys/kernel/sched_downmigrate
+      echo 140 > /proc/sys/kernel/sched_group_upmigrate
+      echo 120 > /proc/sys/kernel/sched_group_downmigrate
+
+      # configure governor settings for little cluster
+      echo "schedutil" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+      echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/rate_limit_us
+      echo 1209600 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/hispeed_freq
+
+      # configure governor settings for big cluster
+      echo "schedutil" > /sys/devices/system/cpu/cpu6/cpufreq/scaling_governor
+      echo 0 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/rate_limit_us
+      echo 1344000 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/hispeed_freq
+
+      echo "0:1209600" > /sys/module/cpu_boost/parameters/input_boost_freq
+      echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
+      # Limit the min frequency to 720MHz
+      echo 720000 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
+
+      # Enable bus-dcvs
+      for cpubw in /sys/class/devfreq/*qcom,cpubw*
+            do
+                echo "bw_hwmon" > $cpubw/governor
+                echo 50 > $cpubw/polling_interval
+                echo "1144 1720 2086 2929 3879 5931 6881" > $cpubw/bw_hwmon/mbps_zones
+                echo 4 > $cpubw/bw_hwmon/sample_ms
+                echo 68 > $cpubw/bw_hwmon/io_percent
+                echo 20 > $cpubw/bw_hwmon/hist_memory
+                echo 0 > $cpubw/bw_hwmon/hyst_length
+                echo 80 > $cpubw/bw_hwmon/down_thres
+                echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
+                echo 68 > $cpubw/bw_hwmon/low_power_io_percent
+                echo 20 > $cpubw/bw_hwmon/low_power_delay
+                echo 0 > $cpubw/bw_hwmon/guard_band_mbps
+                echo 250 > $cpubw/bw_hwmon/up_scale
+                echo 1600 > $cpubw/bw_hwmon/idle_mbps
+            done
+
+            #Enable mem_latency governor for DDR scaling
+            for memlat in /sys/class/devfreq/*qcom,memlat-cpu*
+            do
+                echo "mem_latency" > $memlat/governor
+                echo 10 > $memlat/polling_interval
+                echo 400 > $memlat/mem_latency/ratio_ceil
+            done
+
+            #Enable mem_latency governor for L3 scaling
+            for memlat in /sys/class/devfreq/*qcom,l3-cpu*
+            do
+                echo "mem_latency" > $memlat/governor
+                echo 10 > $memlat/polling_interval
+                echo 400 > $memlat/mem_latency/ratio_ceil
+            done
+
+            echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
+
+            # cpuset parameters
+            echo 0-5 > /dev/cpuset/background/cpus
+            echo 0-5 > /dev/cpuset/system-background/cpus
+
+            # Turn off scheduler boost at the end
+            echo 0 > /proc/sys/kernel/sched_boost
+
+            # Turn on sleep modes.
+            echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+            echo 100 > /proc/sys/vm/swappiness
             ;;
         esac
     ;;
@@ -2518,6 +2601,7 @@ case "$target" in
         echo N > /sys/module/lpm_levels/L3/cpu5/ret/idle_enabled
         echo N > /sys/module/lpm_levels/L3/cpu6/ret/idle_enabled
         echo N > /sys/module/lpm_levels/L3/cpu7/ret/idle_enabled
+	echo N > /sys/module/lpm_levels/L3/l3-dyn-ret/idle_enabled
         # Turn on sleep modes.
         echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 	echo 100 > /proc/sys/vm/swappiness
@@ -2797,7 +2881,7 @@ case "$target" in
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
-    "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv" | "sdm845")
+    "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv" | "sdm845" | "sdm670")
         setprop sys.post_boot.parsed 1
     ;;
     "apq8084")

@@ -32,55 +32,24 @@ source $HERE/init.qcom.debug-sdm660.sh
 enable_tracing_events()
 {
     # timer
-    echo 1 > /sys/kernel/debug/tracing/events/timer/timer_cancel/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/timer_expire_entry/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/timer_expire_exit/enable
-    echo 1 > /sys/kernel/debug/tracing/events/timer/timer_init/enable
-    echo 1 > /sys/kernel/debug/tracing/events/timer/timer_start/enable
-    echo 1 > /sys/kernel/debug/tracing/events/timer/tick_stop/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_cancel/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_expire_entry/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_expire_exit/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_init/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_start/enable
     #enble FTRACE for softirq events
-    echo 1 > /sys/kernel/debug/tracing/events/irq/softirq_entry/enable
-    echo 1 > /sys/kernel/debug/tracing/events/irq/softirq_exit/enable
-    echo 1 > /sys/kernel/debug/tracing/events/irq/softirq_raise/enable
+    echo 1 > /sys/kernel/debug/tracing/events/irq/enable
     #enble FTRACE for Workqueue events
-    echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_activate_work/enable
-    echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_execute_end/enable
-    echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_execute_start/enable
-    echo 1 > /sys/kernel/debug/tracing/events/workqueue/workqueue_queue_work/enable
+    echo 1 > /sys/kernel/debug/tracing/events/workqueue/enable
     # schedular
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_cpu_hotplug/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_cpu_load/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_enq_deq_task/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_kthread_stop_ret/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_kthread_stop/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_load_balance/enable
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_migrate_task/enable
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_pi_setprio/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_process_exec/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_process_exit/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_process_fork/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_process_free/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_process_wait/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_stat_blocked/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_stat_iowait/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_stat_runtime/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_stat_sleep/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_stat_wait/enable
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_switch/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_task_load/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_update_history/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_update_task_ravg/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wait_task/enable
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup/enable
     echo 1 > /sys/kernel/debug/tracing/events/sched/sched_wakeup_new/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_get_busy/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_get_nr_running_avg/enable
-    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_reset_all_window_stats/enable
     # sound
     echo 1 > /sys/kernel/debug/tracing/events/asoc/snd_soc_reg_read/enable
     echo 1 > /sys/kernel/debug/tracing/events/asoc/snd_soc_reg_write/enable
@@ -90,6 +59,8 @@ enable_tracing_events()
     echo 1 > /sys/kernel/debug/tracing/events/msm_vidc/enable
     # clock
     echo 1 > /sys/kernel/debug/tracing/events/power/clock_set_rate/enable
+    echo 1 > /sys/kernel/debug/tracing/events/power/clock_enable/enable
+    echo 1 > /sys/kernel/debug/tracing/events/power/clock_disable/enable
     # regulator
     echo 1 > /sys/kernel/debug/tracing/events/regulator/enable
     # power
@@ -174,6 +145,8 @@ enable_sdm670_dcc_config()
 enable_sdm845_dcc_config()
 {
     DCC_PATH="/sys/bus/platform/devices/10a2000.dcc_v2"
+    soc_version=`cat /sys/devices/soc0/revision`
+    soc_version=${soc_version/./}
 
     if [ ! -d $DCC_PATH ]; then
         echo "DCC does not exist on this build."
@@ -185,6 +158,91 @@ enable_sdm845_dcc_config()
     echo sram > $DCC_PATH/data_sink
     echo 1 > $DCC_PATH/config_reset
     echo 2 > $DCC_PATH/curr_list
+
+    echo 0x00151004 1 > $DCC_PATH/config
+    echo 0x1 0x1 > $DCC_PATH/rd_mod_wr
+    echo 0x00151004 1 > $DCC_PATH/config
+    echo 0x146bf010 1 > $DCC_PATH/config
+    echo 0x146bf020 1 > $DCC_PATH/config
+    echo 0x069EA00C 0x00600007 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x00136800 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x00136810 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x00136820 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x00136830 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x00136840 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x00136850 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x00136860 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x00136870 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003e9a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003c0a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003d1a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003d2a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003d5a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003d6a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003e8a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003eea0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003b1a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003b2a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003b5a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003b6a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003c2a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003c5a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x0003c6a0 1 > $DCC_PATH/config_write
+    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
+    echo 0x069EA014 1 1 > $DCC_PATH/config
+    echo 0x069EA01C 0x00f1e000 1 > $DCC_PATH/config_write
+    echo 0x069EA008 0x00000007 1 > $DCC_PATH/config_write
+    echo 0x013E7E00 124 > $DCC_PATH/config
+
+    #Use for address change between V1 vs V2
+    if [ "$soc_version" -eq 20 ]
+    then
+        #V2
+        echo 0x17D41920  > $DCC_PATH/config
+        echo 0x17D43920  > $DCC_PATH/config
+        echo 0x17D46120  > $DCC_PATH/config
+    else
+        #V1
+        echo 0x17D41780 1 > $DCC_PATH/config
+        echo 0x17D43780 1 > $DCC_PATH/config
+        echo 0x17D45F80 1 > $DCC_PATH/config
+    fi
 
     echo 0x01740300 6 > $DCC_PATH/config
     echo 0x01620500 4 > $DCC_PATH/config
@@ -310,7 +368,7 @@ enable_sdm845_dcc_config()
     echo 0x17D45F14 1 > $DCC_PATH/config
     echo 0x17D45F18 1 > $DCC_PATH/config
     echo 0x17D45F1C 1 > $DCC_PATH/config
-    echo 0x17D45F80 1 > $DCC_PATH/config
+    echo 0x17D47414 1 > $DCC_PATH/config
     echo 0x17D47418 1 > $DCC_PATH/config
     echo 0x17D47570 1 > $DCC_PATH/config
     echo 0x17D47588 1 > $DCC_PATH/config
@@ -321,7 +379,7 @@ enable_sdm845_dcc_config()
     echo 0x17D43714 1 > $DCC_PATH/config
     echo 0x17D43718 1 > $DCC_PATH/config
     echo 0x17D4371C 1 > $DCC_PATH/config
-    echo 0x17D43780 1 > $DCC_PATH/config
+    echo 0x17D44C14 1 > $DCC_PATH/config
     echo 0x17D44C18 1 > $DCC_PATH/config
     echo 0x17D44D70 1 > $DCC_PATH/config
     echo 0x17D44D88 1 > $DCC_PATH/config
@@ -332,73 +390,10 @@ enable_sdm845_dcc_config()
     echo 0x17D41714 1 > $DCC_PATH/config
     echo 0x17D41718 1 > $DCC_PATH/config
     echo 0x17D4171C 1 > $DCC_PATH/config
-    echo 0x17D41780 1 > $DCC_PATH/config
+    echo 0x17D42C14 1 > $DCC_PATH/config
     echo 0x17D42C18 1 > $DCC_PATH/config
     echo 0x17D42D70 1 > $DCC_PATH/config
     echo 0x17D42D88 1 > $DCC_PATH/config
-
-    echo 0x069EA00C 0x00600007 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x00136800 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x00136810 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x00136820 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x00136830 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x00136840 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x00136850 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x00136860 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x00136870 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003e9a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003c0a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003d1a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003d2a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003d5a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003d6a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003b1a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003b2a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003b5a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003b6a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003c2a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003c5a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x0003c6a0 1 > $DCC_PATH/config_write
-    echo 0x069EA01C 0x001368a0 1 > $DCC_PATH/config_write
-    echo 0x069EA014 1 1 > $DCC_PATH/config
-    echo 0x069EA01C 0x00f1e000 1 > $DCC_PATH/config_write
-    echo 0x069EA008 0x00000007 1 > $DCC_PATH/config_write
-    echo 0x013E7E00 31 > $DCC_PATH/config
 
    # DDR_SS
     echo 0x01132100 1 > $DCC_PATH/config
@@ -418,10 +413,12 @@ enable_sdm845_dcc_config()
     echo 0x01160410 1 > $DCC_PATH/config
     echo 0x01160414 1 > $DCC_PATH/config
     echo 0x01160418 1 > $DCC_PATH/config
+    echo 0x01160420 1 > $DCC_PATH/config
+    echo 0x01160424 1 > $DCC_PATH/config
+    echo 0x01160430 1 > $DCC_PATH/config
+    echo 0x01160440 1 > $DCC_PATH/config
+    echo 0x01160448 1 > $DCC_PATH/config
     echo 0x011604A0 1 > $DCC_PATH/config
-    echo 0x011604B8 1 > $DCC_PATH/config
-    echo 0x01165804 1 > $DCC_PATH/config
-    echo 0x01166418 1 > $DCC_PATH/config
     echo 0x011B2100 1 > $DCC_PATH/config
     echo 0x011B6044 1 > $DCC_PATH/config
     echo 0x011B6048 1 > $DCC_PATH/config
@@ -439,10 +436,12 @@ enable_sdm845_dcc_config()
     echo 0x011E0410 1 > $DCC_PATH/config
     echo 0x011E0414 1 > $DCC_PATH/config
     echo 0x011E0418 1 > $DCC_PATH/config
+    echo 0x011E0420 1 > $DCC_PATH/config
+    echo 0x011E0424 1 > $DCC_PATH/config
+    echo 0x011E0430 1 > $DCC_PATH/config
+    echo 0x011E0440 1 > $DCC_PATH/config
+    echo 0x011E0448 1 > $DCC_PATH/config
     echo 0x011E04A0 1 > $DCC_PATH/config
-    echo 0x011E04B8 1 > $DCC_PATH/config
-    echo 0x011E5804 1 > $DCC_PATH/config
-    echo 0x011E6418 1 > $DCC_PATH/config
     echo 0x01232100 1 > $DCC_PATH/config
     echo 0x01236044 1 > $DCC_PATH/config
     echo 0x01236048 1 > $DCC_PATH/config
@@ -460,10 +459,12 @@ enable_sdm845_dcc_config()
     echo 0x01260410 1 > $DCC_PATH/config
     echo 0x01260414 1 > $DCC_PATH/config
     echo 0x01260418 1 > $DCC_PATH/config
+    echo 0x01260420 1 > $DCC_PATH/config
+    echo 0x01260424 1 > $DCC_PATH/config
+    echo 0x01260430 1 > $DCC_PATH/config
+    echo 0x01260440 1 > $DCC_PATH/config
+    echo 0x01260448 1 > $DCC_PATH/config
     echo 0x012604A0 1 > $DCC_PATH/config
-    echo 0x012604B8 1 > $DCC_PATH/config
-    echo 0x01265804 1 > $DCC_PATH/config
-    echo 0x01266418 1 > $DCC_PATH/config
     echo 0x012B2100 1 > $DCC_PATH/config
     echo 0x012B6044 1 > $DCC_PATH/config
     echo 0x012B6048 1 > $DCC_PATH/config
@@ -481,10 +482,12 @@ enable_sdm845_dcc_config()
     echo 0x012E0410 1 > $DCC_PATH/config
     echo 0x012E0414 1 > $DCC_PATH/config
     echo 0x012E0418 1 > $DCC_PATH/config
+    echo 0x012E0420 1 > $DCC_PATH/config
+    echo 0x012E0424 1 > $DCC_PATH/config
+    echo 0x012E0430 1 > $DCC_PATH/config
+    echo 0x012E0440 1 > $DCC_PATH/config
+    echo 0x012E0448 1 > $DCC_PATH/config
     echo 0x012E04A0 1 > $DCC_PATH/config
-    echo 0x012E04B8 1 > $DCC_PATH/config
-    echo 0x012E5804 1 > $DCC_PATH/config
-    echo 0x012E6418 1 > $DCC_PATH/config
     echo 0x01380900 1 > $DCC_PATH/config
     echo 0x01380904 1 > $DCC_PATH/config
     echo 0x01380908 1 > $DCC_PATH/config
@@ -511,7 +514,6 @@ enable_sdm845_dcc_config()
     echo 0x0143029c 1 > $DCC_PATH/config
     echo 0x014302a0 1 > $DCC_PATH/config
 
-    # DDR_SS Repeat
     echo 0x01132100 1 > $DCC_PATH/config
     echo 0x01136044 1 > $DCC_PATH/config
     echo 0x01136048 1 > $DCC_PATH/config
@@ -520,6 +522,7 @@ enable_sdm845_dcc_config()
     echo 0x011360B0 1 > $DCC_PATH/config
     echo 0x0113E030 1 > $DCC_PATH/config
     echo 0x0113E034 1 > $DCC_PATH/config
+    echo 0x01141000 1 > $DCC_PATH/config
     echo 0x01142028 1 > $DCC_PATH/config
     echo 0x01148058 1 > $DCC_PATH/config
     echo 0x0114805C 1 > $DCC_PATH/config
@@ -528,10 +531,12 @@ enable_sdm845_dcc_config()
     echo 0x01160410 1 > $DCC_PATH/config
     echo 0x01160414 1 > $DCC_PATH/config
     echo 0x01160418 1 > $DCC_PATH/config
+    echo 0x01160420 1 > $DCC_PATH/config
+    echo 0x01160424 1 > $DCC_PATH/config
+    echo 0x01160430 1 > $DCC_PATH/config
+    echo 0x01160440 1 > $DCC_PATH/config
+    echo 0x01160448 1 > $DCC_PATH/config
     echo 0x011604A0 1 > $DCC_PATH/config
-    echo 0x011604B8 1 > $DCC_PATH/config
-    echo 0x01165804 1 > $DCC_PATH/config
-    echo 0x01166418 1 > $DCC_PATH/config
     echo 0x011B2100 1 > $DCC_PATH/config
     echo 0x011B6044 1 > $DCC_PATH/config
     echo 0x011B6048 1 > $DCC_PATH/config
@@ -540,6 +545,7 @@ enable_sdm845_dcc_config()
     echo 0x011B60B0 1 > $DCC_PATH/config
     echo 0x011BE030 1 > $DCC_PATH/config
     echo 0x011BE034 1 > $DCC_PATH/config
+    echo 0x011C1000 1 > $DCC_PATH/config
     echo 0x011C2028 1 > $DCC_PATH/config
     echo 0x011C8058 1 > $DCC_PATH/config
     echo 0x011C805C 1 > $DCC_PATH/config
@@ -548,10 +554,12 @@ enable_sdm845_dcc_config()
     echo 0x011E0410 1 > $DCC_PATH/config
     echo 0x011E0414 1 > $DCC_PATH/config
     echo 0x011E0418 1 > $DCC_PATH/config
+    echo 0x011E0420 1 > $DCC_PATH/config
+    echo 0x011E0424 1 > $DCC_PATH/config
+    echo 0x011E0430 1 > $DCC_PATH/config
+    echo 0x011E0440 1 > $DCC_PATH/config
+    echo 0x011E0448 1 > $DCC_PATH/config
     echo 0x011E04A0 1 > $DCC_PATH/config
-    echo 0x011E04B8 1 > $DCC_PATH/config
-    echo 0x011E5804 1 > $DCC_PATH/config
-    echo 0x011E6418 1 > $DCC_PATH/config
     echo 0x01232100 1 > $DCC_PATH/config
     echo 0x01236044 1 > $DCC_PATH/config
     echo 0x01236048 1 > $DCC_PATH/config
@@ -560,6 +568,7 @@ enable_sdm845_dcc_config()
     echo 0x012360B0 1 > $DCC_PATH/config
     echo 0x0123E030 1 > $DCC_PATH/config
     echo 0x0123E034 1 > $DCC_PATH/config
+    echo 0x01241000 1 > $DCC_PATH/config
     echo 0x01242028 1 > $DCC_PATH/config
     echo 0x01248058 1 > $DCC_PATH/config
     echo 0x0124805C 1 > $DCC_PATH/config
@@ -568,10 +577,12 @@ enable_sdm845_dcc_config()
     echo 0x01260410 1 > $DCC_PATH/config
     echo 0x01260414 1 > $DCC_PATH/config
     echo 0x01260418 1 > $DCC_PATH/config
+    echo 0x01260420 1 > $DCC_PATH/config
+    echo 0x01260424 1 > $DCC_PATH/config
+    echo 0x01260430 1 > $DCC_PATH/config
+    echo 0x01260440 1 > $DCC_PATH/config
+    echo 0x01260448 1 > $DCC_PATH/config
     echo 0x012604A0 1 > $DCC_PATH/config
-    echo 0x012604B8 1 > $DCC_PATH/config
-    echo 0x01265804 1 > $DCC_PATH/config
-    echo 0x01266418 1 > $DCC_PATH/config
     echo 0x012B2100 1 > $DCC_PATH/config
     echo 0x012B6044 1 > $DCC_PATH/config
     echo 0x012B6048 1 > $DCC_PATH/config
@@ -580,6 +591,7 @@ enable_sdm845_dcc_config()
     echo 0x012B60B0 1 > $DCC_PATH/config
     echo 0x012BE030 1 > $DCC_PATH/config
     echo 0x012BE034 1 > $DCC_PATH/config
+    echo 0x012C1000 1 > $DCC_PATH/config
     echo 0x012C2028 1 > $DCC_PATH/config
     echo 0x012C8058 1 > $DCC_PATH/config
     echo 0x012C805C 1 > $DCC_PATH/config
@@ -588,10 +600,12 @@ enable_sdm845_dcc_config()
     echo 0x012E0410 1 > $DCC_PATH/config
     echo 0x012E0414 1 > $DCC_PATH/config
     echo 0x012E0418 1 > $DCC_PATH/config
+    echo 0x012E0420 1 > $DCC_PATH/config
+    echo 0x012E0424 1 > $DCC_PATH/config
+    echo 0x012E0430 1 > $DCC_PATH/config
+    echo 0x012E0440 1 > $DCC_PATH/config
+    echo 0x012E0448 1 > $DCC_PATH/config
     echo 0x012E04A0 1 > $DCC_PATH/config
-    echo 0x012E04B8 1 > $DCC_PATH/config
-    echo 0x012E5804 1 > $DCC_PATH/config
-    echo 0x012E6418 1 > $DCC_PATH/config
     echo 0x01380900 1 > $DCC_PATH/config
     echo 0x01380904 1 > $DCC_PATH/config
     echo 0x01380908 1 > $DCC_PATH/config
@@ -618,140 +632,6 @@ enable_sdm845_dcc_config()
     echo 0x0143029c 1 > $DCC_PATH/config
     echo 0x014302a0 1 > $DCC_PATH/config
 
-    echo 0x1120344 1 > $DCC_PATH/config
-    echo 0x1120348 1 > $DCC_PATH/config
-    echo 0x112034C 1 > $DCC_PATH/config
-    echo 0x1120350 1 > $DCC_PATH/config
-    echo 0x1120354 1 > $DCC_PATH/config
-    echo 0x1120358 1 > $DCC_PATH/config
-    echo 0x112035C 1 > $DCC_PATH/config
-    echo 0x1120360 1 > $DCC_PATH/config
-    echo 0x1120370 1 > $DCC_PATH/config
-    echo 0x1120374 1 > $DCC_PATH/config
-    echo 0x1120378 1 > $DCC_PATH/config
-    echo 0x112037C 1 > $DCC_PATH/config
-    echo 0x1120380 1 > $DCC_PATH/config
-    echo 0x1120384 1 > $DCC_PATH/config
-    echo 0x1120480 1 > $DCC_PATH/config
-    echo 0x1142044 1 > $DCC_PATH/config
-    echo 0x1142048 1 > $DCC_PATH/config
-    echo 0x114204C 1 > $DCC_PATH/config
-    echo 0x1142050 1 > $DCC_PATH/config
-    echo 0x1142054 1 > $DCC_PATH/config
-    echo 0x1142058 1 > $DCC_PATH/config
-    echo 0x114205C 1 > $DCC_PATH/config
-    echo 0x1142060 1 > $DCC_PATH/config
-    echo 0x1142064 1 > $DCC_PATH/config
-    echo 0x1142068 1 > $DCC_PATH/config
-    echo 0x1142070 1 > $DCC_PATH/config
-    echo 0x1142074 1 > $DCC_PATH/config
-    echo 0x1142078 1 > $DCC_PATH/config
-    echo 0x114207C 1 > $DCC_PATH/config
-    echo 0x1142080 1 > $DCC_PATH/config
-    echo 0x1142084 1 > $DCC_PATH/config
-    echo 0x1142088 1 > $DCC_PATH/config
-    echo 0x114208C 1 > $DCC_PATH/config
-    echo 0x11A0344 1 > $DCC_PATH/config
-    echo 0x11A0348 1 > $DCC_PATH/config
-    echo 0x11A034C 1 > $DCC_PATH/config
-    echo 0x11A0350 1 > $DCC_PATH/config
-    echo 0x11A0354 1 > $DCC_PATH/config
-    echo 0x11A0358 1 > $DCC_PATH/config
-    echo 0x11A035C 1 > $DCC_PATH/config
-    echo 0x11A0360 1 > $DCC_PATH/config
-    echo 0x11A0370 1 > $DCC_PATH/config
-    echo 0x11A0374 1 > $DCC_PATH/config
-    echo 0x11A0378 1 > $DCC_PATH/config
-    echo 0x11A037C 1 > $DCC_PATH/config
-    echo 0x11A0380 1 > $DCC_PATH/config
-    echo 0x11A0384 1 > $DCC_PATH/config
-    echo 0x11A0480 1 > $DCC_PATH/config
-    echo 0x11C2044 1 > $DCC_PATH/config
-    echo 0x11C2048 1 > $DCC_PATH/config
-    echo 0x11C204C 1 > $DCC_PATH/config
-    echo 0x11C2050 1 > $DCC_PATH/config
-    echo 0x11C2054 1 > $DCC_PATH/config
-    echo 0x11C2058 1 > $DCC_PATH/config
-    echo 0x11C205C 1 > $DCC_PATH/config
-    echo 0x11C2060 1 > $DCC_PATH/config
-    echo 0x11C2064 1 > $DCC_PATH/config
-    echo 0x11C2068 1 > $DCC_PATH/config
-    echo 0x11C2070 1 > $DCC_PATH/config
-    echo 0x11C2074 1 > $DCC_PATH/config
-    echo 0x11C2078 1 > $DCC_PATH/config
-    echo 0x11C207C 1 > $DCC_PATH/config
-    echo 0x11C2080 1 > $DCC_PATH/config
-    echo 0x11C2084 1 > $DCC_PATH/config
-    echo 0x11C2088 1 > $DCC_PATH/config
-    echo 0x11C208C 1 > $DCC_PATH/config
-    echo 0x1220344 1 > $DCC_PATH/config
-    echo 0x1220348 1 > $DCC_PATH/config
-    echo 0x122034C 1 > $DCC_PATH/config
-    echo 0x1220350 1 > $DCC_PATH/config
-    echo 0x1220354 1 > $DCC_PATH/config
-    echo 0x1220358 1 > $DCC_PATH/config
-    echo 0x122035C 1 > $DCC_PATH/config
-    echo 0x1220360 1 > $DCC_PATH/config
-    echo 0x1220370 1 > $DCC_PATH/config
-    echo 0x1220374 1 > $DCC_PATH/config
-    echo 0x1220378 1 > $DCC_PATH/config
-    echo 0x122037C 1 > $DCC_PATH/config
-    echo 0x1220380 1 > $DCC_PATH/config
-    echo 0x1220384 1 > $DCC_PATH/config
-    echo 0x1220480 1 > $DCC_PATH/config
-    echo 0x1242044 1 > $DCC_PATH/config
-    echo 0x1242048 1 > $DCC_PATH/config
-    echo 0x124204C 1 > $DCC_PATH/config
-    echo 0x1242050 1 > $DCC_PATH/config
-    echo 0x1242054 1 > $DCC_PATH/config
-    echo 0x1242058 1 > $DCC_PATH/config
-    echo 0x124205C 1 > $DCC_PATH/config
-    echo 0x1242060 1 > $DCC_PATH/config
-    echo 0x1242064 1 > $DCC_PATH/config
-    echo 0x1242068 1 > $DCC_PATH/config
-    echo 0x1242070 1 > $DCC_PATH/config
-    echo 0x1242074 1 > $DCC_PATH/config
-    echo 0x1242078 1 > $DCC_PATH/config
-    echo 0x124207C 1 > $DCC_PATH/config
-    echo 0x1242080 1 > $DCC_PATH/config
-    echo 0x1242084 1 > $DCC_PATH/config
-    echo 0x1242088 1 > $DCC_PATH/config
-    echo 0x124208C 1 > $DCC_PATH/config
-    echo 0x12A0344 1 > $DCC_PATH/config
-    echo 0x12A0348 1 > $DCC_PATH/config
-    echo 0x12A034C 1 > $DCC_PATH/config
-    echo 0x12A0350 1 > $DCC_PATH/config
-    echo 0x12A0354 1 > $DCC_PATH/config
-    echo 0x12A0358 1 > $DCC_PATH/config
-    echo 0x12A035C 1 > $DCC_PATH/config
-    echo 0x12A0360 1 > $DCC_PATH/config
-    echo 0x12A0370 1 > $DCC_PATH/config
-    echo 0x12A0374 1 > $DCC_PATH/config
-    echo 0x12A0378 1 > $DCC_PATH/config
-    echo 0x12A037C 1 > $DCC_PATH/config
-    echo 0x12A0380 1 > $DCC_PATH/config
-    echo 0x12A0384 1 > $DCC_PATH/config
-    echo 0x12A0480 1 > $DCC_PATH/config
-    echo 0x12C2044 1 > $DCC_PATH/config
-    echo 0x12C2048 1 > $DCC_PATH/config
-    echo 0x12C204C 1 > $DCC_PATH/config
-    echo 0x12C2050 1 > $DCC_PATH/config
-    echo 0x12C2054 1 > $DCC_PATH/config
-    echo 0x12C2058 1 > $DCC_PATH/config
-    echo 0x12C205C 1 > $DCC_PATH/config
-    echo 0x12C2060 1 > $DCC_PATH/config
-    echo 0x12C2064 1 > $DCC_PATH/config
-    echo 0x12C2068 1 > $DCC_PATH/config
-    echo 0x12C2070 1 > $DCC_PATH/config
-    echo 0x12C2074 1 > $DCC_PATH/config
-    echo 0x12C2078 1 > $DCC_PATH/config
-    echo 0x12C207C 1 > $DCC_PATH/config
-    echo 0x12C2080 1 > $DCC_PATH/config
-    echo 0x12C2084 1 > $DCC_PATH/config
-    echo 0x12C2088 1 > $DCC_PATH/config
-    echo 0x12C208C 1 > $DCC_PATH/config
-
-    #LLCC ACT/ALLOCATION STATUS
     echo 0x01301000 1 > $DCC_PATH/config
     echo 0x01301004 1 > $DCC_PATH/config
     echo 0x01302000 1 > $DCC_PATH/config
@@ -814,10 +694,12 @@ enable_sdm845_dcc_config()
     echo 0x0131E004 1 > $DCC_PATH/config
     echo 0x0131F000 1 > $DCC_PATH/config
     echo 0x0131F004 1 > $DCC_PATH/config
-
-    #CX and MX voltage
     echo 0x0C201244 1 > $DCC_PATH/config
     echo 0x0C202244 1 > $DCC_PATH/config
+    echo 0x013D0008 1 > $DCC_PATH/config
+    echo 0x013D0068 1 > $DCC_PATH/config
+    echo 0x013D0078 1 > $DCC_PATH/config
+    echo 0x013D1000 1 > $DCC_PATH/config
 
     #Apply configuration and enable DCC
     echo  1 > $DCC_PATH/enable
@@ -2107,8 +1989,8 @@ case "$coresight_config" in
                 srcenable="enable_source"
                 sinkenable="enable_sink"
             fi
-            #echo "Enabling STM events."
-            #enable_stm_events
+            echo "Enabling STM events."
+            enable_stm_events
             setprop ro.dbg.coresight.stm_cfg_done 1
         fi
         ;;

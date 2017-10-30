@@ -46,7 +46,11 @@ else
     soc_hwver=`cat /sys/devices/system/soc/soc0/platform_version` 2> /dev/null
 fi
 
-if [ -f /sys/class/graphics/fb0/virtual_size ]; then
+if [ -f /sys/class/drm/card0-DSI-1/modes ]; then
+    echo "detect" > /sys/class/drm/card0-DSI-1/status
+    res=`cat /sys/class/drm/card0-DSI-1/modes` 2> /dev/null
+    fb_width=${res%x*}
+elif [ -f /sys/class/graphics/fb0/virtual_size ]; then
     res=`cat /sys/class/graphics/fb0/virtual_size` 2> /dev/null
     fb_width=${res%,*}
 fi
@@ -260,7 +264,12 @@ case "$target" in
     "sdm845")
         case "$soc_hwplatform" in
             *)
-                setprop ro.sf.lcd_density 560
+                if [ $fb_width -le 1600 ]; then
+                    setprop ro.sf.lcd_density 560
+                else
+                    setprop ro.sf.lcd_density 640
+                fi
+
                 if [ ! -e /dev/kgsl-3d0 ]; then
                     setprop persist.sys.force_sw_gles 1
                     setprop sdm.idle_time 0
@@ -413,13 +422,8 @@ fi
 
 boot_reason=`cat /proc/sys/kernel/boot_reason`
 reboot_reason=`getprop ro.boot.alarmboot`
-power_off_alarm_file=`cat /persist/alarm/powerOffAlarmSet`
 if [ "$boot_reason" = "3" ] || [ "$reboot_reason" = "true" ]; then
-    if [ "$power_off_alarm_file" = "1" ]
-    then
-        setprop ro.alarm_boot true
-        setprop debug.sf.nobootanimation 1
-    fi
+    setprop ro.alarm_boot true
 else
     setprop ro.alarm_boot false
 fi
