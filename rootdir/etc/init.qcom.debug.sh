@@ -27,9 +27,8 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-HERE=/vendor/bin
+HERE=/system/etc
 source $HERE/init.qcom.debug-sdm660.sh
-source $HERE/init.qcom.debug-sdm670.sh
 enable_tracing_events()
 {
     # timer
@@ -2102,12 +2101,6 @@ case "$coresight_config" in
         then
             echo "Enabling STM/Debug events for SDM660"
             enable_sdm660_debug
-        else if [ $target == "sdm670" ];
-        then
-            echo "Enabling DCC/STM/Debug events for SDM670"
-            enable_sdm670_debug
-            setprop ro.dbg.coresight.stm_cfg_done 1
-        fi
         else
             if [ $target == "sdm845" ];
             then
