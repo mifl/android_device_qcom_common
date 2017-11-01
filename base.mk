@@ -13,6 +13,7 @@ QCOM_BOARD_PLATFORMS += msm8916_64
 QCOM_BOARD_PLATFORMS += msm8994
 QCOM_BOARD_PLATFORMS += msm8909
 QCOM_BOARD_PLATFORMS += msm8909_512
+QCOM_BOARD_PLATFORMS += msm8909_256
 QCOM_BOARD_PLATFORMS += msm8909w
 
 QSD8K_BOARD_PLATFORMS := qsd8k
@@ -259,6 +260,7 @@ INIT += init.qcom.zram.sh
 INIT += init.qti.memcheck.sh
 INIT += init.qti.synaptics_dsx_qhd.sh
 INIT += init.qcom.bms.sh
+INIT += init.qcom.ubi_mount_helper.sh
 
 #IPROUTE2
 IPROUTE2 := ip

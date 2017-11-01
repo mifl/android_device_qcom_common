@@ -1215,24 +1215,15 @@ case "$target" in
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
 
-	#Set mmcblk0 read_ahead value for 8909_512 target
-        ProductName=`getprop ro.product.name`
-	if [ "$ProductName" == "msm8909_512" ]; then
-		echo 128 > /sys/block/mmcblk0/queue/read_ahead_kb
-	fi
-
-        #Enable adaptive LMK, zram and set vmpressure_file_min
-        ProductName=`getprop ro.product.name`
-	if [ "$ProductName" == "msm8909" ] || [ "$ProductName" == "msm8909_LMT" ]; then
-		echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-		echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-	elif [ "$ProductName" == "msm8909_512" ] || [ "$ProductName" == "msm8909w" ]; then
-		echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-		echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-                echo 157286400 > /sys/block/zram0/disksize
-                mkswap /dev/block/zram0
-                swapon /dev/block/zram0
-	fi
+	#Set LMK, adaptive LMK, zram, mmcblk read_ahead
+        echo 128 > /sys/block/mmcblk0/queue/read_ahead_kb
+        echo "1024,1280,1536,1792,2048,5120" > /sys/module/lowmemorykiller/parameters/minfree
+        echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+        echo 8192 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+        echo 0 > /sys/module/vmpressure/parameters/allocstall_threshold
+        echo 157286400 > /sys/block/zram0/disksize
+        mkswap /dev/block/zram0
+        swapon /dev/block/zram0
 
 	if [ "$ProductName" != "msm8909w" ]; then
 		# HMP scheduler settings for 8909 similiar to 8916
