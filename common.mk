@@ -6,7 +6,7 @@ $(call inherit-product, device/qcom/common/base.mk)
 $(call inherit-product-if-exists, $(QCPATH)/common/config/device-vendor.mk)
 #$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
 
-PRODUCT_PROPERTY_OVERRIDES := \
+PRODUCT_PROPERTY_OVERRIDES += \
     keyguard.no_require_sim=true \
     ro.com.android.dataroaming=true
 
