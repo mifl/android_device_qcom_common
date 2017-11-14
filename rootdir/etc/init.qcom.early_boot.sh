@@ -225,7 +225,15 @@ case "$platform" in
                 esac
                 ;;
         esac
-	;;
+        case $platform in
+             "msm8909")
+                cap_ver=`cat /sys/devices/soc.0/1d00000.qcom,vidc/capability_version` 2> /dev/null
+                if [ $cap_ver -eq 1 ]; then
+                    setprop media.msm8905.version 1
+                    setprop media.settings.xml /etc/media_profiles_8905.xml
+                fi
+        esac
+        ;;
 esac
 
 # Setup display nodes & permissions
