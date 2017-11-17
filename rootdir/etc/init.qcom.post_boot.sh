@@ -1989,7 +1989,7 @@ case "$target" in
         fi
 
         case "$soc_id" in
-            "336" | "337" )
+            "336" | "337" | "347" )
 
             # Start Host based Touch processing
             case "$hw_platform" in
@@ -2016,16 +2016,16 @@ case "$target" in
       echo "schedutil" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
       echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/rate_limit_us
       echo 1209600 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/hispeed_freq
+      echo 576000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
       # configure governor settings for big cluster
       echo "schedutil" > /sys/devices/system/cpu/cpu6/cpufreq/scaling_governor
       echo 0 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/rate_limit_us
       echo 1344000 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/hispeed_freq
+      echo 825600 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
 
       echo "0:1209600" > /sys/module/cpu_boost/parameters/input_boost_freq
       echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
-      # Limit the min frequency to 720MHz
-      echo 720000 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
 
       # Enable bus-dcvs
       for cpubw in /sys/class/devfreq/*qcom,cpubw*
@@ -2536,11 +2536,11 @@ case "$target" in
             echo 50 > $cpubw/polling_interval
             echo "2288 4577 6500 8132 9155 10681" > $cpubw/bw_hwmon/mbps_zones
             echo 4 > $cpubw/bw_hwmon/sample_ms
-            echo 40 > $cpubw/bw_hwmon/io_percent
+            echo 50 > $cpubw/bw_hwmon/io_percent
             echo 20 > $cpubw/bw_hwmon/hist_memory
             echo 10 > $cpubw/bw_hwmon/hyst_length
             echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
-            echo 40 > $cpubw/bw_hwmon/low_power_io_percent
+            echo 50 > $cpubw/bw_hwmon/low_power_io_percent
             echo 20 > $cpubw/bw_hwmon/low_power_delay
             echo 0 > $cpubw/bw_hwmon/guard_band_mbps
             echo 250 > $cpubw/bw_hwmon/up_scale
@@ -2583,7 +2583,8 @@ case "$target" in
 	#Gold L3 ratio ceil
         echo 4000 > /sys/class/devfreq/soc:qcom,l3-cpu4/mem_latency/ratio_ceil
 
-	echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
+	echo "compute" > /sys/class/devfreq/soc:qcom,mincpubw/governor
+	echo 10 > /sys/class/devfreq/soc:qcom,mincpubw/polling_interval
 
 	# cpuset parameters
         echo 0-3 > /dev/cpuset/background/cpus

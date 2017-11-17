@@ -1601,14 +1601,14 @@ srcenable="enable"
 sinkenable="curr_sink"
 enable_sdm670_debug()
 {
-	echo "sdm670 debug"
-	enable_sdm670_dcc_config
-	enable_sdm670_gladiator_hang_config
-	enable_sdm670_osm_wdog_status_config
-	enable_sdm670_core_hang_config
-	enable_sdm670_stm
-	if [ "$ftrace_disable" != "Yes" ]; then
-		enable_sdm670_ftrace
-	fi
-	enable_sdm670_stm_hw_events
+    echo "sdm670 debug"
+    enable_sdm670_dcc_config
+    enable_sdm670_gladiator_hang_config
+    enable_sdm670_osm_wdog_status_config
+    enable_sdm670_core_hang_config
+    enable_sdm670_stm
+    if [ "$ftrace_disable" != "Yes" ]; then
+        enable_sdm670_ftrace
+    fi
+    enable_sdm670_stm_hw_events
 }

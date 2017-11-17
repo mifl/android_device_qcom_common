@@ -25,7 +25,10 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-write /proc/sys/kernel/kptr_restrict 0
+# this will make sure you have /data ready and then you try to create the dir.
+on post-fs-data
+    # Create directory for Graphics applications
+    mkdir /data/vendor/gpu 0777 system system
 
 # Coresight early boot service
 service cs-early-boot /vendor/bin/sh /persist/coresight/qdss.agent.sh early-boot /vendor/bin/init.qcom.debug.sh
@@ -55,4 +58,4 @@ service DiagDaemon /system/vendor/bin/diag_socket_log -f /sdcard/ipaddress.txt
     oneshot
     disabled
     user root
-    group root system log qcom_diag net_raw
+    group root system log diag net_raw
