@@ -130,6 +130,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="854">
@@ -158,6 +159,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="855">
@@ -186,6 +188,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="856">
@@ -214,6 +217,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="857">
@@ -242,6 +246,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="858">
@@ -270,6 +275,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="859">
@@ -298,6 +304,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="860">
@@ -326,6 +333,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="861">
@@ -354,6 +362,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="862">
@@ -382,6 +391,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="863">
@@ -410,6 +420,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="864">
@@ -438,6 +449,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="865">
@@ -466,6 +478,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="866">
@@ -494,6 +507,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="867">
@@ -522,6 +536,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="868">
@@ -550,6 +565,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="869">
@@ -578,6 +594,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="870">
@@ -606,6 +623,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="871">
@@ -634,6 +652,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="872">
@@ -662,6 +681,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="873">
@@ -690,6 +710,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="874">
@@ -718,6 +739,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="440" mnc="50">
@@ -838,6 +860,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_enable_cfu_time" value="true" />
         <boolean name="support_cancel_modify_call" value="true" />
         <boolean name="config_enable_video_crbt" value="true" />
+        <boolean name="config_hide_vt_callforward_option" value="true" />
+        <boolean name="ignore_reset_ut_capability_bool" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="01">
@@ -855,6 +879,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="02">
@@ -894,6 +919,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_enable_cfu_time" value="true" />
         <boolean name="support_cancel_modify_call" value="true" />
         <boolean name="config_enable_video_crbt" value="true" />
+        <boolean name="config_hide_vt_callforward_option" value="true" />
+        <boolean name="ignore_reset_ut_capability_bool" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="03">
@@ -913,10 +940,13 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </map>
         <boolean name="config_show_orig_dial_string_for_cdma" value="true" />
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
+        <boolean name="ignore_reset_ut_capability_bool" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="04">
         <boolean name="allow_emergency_numbers_in_call_log_bool" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
             <string name="roaming_protocol">IPV4V6</string>
@@ -933,6 +963,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
+        <boolean name="ignore_reset_ut_capability_bool" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="06">
@@ -946,6 +978,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="07">
@@ -985,6 +1018,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_enable_cfu_time" value="true" />
         <boolean name="support_cancel_modify_call" value="true" />
         <boolean name="config_enable_video_crbt" value="true" />
+        <boolean name="config_hide_vt_callforward_option" value="true" />
+        <boolean name="ignore_reset_ut_capability_bool" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="08">
@@ -1023,6 +1058,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_enable_cfu_time" value="true" />
         <boolean name="support_cancel_modify_call" value="true" />
         <boolean name="config_enable_video_crbt" value="true" />
+        <boolean name="config_hide_vt_callforward_option" value="true" />
+        <boolean name="ignore_reset_ut_capability_bool" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="09">
@@ -1035,10 +1072,12 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="10">
         <boolean name="allow_emergency_numbers_in_call_log_bool" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
             <string name="roaming_protocol">IPV4V6</string>
@@ -1062,6 +1101,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
+        <boolean name="ignore_reset_ut_capability_bool" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="12">
@@ -1081,6 +1122,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
+        <boolean name="ignore_reset_ut_capability_bool" value="true" />
     </carrier_config>
 
     <carrier_config mcc="310" mnc="00">
