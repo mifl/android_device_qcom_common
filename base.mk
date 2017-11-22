@@ -286,6 +286,7 @@ INIT += enable_swap.sh
 INIT += init.mdm.sh
 INIT += fstab.qcom
 INIT += init.qcom.sensors.sh
+INIT += init.qcom.crashdata.sh
 INIT += init.qcom.vendor.rc
 INIT += init.target.vendor.rc
 INIT += init.qti.fm.sh
@@ -669,6 +670,11 @@ STMLOG := libstm-log
 
 #THERMAL_HAL
 THERMAL_HAL := thermal.msm8998
+THERMAL_HAL += thermal.sdm845
+THERMAL_HAL += thermal.sdm660
+THERMAL_HAL += thermal.msm8996
+THERMAL_HAL += thermal.msm8953
+THERMAL_HAL += thermal.msm8937
 
 #TSLIB_EXTERNAL
 TSLIB_EXTERNAL := corgi
@@ -891,6 +897,7 @@ PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 
 PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
+PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
