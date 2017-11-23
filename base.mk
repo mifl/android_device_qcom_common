@@ -174,11 +174,8 @@ CHROMIUM += libwebviewchromium_plat_support
 CIMAX := libcimax_spi
 
 #CM
-CM :=CMFileManager
+#CM :=CMFileManager
 #CM += Trebuchet
-
-#Default Launcher
-DELAUN := Launcher3Go
 
 #CONNECTIVITY
 CONNECTIVITY := libcnefeatureconfig
@@ -798,6 +795,18 @@ PRODUCT_PACKAGES := \
     a4wpservice \
     wipowerservice
 
+ifeq ($(TARGET_HAS_LOW_RAM),true)
+    DELAUN := Launcher3Go
+else
+    # Live Wallpapers
+    PRODUCT_PACKAGES += \
+            LiveWallpapers \
+            LiveWallpapersPicker \
+            VisualizationWallpapers
+
+    DELAUN := Launcher3
+endif
+
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
 PRODUCT_PACKAGES += $(ANGLE)
@@ -895,9 +904,7 @@ PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
-
-PRODUCT_PACKAGES += \
-        librs_jni
+PRODUCT_PACKAGES += librs_jni
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
