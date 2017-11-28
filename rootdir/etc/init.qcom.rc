@@ -808,6 +808,10 @@ service loc_launcher /system/bin/loc_launcher
     #loc_launcher will start as root and set its uid to gps
     class late_start
     group gps inet net_raw qcom_diag net_admin wifi
+    disabled
+
+on property:ro.gps.enabled=true
+    start loc_launcher
 
 service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
     class late_start
