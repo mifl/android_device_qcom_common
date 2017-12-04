@@ -223,7 +223,7 @@ NAND_RECOVERYIMAGE_ARGS := \
 # Generate NAND images
 #----------------------------------------------------------------------
 ifeq ($(call is-board-platform-in-list,msm7627a msm7630_surf msm8909),true)
-
+ifeq ($(strip $(TARGET_BOARD_SUFFIX)),_256)
 2K_NAND_OUT := $(PRODUCT_OUT)/2k_nand_images
 
 UBINIZE_SYSTEM_CFG := $(2K_NAND_OUT)/ubinize_system.cfg
@@ -320,6 +320,7 @@ INTERNAL_BCHECC_MKYAFFS2_FLAGS += -s $(BOARD_KERNEL_BCHECC_SPARESIZE)
 INTERNAL_4K_RECOVERYIMAGE_ARGS := $(NAND_RECOVERYIMAGE_ARGS)
 INTERNAL_4K_RECOVERYIMAGE_ARGS += --pagesize $(BOARD_KERNEL_4KPAGESIZE)
 
+endif
 endif
 
 recovery_nand_fstab := $(TARGET_DEVICE_DIR)/recovery_nand.fstab
