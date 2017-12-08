@@ -671,9 +671,6 @@ ifeq ($(TARGET_BOOTIMG_SIGNED),true)
 bootimage: $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_SEC_BOOTIMAGE_TARGET)
 endif
 
-ifeq ($(filter dist,$(MAKECMDGOALS)),)
-droidcore : target-files-package
-endif
 ###################################################################################################
 
 ifeq ($(TARGET_BOOTIMG_SIGNED),true)
