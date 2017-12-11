@@ -298,8 +298,8 @@ emmc_dir=/dev/block/bootdevice/by-name
 nand_file=/proc/mtd
 partition_name=gpsconfig
 
-# set gps to disabled state by default
-gps_enabled=false
+# set gps to enabled state by default
+gps_enabled=true
 
 if [ -d $emmc_dir ]
 then
@@ -307,7 +307,7 @@ then
     emmc_partition="${emmc_dir}/${partition_name}"
     if [ -e $emmc_partition ]
     then
-        gps_enabled=true
+        gps_enabled=false
     fi
 else
     # nand configuration
@@ -315,7 +315,7 @@ else
     then
         if grep ${partition_name} $nand_file
         then
-           gps_enabled=true
+           gps_enabled=false
         fi
     fi
 fi
