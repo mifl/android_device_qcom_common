@@ -369,7 +369,7 @@ on post-fs-data
     mkdir /data/nfc/param 0770 nfc nfc
 
     #Create IOP  deamon related dirs
-    mkdir /data/vendor/iop 0770 root system
+    mkdir /data/vendor/iop 0700 root system
 
     # Mark the copy complete flag to not completed
     write /data/vendor/radio/copy_complete 0
@@ -645,7 +645,7 @@ service ipacm /system/vendor/bin/ipacm
 service qti /system/vendor/bin/qti
     class main
     user radio
-    group radio net_raw diag usb net_admin
+    group radio oem_2901 diag usb net_admin
     disabled
 
 service sensors /vendor/bin/sensors.qcom
@@ -738,20 +738,21 @@ on property:netd.fstman.start=false
     stop fstman
 
 service wigighalsvc /vendor/bin/wigighalsvc
-    class main
+    class hal
     user system
     group wifi
+    # needed for on-demand insmod/rmmod of wigig module
+    capabilities SYS_MODULE
     disabled
 
 service wigignpt /vendor/bin/wigignpt
-    class main
+    class hal
     socket wigignpt stream 660 system wifi
     user system
     group wifi net_admin
     disabled
 
 on property:persist.vendor.wigig.enable=1
-    insmod /vendor/lib/modules/wil6210.ko alt_ifname=1
     start wigighalsvc
 
 on property:persist.vendor.wigig.npt.enable=1
@@ -1049,17 +1050,17 @@ on property:sys.qbcharger.enable=true
 on property:sys.qbcharger.enable=false
     stop qbcharger
 
-service diag_mdlog_start /system/bin/diag_mdlog
+service diag_mdlog_start /system/vendor/bin/diag_mdlog
     class late_start
     user shell
-    group system diag sdcard_rw sdcard_r media_rw
+    group system oem_2901 sdcard_rw sdcard_r media_rw
     disabled
     oneshot
 
-service diag_mdlog_stop /system/bin/diag_mdlog -k
+service diag_mdlog_stop /system/vendor/bin/diag_mdlog -k
     class late_start
     user shell
-    group system diag sdcard_rw sdcard_r media_rw
+    group system oem_2901 sdcard_rw sdcard_r media_rw
     disabled
     oneshot
 
@@ -1123,6 +1124,10 @@ service poweroffhandler /system/vendor/bin/poweroffhandler
     disabled
     oneshot
 
+on property:init.svc.surfaceflinger=restarting
+    stop hwcomposer-2-1
+    start hwcomposer-2-1
+
 # Logcat dump daemon, dumps logs to logdump partition
 service logdumpd /system/bin/logcat -b all -v threadtime -D -w /dev/block/bootdevice/by-name/logdump
     class core
@@ -1163,3 +1168,10 @@ service power_off_alarm /vendor/bin/power_off_alarm
     group system
     disabled
     oneshot
+
+service chre /vendor/bin/chre
+    class late_start
+    user system
+    group system
+    socket chre seqpacket 0660 root system
+    shutdown critical

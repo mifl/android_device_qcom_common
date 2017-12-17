@@ -95,14 +95,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
         <boolean name="check_mobile_data_for_cf" value="true" />
-        <string-array name="apn_hide_rule_strings_with_iccids_array" num="6">
-            <item value="iccid"/>
-            <item value="898603,898611,8985231,8985302,8985307"/>
-            <item value="type"/>
-            <item value="ims"/>
-            <item value="include_common_rules"/>
-            <item value="false"/>
-        </string-array>
     </carrier_config>
 
     <carrier_config mcc="222" mnc="01">
@@ -139,6 +131,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="854">
@@ -167,6 +160,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="855">
@@ -195,6 +189,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="856">
@@ -223,6 +218,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="857">
@@ -251,6 +247,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="858">
@@ -279,6 +276,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="859">
@@ -307,6 +305,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="860">
@@ -335,6 +334,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="861">
@@ -363,6 +363,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="862">
@@ -391,6 +392,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="863">
@@ -419,6 +421,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="864">
@@ -447,6 +450,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="865">
@@ -475,6 +479,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="866">
@@ -503,6 +508,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="867">
@@ -531,6 +537,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="868">
@@ -559,6 +566,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="869">
@@ -587,6 +595,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="870">
@@ -615,6 +624,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="871">
@@ -643,6 +653,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="872">
@@ -671,6 +682,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="873">
@@ -699,6 +711,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="405" mnc="874">
@@ -727,6 +740,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </string-array>
         <boolean name="show_video_quality_ui" value="true" />
         <boolean name="vowifi_call_quality" value="true" />
+        <boolean name="config_retry_sms_over_ims" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="440" mnc="50">
@@ -762,14 +776,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_volte_available_bool" value="true" />
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
-        <string-array name="apn_hide_rule_strings_with_iccids_array" num="6">
-            <item value="iccid"/>
-            <item value="8985231"/>
-            <item value="type"/>
-            <item value="ims"/>
-            <item value="include_common_rules"/>
-            <item value="false"/>
-        </string-array>
     </carrier_config>
 
     <carrier_config mcc="454" mnc="03">
@@ -777,14 +783,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
         <boolean name="check_mobile_data_for_cf" value="true" />
-        <string-array name="apn_hide_rule_strings_with_iccids_array" num="6">
-            <item value="iccid"/>
-            <item value="898603,898611,8985231,8985302,8985307"/>
-            <item value="type"/>
-            <item value="ims"/>
-            <item value="include_common_rules"/>
-            <item value="false"/>
-        </string-array>
     </carrier_config>
 
     <carrier_config mcc="454" mnc="04">
@@ -792,28 +790,12 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
         <boolean name="check_mobile_data_for_cf" value="true" />
-        <string-array name="apn_hide_rule_strings_with_iccids_array" num="6">
-            <item value="iccid"/>
-            <item value="898603,898611,8985231,8985302,8985307"/>
-            <item value="type"/>
-            <item value="ims"/>
-            <item value="include_common_rules"/>
-            <item value="false"/>
-        </string-array>
     </carrier_config>
 
     <carrier_config mcc="454" mnc="31">
         <boolean name="carrier_volte_available_bool" value="true" />
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
-        <string-array name="apn_hide_rule_strings_with_iccids_array" num="6">
-            <item value="iccid"/>
-            <item value="898603,898611,8985231,8985302,8985307"/>
-            <item value="type"/>
-            <item value="ims"/>
-            <item value="include_common_rules"/>
-            <item value="false"/>
-        </string-array>
     </carrier_config>
 
     <carrier_config mcc="455" mnc="02">
@@ -823,7 +805,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="check_mobile_data_for_cf" value="true" />
         <string-array name="apn_hide_rule_strings_array" num="2">
             <item value="type"/>
-            <item value="supl,mms,ims"/>
+            <item value="supl,mms"/>
         </string-array>
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
@@ -838,7 +820,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="check_mobile_data_for_cf" value="true" />
         <string-array name="apn_hide_rule_strings_array" num="2">
             <item value="type"/>
-            <item value="supl,mms,ims"/>
+            <item value="supl,mms"/>
         </string-array>
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
@@ -951,7 +933,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="allow_emergency_numbers_in_call_log_bool" value="true"/>
         <string-array name="apn_hide_rule_strings_array" num="2">
             <item value="type"/>
-            <item value="supl,mms,ims"/>
+            <item value="supl,mms"/>
         </string-array>
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
@@ -1102,7 +1084,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_show_orig_dial_string_for_cdma" value="true" />
         <string-array name="apn_hide_rule_strings_array" num="2">
             <item value="type"/>
-            <item value="supl,mms,ims"/>
+            <item value="supl,mms"/>
         </string-array>
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
@@ -1122,7 +1104,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_show_orig_dial_string_for_cdma" value="true" />
         <string-array name="apn_hide_rule_strings_array" num="2">
             <item value="type"/>
-            <item value="supl,mms,ims"/>
+            <item value="supl,mms"/>
         </string-array>
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
@@ -1280,6 +1262,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_rtt_supported" value="true" />
         <boolean name="carrier_rtt_supported_on_vtcalls" value="true"/>
         <boolean name="carrier_rtt_upgrade_supported" value="true"/>
+        <boolean name="carrier_wfc_supports_wifi_only_bool" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="310" mnc="160">
@@ -1298,6 +1281,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_rtt_supported" value="true" />
         <boolean name="carrier_rtt_supported_on_vtcalls" value="true"/>
         <boolean name="carrier_rtt_upgrade_supported" value="true"/>
+        <boolean name="carrier_wfc_supports_wifi_only_bool" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="310" mnc="220">
@@ -1332,6 +1316,10 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
     <carrier_config mcc="310" mnc="310">
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="config_enable_mms_with_mobile_data_off" value="true" />
+        <boolean name="carrier_rtt_supported" value="true" />
+        <boolean name="carrier_rtt_supported_on_vtcalls" value="true"/>
+        <boolean name="carrier_rtt_upgrade_supported" value="true"/>
+        <boolean name="carrier_wfc_supports_wifi_only_bool" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="310" mnc="490">

@@ -1957,16 +1957,16 @@ case "$coresight_config" in
                 echo "Enabling STM/Debug events for SDM660"
                 enable_sdm660_debug
             ;;
-            "sdm670")
-                echo "Enabling DCC/STM/Debug events for SDM670"
+            "sdm670" | "qcs605")
+                echo "Enabling DCC/STM/Debug events for SDM670 and qcs605"
                 enable_sdm670_debug
                 setprop ro.dbg.coresight.stm_cfg_done 1
             ;;
             "sdm845")
                 srcenable="enable_source"
                 sinkenable="enable_sink"
-                #echo "Enabling STM events."
-                #enable_stm_events
+                echo "Enabling STM events."
+                enable_stm_events
                 if [ "$ftrace_disable" != "Yes" ]; then
                     enable_ftrace_event_tracing
                 fi
