@@ -228,7 +228,7 @@ case "$target" in
             294|295|296|297|298|313)
                 setprop ro.opengles.version 196610
                 ;;
-            303|307|308|309)
+            303|307|308|309|320)
                 # Vulkan is not supported for 8917 variants
                 setprop ro.opengles.version 196608
                 setprop persist.graphics.vulkan.disable true
@@ -406,6 +406,9 @@ function setHDMIPermission() {
    set_perms $file/cec/wr_msg system.graphics 0600
    set_perms $file/hdcp/tp system.graphics 0664
    set_perms $file/hdmi_audio_cb audioserver.audio 0600
+   set_perms $file/pll_enable system.graphics 0664
+   set_perms $file/hdmi_ppm system.graphics 0664
+
    ln -s $dev_file $dev_gfx_hdmi
 }
 
