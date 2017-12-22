@@ -127,8 +127,8 @@ else
         else
             echo 50 > /sys/module/process_reclaim/parameters/pressure_min
             echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
-            echo "15360,19200,23040,26880,34415,43737" > /sys/module/lowmemorykiller/parameters/minfree
-            echo 53059 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+            echo "4871,6767,8663,11915,13811,16246" > /sys/module/lowmemorykiller/parameters/minfree
+            echo 18432 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
         fi
     fi
 
