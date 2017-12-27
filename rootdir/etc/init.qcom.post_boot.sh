@@ -39,11 +39,14 @@ function configure_zram_parameters() {
     # For 512MB Go device, size = 384MB
     # For 1GB Go device, size = 768MB
     # Others - 512MB size
+    # And enable lz4 zram compression for Go devices
     zram_enable=`getprop ro.vendor.qti.config.zram`
     if [ "$zram_enable" == "true" ]; then
-        if [ $MemTotal -le 524288 ] && [ "$low_ram" == "true" ]; then
+        echo lz4 > /sys/block/zram0/comp_algorithm
+
+        if [ "$MemTotal" -le "524288" ] && [ "$low_ram" == "true" ]; then
             echo 402653184 > /sys/block/zram0/disksize
-        elif [ $MemTotal -le 1048576 ] && [ "$low_ram" == "true" ]; then
+        elif [ "$MemTotal" -le "1048576" ] && [ "$low_ram" == "true" ]; then
             echo 805306368 > /sys/block/zram0/disksize
         else
             echo 536870912 > /sys/block/zram0/disksize
@@ -119,7 +122,7 @@ else
         echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
         echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
     else
-        if [ $MemTotal -le 1048576 ] && [ "$low_ram" == "true" ]; then
+        if [ "$MemTotal" -le "1048576" ] && [ "$low_ram" == "true" ]; then
             # Disable KLMK, ALMK & PPR for Go devices
             echo 0 > /sys/module/lowmemorykiller/parameters/enable_lmk
             echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
