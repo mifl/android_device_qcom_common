@@ -95,14 +95,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
         <boolean name="check_mobile_data_for_cf" value="true" />
-        <string-array name="apn_hide_rule_strings_with_iccids_array" num="6">
-            <item value="iccid"/>
-            <item value="898603,898611,8985231,8985302,8985307"/>
-            <item value="type"/>
-            <item value="ims"/>
-            <item value="include_common_rules"/>
-            <item value="false"/>
-        </string-array>
     </carrier_config>
 
     <carrier_config mcc="222" mnc="01">
@@ -784,14 +776,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_volte_available_bool" value="true" />
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
-        <string-array name="apn_hide_rule_strings_with_iccids_array" num="6">
-            <item value="iccid"/>
-            <item value="8985231"/>
-            <item value="type"/>
-            <item value="ims"/>
-            <item value="include_common_rules"/>
-            <item value="false"/>
-        </string-array>
     </carrier_config>
 
     <carrier_config mcc="454" mnc="03">
@@ -799,14 +783,6 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
         <boolean name="check_mobile_data_for_cf" value="true" />
-        <string-array name="apn_hide_rule_strings_with_iccids_array" num="6">
-            <item value="iccid"/>
-            <item value="898603,898611,8985231,8985302,8985307"/>
-            <item value="type"/>
-            <item value="ims"/>
-            <item value="include_common_rules"/>
-            <item value="false"/>
-        </string-array>
     </carrier_config>
 
     <carrier_config mcc="454" mnc="04">
@@ -814,28 +790,12 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
         <boolean name="check_mobile_data_for_cf" value="true" />
-        <string-array name="apn_hide_rule_strings_with_iccids_array" num="6">
-            <item value="iccid"/>
-            <item value="898603,898611,8985231,8985302,8985307"/>
-            <item value="type"/>
-            <item value="ims"/>
-            <item value="include_common_rules"/>
-            <item value="false"/>
-        </string-array>
     </carrier_config>
 
     <carrier_config mcc="454" mnc="31">
         <boolean name="carrier_volte_available_bool" value="true" />
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="carrier_wfc_ims_available_bool" value="true" />
-        <string-array name="apn_hide_rule_strings_with_iccids_array" num="6">
-            <item value="iccid"/>
-            <item value="898603,898611,8985231,8985302,8985307"/>
-            <item value="type"/>
-            <item value="ims"/>
-            <item value="include_common_rules"/>
-            <item value="false"/>
-        </string-array>
     </carrier_config>
 
     <carrier_config mcc="455" mnc="02">
@@ -845,7 +805,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="check_mobile_data_for_cf" value="true" />
         <string-array name="apn_hide_rule_strings_array" num="2">
             <item value="type"/>
-            <item value="supl,mms,ims"/>
+            <item value="supl,mms"/>
         </string-array>
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
@@ -860,7 +820,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="check_mobile_data_for_cf" value="true" />
         <string-array name="apn_hide_rule_strings_array" num="2">
             <item value="type"/>
-            <item value="supl,mms,ims"/>
+            <item value="supl,mms"/>
         </string-array>
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
@@ -905,6 +865,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_enable_cfu_time" value="true" />
         <boolean name="support_cancel_modify_call" value="true" />
         <boolean name="config_enable_video_crbt" value="true" />
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="01">
@@ -922,6 +883,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="02">
@@ -961,6 +923,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_enable_cfu_time" value="true" />
         <boolean name="support_cancel_modify_call" value="true" />
         <boolean name="config_enable_video_crbt" value="true" />
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="03">
@@ -973,7 +936,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="allow_emergency_numbers_in_call_log_bool" value="true"/>
         <string-array name="apn_hide_rule_strings_array" num="2">
             <item value="type"/>
-            <item value="supl,mms,ims"/>
+            <item value="supl,mms"/>
         </string-array>
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
@@ -981,10 +944,12 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         </map>
         <boolean name="config_show_orig_dial_string_for_cdma" value="true" />
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="04">
         <boolean name="allow_emergency_numbers_in_call_log_bool" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
             <string name="roaming_protocol">IPV4V6</string>
@@ -1001,6 +966,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="06">
@@ -1014,6 +980,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="07">
@@ -1053,6 +1020,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_enable_cfu_time" value="true" />
         <boolean name="support_cancel_modify_call" value="true" />
         <boolean name="config_enable_video_crbt" value="true" />
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="08">
@@ -1091,6 +1059,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_enable_cfu_time" value="true" />
         <boolean name="support_cancel_modify_call" value="true" />
         <boolean name="config_enable_video_crbt" value="true" />
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="09">
@@ -1103,10 +1072,12 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="10">
         <boolean name="allow_emergency_numbers_in_call_log_bool" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
             <string name="roaming_protocol">IPV4V6</string>
@@ -1124,13 +1095,14 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_show_orig_dial_string_for_cdma" value="true" />
         <string-array name="apn_hide_rule_strings_array" num="2">
             <item value="type"/>
-            <item value="supl,mms,ims"/>
+            <item value="supl,mms"/>
         </string-array>
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="460" mnc="12">
@@ -1144,13 +1116,14 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="config_show_orig_dial_string_for_cdma" value="true" />
         <string-array name="apn_hide_rule_strings_array" num="2">
             <item value="type"/>
-            <item value="supl,mms,ims"/>
+            <item value="supl,mms"/>
         </string-array>
         <map name="apn_default_values_strings_array">
             <string name="protocol">IPV4V6</string>
             <string name="roaming_protocol">IPV4V6</string>
         </map>
         <boolean name="ignore_data_enabled_changed_for_video_calls" value="true"/>
+        <boolean name="config_hide_vt_callforward_option" value="true" />
     </carrier_config>
 
     <carrier_config mcc="310" mnc="00">
@@ -1302,6 +1275,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_rtt_supported" value="true" />
         <boolean name="carrier_rtt_supported_on_vtcalls" value="true"/>
         <boolean name="carrier_rtt_upgrade_supported" value="true"/>
+        <boolean name="carrier_wfc_supports_wifi_only_bool" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="310" mnc="160">
@@ -1320,6 +1294,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
         <boolean name="carrier_rtt_supported" value="true" />
         <boolean name="carrier_rtt_supported_on_vtcalls" value="true"/>
         <boolean name="carrier_rtt_upgrade_supported" value="true"/>
+        <boolean name="carrier_wfc_supports_wifi_only_bool" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="310" mnc="220">
@@ -1354,6 +1329,10 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.-->
     <carrier_config mcc="310" mnc="310">
         <boolean name="carrier_vt_available_bool" value="true" />
         <boolean name="config_enable_mms_with_mobile_data_off" value="true" />
+        <boolean name="carrier_rtt_supported" value="true" />
+        <boolean name="carrier_rtt_supported_on_vtcalls" value="true"/>
+        <boolean name="carrier_rtt_upgrade_supported" value="true"/>
+        <boolean name="carrier_wfc_supports_wifi_only_bool" value="true"/>
     </carrier_config>
 
     <carrier_config mcc="310" mnc="490">

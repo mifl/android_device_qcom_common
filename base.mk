@@ -139,6 +139,11 @@ AUDIO_POLICY += audio_policy.msmgold
 
 #HAL Wrapper
 AUDIO_WRAPPER := libqahw
+AUDIO_WRAPPER += libqahwwrapper
+
+#HAL Test app
+AUDIO_HAL_TEST_APPS := hal_play_test
+AUDIO_HAL_TEST_APPS += hal_rec_test
 
 #tinyalsa test apps
 TINY_ALSA_TEST_APPS := tinyplay
@@ -774,6 +779,9 @@ WIGIG += libwigig_utils
 WIGIG += libwigig_flashaccess
 WIGIG += libwigig_pciaccess
 
+#FD_LEAK
+FD_LEAK := libc_leak_detector
+
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
@@ -821,6 +829,7 @@ PRODUCT_PACKAGES += $(APPOPS_POLICY)
 PRODUCT_PACKAGES += $(AUDIO_HARDWARE)
 PRODUCT_PACKAGES += $(AUDIO_POLICY)
 PRODUCT_PACKAGES += $(AUDIO_WRAPPER)
+PRODUCT_PACKAGES += $(AUDIO_HAL_TEST_APPS)
 PRODUCT_PACKAGES += $(TINY_ALSA_TEST_APPS)
 PRODUCT_PACKAGES += $(AMPLOADER)
 PRODUCT_PACKAGES += $(APPS)
@@ -905,6 +914,7 @@ PRODUCT_PACKAGES += $(WLAN)
 PRODUCT_PACKAGES += $(IPACM)
 PRODUCT_PACKAGES += $(FSTMAN)
 PRODUCT_PACKAGES += $(WIGIG)
+PRODUCT_PACKAGES += $(FD_LEAK)
 PRODUCT_PACKAGES += $(IMS_EXT)
 # Temp workarround for b/36603742
 PRODUCT_PACKAGES += android.hidl.manager@1.0-java

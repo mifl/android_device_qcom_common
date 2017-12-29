@@ -48,8 +48,11 @@ fi
 
 if [ -f /sys/class/drm/card0-DSI-1/modes ]; then
     echo "detect" > /sys/class/drm/card0-DSI-1/status
-    res=`cat /sys/class/drm/card0-DSI-1/modes` 2> /dev/null
-    fb_width=${res%x*}
+    mode_file=/sys/class/drm/card0-DSI-1/modes
+    while read line; do
+        fb_width=${line%x*};
+        break;
+    done < $mode_file
 elif [ -f /sys/class/graphics/fb0/virtual_size ]; then
     res=`cat /sys/class/graphics/fb0/virtual_size` 2> /dev/null
     fb_width=${res%,*}
@@ -357,6 +360,7 @@ function setHDMIPermission() {
    set_perms $file/pa system.graphics 0664
    set_perms $file/cec/wr_msg system.graphics 0600
    set_perms $file/hdcp/tp system.graphics 0664
+   set_perms $file/hdcp2p2/min_level_change system.graphics 0660
    set_perms $file/hdmi_audio_cb audioserver.audio 0600
    ln -s $dev_file $dev_gfx_hdmi
 }
