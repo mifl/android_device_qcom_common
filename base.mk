@@ -748,9 +748,7 @@ PRODUCT_PACKAGES := \
     CellBroadcastReceiver \
     CertInstaller \
     DrmProvider \
-    Email \
     Gallery2 \
-    LatinIME \
     Mms \
     Music \
     netutils-wrapper-1.0 \
@@ -781,6 +779,8 @@ ifeq ($(TARGET_HAS_LOW_RAM),true)
 else
     # Live Wallpapers
     PRODUCT_PACKAGES += \
+            Email \
+            LatinIME \
             LiveWallpapers \
             LiveWallpapersPicker \
             VisualizationWallpapers
