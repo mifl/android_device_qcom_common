@@ -28,7 +28,6 @@
 #
 
 export PATH=/vendor/bin
-
 # Set platform variables
 if [ -f /sys/devices/soc0/hw_platform ]; then
     soc_hwplatform=`cat /sys/devices/soc0/hw_platform` 2> /dev/null
@@ -79,6 +78,13 @@ function set_density_by_fb() {
         fi
     fi
 }
+target=`getprop ro.build.product`
+echo "$target"
+comp_device="msm8996_gvmq"
+     if [ "$target" == "$comp_device" ]; then
+         setprop ro.sf.lcd_density 160
+     fi
+
 target=`getprop ro.board.platform`
 case "$target" in
     "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
