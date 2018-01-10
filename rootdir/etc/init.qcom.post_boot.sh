@@ -2929,6 +2929,7 @@ case "$target" in
 
 	# Tune core control
 	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
 	max_freq=`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq`
 	min_freq=800000
 	echo $((min_freq*100 / max_freq)) $((min_freq*100 / max_freq)) $((66*1000000 / max_freq)) \
