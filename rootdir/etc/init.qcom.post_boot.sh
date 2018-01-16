@@ -53,6 +53,17 @@ function configure_zram_parameters() {
         fi
         mkswap /dev/block/zram0
         swapon /dev/block/zram0 -p 32758
+
+        if [ "$MemTotal" -le "524288" ] && [ "$low_ram" == "true" ]; then
+            # Enable swap on eMMC, the same priority with ZRAM
+            if [ ! -f /data/system/swap/swapfile ]; then
+                dd if=/dev/zero of=/data/system/swap/swapfile bs=1m count=75;
+            fi
+            mkswap /data/system/swap/swapfile
+            swapon /data/system/swap/swapfile -p 32758
+            echo 1 > /proc/sys/vm/swap_ratio_enable
+            echo 70 > /proc/sys/vm/swap_ratio
+        fi
     fi
 }
 
