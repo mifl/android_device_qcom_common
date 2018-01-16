@@ -774,19 +774,19 @@ PRODUCT_PACKAGES := \
     a4wpservice \
     wipowerservice
 
-ifeq ($(TARGET_HAS_LOW_RAM),true)
-    DELAUN := Launcher3Go
-else
+#ifeq ($(TARGET_HAS_LOW_RAM),true)
+#    DELAUN := Launcher3Go
+#else
     # Live Wallpapers
-    PRODUCT_PACKAGES += \
-            Email \
-            LatinIME \
-            LiveWallpapers \
-            LiveWallpapersPicker \
-            VisualizationWallpapers
-
-    DELAUN := Launcher3
-endif
+#    PRODUCT_PACKAGES += \
+#            Email \
+#            LatinIME \
+#            LiveWallpapers \
+#            LiveWallpapersPicker \
+#            VisualizationWallpapers
+#
+#    DELAUN := Launcher3
+#endif
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
