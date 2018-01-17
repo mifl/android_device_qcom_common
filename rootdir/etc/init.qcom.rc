@@ -1178,10 +1178,10 @@ service chre /vendor/bin/chre
 on property:vendor.rild.libpath=*
     setprop rild.libpath ${vendor.rild.libpath}
 
-service seemp_healthd /vendor/bin/seemp_healthd
-    class late_start
-    user system
-    group system
+#service seemp_healthd /vendor/bin/seemp_healthd
+#    class late_start
+#    user system
+#    group system
 
 service power_off_alarm /vendor/bin/power_off_alarm
     class core
