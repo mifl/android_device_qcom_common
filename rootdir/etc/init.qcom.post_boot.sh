@@ -2939,14 +2939,14 @@ case "$target" in
         echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
 	# Tune core control
-	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
-	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
 	max_freq=`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq`
 	min_freq=800000
 	echo $((min_freq*100 / max_freq)) $((min_freq*100 / max_freq)) $((66*1000000 / max_freq)) \
 		$((55*1000000 / max_freq)) > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
 	echo $((33*1000000 / max_freq)) > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
 	echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
+	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
 
         for devfreq_gov in /sys/class/devfreq/*qcom,cpubw*/governor
         do
