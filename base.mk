@@ -772,8 +772,6 @@ PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
     AlarmProvider \
-    Bluetooth \
-    BluetoothExt \
     Calculator \
     Calendar \
     Camera \
@@ -807,6 +805,12 @@ PRODUCT_PACKAGES := \
     SnapdragonMusic \
     a4wpservice \
     wipowerservice
+
+ifeq ($(ENABLE_HYP),)
+PRODUCT_PACKAGES := \
+    Bluetooth \
+    BluetoothExt
+endif
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
