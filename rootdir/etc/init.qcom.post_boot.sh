@@ -1,6 +1,6 @@
 #! /vendor/bin/sh
 
-# Copyright (c) 2012-2013, 2016, The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013, 2016-2017, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -971,7 +971,6 @@ case "$target" in
         esac
         # Set Memory parameters
         configure_memory_parameters
-        restorecon -R /sys/devices/system/cpu
     ;;
 esac
 
@@ -1359,7 +1358,6 @@ case "$target" in
         esac
         #Enable Memory Features
         enable_memory_features
-        restorecon -R /sys/devices/system/cpu
     ;;
 esac
 
@@ -1379,7 +1377,7 @@ case "$target" in
         fi
 
         case "$soc_id" in
-            "293" | "304" | "338" )
+            "293" | "304" | "338" | "351" )
 
                 # Start Host based Touch processing
                 case "$hw_platform" in
@@ -1595,14 +1593,25 @@ case "$target" in
         else
             hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
         fi
+	if [ -f /sys/devices/soc0/platform_subtype_id ]; then
+	    platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
+        fi
 
         case "$soc_id" in
            "303" | "307" | "308" | "309" | "320" )
 
                   # Start Host based Touch processing
                   case "$hw_platform" in
-                    "MTP" | "Surf" | "RCM" )
-                        start_hbtp
+                    "MTP" )
+			start_hbtp
+                        ;;
+                  esac
+
+                  case "$hw_platform" in
+                    "Surf" | "RCM" )
+			if [ $platform_subtype_id -ne "4" ]; then
+			    start_hbtp
+		        fi
                         ;;
                   esac
                 # Apply Scheduler and Governor settings for 8917 / 8920
@@ -2976,7 +2985,6 @@ case "$target" in
 
         # Set Memory parameters
         configure_memory_parameters
-        restorecon -R /sys/devices/system/cpu
 	;;
 esac
 
@@ -3068,7 +3076,12 @@ case "$target" in
         echo 128 > /sys/block/mmcblk0rpmb/bdi/read_ahead_kb
         echo 128 > /sys/block/mmcblk0rpmb/queue/read_ahead_kb
         setprop sys.post_boot.parsed 1
+
+        low_ram_enable=`getprop ro.config.low_ram`
+
+        if [ "$low_ram_enable" != "true" ]; then
         start gamed
+        fi
     ;;
     "msm8974")
         start mpdecision

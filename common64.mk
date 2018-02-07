@@ -19,6 +19,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.radio.custom_ecc=1 \
     persist.vendor.radio.rat_on=combine \
     persist.backup.ntpServer=0.pool.ntp.org \
+    persist.radio.schd.cache=3500 \
     sys.vendor.shutdown.waittime=500 \
     ro.build.shutdown_timeout=0
 

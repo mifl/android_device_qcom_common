@@ -16,6 +16,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/generic.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/locales_full.mk)
 else
     $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
+    $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
     PRODUCT_PROPERTY_OVERRIDES += \
         persist.vendor.qcomsysd.enabled=1
 endif
@@ -32,6 +33,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.radio.sib16_support=1 \
     persist.vendor.radio.rat_on=combine \
     persist.backup.ntpServer=0.pool.ntp.org \
+    persist.radio.schd.cache=3500 \
     sys.vendor.shutdown.waittime=500 \
     ro.build.shutdown_timeout=0
 
@@ -51,6 +53,5 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PRIVATE_KEY := device/qcom/common/qcom.key
 PRODUCT_PACKAGES += qcril.db
 
-$(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
 #$(call inherit-product, frameworks/base/data/fonts/fonts.mk)
 #$(call inherit-product, frameworks/base/data/keyboards/keyboards.mk)
