@@ -45,7 +45,7 @@ function configure_zram_parameters() {
         echo lz4 > /sys/block/zram0/comp_algorithm
 
         if [ "$MemTotal" -le "524288" ] && [ "$low_ram" == "true" ]; then
-            echo 402653184 > /sys/block/zram0/disksize
+            echo 268435456 > /sys/block/zram0/disksize
         elif [ "$MemTotal" -le "1048576" ] && [ "$low_ram" == "true" ]; then
             echo 805306368 > /sys/block/zram0/disksize
         else
@@ -92,6 +92,19 @@ if [ "$ProductName" == "msm8996" ]; then
       echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 
       configure_zram_parameters
+elif [ "$ProductName" == "msm8909w" ]; then
+    # Replace MEMCG with ALMK and PPR for 51MB go devices
+    echo 70 > /sys/module/process_reclaim/parameters/pressure_max
+    # Replace the default score with 100, to reclaim more apps' memory
+    echo 100 > /sys/module/process_reclaim/parameters/min_score_adj
+    echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
+    echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
+
+    echo "8192,11264,14336,17408,20480,26624" > /sys/module/lowmemorykiller/parameters/minfree
+    echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+    echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+
+    configure_zram_parameters
 else
     arch_type=`uname -m`
     MemTotalStr=`cat /proc/meminfo | grep MemTotal`
