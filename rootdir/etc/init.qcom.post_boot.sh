@@ -2024,7 +2024,10 @@ case "$target" in
       echo 0 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/rate_limit_us
       echo 1344000 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/hispeed_freq
       echo 652800 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
+
+      # sched_load_boost as -6 is equivalent to target load as 85. It is per cpu tunable.
       echo -6 >  /sys/devices/system/cpu/cpu6/sched_load_boost
+      echo -6 >  /sys/devices/system/cpu/cpu7/sched_load_boost
 
       echo "0:1209600" > /sys/module/cpu_boost/parameters/input_boost_freq
       echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
@@ -2065,6 +2068,13 @@ case "$target" in
                 echo "mem_latency" > $memlat/governor
                 echo 10 > $memlat/polling_interval
                 echo 400 > $memlat/mem_latency/ratio_ceil
+            done
+
+            #Enable userspace governor for L3 cdsp nodes
+            for l3cdsp in /sys/class/devfreq/*qcom,l3-cdsp*
+            do
+                echo "userspace" > $l3cdsp/governor
+                chown -h system $l3cdsp/userspace/set_freq
             done
 
             echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
@@ -2681,7 +2691,7 @@ case "$target" in
         do
             echo "bw_hwmon" > $llccbw/governor
             echo 50 > $llccbw/polling_interval
-            echo "1720 2929 4943 5931 6881" > $llccbw/bw_hwmon/mbps_zones
+            echo "1720 2929 3879 5931 6881" > $llccbw/bw_hwmon/mbps_zones
             echo 4 > $llccbw/bw_hwmon/sample_ms
             echo 80 > $llccbw/bw_hwmon/io_percent
             echo 20 > $llccbw/bw_hwmon/hist_memory
@@ -2742,6 +2752,7 @@ case "$target" in
         # Turn on sleep modes.
         echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 	echo 100 > /proc/sys/vm/swappiness
+	echo 120 > /proc/sys/vm/watermark_scale_factor
     ;;
 esac
 

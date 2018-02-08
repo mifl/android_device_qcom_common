@@ -174,8 +174,8 @@ on boot
     chown wifi wifi /sys/class/net/bond0/bonding/queue_id
 
     # Allow access to emmc rawdump block partition and dload sysfs node
-    chown root system /dev/block/bootdevice/by-name/rawdump
-    chmod 0660 /dev/block/bootdevice/by-name/rawdump
+    chown root system /dev/block/bootdevice/by-name/rawdump -p /dev/block/
+    chmod 0660 /dev/block/bootdevice/by-name/rawdump -p /dev/block/
     chown root system /sys/kernel/dload/emmc_dload
     chmod 0660 /sys/kernel/dload/emmc_dload
     chown root system /dev/block/bootdevice/by-name/ramdump -p /dev/block/
@@ -565,7 +565,6 @@ service bt-dun /system/bin/dun-server /dev/smd7 /dev/rfcomm0
     user bluetooth
     group bluetooth net_bt_admin inet
     disabled
-    seclabel u:r:bluetooth:s0
     oneshot
 
 service btsnoop /system/bin/btsnoop
@@ -573,7 +572,6 @@ service btsnoop /system/bin/btsnoop
    group bluetooth net_bt_admin sdcard_rw sdcard_r media_rw
    class late_start
    disabled
-   seclabel u:r:bluetooth:s0
    oneshot
 
 service bt_logger /system/bin/bt_logger
@@ -581,7 +579,6 @@ service bt_logger /system/bin/bt_logger
    group bluetooth net_bt_admin sdcard_rw sdcard_r media_rw
    class late_start
    disabled
-   seclabel u:r:bluetooth:s0
    oneshot
 
 service ftmd /system/bin/logwrapper /system/bin/ftmdaemon
@@ -634,10 +631,16 @@ service qti /system/vendor/bin/qti
     group radio oem_2901 diag usb net_admin
     disabled
 
-service sensors /vendor/bin/sensors.qcom
+service sensors /vendor/bin/sscrpcd
     class core
-    user root
-    group root
+    user system
+    group system
+    disabled
+
+service sensors.qti /vendor/bin/sensors.qti
+    class core
+    user system
+    group system
     disabled
 
 on property:ro.use_data_netmgrd=false
