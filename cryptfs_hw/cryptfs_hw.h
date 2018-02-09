@@ -38,12 +38,6 @@ extern "C" {
 #define START_ENC 0x1
 #define START_ENCDEC 0x3
 
-struct encdec_config_t {
-	__le64 start_sector;
-	size_t fs_size;
-	int index;
-	char mode[CRYPTO_ALGO_LENGTH];
-};
 int set_hw_device_encryption_key(const char*, const char*);
 int update_hw_device_encryption_key(const char*, const char*, const char*);
 int clear_hw_device_encryption_key();
@@ -51,7 +45,6 @@ unsigned int is_hw_disk_encryption(const char*);
 int is_ice_enabled(void);
 int should_use_keymaster();
 int set_ice_param(int flag);
-int set_encdec_param(struct encdec_config_t conf);
 #ifdef __cplusplus
 }
 #endif
