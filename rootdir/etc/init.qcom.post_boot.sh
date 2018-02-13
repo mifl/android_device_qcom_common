@@ -30,12 +30,18 @@
 target=`getprop ro.board.platform`
 
 function configure_zram_parameters() {
-    # Zram disk - 512MB size
-    zram_enable=`getprop ro.vendor.qti.config.zram`
-    if [ "$zram_enable" == "true" ]; then
-        echo 536870912 > /sys/block/zram0/disksize
+    MemTotalStr=`cat /proc/meminfo | grep MemTotal`
+    MemTotal=${MemTotalStr:16:8}
+    # Set Zram disk size to 512MB for 3GB and below targets, 1GB for above 3GB targets.
+    if [ -f /sys/block/zram0/disksize ]; then
+        if [ $MemTotal -gt 3145728 ]; then
+            echo 1073741824 > /sys/block/zram0/disksize
+        else
+            echo 536870912 > /sys/block/zram0/disksize
+        fi
         mkswap /dev/block/zram0
         swapon /dev/block/zram0 -p 32758
+        echo 100 > /proc/sys/vm/swappiness
     fi
 }
 
@@ -91,7 +97,7 @@ else
         echo 10 > /sys/module/process_reclaim/parameters/pressure_min
         echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
         echo "18432,23040,27648,32256,55296,80640" > /sys/module/lowmemorykiller/parameters/minfree
-        echo 81250 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+        echo 80640 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
     elif [ "$arch_type" == "aarch64" ] && [ $MemTotal -gt 1048576 ]; then
         echo 10 > /sys/module/process_reclaim/parameters/pressure_min
         echo 1024 > /sys/module/process_reclaim/parameters/per_swap_size
@@ -2046,9 +2052,6 @@ case "$target" in
                 echo 20 > $cpubw/bw_hwmon/hist_memory
                 echo 0 > $cpubw/bw_hwmon/hyst_length
                 echo 80 > $cpubw/bw_hwmon/down_thres
-                echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
-                echo 68 > $cpubw/bw_hwmon/low_power_io_percent
-                echo 20 > $cpubw/bw_hwmon/low_power_delay
                 echo 0 > $cpubw/bw_hwmon/guard_band_mbps
                 echo 250 > $cpubw/bw_hwmon/up_scale
                 echo 1600 > $cpubw/bw_hwmon/idle_mbps
@@ -2098,7 +2101,6 @@ case "$target" in
 
             # Turn on sleep modes.
             echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
-            echo 60 > /proc/sys/vm/swappiness
             ;;
         esac
     ;;
@@ -2628,10 +2630,30 @@ case "$target" in
                 soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
 
-	case "$soc_id" in
-		"321" | "341") #sdm845
-		start_hbtp
-		;;
+	if [ -f /sys/devices/soc0/hw_platform ]; then
+                hw_platform=`cat /sys/devices/soc0/hw_platform`
+	fi
+
+	if [ -f /sys/devices/soc0/platform_subtype_id ]; then
+		platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
+	fi
+
+    case "$soc_id" in
+                "321")
+                # Start Host based Touch processing
+                case "$hw_platform" in
+                    "MTP" )
+                          start_hbtp
+                     ;;
+                    "QRD" )
+                            case "$platform_subtype_id" in
+                                   "1") #QRD845
+                                         start_hbtp
+                                     ;;
+                            esac
+                     ;;
+                esac
+         ;;
 	esac
 	# Core control parameters
 	echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
@@ -2679,9 +2701,6 @@ case "$target" in
             echo 50 > $cpubw/bw_hwmon/io_percent
             echo 20 > $cpubw/bw_hwmon/hist_memory
             echo 10 > $cpubw/bw_hwmon/hyst_length
-            echo 0 > $cpubw/bw_hwmon/low_power_ceil_mbps
-            echo 50 > $cpubw/bw_hwmon/low_power_io_percent
-            echo 20 > $cpubw/bw_hwmon/low_power_delay
             echo 0 > $cpubw/bw_hwmon/guard_band_mbps
             echo 250 > $cpubw/bw_hwmon/up_scale
             echo 1600 > $cpubw/bw_hwmon/idle_mbps
@@ -2696,9 +2715,6 @@ case "$target" in
             echo 80 > $llccbw/bw_hwmon/io_percent
             echo 20 > $llccbw/bw_hwmon/hist_memory
             echo 10 > $llccbw/bw_hwmon/hyst_length
-            echo 0 > $llccbw/bw_hwmon/low_power_ceil_mbps
-            echo 80 > $llccbw/bw_hwmon/low_power_io_percent
-            echo 20 > $llccbw/bw_hwmon/low_power_delay
             echo 0 > $llccbw/bw_hwmon/guard_band_mbps
             echo 250 > $llccbw/bw_hwmon/up_scale
             echo 1600 > $llccbw/bw_hwmon/idle_mbps
