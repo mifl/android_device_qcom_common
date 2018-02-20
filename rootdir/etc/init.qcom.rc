@@ -357,7 +357,7 @@ on post-fs-data
     setprop vold.post_fs_data_done 1
 
     #Create a folder for SRS to be able to create a usercfg file
-    mkdir /data/data/media 0770 media media
+    #mkdir /data/data/media 0770 media media
 
     #Create FM dir for patchdownloader
     mkdir /data/misc/fm 0770 system system
@@ -823,7 +823,7 @@ service iprenew_bt-pan /system/bin/dhcpcd -n
 service ssgqmigd /vendor/bin/ssgqmigd
     class late_start
     user radio
-    group radio gps
+    group radio gps system
     socket ssgqmig seqpacket 0660 radio inet
 
 service ssgtzd /vendor/bin/ssgtzd
