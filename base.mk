@@ -1102,3 +1102,5 @@ else
     PRODUCT_PROPERTY_OVERRIDES += \
         persist.vendor.qcomsysd.enabled=1
 endif
+
+PRODUCT_PACKAGES_DEBUG += sl4a
