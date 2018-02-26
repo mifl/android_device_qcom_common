@@ -2913,6 +2913,9 @@ case "$target" in
            soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
 
+        # Set Memory parameters
+        configure_memory_parameters
+
         # HMP scheduler settings for 8909 similiar to 8917
         echo 3 > /proc/sys/kernel/sched_window_stats_policy
         echo 3 > /proc/sys/kernel/sched_ravg_hist_size
@@ -2948,9 +2951,9 @@ case "$target" in
         echo "29000 1094400:49000" > /sys/devices/system/cpu/cpufreq/interactive/above_hispeed_delay
         echo 90 > /sys/devices/system/cpu/cpufreq/interactive/go_hispeed_load
         echo 30000 > /sys/devices/system/cpu/cpufreq/interactive/timer_rate
-        echo 998400 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
+        echo 800000 > /sys/devices/system/cpu/cpufreq/interactive/hispeed_freq
         echo 0 > /sys/devices/system/cpu/cpufreq/interactive/io_is_busy
-        echo "1 800000:85 998400:90 1094400:80" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
+        echo "90" > /sys/devices/system/cpu/cpufreq/interactive/target_loads
         echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/min_sample_time
         echo 50000 > /sys/devices/system/cpu/cpufreq/interactive/sampling_down_factor
 
@@ -2996,8 +2999,6 @@ case "$target" in
             echo 30 > $gpu_bimc_guard_band_mbps
         done
 
-        # Set Memory parameters
-        configure_memory_parameters
 	;;
 esac
 
