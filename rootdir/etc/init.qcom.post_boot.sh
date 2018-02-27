@@ -1217,16 +1217,14 @@ case "$target" in
         fi
 
 	#Set LMK, adaptive LMK, zram, mmcblk read_ahead
-        echo 128 > /sys/block/mmcblk0/queue/read_ahead_kb
-        echo "1024,1280,1536,1792,2048,5120" > /sys/module/lowmemorykiller/parameters/minfree
 	if [ $MemTotal -le 262144 ]; then
 		echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 	else
 		echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+		echo 128 > /sys/block/mmcblk0/queue/read_ahead_kb
+		echo 8192 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+		echo 0 > /sys/module/vmpressure/parameters/allocstall_threshold
 	fi
-        echo 8192 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
-        echo 0 > /sys/module/vmpressure/parameters/allocstall_threshold
-        echo 157286400 > /sys/block/zram0/disksize
         mkswap /dev/block/zram0
         swapon /dev/block/zram0
 
