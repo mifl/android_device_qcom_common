@@ -2973,6 +2973,12 @@ case "$target" in
 	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
 	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/max_cpus
 
+        # Disable CPU online uevent
+        echo 1 > /sys/devices/system/cpu/cpu0/uevent_suppress
+        echo 1 > /sys/devices/system/cpu/cpu1/uevent_suppress
+        echo 1 > /sys/devices/system/cpu/cpu2/uevent_suppress
+        echo 1 > /sys/devices/system/cpu/cpu3/uevent_suppress
+
         for devfreq_gov in /sys/class/devfreq/*qcom,cpubw*/governor
         do
             echo "bw_hwmon" > $devfreq_gov
