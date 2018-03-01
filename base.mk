@@ -179,19 +179,23 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
 #C2DColorConvert
 C2DCC := libc2dcolorconvert
 
+ifneq ($(strip $(TARGET_USES_IOTCC_HEADLESS)),true)
 CHROMIUM := libwebviewchromium
 CHROMIUM += libwebviewchromium_loader
 CHROMIUM += libwebviewchromium_plat_support
+endif
 
 #CIMAX
 CIMAX := libcimax_spi
 
+ifneq ($(strip $(TARGET_USES_IOTCC_HEADLESS)),true)
 #CM
 CM :=CMFileManager
 #CM += Trebuchet
 
 #Default Launcher
 DELAUN := Launcher3
+endif
 
 #CONNECTIVITY
 CONNECTIVITY := libcnefeatureconfig
@@ -785,6 +789,10 @@ WIGIG += libwigig_pciaccess
 FD_LEAK := libc_leak_detector
 
 PRODUCT_PACKAGES := \
+    Camera
+
+ifneq ($(strip $(TARGET_USES_IOTCC_HEADLESS)),true)
+PRODUCT_PACKAGES += \
     AccountAndSyncSettings \
     DeskClock \
     AlarmProvider \
@@ -823,6 +831,7 @@ PRODUCT_PACKAGES := \
     SnapdragonMusic \
     a4wpservice \
     wipowerservice
+endif
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
