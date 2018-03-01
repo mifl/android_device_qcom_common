@@ -697,11 +697,11 @@ VT_JNI += libimscamera_jni
 VT_QTI_PERMISSIONS := qti_permissions.xml
 
 #RCS
-RCS := rcs_service_aidl
-RCS += rcs_service_aidl.xml
-RCS += rcs_service_aidl_static
-RCS += rcs_service_api
-RCS += rcs_service_api.xml
+#RCS := rcs_service_aidl
+#RCS += rcs_service_aidl.xml
+#RCS += rcs_service_aidl_static
+#RCS += rcs_service_api
+#RCS += rcs_service_api.xml
 
 #IMS SETTINGS
 IMS_SETTINGS := imssettings
@@ -765,9 +765,6 @@ PRODUCT_PACKAGES := \
     SoundRecorder \
     IM \
     VoiceDialer \
-    FM2 \
-    FMRecord \
-    VideoEditor \
     SnapdragonGallery \
     SnapdragonLauncher \
     SnapdragonMusic \
@@ -805,7 +802,7 @@ PRODUCT_PACKAGES += $(CHROMIUM)
 PRODUCT_PACKAGES += $(CIMAX)
 PRODUCT_PACKAGES += $(CM)
 PRODUCT_PACKAGES += $(DELAUN)
-PRODUCT_PACKAGES += $(RCS)
+#PRODUCT_PACKAGES += $(RCS)
 PRODUCT_PACKAGES += $(CONNECTIVITY)
 PRODUCT_PACKAGES += $(CHARGER)
 PRODUCT_PACKAGES += $(CURL)
@@ -815,9 +812,9 @@ PRODUCT_PACKAGES += $(E2FSPROGS)
 PRODUCT_PACKAGES += $(EBTABLES)
 PRODUCT_PACKAGES += $(EXTENDEDMEDIA_EXT)
 PRODUCT_PACKAGES += $(FASTPOWERON)
-PRODUCT_PACKAGES += $(FM)
+#PRODUCT_PACKAGES += $(FM)
 PRODUCT_PACKAGES += $(GPS_HARDWARE)
-PRODUCT_PACKAGES += $(HDMID)
+#PRODUCT_PACKAGES += $(HDMID)
 PRODUCT_PACKAGES += $(HOSTAPD)
 PRODUCT_PACKAGES += $(I420CC)
 PRODUCT_PACKAGES += $(INIT)
