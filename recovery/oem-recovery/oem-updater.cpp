@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013,2016-2018, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -31,9 +31,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+#include <sys/stat.h>
 #include "edify/expr.h"
 #include "dec.h"
 #include "gpt-utils.h"
+
+#define COPY_BUFFER_SIZE (32*1024*1024)
 
 Value* DecryptFn(const char* name, State* state, const std::vector<std::unique_ptr<Expr>>& argv) {
     int rc = -1;
@@ -84,7 +87,112 @@ Value* BootUpdateFn(const char* name, State* state,  const std::vector<std::uniq
     return StringValue(strdup(rc ? "" : "t"));
 }
 
+Value* SwapGPTFn(const char* name, State* state, const std::vector<std::unique_ptr<Expr>>& argv) {
+    int rc = -1;
+    const char *src_file, *dst_file;
+
+    char** dev_list;
+
+    if (argv.size() == 0)
+        return ErrorAbort(state, "%s expects at least 1 args, got %zu", name, argv.size());
+
+    std::vector<std::string> args;
+    if (!ReadArgs(state,  argv, &args))
+        return NULL;
+
+    rc = swap_primary_and_secondary_gpt(args);
+
+    return StringValue(strdup(rc >= 0 ? "t" : ""));
+}
+
+Value* CopyFn(const char* name, State* state, const std::vector<std::unique_ptr<Expr>>& argv) {
+    int rc = 0;
+    FILE* ffrom;
+    FILE* fto;
+    char* buf;
+    size_t len;
+    off_t progress = 0;
+    struct stat fstat;
+
+    if (argv.size() != 2)
+        return ErrorAbort(state,kArgsParsingFailure, "%s() expects 2 arg, got %zu", name, argv.size());
+
+    std::vector<std::string> args;
+    if (!ReadArgs(state,  argv, &args))
+        return NULL;
+
+    const std::string& from = args[0];
+    const std::string& to = args[1];
+
+    printf("msm.copy from %s to %s: ", from.c_str(), to.c_str());
+
+    /* check "from" is exists */
+    if (stat(from.c_str(), &fstat)) {
+        fprintf(stderr, "%s not present. Skipping\n",
+                from.c_str());
+        rc = -1;
+        goto EXIT;
+    }
+
+    /* check "to" is exists */
+    if (stat(to.c_str(), &fstat)) {
+        fprintf(stderr, "%s not present. Skipping\n",
+                to.c_str());
+        rc = -1;
+        goto EXIT;
+    }
+
+    ffrom = fopen(from.c_str(), "rb");
+    if (NULL == ffrom) {
+        fprintf(stderr, "fopen %s failed: %s!\n", from.c_str(), strerror(errno));
+        rc = -1;
+        goto EXIT;
+    }
+
+    fto = fopen(to.c_str(), "rb+");
+    if (NULL == fto) {
+        fprintf(stderr, "fopen %s failed: %s!\n", to.c_str(), strerror(errno));
+        fclose(ffrom);
+        rc = -1;
+        goto EXIT;
+    }
+
+    buf = (char*)malloc(COPY_BUFFER_SIZE);
+    if (NULL == buf) {
+        fprintf(stderr, "msm.copy malloc failed!\n");
+        rc = -1;
+        fclose(ffrom);
+        fclose(fto);
+        goto EXIT;
+    }
+
+    do {
+        len = fread(buf, 1, COPY_BUFFER_SIZE, ffrom);
+        if (len) {
+            if (len != fwrite(buf, 1, len, fto)) {
+                fprintf(stderr, "do_copy write failed: %s!\n", strerror(errno));
+                rc = -1;
+                break;
+            } else {
+                progress += len;
+                printf("%d%%->", (int)(progress*100/fstat.st_size));
+            }
+        }
+    } while (len);
+
+    printf("done!\n");
+
+    free(buf);
+    fclose(ffrom);
+    fclose(fto);
+
+EXIT:
+    return StringValue(strdup(rc >= 0 ? "t" : ""));
+}
+
 void Register_librecovery_updater_msm() {
     RegisterFunction("msm.decrypt", DecryptFn);
     RegisterFunction("msm.boot_update", BootUpdateFn);
+    RegisterFunction("msm.swap_gpt", SwapGPTFn);
+    RegisterFunction("msm.copy", CopyFn);
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013,2016, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2013,2016-2018, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -61,6 +61,8 @@ extern "C" {
 #define ATTRIBUTE_FLAG_OFFSET       48
 #define PARTITION_NAME_OFFSET       56
 #define MAX_GPT_NAME_SIZE           72
+
+#define LBA_LOCATION_SIZE           8
 
 /******************************************************************************
  * AB RELATED DEFINES
@@ -179,6 +181,8 @@ int gpt_utils_is_ufs_device();
 //- Once we locate sgY we call the query ioctl on /dev/sgy to switch
 //the boot lun to either LUNA or LUNB
 int gpt_utils_set_xbl_boot_partition(enum boot_chain chain);
+
+int swap_primary_and_secondary_gpt(const std::vector<std::string>& dev_list);
 
 //Given a vector of partition names as a input and a reference to a map,
 //populate the map to indicate which physical disk each of the partitions
