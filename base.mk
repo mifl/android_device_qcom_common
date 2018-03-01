@@ -769,7 +769,8 @@ PRODUCT_PACKAGES := \
     SnapdragonLauncher \
     SnapdragonMusic \
     a4wpservice \
-    wipowerservice
+    wipowerservice \
+    VoiceInteraction
 
 #ifeq ($(TARGET_HAS_LOW_RAM),true)
 #    DELAUN := Launcher3Go
