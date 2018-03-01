@@ -790,7 +790,8 @@ PRODUCT_PACKAGES := \
     SnapdragonGallery \
     SnapdragonMusic \
     a4wpservice \
-    wipowerservice
+    wipowerservice \
+    VoiceInteraction
 
 ifneq ($(TARGET_SUPPORTS_WEARABLES),true)
 PRODUCT_PACKAGES += \
