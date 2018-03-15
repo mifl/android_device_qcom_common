@@ -126,9 +126,6 @@ on boot
 
     setprop ro.telephony.call_ring.multiple false
 
-    #enable camera read sensors data
-    setprop persist.camera.gyro.disable 0
-
     #Remove SUID bit for iproute2 ip tool
     chmod 0755 /system/bin/ip
 
@@ -542,6 +539,7 @@ service rmt_storage /vendor/bin/rmt_storage
     user root
     shutdown critical
     ioprio rt 0
+    disabled
 
 service tftp_server /vendor/bin/tftp_server
    class core
@@ -921,7 +919,11 @@ service wifi-crda /vendor/bin/init.crda.sh
    oneshot
 
 on property:sys.boot_completed=1
+    start per_mgr
     start qcom-post-boot
+    start rmt_storage
+    #enable camera read sensors data
+    setprop persist.camera.gyro.disable 0
 
 service qvop-daemon /vendor/bin/qvop-daemon
     class late_start
