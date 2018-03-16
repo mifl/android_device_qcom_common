@@ -51,7 +51,6 @@ LOCAL_SRC_FILES    := etc/init.qcom.sdio.sh
 LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR_EXECUTABLES)
 include $(BUILD_PREBUILT)
 
-ifeq ($(ENABLE_HYP),)
 include $(CLEAR_VARS)
 LOCAL_MODULE       := init.qcom.wifi.sh
 LOCAL_MODULE_TAGS  := optional eng
@@ -59,7 +58,6 @@ LOCAL_MODULE_CLASS := ETC
 LOCAL_SRC_FILES    := etc/init.qcom.wifi.sh
 LOCAL_MODULE_PATH  := $(TARGET_OUT_VENDOR_EXECUTABLES)
 include $(BUILD_PREBUILT)
-endif
 
 include $(CLEAR_VARS)
 LOCAL_MODULE       := init.crda.sh

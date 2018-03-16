@@ -280,9 +280,7 @@ INIT += init.qcom.sdio.sh
 INIT += init.qcom.sh
 INIT += init.qcom.class_core.sh
 INIT += init.class_main.sh
-ifeq ($(ENABLE_HYP),)
 INIT += init.qcom.wifi.sh
-endif
 INIT += vold.fstab
 INIT += init.qcom.ril.path.sh
 INIT += init.qcom.usb.rc
@@ -709,14 +707,13 @@ QRGND := qrngd
 QRGND += qrngp
 QRGND += qrngtest
 
-ifeq ($(ENABLE_HYP),)
 #WPA
 WPA := wpa_supplicant.conf
 WPA += wpa_supplicant_wcn.conf
 WPA += wpa_supplicant_ath6kl.conf
 WPA += wpa_supplicant
 WPA += hs20-osu-client
-endif
+
 #ZLIB
 ZLIB := gzip
 ZLIB += minigzip
@@ -740,10 +737,8 @@ RCS += rcs_service_aidl_static
 RCS += rcs_service_api
 RCS += rcs_service_api.xml
 
-ifeq ($(ENABLE_HYP),)
 #IMS SETTINGS
 IMS_SETTINGS := imssettings
-endif
 
 #IMS Extension module for Android Telephony
 IMS_EXT := ims-ext-common
@@ -756,12 +751,10 @@ CRDA += regulatory.bin
 CRDA += linville.key.pub.pem
 CRDA += init.crda.sh
 
-ifeq ($(ENABLE_HYP),)
 #WLAN
 WLAN := prima_wlan.ko
 WLAN += pronto_wlan.ko
 WLAN += qca_cld_wlan.ko
-endif
 
 #FSTMAN
 FSTMAN := fstman
@@ -903,17 +896,13 @@ PRODUCT_PACKAGES += $(TSLIB_EXTERNAL)
 PRODUCT_PACKAGES += $(VR_HAL)
 PRODUCT_PACKAGES += $(QRGND)
 PRODUCT_PACKAGES += $(UPDATER)
-ifeq ($(ENABLE_HYP),)
 PRODUCT_PACKAGES += $(WPA)
-endif
 PRODUCT_PACKAGES += $(ZLIB)
 PRODUCT_PACKAGES += $(VT_JNI)
 PRODUCT_PACKAGES += $(VT_QTI_PERMISSIONS)
 PRODUCT_PACKAGES += $(IMS_SETTINGS)
 PRODUCT_PACKAGES += $(CRDA)
-ifeq ($(ENABLE_HYP),)
-RODUCT_PACKAGES += $(WLAN)
-endif
+PRODUCT_PACKAGES += $(WLAN)
 PRODUCT_PACKAGES += $(IPACM)
 PRODUCT_PACKAGES += $(FSTMAN)
 PRODUCT_PACKAGES += $(WIGIG)
