@@ -435,7 +435,7 @@ define create_system_ubinize_config
   echo vol_type=dynamic >> "$(1)"
   echo vol_name=system >> "$(1)"
   # Reserve 5MB for pushing and syncing with adb
-  echo vol_size=$(shell expr `stat --printf %s $(2)` + 1048576) >> "$(1)"
+  echo vol_size=191MiB >> "$(1)"
 endef
 
 define create_userdata_ubinize_config
