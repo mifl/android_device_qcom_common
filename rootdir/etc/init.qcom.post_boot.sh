@@ -2131,13 +2131,22 @@ case "$target" in
             hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
         fi
 
+        if [ -f /sys/devices/soc0/platform_subtype_id ]; then
+            platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
+        fi
+
         case "$soc_id" in
             "347" )
 
             # Start Host based Touch processing
             case "$hw_platform" in
-              "MTP" | "Surf" | "RCM" | "QRD" )
+              "Surf" | "RCM" | "QRD" )
                   start_hbtp
+                  ;;
+              "MTP" )
+                  if [ $platform_subtype_id != 5 ]; then
+                      start_hbtp
+                  fi
                   ;;
             esac
 
@@ -2695,7 +2704,11 @@ case "$target" in
 	# Limit the min frequency to 825MHz
 	echo 825000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
-        # Enable bus-dcvs
+	# Enable oom_reaper
+	echo 1 > /sys/module/lowmemorykiller/parameters/oom_reaper
+
+
+	# Enable bus-dcvs
         for cpubw in /sys/class/devfreq/*qcom,cpubw*
         do
             echo "bw_hwmon" > $cpubw/governor

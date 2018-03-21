@@ -49,17 +49,17 @@
 #include <map>
 #include <vector>
 #include <string>
+#ifndef __STDC_FORMAT_MACROS
+#define __STDC_FORMAT_MACROS
+#endif
+#include <inttypes.h>
+
+
 #define LOG_TAG "gpt-utils"
 #include <cutils/log.h>
 #include <cutils/properties.h>
 #include "gpt-utils.h"
-#ifdef __cplusplus
-extern "C" {
-#endif
-#include "sparse_crc32.h"
-#ifdef __cplusplus
-}
-#endif
+#include <zlib.h>
 #include <endian.h>
 
 
@@ -152,7 +152,7 @@ static int blk_rw(int fd, int rw, int64_t offset, uint8_t *buf, unsigned len)
     int r;
 
     if (lseek64(fd, offset, SEEK_SET) < 0) {
-        fprintf(stderr, "block dev lseek64 %lld failed: %s\n", offset,
+        fprintf(stderr, "block dev lseek64 %" PRIi64 " failed: %s\n", offset,
                 strerror(errno));
         return -1;
     }
@@ -193,20 +193,24 @@ static uint8_t *gpt_pentry_seek(const char *ptn_name,
                                 const uint8_t *pentries_end,
                                 uint32_t pentry_size)
 {
-    char *pentry_name;
-    unsigned len = strlen(ptn_name);
+    char     *pentry_name;
+    unsigned  len = strlen(ptn_name);
+    unsigned  i;
+    char      name8[MAX_GPT_NAME_SIZE];
 
     for (pentry_name = (char *) (pentries_start + PARTITION_NAME_OFFSET);
-         pentry_name < (char *) pentries_end; pentry_name += pentry_size) {
-        char name8[MAX_GPT_NAME_SIZE] = {0}; // initialize with null
-        unsigned i;
+         pentry_name < (char *) pentries_end;
+         pentry_name += pentry_size) {
 
         /* Partition names in GPT are UTF-16 - ignoring UTF-16 2nd byte */
         for (i = 0; i < sizeof(name8) / 2; i++)
             name8[i] = pentry_name[i * 2];
-        if (!strncmp(ptn_name, name8, len))
+        name8[i] = '\0';
+
+        if (!strncmp(ptn_name, name8, len)) {
             if (name8[len] == 0 || !strcmp(&name8[len], BAK_PTN_NAME_EXT))
                 return (uint8_t *) (pentry_name - PARTITION_NAME_OFFSET);
+        }
     }
 
     return NULL;
@@ -295,9 +299,12 @@ static int gpt2_set_boot_chain(int fd, enum boot_chain boot)
     uint8_t *gpt_header = NULL;
     uint8_t  *pentries = NULL;
     uint32_t crc;
+    uint32_t crc_zero;
     uint32_t blk_size = 0;
     int r;
 
+
+    crc_zero = crc32(0L, Z_NULL, 0);
     if (ioctl(fd, BLKSSZGET, &blk_size) != 0) {
             fprintf(stderr, "Failed to get GPT device block size: %s\n",
                             strerror(errno));
@@ -343,7 +350,7 @@ static int gpt2_set_boot_chain(int fd, enum boot_chain boot)
     if (r)
         goto EXIT;
 
-    crc = sparse_crc32(0, pentries, pentries_array_size);
+    crc = crc32(crc_zero, pentries, pentries_array_size);
     if (GET_4_BYTES(gpt_header + PARTITION_CRC_OFFSET) != crc) {
         fprintf(stderr, "Primary GPT partition entries array CRC invalid\n");
         r = -1;
@@ -366,12 +373,12 @@ static int gpt2_set_boot_chain(int fd, enum boot_chain boot)
             goto EXIT;
     }
 
-    crc = sparse_crc32(0, pentries, pentries_array_size);
+    crc = crc32(crc_zero, pentries, pentries_array_size);
     PUT_4_BYTES(gpt_header + PARTITION_CRC_OFFSET, crc);
 
     /* header CRC is calculated with this field cleared */
     PUT_4_BYTES(gpt_header + HEADER_CRC_OFFSET, 0);
-    crc = sparse_crc32(0, gpt_header, gpt_header_size);
+    crc = crc32(crc_zero, gpt_header, gpt_header_size);
     PUT_4_BYTES(gpt_header + HEADER_CRC_OFFSET, crc);
 
     /* Write the modified GPT header back to block dev */
@@ -408,10 +415,12 @@ static int gpt_get_state(int fd, enum gpt_instance gpt, enum gpt_state *state)
     uint32_t gpt_header_size;
     uint8_t  *gpt_header = NULL;
     uint32_t crc;
+    uint32_t crc_zero;
     uint32_t blk_size = 0;
 
     *state = GPT_OK;
 
+    crc_zero = crc32(0L, Z_NULL, 0);
     if (ioctl(fd, BLKSSZGET, &blk_size) != 0) {
             fprintf(stderr, "Failed to get GPT device block size: %s\n",
                             strerror(errno));
@@ -443,7 +452,7 @@ static int gpt_get_state(int fd, enum gpt_instance gpt, enum gpt_state *state)
     crc = GET_4_BYTES(gpt_header + HEADER_CRC_OFFSET);
     /* header CRC is calculated with this field cleared */
     PUT_4_BYTES(gpt_header + HEADER_CRC_OFFSET, 0);
-    if (sparse_crc32(0, gpt_header, gpt_header_size) != crc)
+    if (crc32(crc_zero, gpt_header, gpt_header_size) != crc)
         *state = GPT_BAD_CRC;
     free(gpt_header);
     return 0;
@@ -474,8 +483,10 @@ static int gpt_set_state(int fd, enum gpt_instance gpt, enum gpt_state state)
     uint32_t gpt_header_size;
     uint8_t  *gpt_header = NULL;
     uint32_t crc;
+    uint32_t crc_zero;
     uint32_t blk_size = 0;
 
+    crc_zero = crc32(0L, Z_NULL, 0);
     if (ioctl(fd, BLKSSZGET, &blk_size) != 0) {
             fprintf(stderr, "Failed to get GPT device block size: %s\n",
                             strerror(errno));
@@ -512,7 +523,7 @@ static int gpt_set_state(int fd, enum gpt_instance gpt, enum gpt_state state)
 
     /* header CRC is calculated with this field cleared */
     PUT_4_BYTES(gpt_header + HEADER_CRC_OFFSET, 0);
-    crc = sparse_crc32(0, gpt_header, gpt_header_size);
+    crc = crc32(crc_zero, gpt_header, gpt_header_size);
     PUT_4_BYTES(gpt_header + HEADER_CRC_OFFSET, crc);
 
     if (blk_rw(fd, 1, gpt_header_offset, gpt_header, blk_size)) {
@@ -1375,10 +1386,13 @@ void gpt_disk_free(struct gpt_disk *disk)
 //disk represented by path dev. Returns 0 on success and -1 on error.
 int gpt_disk_get_disk_info(const char *dev, struct gpt_disk *dsk)
 {
-        struct gpt_disk *disk = NULL;
-        int fd = -1;
-        uint32_t gpt_header_size = 0;
 
+	struct gpt_disk *disk = NULL;
+	int fd = -1;
+	uint32_t gpt_header_size = 0;
+	uint32_t crc_zero;
+
+	crc_zero = crc32(0L, Z_NULL, 0);
         if (!dsk || !dev) {
                 ALOGE("%s: Invalid arguments", __func__);
                 goto error;
@@ -1390,13 +1404,13 @@ int gpt_disk_get_disk_info(const char *dev, struct gpt_disk *dsk)
                 goto error;
         }
         gpt_header_size = GET_4_BYTES(disk->hdr + HEADER_SIZE_OFFSET);
-        disk->hdr_crc = sparse_crc32(0, disk->hdr, gpt_header_size);
+        disk->hdr_crc = crc32(crc_zero, disk->hdr, gpt_header_size);
         disk->hdr_bak = gpt_get_header(dev, SECONDARY_GPT);
         if (!disk->hdr_bak) {
                 ALOGE("%s: Failed to get backup header", __func__);
                 goto error;
         }
-        disk->hdr_bak_crc = sparse_crc32(0, disk->hdr_bak, gpt_header_size);
+        disk->hdr_bak_crc = crc32(crc_zero, disk->hdr_bak, gpt_header_size);
 
         //Descriptor for the block device. We will use this for further
         //modifications to the partition table
@@ -1471,16 +1485,18 @@ error:
 int gpt_disk_update_crc(struct gpt_disk *disk)
 {
         uint32_t gpt_header_size = 0;
+        uint32_t crc_zero;
+        crc_zero = crc32(0L, Z_NULL, 0);
         if (!disk || (disk->is_initialized != GPT_DISK_INIT_MAGIC)) {
                 ALOGE("%s: invalid argument", __func__);
                 goto error;
         }
         //Recalculate the CRC of the primary partiton array
-        disk->pentry_arr_crc = sparse_crc32(0,
+        disk->pentry_arr_crc = crc32(crc_zero,
                         disk->pentry_arr,
                         disk->pentry_arr_size);
         //Recalculate the CRC of the backup partition array
-        disk->pentry_arr_bak_crc = sparse_crc32(0,
+        disk->pentry_arr_bak_crc = crc32(crc_zero,
                         disk->pentry_arr_bak,
                         disk->pentry_arr_size);
         //Update the partition CRC value in the primary GPT header
@@ -1493,8 +1509,8 @@ int gpt_disk_update_crc(struct gpt_disk *disk)
         //Header CRC is calculated with its own CRC field set to 0
         PUT_4_BYTES(disk->hdr + HEADER_CRC_OFFSET, 0);
         PUT_4_BYTES(disk->hdr_bak + HEADER_CRC_OFFSET, 0);
-        disk->hdr_crc = sparse_crc32(0, disk->hdr, gpt_header_size);
-        disk->hdr_bak_crc = sparse_crc32(0, disk->hdr_bak, gpt_header_size);
+        disk->hdr_crc = crc32(crc_zero, disk->hdr, gpt_header_size);
+        disk->hdr_bak_crc = crc32(crc_zero, disk->hdr_bak, gpt_header_size);
         PUT_4_BYTES(disk->hdr + HEADER_CRC_OFFSET, disk->hdr_crc);
         PUT_4_BYTES(disk->hdr_bak + HEADER_CRC_OFFSET, disk->hdr_bak_crc);
         return 0;
