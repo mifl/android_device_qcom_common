@@ -208,6 +208,7 @@ case "$target" in
             "ADP")
                 setprop ro.sf.lcd_density 160
                 setprop qemu.hw.mainkeys 0
+                setprop persist.graphics.vulkan.disable true
                 ;;
             "SBC")
                 setprop ro.sf.lcd_density 240
