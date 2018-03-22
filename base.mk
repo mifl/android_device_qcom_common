@@ -173,6 +173,9 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
 #C2DColorConvert
 C2DCC := libc2dcolorconvert
 
+#SidebandstreamHandle
+SBSH := libsidebandstreamhandle
+
 CHROMIUM := libwebviewchromium
 CHROMIUM += libwebviewchromium_loader
 CHROMIUM += libwebviewchromium_plat_support
@@ -832,6 +835,7 @@ PRODUCT_PACKAGES += $(BRCTL)
 PRODUCT_PACKAGES += $(BSON)
 PRODUCT_PACKAGES += $(BT)
 PRODUCT_PACKAGES += $(C2DCC)
+PRODUCT_PACKAGES += $(SBSH)
 PRODUCT_PACKAGES += $(CHROMIUM)
 PRODUCT_PACKAGES += $(CIMAX)
 PRODUCT_PACKAGES += $(CM)
