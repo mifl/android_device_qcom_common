@@ -1825,7 +1825,7 @@ static int gpt_copy_secondary_to_primary(int fd)
     uint32_t pentries_array_size;
 
     unsigned i;
-    const char ptn_swap_list[][MAX_GPT_NAME_SIZE] = { PTN_SWAP_LIST };
+    const char ptn_swap_list[][MAX_GPT_NAME_SIZE] = { HQX_PTN_LIST };
     uint32_t blk_size = 0;
 
     if (ioctl(fd, BLKSSZGET, &blk_size) != 0) {

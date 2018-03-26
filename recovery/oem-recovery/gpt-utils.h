@@ -84,6 +84,7 @@ extern "C" {
 #define PTN_XBL_CFG                     "xbl_config"
 #define PTN_SWAP_LIST                   PTN_XBL, PTN_XBL_CFG, "sbl1", "rpm", "tz", "aboot", "abl", "hyp", "lksecapp", "keymaster", "cmnlib", "cmnlib32", "cmnlib64", "pmic", "apdp", "devcfg", "hosd", "keystore", "msadp", "mdtp", "mdtpsecapp", "dsp", "aop", "qupfw", "vbmeta", "dtbo"
 #define AB_PTN_LIST PTN_SWAP_LIST, "boot", "system", "vendor", "modem", "bluetooth"
+#define HQX_PTN_LIST AB_PTN_LIST, "ifs2", "la_system"
 #define BOOT_DEV_DIR    "/dev/block/bootdevice/by-name"
 
 /******************************************************************************
