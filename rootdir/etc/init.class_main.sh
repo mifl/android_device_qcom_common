@@ -1,6 +1,6 @@
 #! /vendor/bin/sh
 
-# Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
+# Copyright (c) 2013-2014, 2018 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -30,6 +30,7 @@
 #
 # start ril-daemon only for targets on which radio is present
 #
+target=`getprop ro.board.platform`
 baseband=`getprop ro.baseband`
 sgltecsfb=`getprop persist.vendor.radio.sglte_csfb`
 datamode=`getprop persist.data.mode`
@@ -87,6 +88,11 @@ case "$baseband" in
             start netmgrd
             ;;
     esac
+esac
+
+case "$target" in
+    "qcs605" )
+    start vendor.discoveryd
 esac
 
 #
