@@ -1119,3 +1119,6 @@ else
   $(warning TODO: Need to replace legacy $(DEVICE_CONFIG_DIR)android_filesystem_config.h with config.fs)
   $(warning **********)
 endif
+
+PRODUCT_PACKAGES += liboemaids_system
+PRODUCT_PACKAGES += liboemaids_vendor
