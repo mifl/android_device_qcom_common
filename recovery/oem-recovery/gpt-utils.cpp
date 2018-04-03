@@ -208,7 +208,7 @@ static uint8_t *gpt_pentry_seek(const char *ptn_name,
 
     for (pentry_name = (char *) (pentries_start + PARTITION_NAME_OFFSET);
          pentry_name < (char *) pentries_end; pentry_name += pentry_size) {
-        char name8[MAX_GPT_NAME_SIZE];
+        char name8[MAX_GPT_NAME_SIZE] = { 0, };
         unsigned i;
 
         /* Partition names in GPT are UTF-16 - ignoring UTF-16 2nd byte */
@@ -1851,7 +1851,7 @@ static int gpt_copy_secondary_to_primary(int fd)
         GET_4_BYTES(pheaderB + PARTITION_COUNT_OFFSET) * pentry_size;
 
     pentriesA = (uint8_t *) calloc(1, pentries_array_size);
-    if (pentriesB == NULL) {
+    if (pentriesA == NULL) {
         fprintf(stderr,
                     "Failed to alloc memory for GPT partition entries array\n");
         goto error;
