@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: cryptfs_hw library
+Description: cryptfs_hw is needed to use cryptohardware for filesystem encryption and decryption
+Version: @VERSION@
+Libs: -L${libdir} -lcryptfs_hw
+Cflags: -I${includedir}/cryptfs_hw
