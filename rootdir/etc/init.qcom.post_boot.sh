@@ -220,26 +220,6 @@ function 8937_sched_dcvs_hmp()
     echo 50000 > /proc/sys/kernel/sched_freq_dec_notify
 
 }
-
-function sdm632_sched_dcvs_eas {
-    # enable governor for perf cluster
-    echo 1 > /sys/devices/system/cpu/cpu0/online
-    echo "schedutil" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/rate_limit_us
-    #set the hispeed_freq
-    echo 1363200 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/hispeed_freq
-    #default value for hispeed_load is 90, for sdm632 it should be 85
-    echo 85 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/hispeed_load
-    ## enable governor for power cluster
-    echo 1 > /sys/devices/system/cpu/cpu4/online
-    echo "schedutil" > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-    echo 0 > /sys/devices/system/cpu/cpu4/cpufreq/schedutil/rate_limit_us
-    #set the hispeed_freq
-    echo 1401600 > /sys/devices/system/cpu/cpu4/cpufreq/schedutil/hispeed_freq
-    #default value for hispeed_load is 90, for sdm632 it should be 85
-    echo 85 > /sys/devices/system/cpu/cpu4/cpufreq/schedutil/hispeed_load
-}
-
 target=`getprop ro.board.platform`
 
 function configure_zram_parameters() {
@@ -1719,13 +1699,8 @@ case "$target" in
                 KernelVersionS=${KernelVersionStr:2:2}
                 KernelVersionA=${KernelVersionStr:0:1}
                 KernelVersionB=${KernelVersionS%.*}
-
                 if [ $KernelVersionA -ge 4 ] && [ $KernelVersionB -ge 9 ]; then
-                    if [ $soc_id -eq "349" ] || [ $soc_id -eq "350" ]; then
-                        sdm632_sched_dcvs_eas
-                    else
-                        8953_sched_dcvs_eas
-                fi
+                    8953_sched_dcvs_eas
                 else
                     8953_sched_dcvs_hmp
                 fi
