@@ -13,8 +13,8 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE_TAGS := optional
 LOCAL_C_INCLUDES := bootable/recovery \
-	                zlib \
 		    $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+LOCAL_STATIC_LIBRARIES := libz
 LOCAL_SRC_FILES := gpt-utils.cpp dec.cpp oem-updater.cpp
 LOCAL_C_FLAGS := -Wall
 LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
@@ -24,7 +24,6 @@ include $(BUILD_STATIC_LIBRARY)
 include $(CLEAR_VARS)
 LOCAL_MODULE_TAGS := optional
 LOCAL_C_INCLUDES := bootable/recovery \
-	                zlib \
 		    $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
 LOCAL_SRC_FILES := gpt-utils.cpp
 LOCAL_C_FLAGS := -Wall
