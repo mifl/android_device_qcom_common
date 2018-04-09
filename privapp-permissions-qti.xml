@@ -77,4 +77,8 @@ It allows additional grants on top of privapp-permissions-platform.xml
     <privapp-permissions package="com.qualcomm.qti.settings.watchairplanemode">
         <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
     </privapp-permissions>
+
+    <privapp-permissions package="com.qualcomm.qti.settings.watchtheatermode">
+        <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
+    </privapp-permissions>
 </permissions>
