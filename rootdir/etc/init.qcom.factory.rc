@@ -74,6 +74,7 @@ on mmi && property:ro.bootmode=ffbm-00
     start fastmmi
     # start qcom-post-boot to set the misc partition path property value
     start qcom-post-boot
+    enable qcom-usb-sh
 
 on mmi && property:ro.bootmode=ffbm-01
     # ========================================================
@@ -85,6 +86,7 @@ on mmi && property:ro.bootmode=ffbm-01
     start fastmmi
     ## start qcom-post-boot to set the misc partition path property value
     start qcom-post-boot
+    enable qcom-usb-sh
 
 on ffbm
     trigger early-fs
