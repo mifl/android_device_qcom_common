@@ -2180,6 +2180,8 @@ case "$target" in
       echo "0:1209600" > /sys/module/cpu_boost/parameters/input_boost_freq
       echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
 
+      configure_zram_parameters
+
       # Enable bus-dcvs
       for cpubw in /sys/class/devfreq/*qcom,cpubw*
             do
