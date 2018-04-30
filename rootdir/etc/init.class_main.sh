@@ -95,8 +95,8 @@ case "$baseband" in
     if [ -z "$rild_status" ] && [ -z "$vendor_rild_status" ]; then
       start vendor.qcrild
     fi
-    start ipacm-diag
-    start ipacm
+    start vendor.ipacm-diag
+    start vendor.ipacm
     case "$baseband" in
         "svlte2a" | "csfb")
           start qmiproxy
@@ -132,11 +132,11 @@ case "$baseband" in
 
     case "$datamode" in
         "tethered")
-            start qti
+            start vendor.qti
             start port-bridge
             ;;
         "concurrent")
-            start qti
+            start vendor.qti
             start netmgrd
             start port-bridge
             ;;
