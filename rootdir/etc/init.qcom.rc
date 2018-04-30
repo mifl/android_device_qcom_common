@@ -253,6 +253,9 @@ on post-fs-data
     #Create folder for mm-qcamera-daemon
     mkdir /data/misc/camera 0770 camera camera
 
+    #Create folder of camera
+    mkdir /data/vendor/camera 0770 camera camera
+
     mkdir /data/media 0770 media_rw media_rw
     chown media_rw media_rw /data/media
 
@@ -293,6 +296,10 @@ on post-fs-data
     # Create the directories used by CnE subsystem
     mkdir /data/connectivity 0771 system system
     chown system system /data/connectivity
+
+    # Create the directories used by CnE subsystem
+    mkdir /data/vendor/connectivity 0771 radio radio
+    chown radio radio /data/vendor/connectivity
 
     # Create the directories used by DPM subsystem
     mkdir /data/dpm 0771 system system
@@ -357,7 +364,7 @@ on post-fs-data
     mkdir /data/hostapd 0770 system wifi
 
     # Create /data/time folder for time-services
-    mkdir /data/time/ 0700 system system
+    mkdir /data/vendor/time/ 0700 system system
 
     setprop vold.post_fs_data_done 1
 
@@ -486,11 +493,12 @@ on property:sys.boot_completed=1
     #WDSP FW boot sysfs node used by STHAL
     chown media audio /sys/kernel/wdsp0/boot
     chown media audio /sys/kernel/wcd_cpe0/fw_name
-on property:persist.radio.atfwd.start=false
-    stop atfwd
 
-on property:radio.atfwd.start=false
-    stop atfwd
+on property:persist.vendor.radio.atfwd.start=false
+    stop vendor.atfwd
+
+on property:vendor.radio.atfwd.start=false
+    stop vendor.atfwd
 
 # corefile limit
 on property:persist.debug.trace=1
@@ -509,17 +517,17 @@ on property:bluetooth.dun.status=stopped
 on property:ro.bluetooth.ftm_enabled=true
     start ftmd
 
-on property:bluetooth.startbtsnoop=true
-    start btsnoop
+on property:vendor.bluetooth.startbtsnoop=true
+    start vendor.btsnoop
 
-on property:bluetooth.startbtsnoop=false
-    stop btsnoop
+on property:vendor.bluetooth.startbtsnoop=false
+    stop vendor.btsnoop
 
-on property:bluetooth.startbtlogger=true
-    start bt_logger
+on property:vendor.bluetooth.startbtlogger=true
+    start vendor.bt_logger
 
-on property:bluetooth.startbtlogger=false
-    stop bt_logger
+on property:vendor.bluetooth.startbtlogger=false
+    stop vendor.bt_logger
 
 service qcom-c_core-sh  /vendor/bin/init.qcom.class_core.sh
     class core
@@ -570,13 +578,13 @@ service tftp_server /vendor/bin/tftp_server
    class core
    user root
 
-on property:wc_transport.start_hci=true
-    start start_hci_filter
+on property:vendor.wc_transport.start_hci=true
+    start vendor.start_hci_filter
 
-on property:wc_transport.start_hci=false
-    stop start_hci_filter
+on property:vendor.wc_transport.start_hci=false
+    stop vendor.start_hci_filter
 
-service start_hci_filter /system/vendor/bin/wcnss_filter
+service vendor.start_hci_filter /system/vendor/bin/wcnss_filter
     class late_start
     user bluetooth
     group bluetooth diag system wakelock
@@ -598,14 +606,14 @@ service bt-sap /system/bin/sapd 15
     seclabel u:r:bluetooth:s0
     oneshot
 
-service btsnoop /system/bin/btsnoop
+service vendor.btsnoop /system/bin/btsnoop
    user bluetooth
    group bluetooth net_bt_admin sdcard_rw sdcard_r media_rw
    class late_start
    disabled
    oneshot
 
-service bt_logger /system/bin/bt_logger
+service vendor.bt_logger /system/bin/bt_logger
    user bluetooth
    group bluetooth net_bt_admin sdcard_rw sdcard_r media_rw
    class late_start
@@ -938,7 +946,7 @@ service qvop-daemon /vendor/bin/qvop-daemon
     user system
     group system drmrpc
 
-service atfwd /vendor/bin/ATFWD-daemon
+service vendor.atfwd /vendor/bin/ATFWD-daemon
     class late_start
     user system
     group system radio
