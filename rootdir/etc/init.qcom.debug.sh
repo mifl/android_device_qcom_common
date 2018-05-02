@@ -128,7 +128,7 @@ enable_sdm845_dcc_config()
 {
     DCC_PATH="/sys/bus/platform/devices/10a2000.dcc_v2"
     soc_version=`cat /sys/devices/soc0/revision`
-    soc_version=${soc_version/./}
+    soc_version=${soc_version/.*/}
 
     if [ ! -d $DCC_PATH ]; then
         echo "DCC does not exist on this build."
@@ -147,7 +147,7 @@ enable_sdm845_dcc_config()
     echo 0x013E7E00 124 > $DCC_PATH/config
 
     #Use for address change between V1 vs V2
-    if [ "$soc_version" -eq 20 ]
+    if [ "$soc_version" -eq 2 ]
     then
         #V2
         echo 0x17D41920  > $DCC_PATH/config
