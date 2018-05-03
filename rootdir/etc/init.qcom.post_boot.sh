@@ -1218,15 +1218,15 @@ case "$target" in
 
 	#Set LMK, adaptive LMK, zram, mmcblk read_ahead
 	if [ $MemTotal -le 262144 ]; then
-		echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 		echo 157286400 > /sys/block/zram0/disksize
 	else
-		echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
 		echo 128 > /sys/block/mmcblk0/queue/read_ahead_kb
 		echo 8192 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
 		echo 0 > /sys/module/vmpressure/parameters/allocstall_threshold
 		echo 268435456 > /sys/block/zram0/disksize
 	fi
+	#Disable ALMK due to memory leakage in b2g process on apps getting killed by ALMK.
+	echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
         mkswap /dev/block/zram0
         swapon /dev/block/zram0
 
