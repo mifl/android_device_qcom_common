@@ -408,11 +408,21 @@ define build-nand-ubifs-persistimage
   $(hide) $(call assert-max-image-size,$@,$(BOARD_PERSISTIMAGE_PARTITION_SIZE),yaffs)
 endef
 
+#Generate recovery from boot patch
+define build-recovery-from-boot-patch
+  $(hide) cp -r $(1)/boot.img $(ota_temp_root)/BOOTABLE_IMAGES/
+  $(hide) cp -r $(1)/recovery.img $(ota_temp_root)/BOOTABLE_IMAGES/
+  $(hide) ./build/tools/releasetools/make_recovery_patch $(ota_temp_root) $(ota_temp_root)
+  $(hide) cp -f $(ota_temp_root)/SYSTEM/bin/install-recovery.sh $(TARGET_OUT)/bin/install-recovery.sh
+  $(hide) cp -f $(ota_temp_root)/SYSTEM/recovery-from-boot.p $(TARGET_OUT)/recovery-from-boot.p
+endef
+
 # Generate UBIFS images for NAND
 define build-nand-ubifs-systemimage
   @echo "target UBIFS NAND system image: $(3)"
   (set -o pipefail; cd $(PRODUCT_OUT) && find system/ -mindepth 1 | $(CURDIR)/$(HOST_OUT_EXECUTABLES)/mkdevtbl > system.dt)
   $(hide) mkdir -p $(1)
+  $(call build-recovery-from-boot-patch,$(1))
   $(MKFSUBIFS) $(2) $(3) -c 2555 -D $(PRODUCT_OUT)/system.dt -r $(PRODUCT_OUT)/system
   $(hide) chmod a+r $(3)
   $(hide) $(call assert-max-image-size,$@,$(BOARD_SYSTEMIMAGE_PARTITION_SIZE),ubifs)
