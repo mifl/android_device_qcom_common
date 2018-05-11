@@ -23,8 +23,9 @@ QCOM_BOARD_PLATFORMS += apq8098_latv
 QCOM_BOARD_PLATFORMS += sdm660
 QCOM_BOARD_PLATFORMS += sdm845
 QCOM_BOARD_PLATFORMS += msmnile
-QCOM_BOARD_PLATFORMS += sdm670
+QCOM_BOARD_PLATFORMS += sdm710
 QCOM_BOARD_PLATFORMS += qcs605
+QCOM_BOARD_PLATFORMS += $(MSMSTEPPE)
 
 QSD8K_BOARD_PLATFORMS := qsd8k
 
@@ -32,7 +33,7 @@ TARGET_USE_VENDOR_CAMERA_EXT := true
 TARGET_USE_QTI_BT_STACK := true
 
 #List of targets that use video hw
-MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845 sdm670 qcs605 msmnile
+MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845 sdm710 qcs605 msmnile $(MSMSTEPPE)
 
 ifneq ($(PREBUILT_BOARD_PLATFORM_DIR), msm8937_32go)
 #List of targets that use video hw
@@ -40,7 +41,7 @@ MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 
 endif
 
 #List of targets that use master side content protection
-MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845 apq8098_latv sdm670 qcs605 msmnile
+MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845 apq8098_latv sdm710 qcs605 msmnile $(MSMSTEPPE)
 
 # Below projects/packages with LOCAL_MODULEs will be used by
 # PRODUCT_PACKAGES to build LOCAL_MODULEs that are tagged with
@@ -115,9 +116,10 @@ AUDIO_HARDWARE += audio.primary.msm8998
 AUDIO_HARDWARE += audio.primary.sdm660
 AUDIO_HARDWARE += audio.primary.sdm845
 AUDIO_HARDWARE += audio.primary.apq8098_latv
-AUDIO_HARDWARE += audio.primary.sdm670
+AUDIO_HARDWARE += audio.primary.sdm710
 AUDIO_HARDWARE += audio.primary.qcs605
 AUDIO_HARDWARE += audio.primary.msmnile
+AUDIO_HARDWARE += audio.primary.$(MSMSTEPPE)
 #
 AUDIO_POLICY := audio_policy.mpq8064
 AUDIO_POLICY += audio_policy.apq8084
@@ -143,6 +145,15 @@ AUDIO_POLICY += audio_policy.msm8952
 AUDIO_POLICY += audio_policy.msm8937
 AUDIO_POLICY += audio_policy.msm8953
 AUDIO_POLICY += audio_policy.msmgold
+
+#HAL Wrapper
+AUDIO_WRAPPER := libqahw
+AUDIO_WRAPPER += libqahwwrapper
+
+#HAL Test app
+AUDIO_HAL_TEST_APPS := hal_play_test
+AUDIO_HAL_TEST_APPS += hal_rec_test
+
 #tinyalsa test apps
 TINY_ALSA_TEST_APPS := tinyplay
 TINY_ALSA_TEST_APPS += tinycap
@@ -247,6 +258,8 @@ GPS_HARDWARE += libgnss
 GPS_HARDWARE += liblocation_api
 GPS_HARDWARE += android.hardware.gnss@1.0-impl-qti
 GPS_HARDWARE += android.hardware.gnss@1.0-service-qti
+GPS_HARDWARE += android.hardware.gnss@1.1-impl-qti
+GPS_HARDWARE += android.hardware.gnss@1.1-service-qti
 
 #HDMID
 HDMID := hdmid
@@ -424,7 +437,7 @@ LIBCOPYBIT += copybit.sdm630
 LIBCOPYBIT += copybit.sdm660
 LIBCOPYBIT += copybit.sda630
 LIBCOPYBIT += copybit.apq8098_latv
-LIBCOPYBIT += copybit.sdm670
+LIBCOPYBIT += copybit.sdm710
 LIBCOPYBIT += copybit.qcs605
 
 #LIBGESTURES
@@ -461,8 +474,9 @@ LIBGRALLOC += gralloc.apq8098_latv
 LIBGRALLOC += libmemalloc
 LIBGRALLOC += gralloc.sdm630
 LIBGRALLOC += gralloc.sdm660
-LIBGRALLOC += gralloc.sdm670
+LIBGRALLOC += gralloc.sdm710
 LIBGRALLOC += gralloc.qcs605
+LIBGRALLOC += gralloc.$(MSMSTEPPE)
 
 #memtrack
 LIBMEMTRACK := memtrack.default
@@ -483,8 +497,9 @@ LIBMEMTRACK += memtrack.msmnile
 LIBMEMTRACK += memtrack.sdm660
 LIBMEMTRACK += memtrack.sdm845
 LIBMEMTRACK += memtrack.apq8098_latv
-LIBMEMTRACK += memtrack.sdm670
+LIBMEMTRACK += memtrack.sdm710
 LIBMEMTRACK += memtrack.qcs605
+LIBMEMTRACK += memtrack.$(MSMSTEPPE)
 
 #LIBLIGHTS
 LIBLIGHTS := lights.msm8660
@@ -512,8 +527,9 @@ LIBLIGHTS += lights.msmnile
 LIBLIGHTS += lights.sdm660
 LIBLIGHTS += lights.sdm845
 LIBLIGHTS += lights.apq8098_latv
-LIBLIGHTS += lights.sdm670
+LIBLIGHTS += lights.sdm710
 LIBLIGHTS += lights.qcs605
+LIBLIGHTS += lights.$(MSMSTEPPE)
 
 #LIBHWCOMPOSER
 LIBHWCOMPOSER := hwcomposer.msm8660
@@ -542,8 +558,9 @@ LIBHWCOMPOSER += hwcomposer.msmnile
 LIBHWCOMPOSER += hwcomposer.sdm660
 LIBHWCOMPOSER += hwcomposer.sdm845
 LIBHWCOMPOSER += hwcomposer.apq8098_latv
-LIBHWCOMPOSER += hwcomposer.sdm670
+LIBHWCOMPOSER += hwcomposer.sdm710
 LIBHWCOMPOSER += hwcomposer.qcs605
+LIBHWCOMPOSER += hwcomposer.$(MSMSTEPPE)
 
 #LIBAUDIOPARAM -- Exposing AudioParameter as dynamic library for SRS TruMedia to work
 LIBAUDIOPARAM := libaudioparameter
@@ -697,6 +714,8 @@ STMLOG := libstm-log
 #THERMAL_HAL
 THERMAL_HAL := thermal.msm8998
 THERMAL_HAL += thermal.sdm845
+THERMAL_HAL += thermal.sdm710
+THERMAL_HAL += thermal.qcs605
 
 #TSLIB_EXTERNAL
 TSLIB_EXTERNAL := corgi
@@ -784,6 +803,9 @@ WIGIG += libwigig_utils
 WIGIG += libwigig_flashaccess
 WIGIG += libwigig_pciaccess
 
+#FD_LEAK
+FD_LEAK := libc_leak_detector
+
 PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
@@ -817,6 +839,7 @@ PRODUCT_PACKAGES := \
     VoiceDialer \
     FM2 \
     FMRecord \
+    SnapdragonGallery \
     VideoEditor \
     SnapdragonLauncher \
     a4wpservice \
@@ -830,6 +853,8 @@ PRODUCT_PACKAGES += $(ANGLE)
 PRODUCT_PACKAGES += $(APPOPS_POLICY)
 PRODUCT_PACKAGES += $(AUDIO_HARDWARE)
 PRODUCT_PACKAGES += $(AUDIO_POLICY)
+PRODUCT_PACKAGES += $(AUDIO_WRAPPER)
+PRODUCT_PACKAGES += $(AUDIO_HAL_TEST_APPS)
 PRODUCT_PACKAGES += $(TINY_ALSA_TEST_APPS)
 PRODUCT_PACKAGES += $(AMPLOADER)
 PRODUCT_PACKAGES += $(APPS)
@@ -914,6 +939,7 @@ PRODUCT_PACKAGES += $(WLAN)
 PRODUCT_PACKAGES += $(IPACM)
 PRODUCT_PACKAGES += $(FSTMAN)
 PRODUCT_PACKAGES += $(WIGIG)
+PRODUCT_PACKAGES += $(FD_LEAK)
 PRODUCT_PACKAGES += $(IMS_EXT)
 # Temp workarround for b/36603742
 PRODUCT_PACKAGES += android.hidl.manager@1.0-java
@@ -1106,6 +1132,7 @@ else
   $(warning **********)
 endif
 
-PRODUCT_PACKAGES_DEBUG += sl4a
+#PRODUCT_PACKAGES_DEBUG += sl4a
 PRODUCT_PACKAGES += liboemaids_system
 PRODUCT_PACKAGES += liboemaids_vendor
+PRODUCT_PACKAGES += android.hardware.health@2.0-service

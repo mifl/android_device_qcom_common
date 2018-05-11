@@ -89,7 +89,7 @@ esac
 if [ -d /sys/bus/esoc/devices ]; then
 for f in /sys/bus/esoc/devices/*; do
     if [ -d $f ]; then
-        if [ `grep "^MDM" $f/esoc_name` ]; then
+    if [ `grep -e "^MDM" -e "^SDX" $f/esoc_name` ]; then
             esoc_link=`cat $f/esoc_link`
             break
         fi
@@ -115,11 +115,9 @@ echo 1  > /sys/class/android_usb/f_mass_storage/lun/nofua
 usb_config=`getprop persist.sys.usb.config`
 case "$usb_config" in
     "" | "adb") #USB persist config not set, select default configuration
-      case "$esoc_link" in
-          "PCIe")
-              setprop persist.sys.usb.config diag,diag_mdm,serial_cdev,rmnet_qti_ether,mass_storage,adb
-          ;;
-          *)
+      if [ "$esoc_link" != "" ]; then
+	  setprop persist.sys.usb.config diag,diag_mdm,qdss,qdss_mdm,serial_cdev,dpl,rmnet,adb
+      else
 	  case "$baseband" in
 	      "apq")
 	          setprop persist.sys.usb.config diag,adb
@@ -176,7 +174,7 @@ case "$usb_config" in
 	              "msm8998" | "sdm660" | "apq8098_latv")
 		          setprop persist.sys.usb.config diag,serial_cdev,rmnet,adb
 		      ;;
-	              "sdm845" | "sdm670")
+	              "sdm845" | "sdm710")
 		          setprop persist.sys.usb.config diag,serial_cdev,rmnet,dpl,adb
 		      ;;
 	              "msmnile")
@@ -192,14 +190,15 @@ case "$usb_config" in
 	      esac
 	      ;;
 	  esac
-	  ;;
-      esac
-      ;;
+      fi
+  ;;
   * ) ;; #USB persist config exists, do nothing
 esac
 
 # check configfs is mounted or not
 if [ -d /config/usb_gadget ]; then
+	setprop sys.usb.rndis.func.name "rndis_bam"
+	setprop sys.usb.rmnet.func.name "rmnet_bam"
 	# set USB controller's device node
 	case "$target" in
 	"msm8937")
@@ -207,15 +206,11 @@ if [ -d /config/usb_gadget ]; then
 		;;
 	"msm8953")
 		setprop sys.usb.controller "7000000.dwc3"
-		setprop sys.usb.rndis.func.name "rndis_bam"
-		setprop sys.usb.rmnet.func.name "rmnet_bam"
 		echo 131072 > /sys/module/usb_f_mtp/parameters/mtp_tx_req_len
 		echo 131072 > /sys/module/usb_f_mtp/parameters/mtp_rx_req_len
 		;;
 	"msm8996")
 		setprop sys.usb.controller "6a00000.dwc3"
-		setprop sys.usb.rndis.func.name "rndis_bam"
-		setprop sys.usb.rmnet.func.name "rmnet_bam"
 		echo 131072 > /sys/module/usb_f_mtp/parameters/mtp_tx_req_len
 		echo 131072 > /sys/module/usb_f_mtp/parameters/mtp_rx_req_len
 		;;
@@ -226,8 +221,6 @@ if [ -d /config/usb_gadget ]; then
 		;;
 	"sdm660")
 		setprop sys.usb.controller "a800000.dwc3"
-		setprop sys.usb.rndis.func.name "rndis_bam"
-		setprop sys.usb.rmnet.func.name "rmnet_bam"
 		echo 15916 > /sys/module/usb_f_qcrndis/parameters/rndis_dl_max_xfer_size
 		;;
 	"sdm845")
@@ -264,14 +257,6 @@ if [ -d /config/usb_gadget ]; then
 
 	setprop sys.usb.configfs 1
 else
-	persist_comp=`getprop persist.sys.usb.config`
-	comp=`getprop sys.usb.config`
-	echo $persist_comp
-	echo $comp
-	if [ "$comp" != "$persist_comp" ]; then
-		echo "setting sys.usb.config"
-		setprop sys.usb.config $persist_comp
-	fi
         #
         # Do target specific things
         #
@@ -389,3 +374,59 @@ case "$soc_id" in
 		setprop sys.usb.rps_mask 40
 	;;
 esac
+
+#
+# Initialize UVC conifguration.
+#
+if [ -d /config/usb_gadget/g1/functions/uvc.0 ]; then
+	cd /config/usb_gadget/g1/functions/uvc.0
+
+	echo 3072 > streaming_maxpacket
+	echo 1 > streaming_maxburst
+	mkdir control/header/h
+	ln -s control/header/h control/class/fs/
+	ln -s control/header/h control/class/ss
+
+	mkdir -p streaming/uncompressed/u/360p
+	echo "666666\n1000000\n5000000\n" > streaming/uncompressed/u/360p/dwFrameInterval
+
+	mkdir -p streaming/uncompressed/u/720p
+	echo 1280 > streaming/uncompressed/u/720p/wWidth
+	echo 720 > streaming/uncompressed/u/720p/wWidth
+	echo 29491200 > streaming/uncompressed/u/720p/dwMinBitRate
+	echo 29491200 > streaming/uncompressed/u/720p/dwMaxBitRate
+	echo 1843200 > streaming/uncompressed/u/720p/dwMaxVideoFrameBufferSize
+	echo 5000000 > streaming/uncompressed/u/720p/dwDefaultFrameInterval
+	echo "5000000\n" > streaming/uncompressed/u/720p/dwFrameInterval
+
+	mkdir -p streaming/mjpeg/m/360p
+	echo "666666\n1000000\n5000000\n" > streaming/mjpeg/m/360p/dwFrameInterval
+
+	mkdir -p streaming/mjpeg/m/720p
+	echo 1280 > streaming/mjpeg/m/720p/wWidth
+	echo 720 > streaming/mjpeg/m/720p/wWidth
+	echo 29491200 > streaming/mjpeg/m/720p/dwMinBitRate
+	echo 29491200 > streaming/mjpeg/m/720p/dwMaxBitRate
+	echo 1843200 > streaming/mjpeg/m/720p/dwMaxVideoFrameBufferSize
+	echo 5000000 > streaming/mjpeg/m/720p/dwDefaultFrameInterval
+	echo "5000000\n" > streaming/mjpeg/m/720p/dwFrameInterval
+
+	echo 0x04 > /config/usb_gadget/g1/functions/uvc.0/streaming/mjpeg/m/bmaControls
+
+	mkdir -p streaming/h264/h/960p
+	echo 1920 > streaming/h264/h/960p/wWidth
+	echo 960 > streaming/h264/h/960p/wWidth
+	echo 40 > streaming/h264/h/960p/bLevelIDC
+	echo "333667\n" > streaming/h264/h/960p/dwFrameInterval
+
+	mkdir -p streaming/h264/h/1920p
+	echo "333667\n" > streaming/h264/h/1920p/dwFrameInterval
+
+	mkdir streaming/header/h
+	ln -s streaming/uncompressed/u streaming/header/h
+	ln -s streaming/mjpeg/m streaming/header/h
+	ln -s streaming/h264/h streaming/header/h
+	ln -s streaming/header/h streaming/class/fs/
+	ln -s streaming/header/h streaming/class/hs/
+	ln -s streaming/header/h streaming/class/ss/
+fi
