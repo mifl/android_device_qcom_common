@@ -65,8 +65,6 @@
 #define CRYPTFS_HW_WIPE_KEY_FAILED			-8
 #define CRYPTFS_HW_CREATE_KEY_FAILED			-7
 
-#define CRYPTFS_HW_ALGO_MODE_AES_XTS 			0x3
-
 enum cryptfs_hw_key_management_usage_type {
 	CRYPTFS_HW_KM_USAGE_DISK_ENCRYPTION		= 0x01,
 	CRYPTFS_HW_KM_USAGE_FILE_ENCRYPTION		= 0x02,
@@ -169,35 +167,6 @@ static int cryptfs_hw_wipe_key(enum cryptfs_hw_key_management_usage_type usage)
 		SLOGE("SUCCESS::ioctl call to wipe the encryption key for usage %d success with ret = %d\n",
 			usage, ret);
 	}
-	return ret;
-}
-
-int set_encdec_param(struct encdec_config_t config)
-{
-	int  qseecom_fd, ret = -1;
-	struct qseecom_encdec_conf_t param;
-	qseecom_fd = open("/dev/qseecom", O_RDWR);
-	if (qseecom_fd < 0)
-		return ret;
-	if (is_hw_disk_encryption(config.mode)) {
-		param.start_sector = config.start_sector;
-		param.fs_size = config.fs_size;
-		param.index = config.index;
-		param.mode = CRYPTFS_HW_ALGO_MODE_AES_XTS;
-		ret = ioctl(qseecom_fd, QSEECOM_IOCTL_SET_ENCDEC_INFO, &param);
-	}
-	return ret;
-}
-
-int set_ice_param(int flag)
-{
-	int  qseecom_fd, ret = -1;
-	struct qseecom_ice_data_t ice_data;
-	qseecom_fd = open("/dev/qseecom", O_RDWR);
-	if (qseecom_fd < 0)
-		return ret;
-	ice_data.flag = flag;
-	ret = ioctl(qseecom_fd, QSEECOM_IOCTL_SET_ICE_INFO, &ice_data);
 	return ret;
 }
 
