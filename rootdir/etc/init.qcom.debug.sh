@@ -29,7 +29,7 @@
 
 HERE=/vendor/bin
 source $HERE/init.qcom.debug-sdm660.sh
-source $HERE/init.qcom.debug-sdm670.sh
+source $HERE/init.qcom.debug-sdm710.sh
 enable_tracing_events()
 {
     # timer
@@ -141,7 +141,7 @@ enable_sdm845_dcc_config()
 {
     DCC_PATH="/sys/bus/platform/devices/10a2000.dcc_v2"
     soc_version=`cat /sys/devices/soc0/revision`
-    soc_version=${soc_version/./}
+    soc_version=${soc_version/.*/}
 
     if [ ! -d $DCC_PATH ]; then
         echo "DCC does not exist on this build."
@@ -160,7 +160,7 @@ enable_sdm845_dcc_config()
     echo 0x013E7E00 124 > $DCC_PATH/config
 
     #Use for address change between V1 vs V2
-    if [ "$soc_version" -eq 20 ]
+    if [ "$soc_version" -eq 2 ]
     then
         #V2
         echo 0x17D41920  > $DCC_PATH/config
@@ -1985,9 +1985,9 @@ case "$coresight_config" in
                 echo "Enabling STM/Debug events for SDM660"
                 enable_sdm660_debug
             ;;
-            "sdm670" | "qcs605")
-                echo "Enabling DCC/STM/Debug events for SDM670 and qcs605"
-                enable_sdm670_debug
+            "sdm710" | "qcs605")
+                echo "Enabling DCC/STM/Debug events for sdm710 and qcs605"
+                enable_sdm710_debug
                 setprop ro.dbg.coresight.stm_cfg_done 1
             ;;
             "sdm845")
