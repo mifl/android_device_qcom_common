@@ -329,6 +329,11 @@ else
         fi
     fi
 
+    #Enable oom_reaper
+    if [ -f /sys/module/lowmemorykiller/parameters/oom_reaper ]; then
+        echo 1 > /sys/module/lowmemorykiller/parameters/oom_reaper
+    fi
+
     configure_zram_parameters
 
     SWAP_ENABLE_THRESHOLD=1048576
@@ -1563,6 +1568,8 @@ case "$target" in
             platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
         fi
 
+        echo 0 > /proc/sys/kernel/sched_boost
+
         case "$soc_id" in
             "293" | "304" | "338" | "351")
 
@@ -1744,6 +1751,7 @@ case "$target" in
                 echo 4 > $cpubw/bw_hwmon/sample_ms
                 echo 34 > $cpubw/bw_hwmon/io_percent
                 echo 20 > $cpubw/bw_hwmon/hist_memory
+                echo 80 > $cpubw/bw_hwmon/down_thres
                 echo 0 > $cpubw/bw_hwmon/hyst_length
                 echo 0 > $cpubw/bw_hwmon/guard_band_mbps
                 echo 250 > $cpubw/bw_hwmon/up_scale
@@ -1803,6 +1811,9 @@ case "$target" in
             echo 85 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/hispeed_load
             # sched_load_boost as -6 is equivalent to target load as 85.
             echo -6 > /sys/devices/system/cpu/cpu0/sched_load_boost
+            echo -6 > /sys/devices/system/cpu/cpu1/sched_load_boost
+            echo -6 > /sys/devices/system/cpu/cpu2/sched_load_boost
+            echo -6 > /sys/devices/system/cpu/cpu3/sched_load_boost
 
             # configure governor settings for big cluster
             echo 1 > /sys/devices/system/cpu/cpu4/online
@@ -1813,6 +1824,9 @@ case "$target" in
             echo 85 > /sys/devices/system/cpu/cpu4/cpufreq/schedutil/hispeed_load
             # sched_load_boost as -6 is equivalent to target load as 85.
             echo -6 >  /sys/devices/system/cpu/cpu4/sched_load_boost
+            echo -6 > /sys/devices/system/cpu/cpu5/sched_load_boost
+            echo -6 > /sys/devices/system/cpu/cpu7/sched_load_boost
+            echo -6 > /sys/devices/system/cpu/cpu6/sched_load_boost
 
             echo 614400 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
             echo 1094400 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
@@ -1891,11 +1905,11 @@ case "$target" in
         fi
 
         case "$soc_id" in
-           "303" | "307" | "308" | "309" | "320" | "294" )
+           "303" | "307" | "308" | "309" | "320" )
 
                   # Start Host based Touch processing
                   case "$hw_platform" in
-                    "MTP" | "QRD" )
+                    "MTP" )
 			start_hbtp
                         ;;
                   esac
@@ -2192,8 +2206,14 @@ case "$target" in
                 #disable sched_boost
                 echo 0 > /proc/sys/kernel/sched_boost
 
+                # Disable L2-GDHS low power modes
+                echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-gdhs/idle_enabled
+                echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-gdhs/suspend_enabled
+                echo N > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/idle_enabled
+                echo N > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/suspend_enabled
+
                 # Enable low power modes
-                echo 1 > /sys/module/lpm_levels/parameters/sleep_disabled
+                echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
             ;;
         esac
     ;;
@@ -2984,6 +3004,9 @@ case "$target" in
 	echo 1574400 > /sys/devices/system/cpu/cpu4/cpufreq/schedutil/hispeed_freq
 	echo "0:1324800" > /sys/module/cpu_boost/parameters/input_boost_freq
 	echo 120 > /sys/module/cpu_boost/parameters/input_boost_ms
+
+        # Enable oom_reaper for sdm845
+        echo 1 > /sys/module/lowmemorykiller/parameters/oom_reaper
 
         # Enable bus-dcvs
         for cpubw in /sys/class/devfreq/*qcom,cpubw*
