@@ -40,6 +40,7 @@
 #include <sys/ioctl.h>
 #include <unistd.h>
 #include <linux/fs.h>
+#include <cutils/memory.h>
 #include "gpt-utils.h"
 #include "sparse_crc32.h"
 
@@ -204,7 +205,9 @@ static uint8_t *gpt_pentry_seek(const char *ptn_name,
                                 uint32_t pentry_size)
 {
     char *pentry_name;
-    unsigned len = strlen(ptn_name);
+    unsigned ptn_name_len = strlen(ptn_name);
+    unsigned name8_max_len =  MAX_GPT_NAME_SIZE / 2 - 1;
+    unsigned len = ptn_name_len < name8_max_len ? ptn_name_len : name8_max_len;
 
     for (pentry_name = (char *) (pentries_start + PARTITION_NAME_OFFSET);
          pentry_name < (char *) pentries_end; pentry_name += pentry_size) {

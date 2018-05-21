@@ -37,6 +37,7 @@
 #include <inttypes.h>
 #include <linux/qseecom.h>
 #include <linux/msm_ion.h>
+#include <sys/ioctl.h>
 
 /* Service IDs */
 #define SCM_SVC_SSD                 0x07
