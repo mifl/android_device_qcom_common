@@ -41,9 +41,9 @@
 #include "hardware.h"
 
 #if defined(__LP64__)
-#define QSEECOM_LIBRARY_PATH "/usr/lib64/libQSEEComAPI.so"
+#define QSEECOM_LIBRARY_PATH "/usr/lib64/libQseeComApi.so"
 #else
-#define QSEECOM_LIBRARY_PATH "/usr/lib/libQSEEComAPI.so"
+#define QSEECOM_LIBRARY_PATH "/usr/lib/libQseeComApi.so"
 #endif
 
 #define CMDLINE  "/proc/cmdline"
@@ -170,7 +170,7 @@ static int load_qseecom_library()
                 SLOGE("Error %s loading symbols for QSEECom APIs \n", error);
         }
     } else {
-        SLOGE("Could not load libQSEEComAPI.so \n");
+        SLOGE("Could not load libQseeComApi.so \n");
     }
 
     if(error)
