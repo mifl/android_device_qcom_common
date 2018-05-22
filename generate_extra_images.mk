@@ -445,7 +445,7 @@ define create_system_ubinize_config
   echo vol_type=dynamic >> "$(1)"
   echo vol_name=system >> "$(1)"
   # Reserve 5MB for pushing and syncing with adb
-  echo vol_size=191MiB >> "$(1)"
+  echo vol_size=210MiB >> "$(1)"
 endef
 
 define create_userdata_ubinize_config
@@ -462,7 +462,7 @@ define create_userdata_ubinize_config
   echo vol_id=1 >> "$(1)"
   echo vol_type=dynamic >> "$(1)"
   echo vol_name=cache >> "$(1)"
-  echo vol_size=89MiB >> "$(1)"
+  echo vol_size=57MiB >> "$(1)"
 
   echo \[persist_volume\] >> "$(1)"
   echo mode=ubi >> "$(1)"
