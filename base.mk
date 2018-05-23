@@ -922,8 +922,10 @@ PRODUCT_PACKAGES += $(IMS_EXT)
 PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 
 PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
+ifneq ($(TARGET_PRODUCT), qcs605)
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
+endif
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
@@ -1103,5 +1105,3 @@ else
   $(warning TODO: Need to replace legacy $(DEVICE_CONFIG_DIR)android_filesystem_config.h with config.fs)
   $(warning **********)
 endif
-
-PRODUCT_PACKAGES_DEBUG += sl4a
