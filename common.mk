@@ -6,10 +6,16 @@ $(call inherit-product, device/qcom/common/base.mk)
 $(call inherit-product-if-exists, $(QCPATH)/common/config/device-vendor.mk)
 
 ifeq ($(TARGET_HAS_LOW_RAM),true)
+ifeq ($(TARGET_PRODUCT),msm8909w)
+    PRODUCT_PROPERTY_OVERRIDES += \
+        persist.vendor.qcomsysd.enabled=1
+else
+    PRODUCT_PROPERTY_OVERRIDES += \
+        persist.vendor.qcomsysd.enabled=0
+endif
     PRODUCT_PROPERTY_OVERRIDES += \
         keyguard.no_require_sim=true \
-        ro.com.android.dataroaming=true \
-        persist.vendor.qcomsysd.enabled=0
+        ro.com.android.dataroaming=true
 
 $(call inherit-product, $(SRC_TARGET_DIR)/product/telephony.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/generic.mk)
