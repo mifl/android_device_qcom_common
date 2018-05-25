@@ -35,11 +35,6 @@ TARGET_USE_QTI_BT_STACK := true
 #List of targets that use video hw
 MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845 sdm710 qcs605 msmnile $(MSMSTEPPE)
 
-ifneq ($(PREBUILT_BOARD_PLATFORM_DIR), msm8937_32go)
-#List of targets that use video hw
-MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8953 msm8998 apq8098_latv sdm660 sdm845 sdm670 qcs605 msmnile
-endif
-
 #List of targets that use master side content protection
 MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845 apq8098_latv sdm710 qcs605 msmnile $(MSMSTEPPE)
 
