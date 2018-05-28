@@ -931,7 +931,7 @@ PRODUCT_PACKAGES += $(IMS_EXT)
 PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 
 PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
-ifneq ($(TARGET_PRODUCT), qcs605)
+ifneq ($(strip $(TARGET_USES_IOTCC_HEADLESS)),true)
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
 endif
