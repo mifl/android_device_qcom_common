@@ -311,6 +311,10 @@ if [ "$ProductName" == "msm8996" ]; then
       configure_zram_parameters
 
       configure_read_ahead_kb_values
+elif [ "$ProductName" == "msmnile" ]; then
+      # Enable ZRAM
+      configure_zram_parameters
+      configure_read_ahead_kb_values
 else
     arch_type=`uname -m`
     MemTotalStr=`cat /proc/meminfo | grep MemTotal`
@@ -352,6 +356,11 @@ else
         echo "14746,18432,22118,25805,40000,55000" > /sys/module/lowmemorykiller/parameters/minfree
         echo 55000 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
     else
+        # Set allocstall_threshold to 0 for both Go & non-go <=1GB targets
+        if [ $MemTotal -le 1048576 ]; then
+            echo 0 > /sys/module/vmpressure/parameters/allocstall_threshold
+        fi
+
         if [ $MemTotal -le 1048576 ] && [ "$low_ram" == "true" ]; then
             # Disable KLMK, ALMK, PPR & Core Control for Go devices
             echo 0 > /sys/module/lowmemorykiller/parameters/enable_lmk
@@ -359,6 +368,11 @@ else
             echo 0 > /sys/module/process_reclaim/parameters/enable_process_reclaim
             echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/disable
         else
+            # Disable Core Control, enable KLMK for non-go 8909
+            if [ "$ProductName" == "msm8909" ]; then
+                echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/disable
+                echo 1 > /sys/module/lowmemorykiller/parameters/enable_lmk
+            fi
             echo 50 > /sys/module/process_reclaim/parameters/pressure_min
             echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
             echo "15360,19200,23040,26880,34415,43737" > /sys/module/lowmemorykiller/parameters/minfree
@@ -370,9 +384,6 @@ else
     if [ -f /sys/module/lowmemorykiller/parameters/oom_reaper ]; then
         echo 1 > /sys/module/lowmemorykiller/parameters/oom_reaper
     fi
-
-    #Enable oom_reaper
-    echo 1 > /sys/module/lowmemorykiller/parameters/oom_reaper
 
     configure_zram_parameters
 
@@ -3001,7 +3012,7 @@ case "$target" in
                 "321")
                 # Start Host based Touch processing
                 case "$hw_platform" in
-                    "MTP" )
+		    "MTP" | "Surf" | "RCM" )
                           start_hbtp
                      ;;
                     "QRD" )
@@ -3223,6 +3234,23 @@ case "$target" in
 		echo 1600 > $llccbw/bw_hwmon/idle_mbps
 	    done
 
+	    for npubw in $device/*npu-npu-ddr-bw/devfreq/*npu-npu-ddr-bw
+	    do
+		echo 1 > /sys/devices/virtual/npu/msm_npu/pwr
+		echo "bw_hwmon" > $npubw/governor
+		echo 40 > $npubw/polling_interval
+		echo "1720 2929 4943 5931 6881 7980" > $npubw/bw_hwmon/mbps_zones
+		echo 4 > $npubw/bw_hwmon/sample_ms
+		echo 80 > $npubw/bw_hwmon/io_percent
+		echo 20 > $npubw/bw_hwmon/hist_memory
+		echo 10 > $npubw/bw_hwmon/hyst_length
+		echo 30 > $npubw/bw_hwmon/down_thres
+		echo 0 > $npubw/bw_hwmon/guard_band_mbps
+		echo 250 > $npubw/bw_hwmon/up_scale
+		echo 1600 > $npubw/bw_hwmon/idle_mbps
+		echo 0 > /sys/devices/virtual/npu/msm_npu/pwr
+	    done
+
 	    #Enable mem_latency governor for L3, LLCC, and DDR scaling
 	    for memlat in $device/*cpu*-lat/devfreq/*cpu*-lat
 	    do
@@ -3266,7 +3294,7 @@ case "$target" in
         "MTP" | "Surf" | "RCM" )
             # Start Host based Touch processing
             case "$platform_subtype_id" in
-                "0")
+                "0" | "1")
                     start_hbtp
                     ;;
             esac
@@ -3274,6 +3302,7 @@ case "$target" in
     esac
 
     echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
+    configure_memory_parameters
     ;;
 esac
 
@@ -3428,6 +3457,9 @@ case "$target" in
         echo 0-3 > /dev/cpuset/background/cpus
         echo 0-3 > /dev/cpuset/system-background/cpus
         echo 0 > /proc/sys/kernel/sched_boost
+
+        # Set Memory parameters
+        configure_memory_parameters
     ;;
 esac
 

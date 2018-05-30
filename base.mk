@@ -31,6 +31,7 @@ QSD8K_BOARD_PLATFORMS := qsd8k
 
 TARGET_USE_VENDOR_CAMERA_EXT := true
 TARGET_USE_QTI_BT_STACK := true
+BOARD_HAVE_QCOM_FM := true
 
 #List of targets that use video hw
 MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845 sdm710 qcs605 msmnile $(MSMSTEPPE)
@@ -807,6 +808,7 @@ PRODUCT_PACKAGES := \
     AlarmProvider \
     Bluetooth \
     BluetoothExt \
+    BATestApp \
     HidTestApp \
     Calculator \
     Calendar \
@@ -910,6 +912,9 @@ ifeq ($(strip $(TARGET_USES_NQ_NFC)),true)
 PRODUCT_PACKAGES += $(NQ_NFC)
 PRODUCT_BOOT_JARS += com.nxp.nfc.nq
 endif
+ifeq ($(strip $(BOARD_HAVE_QCOM_FM)),true)
+PRODUCT_BOOT_JARS += qcom.fmradio
+endif #BOARD_HAVE_QCOM_FM
 PRODUCT_PACKAGES += $(OPENCORE)
 PRODUCT_PACKAGES += $(PPP)
 PRODUCT_PACKAGES += $(PROTOBUF)
@@ -1046,7 +1051,7 @@ endif
 
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.vulkan.level-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.level-0.xml \
-    frameworks/native/data/etc/android.hardware.vulkan.version-1_0_3.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version-1_0_3.xml \
+    frameworks/native/data/etc/android.hardware.vulkan.version-1_1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version-1_1.xml \
     frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute-0.xml \
 
 # enable overlays to use our version of
@@ -1127,6 +1132,7 @@ else
   $(warning **********)
 endif
 
-PRODUCT_PACKAGES_DEBUG += sl4a
+#PRODUCT_PACKAGES_DEBUG += sl4a
 PRODUCT_PACKAGES += liboemaids_system
 PRODUCT_PACKAGES += liboemaids_vendor
+PRODUCT_PACKAGES += android.hardware.health@2.0-service
