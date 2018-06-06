@@ -61,11 +61,11 @@ service DiagDaemon /system/vendor/bin/diag_socket_log -f /sdcard/ipaddress.txt
     group root system log diag net_raw
 
 service qmmf_recorder_test /vendor/bin/qmmf_recorder_test -a -w 3840 -h 2160 -f 30 -t AVC
-    class late_start
+    class core
     user media
     group audio camera
     oneshot
     disabled
 
-on property:persist.qmmf.coldbootkpi=1
+on property:vendor.qmmf.boot.complete=1 && property:persist.qmmf.rectest.autostart=1
     enable qmmf_recorder_test
