@@ -86,6 +86,18 @@ function set_density_by_fb() {
         fi
     fi
 }
+
+# set Lilliput LCD density for ADP
+product=`getprop ro.build.product`
+
+case "$product" in
+        "msmnile_au")
+         setprop ro.sf.lcd_density 160
+         ;;
+        *)
+        ;;
+esac
+
 target=`getprop ro.board.platform`
 case "$target" in
     "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
@@ -230,11 +242,12 @@ case "$target" in
         # MSM8937 and MSM8940  variants supports OpenGLES 3.1
         # 196608 is decimal for 0x30000 to report version 3.0
         # 196609 is decimal for 0x30001 to report version 3.1
+        # 196610 is decimal for 0x30002 to report version 3.2
         case "$soc_hwid" in
-            294|295|296|297|298|313)
-                setprop ro.opengles.version 196609
+            294|295|296|297|298|313|353|354|363|364)
+                setprop ro.opengles.version 196610
                 ;;
-            303|307|308|309)
+            303|307|308|309|320)
                 # Vulkan is not supported for 8917 variants
                 setprop ro.opengles.version 196608
                 setprop persist.graphics.vulkan.disable true
@@ -300,8 +313,8 @@ case "$target" in
         esac
         ;;
     "sdm660")
-        if [ -f /firmware/verinfo/ver_info.txt ]; then
-            Meta_Build_ID=`cat /firmware/verinfo/ver_info.txt |
+        if [ -f /vendor/firmware_mnt/verinfo/ver_info.txt ]; then
+            Meta_Build_ID=`cat /vendor/firmware_mnt/verinfo/ver_info.txt |
                     sed -n 's/^[^:]*Meta_Build_ID[^:]*:[[:blank:]]*//p' |
                     sed 's/.*LA.\(.*\)/\1/g' | cut -d \- -f 1`
             # In SDM660 if meta version is greater than 2.1, need
@@ -342,9 +355,9 @@ baseband=`getprop ro.baseband`
 #enable atfwd daemon all targets except sda, apq, qcs
 case "$baseband" in
     "apq" | "sda" | "qcs" )
-        setprop persist.radio.atfwd.start false;;
+        setprop persist.vendor.radio.atfwd.start false;;
     *)
-        setprop persist.radio.atfwd.start true;;
+        setprop persist.vendor.radio.atfwd.start true;;
 esac
 
 #set default lcd density
