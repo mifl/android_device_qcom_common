@@ -260,12 +260,12 @@ def IncrementalOTA_VerifyEnd(info):
   deltaConfig = LoadFilesMap(info.target_zip, "RADIO/delta.conf")
   if deltaConfig != {}:
     print ('delta.conf found - continue with delta update')
-    if os.path.exists(deltaConfig['root'] + '/vendor/qcom/proprietary/qdma-dm-tools'):
-      print ('qdma-dm-tools found - using modem delta update')
-      sys.path.append(deltaConfig['root'] + '/vendor/qcom/proprietary/qdma-dm-tools')
+    if os.path.exists(deltaConfig['root'] + deltaConfig['qdmaToolsLocation']):
+      print ('qdmaTools found - using modem delta update')
+      sys.path.append(deltaConfig['root'] + deltaConfig['qdmaToolsLocation'])
       try:
         DiffGen = import_module('DiffGen')
-        print ('dynamically imported DiffGen from qdma-dm-tools')
+        print ('dynamically imported DiffGen from qdmaTools')
         global deltaUpdate
         deltaUpdate = True
         diff_files, err = DiffGen.GenerateDiff(common.OPTIONS, deltaConfig)
@@ -279,9 +279,9 @@ def IncrementalOTA_VerifyEnd(info):
         return
       except Exception as e:
         print (e)
-        raise AssertionError('could not dynamically import DiffGen from qdma-dm-tools - Update Aborted')
+        raise AssertionError('could not dynamically import DiffGen from qdmaTools - Update Aborted')
     else:
-      print ('qdma-dm-tools not found - continue to full update')
+      print ('qdmaTools not found - continue to full update')
   else:
     print ('delta.conf not found - continue with full update')
 
@@ -421,16 +421,16 @@ def IncrementalOTA_InstallEnd_MMC(info):
   global deltaConfig
   global DiffGen
   if deltaUpdate:
-    if os.path.exists(deltaConfig['root'] + '/vendor/qcom/proprietary/qdma-dm-tools'):
-      print ('qdma-dm-tools found - using modem delta update')
-      sys.path.append(deltaConfig['root'] + '/vendor/qcom/proprietary/qdma-dm-tools')
+    if os.path.exists(deltaConfig['root'] + deltaConfig['qdmaToolsLocation']):
+      print ('qdmaTools found - using modem delta update')
+      sys.path.append(deltaConfig['root'] + deltaConfig['qdmaToolsLocation'])
       try:
         DiffGen = import_module('DiffGen')
-        print ('dynamically imported DiffGen from qdma-dm-tools')
+        print ('dynamically imported DiffGen from qdmaTools')
         DiffGen.AddScriptCommands(info, deltaConfig)
       except Exception as e:
         print (e)
-        raise AssertionError('could not dynamically import DiffGen from qdma-dm-tools - Update Aborted')
+        raise AssertionError('could not dynamically import DiffGen from qdmaTools - Update Aborted')
   else:
     print ('deltaUpdate flag was not set - modem full update took place')
     OTA_InstallEnd(info)
@@ -442,16 +442,16 @@ def IncrementalOTA_InstallEnd_MTD(info):
   global deltaConfig
   global DiffGen
   if deltaUpdate:
-    if os.path.exists(deltaConfig['root'] + '/vendor/qcom/proprietary/qdma-dm-tools'):
-      print ('qdma-dm-tools found - using modem delta update')
-      sys.path.append(deltaConfig['root'] + '/vendor/qcom/proprietary/qdma-dm-tools')
+    if os.path.exists(deltaConfig['root'] + deltaConfig['qdmaToolsLocation']):
+      print ('qdmaTools found - using modem delta update')
+      sys.path.append(deltaConfig['root'] + deltaConfig['qdmaToolsLocation'])
       try:
         DiffGen = import_module('DiffGen')
-        print ('dynamically imported DiffGen from qdma-dm-tools')
+        print ('dynamically imported DiffGen from qdmaTools')
         DiffGen.AddScriptCommands(info, deltaConfig)
       except Exception as e:
         print (e)
-        raise AssertionError('could not dynamically import DiffGen from qdma-dm-tools - Update Aborted')
+        raise AssertionError('could not dynamically import DiffGen from qdmaTools - Update Aborted')
   else:
     print ('deltaUpdate flag was not set - modem full update took place')
     OTA_InstallEnd(info)
