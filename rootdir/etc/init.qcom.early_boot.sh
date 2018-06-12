@@ -28,6 +28,7 @@
 #
 
 export PATH=/vendor/bin
+
 # Set platform variables
 if [ -f /sys/devices/soc0/hw_platform ]; then
     soc_hwplatform=`cat /sys/devices/soc0/hw_platform` 2> /dev/null
@@ -78,13 +79,6 @@ function set_density_by_fb() {
         fi
     fi
 }
-target=`getprop ro.build.product`
-echo "$target"
-comp_device="msm8996_gvmq"
-     if [ "$target" == "$comp_device" ]; then
-         setprop ro.sf.lcd_density 160
-     fi
-
 target=`getprop ro.board.platform`
 case "$target" in
     "msm7630_surf" | "msm7630_1x" | "msm7630_fusion")
@@ -214,11 +208,6 @@ case "$target" in
             "ADP")
                 setprop ro.sf.lcd_density 160
                 setprop qemu.hw.mainkeys 0
-                setprop persist.graphics.vulkan.disable true
-                ;;
-            "Surf")
-                setprop ro.sf.lcd_density 160
-                setprop qemu.hw.mainkeys 0
                 ;;
             "SBC")
                 setprop ro.sf.lcd_density 240
@@ -234,12 +223,11 @@ case "$target" in
         # MSM8937 and MSM8940  variants supports OpenGLES 3.1
         # 196608 is decimal for 0x30000 to report version 3.0
         # 196609 is decimal for 0x30001 to report version 3.1
-        # 196610 is decimal for 0x30002 to report version 3.2
         case "$soc_hwid" in
             294|295|296|297|298|313)
-                setprop ro.opengles.version 196610
+                setprop ro.opengles.version 196609
                 ;;
-            303|307|308|309|320)
+            303|307|308|309)
                 # Vulkan is not supported for 8917 variants
                 setprop ro.opengles.version 196608
                 setprop persist.graphics.vulkan.disable true
@@ -268,12 +256,6 @@ case "$target" in
                 fi
                 ;;
         esac
-        case "$soc_hwid" in
-                "319") #apq8098_latv
-                echo "\n==Loading ALX module==\n"
-                insmod /system/lib/modules/alx.ko
-		;;
-	esac
         ;;
     "sdm845")
         case "$soc_hwplatform" in
@@ -288,94 +270,32 @@ case "$target" in
                 ;;
         esac
         ;;
-    "msm8953")
-        cap_ver=`cat /sys/devices/soc/1d00000.qcom,vidc/capability_version` 2> /dev/null
-        if [ $cap_ver -eq 1 ]; then
-            setprop media.msm8953.version 1
-        fi
-        ;;
-    "msm8952")
-      case "$soc_hwid" in
-              278)
-                  setprop media.msm8956hw 1
-                  if [ -f /sys/devices/soc0/platform_version ]; then
-                     hw_ver=`cat /sys/devices/soc.0/1d00000.qcom,vidc/version` 2> /dev/null
-                     if [ $hw_ver -eq 1 ]; then
-                         setprop media.msm8956.version 1
-                     fi
-                  fi
-                  ;;
-               266|277)
-                    setprop media.msm8956hw 1
-                    if [ -f /sys/devices/soc0/platform_version ]; then
-                        hw_ver=`cat /sys/devices/soc.0/1d00000.qcom,vidc/version` 2> /dev/null
-                        if [ $hw_ver -eq 1 ]; then
-                            setprop media.msm8956.version 1
-                        fi
-                    fi
-                    ;;
-      esac
-      ;;
 esac
 
+# In mpss AT version is greater than 3.1, need
+# to use the new vendor-ril which supports L+L feature
+# otherwise use the existing old one.
 if [ -f /firmware/verinfo/ver_info.txt ]; then
-    # In mpss AT version is greater than 3.1, need
-    # to use the new vendor-ril which supports L+L feature
-    # otherwise use the existing old one.
     modem=`cat /firmware/verinfo/ver_info.txt |
             sed -n 's/^[^:]*modem[^:]*:[[:blank:]]*//p' |
-            sed 's/.*MPSS.\(.*\)/\1/g' | cut -d \. -f 1`
-    if [ "$modem" = "AT" ]; then
-        version=`cat /firmware/verinfo/ver_info.txt |
-                sed -n 's/^[^:]*modem[^:]*:[[:blank:]]*//p' |
-                sed 's/.*AT.\(.*\)/\1/g' | cut -d \- -f 1`
-        if [ ! -z $version ]; then
-            zygote=`getprop ro.zygote`
-            case "$zygote" in
-                "zygote64_32")
-                    if [ "$version" \< "3.1" ]; then
-                        setprop vendor.rild.libpath "/vendor/lib64/libril-qc-qmi-1.so"
-                    else
-                        setprop vendor.rild.libpath "/vendor/lib64/libril-qc-hal-qmi.so"
-                    fi
-                    ;;
-                "zygote32")
-                    if [ "$version" \< "3.1" ]; then
-                        echo "legacy qmi load for TA less than 3.1"
-                        setprop vendor.rild.libpath "/vendor/lib/libril-qc-qmi-1.so"
-                    else
-                        setprop vendor.rild.libpath "/vendor/lib/libril-qc-hal-qmi.so"
-                    fi
-                    ;;
-            esac
+            sed 's/.*AT.\(.*\)/\1/g' | cut -d \- -f 1`
+    zygote=`getprop ro.zygote`
+    case "$zygote" in
+    "zygote64_32")
+        if [ "$modem" \< "3.1" ]; then
+            setprop vendor.rild.libpath "/vendor/lib64/libril-qc-qmi-1.so"
+        else
+            setprop vendor.rild.libpath "/vendor/lib64/libril-qc-hal-qmi.so"
         fi
-    # In mpss TA version is greater than 3.0, need
-    # to use the new vendor-ril which supports L+L feature
-    # otherwise use the existing old one.
-    elif [ "$modem" = "TA" ]; then
-        version=`cat /firmware/verinfo/ver_info.txt |
-                sed -n 's/^[^:]*modem[^:]*:[[:blank:]]*//p' |
-                sed 's/.*TA.\(.*\)/\1/g' | cut -d \- -f 1`
-        if [ ! -z $version ]; then
-            zygote=`getprop ro.zygote`
-            case "$zygote" in
-                "zygote64_32")
-                    if [ "$version" \< "3.0" ]; then
-                        setprop vendor.rild.libpath "/vendor/lib64/libril-qc-qmi-1.so"
-                    else
-                        setprop vendor.rild.libpath "/vendor/lib64/libril-qc-hal-qmi.so"
-                    fi
-                    ;;
-                "zygote32")
-                    if [ "$version" \< "3.0" ]; then
-                        setprop vendor.rild.libpath "/vendor/lib/libril-qc-qmi-1.so"
-                    else
-                        setprop vendor.rild.libpath "/vendor/lib/libril-qc-hal-qmi.so"
-                    fi
-                    ;;
-            esac
+        ;;
+    "zygote32")
+        if [ "$modem" \< "3.1" ]; then
+            setprop vendor.rild.libpath "/vendor/lib/libril-qc-qmi-1.so"
+        else
+            setprop vendor.rild.libpath "/vendor/lib/libril-qc-hal-qmi.so"
         fi
-    fi;
+        ;;
+    esac
 fi
 
 #set default lcd density

@@ -126,6 +126,9 @@ on boot
 
     setprop ro.telephony.call_ring.multiple false
 
+    #enable camera read sensors data
+    setprop persist.camera.gyro.disable 0
+
     #Remove SUID bit for iproute2 ip tool
     chmod 0755 /system/bin/ip
 
@@ -171,8 +174,8 @@ on boot
     chown wifi wifi /sys/class/net/bond0/bonding/queue_id
 
     # Allow access to emmc rawdump block partition and dload sysfs node
-    chown root system /dev/block/bootdevice/by-name/rawdump -p /dev/block/
-    chmod 0660 /dev/block/bootdevice/by-name/rawdump -p /dev/block/
+    chown root system /dev/block/bootdevice/by-name/rawdump
+    chmod 0660 /dev/block/bootdevice/by-name/rawdump
     chown root system /sys/kernel/dload/emmc_dload
     chmod 0660 /sys/kernel/dload/emmc_dload
     chown root system /dev/block/bootdevice/by-name/ramdump -p /dev/block/
@@ -188,10 +191,6 @@ on boot
     chown system system /sys/class/sensors/MPU6050-accel/poll_delay
     chown system system /sys/class/sensors/MPU6050-gyro/enable
     chown system system /sys/class/sensors/MPU6050-gyro/poll_delay
-    chown system system /sys/class/sensors/apds9930-light/enable
-    chown system system /sys/class/sensors/apds9930-light/poll_delay
-    chown system system /sys/class/sensors/apds9930-proximity/enable
-    chown system system /sys/class/sensors/apds9930-proximity/poll_delay
 
     # Create directory used for display
     mkdir /persist/display 0770 system graphics
@@ -235,7 +234,7 @@ on post-fs-data
     mkdir /data/misc/qvop 0771 system system
 
     #Create folder for mm-qcamera-daemon
-    mkdir /data/misc/camera 0770 system camera
+    mkdir /data/misc/camera 0770 camera camera
 
     mkdir /data/media 0770 media_rw media_rw
     chown media_rw media_rw /data/media
@@ -244,6 +243,7 @@ on post-fs-data
     mkdir /data/vendor/tombstones 0771 system system
 
     mkdir /data/vendor/ramdump 0771 root system
+    mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
     mkdir /data/vendor/bluetooth 0770 bluetooth bluetooth
     mkdir /data/vendor/ramdump/bluetooth 0770 bluetooth bluetooth
 
@@ -332,8 +332,8 @@ on post-fs-data
     #Create directory for hostapd
     mkdir /data/hostapd 0770 system wifi
 
-    # Create /data/time folder for time-services
-    mkdir /data/time/ 0700 system system
+    # Create /data/vendor/time folder for time-services
+    mkdir /data/vendor/time/ 0700 system system
 
     mkdir /data/vendor/audio/ 0770 media audio
 
@@ -453,6 +453,7 @@ on property:persist.sys.ssr.enable_ramdumps=0
     write /sys/module/subsystem_restart/parameters/enable_ramdumps 0
 
 on property:sys.boot_completed=1
+    exec u:r:qti_init_shell:s0 -- /vendor/bin/init.qcom.crashdata.sh
     write /dev/kmsg "Boot completed "
     #Reset read ahead for dm-0 and dm-1 to 512kb
     write /sys/block/dm-0/queue/read_ahead_kb 512
@@ -539,7 +540,6 @@ service rmt_storage /vendor/bin/rmt_storage
     user root
     shutdown critical
     ioprio rt 0
-    disabled
 
 service tftp_server /vendor/bin/tftp_server
    class core
@@ -586,10 +586,10 @@ service bt_logger /system/bin/bt_logger
    disabled
    oneshot
 
-service ftmd /system/bin/logwrapper /system/vendor/bin/ftmdaemon
+service ftmd /system/bin/logwrapper /system/bin/ftmdaemon
     class late_start
     user root
-    group bluetooth net_bt_admin misc diag net_bt
+    group bluetooth net_bt_admin misc net_bt_stack diag net_bt
     disabled
     oneshot
 
@@ -621,7 +621,7 @@ service ipacm-diag /system/vendor/bin/ipacm-diag
     class main
     user radio
     socket ipacm_log_file dgram 660 radio radio
-    group radio diag oem_2901
+    group radio diag
     disabled
 
 service ipacm /system/vendor/bin/ipacm
@@ -633,7 +633,7 @@ service ipacm /system/vendor/bin/ipacm
 service qti /system/vendor/bin/qti
     class main
     user radio
-    group radio oem_2901 diag usb net_admin
+    group radio net_raw diag usb net_admin
     disabled
 
 service sensors /vendor/bin/sensors.qcom
@@ -817,7 +817,6 @@ service cnss-daemon /system/vendor/bin/cnss-daemon -n -l
     class late_start
     user system
     group system inet net_admin wifi
-    capabilities NET_ADMIN
 
 on property:sys.shutdown.requested=*
     stop cnss-daemon
@@ -895,11 +894,6 @@ service sensor-sh /vendor/bin/init.qcom.sensors.sh
     user root
     oneshot
 
-service crashdata-sh /vendor/bin/init.qcom.crashdata.sh
-    class late_start
-    user root
-    oneshot
-
 service qcom-post-boot /vendor/bin/init.qcom.post_boot.sh
     class late_start
     user root
@@ -919,11 +913,7 @@ service wifi-crda /vendor/bin/init.crda.sh
    oneshot
 
 on property:sys.boot_completed=1
-    start per_mgr
     start qcom-post-boot
-    start rmt_storage
-    #enable camera read sensors data
-    setprop persist.camera.gyro.disable 0
 
 service qvop-daemon /vendor/bin/qvop-daemon
     class late_start
@@ -935,7 +925,7 @@ service atfwd /vendor/bin/ATFWD-daemon
     user system
     group system radio
 
-service hostapd_fst /vendor/bin/hostapd -dd -g /data/vendor/wifi/hostapd/global /data/misc/wifi/hostapd.conf
+service hostapd_fst /vendor/bin/hostapd -dd -g /data/vendor/wifi/hostapd/global /data/vendor/wifi/hostapd.conf
     class late_start
     user wifi
     group wifi inet keystore net_admin net_raw
@@ -1071,12 +1061,6 @@ service vendor.msm_irqbalance /vendor/bin/msm_irqbalance -f /system/vendor/etc/m
     group root
     disabled
 
-service vendor.msm_irqbal_lb /vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance_little_big.conf
-    class core
-    user root
-    group root
-    disabled
-
 service vendor.msm_irqbl_sdm630 /vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance_sdm630.conf
     class core
     user root
@@ -1156,9 +1140,3 @@ service seemp_healthd /vendor/bin/seemp_healthd
     class late_start
     user system
     group system
-
-service power_off_alarm /vendor/bin/power_off_alarm
-    class core
-    group system
-    disabled
-    oneshot

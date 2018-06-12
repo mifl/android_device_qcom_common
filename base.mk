@@ -140,12 +140,6 @@ TINY_ALSA_TEST_APPS += tinymix
 TINY_ALSA_TEST_APPS += tinypcminfo
 TINY_ALSA_TEST_APPS += cplay
 
-
-#IMG tools
-IMG_TOOLS := bro
-IMG_TOOLS += img2simg
-
-
 #AMPLOADER
 AMPLOADER := amploader
 
@@ -172,9 +166,6 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
 
 #C2DColorConvert
 C2DCC := libc2dcolorconvert
-
-#SidebandstreamHandle
-SBSH := libsidebandstreamhandle
 
 CHROMIUM := libwebviewchromium
 CHROMIUM += libwebviewchromium_loader
@@ -295,7 +286,6 @@ INIT += enable_swap.sh
 INIT += init.mdm.sh
 INIT += fstab.qcom
 INIT += init.qcom.sensors.sh
-INIT += init.qcom.crashdata.sh
 INIT += init.qcom.vendor.rc
 INIT += init.target.vendor.rc
 INIT += init.qti.fm.sh
@@ -467,7 +457,6 @@ LIBMEMTRACK += memtrack.msm8610
 LIBMEMTRACK += memtrack.apq8084
 LIBMEMTRACK += memtrack.mpq8092
 LIBMEMTRACK += memtrack.msm8996
-LIBMEMTRACK += memtrack.msm8996_gvmq
 LIBMEMTRACK += memtrack.msm8952
 LIBMEMTRACK += memtrack.msm8937
 LIBMEMTRACK += memtrack.msm8953
@@ -679,11 +668,6 @@ STMLOG := libstm-log
 
 #THERMAL_HAL
 THERMAL_HAL := thermal.msm8998
-THERMAL_HAL += thermal.sdm845
-THERMAL_HAL += thermal.sdm660
-THERMAL_HAL += thermal.msm8996
-THERMAL_HAL += thermal.msm8953
-THERMAL_HAL += thermal.msm8937
 
 #TSLIB_EXTERNAL
 TSLIB_EXTERNAL := corgi
@@ -774,6 +758,8 @@ PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
     AlarmProvider \
+    Bluetooth \
+    BluetoothExt \
     Calculator \
     Calendar \
     Camera \
@@ -808,12 +794,6 @@ PRODUCT_PACKAGES := \
     a4wpservice \
     wipowerservice
 
-ifeq ($(ENABLE_HYP),)
-PRODUCT_PACKAGES := \
-    Bluetooth \
-    BluetoothExt
-endif
-
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
 PRODUCT_PACKAGES += $(ANGLE)
@@ -821,14 +801,12 @@ PRODUCT_PACKAGES += $(APPOPS_POLICY)
 PRODUCT_PACKAGES += $(AUDIO_HARDWARE)
 PRODUCT_PACKAGES += $(AUDIO_POLICY)
 PRODUCT_PACKAGES += $(TINY_ALSA_TEST_APPS)
-PRODUCT_PACKAGES += $(IMG_TOOLS)
 PRODUCT_PACKAGES += $(AMPLOADER)
 PRODUCT_PACKAGES += $(APPS)
 PRODUCT_PACKAGES += $(BRCTL)
 PRODUCT_PACKAGES += $(BSON)
 PRODUCT_PACKAGES += $(BT)
 PRODUCT_PACKAGES += $(C2DCC)
-PRODUCT_PACKAGES += $(SBSH)
 PRODUCT_PACKAGES += $(CHROMIUM)
 PRODUCT_PACKAGES += $(CIMAX)
 PRODUCT_PACKAGES += $(CM)
@@ -912,7 +890,6 @@ PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 
 PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
-PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
 
 # Live Wallpapers
 PRODUCT_PACKAGES += \
@@ -1058,11 +1035,6 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
     ro.adb.secure=1
 endif
 
-#Camera QC extends API
-ifeq ($(strip $(TARGET_USES_QTIC_EXTENSION)),true)
-PRODUCT_BOOT_JARS += com.qualcomm.qti.camera
-endif
-
 # Preloading QPerformance jar to ensure faster perflocks in Boost Framework
 PRODUCT_BOOT_JARS += QPerformance
 
@@ -1091,6 +1063,3 @@ else
   $(warning TODO: Need to replace legacy $(DEVICE_CONFIG_DIR)android_filesystem_config.h with config.fs)
   $(warning **********)
 endif
-
-PRODUCT_PACKAGES += liboemaids_system
-PRODUCT_PACKAGES += liboemaids_vendor
