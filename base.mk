@@ -179,19 +179,23 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/qcom/common
 #C2DColorConvert
 C2DCC := libc2dcolorconvert
 
+ifneq ($(strip $(TARGET_USES_IOTCC_HEADLESS)),true)
 CHROMIUM := libwebviewchromium
 CHROMIUM += libwebviewchromium_loader
 CHROMIUM += libwebviewchromium_plat_support
+endif
 
 #CIMAX
 CIMAX := libcimax_spi
 
+ifneq ($(strip $(TARGET_USES_IOTCC_HEADLESS)),true)
 #CM
 CM :=CMFileManager
 #CM += Trebuchet
 
 #Default Launcher
 DELAUN := Launcher3
+endif
 
 #CONNECTIVITY
 CONNECTIVITY := libcnefeatureconfig
@@ -785,6 +789,10 @@ WIGIG += libwigig_pciaccess
 FD_LEAK := libc_leak_detector
 
 PRODUCT_PACKAGES := \
+    Camera
+
+ifneq ($(strip $(TARGET_USES_IOTCC_HEADLESS)),true)
+PRODUCT_PACKAGES += \
     AccountAndSyncSettings \
     DeskClock \
     AlarmProvider \
@@ -823,6 +831,7 @@ PRODUCT_PACKAGES := \
     SnapdragonMusic \
     a4wpservice \
     wipowerservice
+endif
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
@@ -922,7 +931,7 @@ PRODUCT_PACKAGES += $(IMS_EXT)
 PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 
 PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
-ifneq ($(TARGET_PRODUCT), qcs605)
+ifneq ($(strip $(TARGET_USES_IOTCC_HEADLESS)),true)
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
 endif
@@ -953,6 +962,11 @@ PRODUCT_PACKAGES += tcmiface
 
 # healthd libaray expanded for mode charger
 PRODUCT_PACKAGES += libhealthd.msm
+
+#Android net
+PRODUCT_PACKAGES += \
+   libandroid_net \
+   libandroid_net_32
 
 #intialise PRODUCT_PACKAGES_DEBUG list for debug modules
 PRODUCT_PACKAGES_DEBUG := init.qcom.testscripts.sh
