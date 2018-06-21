@@ -50,6 +50,8 @@ $(PERSIST_MOUNT_POINT):
 	@echo "Creating $(PERSIST_MOUNT_POINT)"
 #	@ln -sf /mnt/vendor/persist $(TARGET_ROOT_OUT)/persist
 
+$(INSTALLED_KERNEL_TARGET) : $(FIRMWARE_MOUNT_POINT) $(BT_FIRMWARE_MOUNT_POINT) $(DSP_MOUNT_POINT) $(PERSIST_MOUNT_POINT)
+
 #----------------------------------------------------------------------
 # Generate secure boot image
 #----------------------------------------------------------------------
