@@ -102,10 +102,11 @@ if [ "$usb_config" == "" ]; then #USB persist config not set, select default con
 		      ;;
 	              "msm8937")
 			    if [ -d /config/usb_gadget ]; then
-				       setprop persist.vendor.usb.config diag,adb
+				       setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,adb
 			    else
 			               case "$soc_id" in
 				               "313" | "320")
+						  echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
 				                  setprop persist.vendor.usb.config diag,serial_smd,rmnet_ipa,adb
 				               ;;
 				               *)
@@ -113,9 +114,6 @@ if [ "$usb_config" == "" ]; then #USB persist config not set, select default con
 				               ;;
 			               esac
 			    fi
-		      ;;
-	              "msm8952")
-		          setprop persist.vendor.usb.config diag,serial_smd,rmnet_ipa,adb
 		      ;;
 	              "msm8953")
 			      if [ -d /config/usb_gadget ]; then
@@ -146,6 +144,17 @@ if [ "$usb_config" == "" ]; then #USB persist config not set, select default con
       fi
 fi
 
+# set device mode notification to USB driver for SA8150 Auto ADP
+product=`getprop ro.build.product`
+
+case "$product" in
+	"msmnile_au")
+	echo peripheral > /sys/bus/platform/devices/a600000.ssusb/mode
+         ;;
+	*)
+	;;
+esac
+
 # check configfs is mounted or not
 if [ -d /config/usb_gadget ]; then
 	# Chip-serial is used for unique MSM identification in Product string
@@ -161,24 +170,6 @@ if [ -d /config/usb_gadget ]; then
 		serialno=1234567
 		echo $serialno > /config/usb_gadget/g1/strings/0x409/serialnumber
 	fi
-else
-        #
-        # Do target specific things
-        #
-        case "$target" in
-             "msm8996" | "msm8953")
-                echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
-                echo 131072 > /sys/module/g_android/parameters/mtp_tx_req_len
-                echo 131072 > /sys/module/g_android/parameters/mtp_rx_req_len
-             ;;
-             "msm8937")
-                case "$soc_id" in
-                      "313" | "320")
-                         echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
-                      ;;
-                esac
-             ;;
-        esac
 fi
 
 #
@@ -192,7 +183,7 @@ fi
 # enable rps cpus on msm8937 target
 setprop vendor.usb.rps_mask 0
 case "$soc_id" in
-	"294" | "295")
+	"294" | "295" | "353" | "354")
 		setprop vendor.usb.rps_mask 40
 	;;
 esac
