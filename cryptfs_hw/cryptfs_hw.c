@@ -29,7 +29,6 @@
 #include <cryptfs_hw.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/limits.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -42,11 +41,14 @@
 #include "hardware.h"
 
 #if defined(__LP64__)
-#define QSEECOM_LIBRARY_PATH "/vendor/lib64/libQSEEComAPI.so"
+#define QSEECOM_LIBRARY_PATH "/usr/lib64/libQseeComApi.so"
 #else
-#define QSEECOM_LIBRARY_PATH "/vendor/lib/libQSEEComAPI.so"
+#define QSEECOM_LIBRARY_PATH "/usr/lib/libQseeComApi.so"
 #endif
 
+#define CMDLINE  "/proc/cmdline"
+#define EMMC_DEV "sdhci"
+#define UFS_DEV  "ufshc"
 
 // When device comes up or when user tries to change the password, user can
 // try wrong password upto a certain number of times. If user enters wrong
@@ -168,7 +170,7 @@ static int load_qseecom_library()
                 SLOGE("Error %s loading symbols for QSEECom APIs \n", error);
         }
     } else {
-        SLOGE("Could not load libQSEEComAPI.so \n");
+        SLOGE("Could not load libQseeComApi.so \n");
     }
 
     if(error)
@@ -229,22 +231,39 @@ unsigned int is_hw_disk_encryption(const char* encryption_mode)
 
 int is_ice_enabled(void)
 {
-  char prop_storage[PATH_MAX];
-  int storage_type = 0;
-  int fd;
+    char prop_storage[PATH_MAX];
+    int storage_type = 0;
+    int ret,cmdline_fd;
+    char cmdline_buf[1024];
 
-  if (property_get("ro.boot.bootdevice", prop_storage, "")) {
-    if (strstr(prop_storage, "ufs")) {
-      /* All UFS based devices has ICE in it. So we dont need
-       * to check if corresponding device exists or not
-       */
-      storage_type = QCOM_ICE_STORAGE_UFS;
-    } else if (strstr(prop_storage, "sdhc")) {
-      if (access("/dev/icesdcc", F_OK) != -1)
-        storage_type = QCOM_ICE_STORAGE_SDCC;
+    cmdline_fd = open(CMDLINE, O_RDONLY | O_CLOEXEC);
+    if (cmdline_fd < 0) {
+        SLOGE("Error unable to open the file /proc/cmdnline\n");
+        return -1;
     }
-  }
-  return storage_type;
+
+    ret = read(cmdline_fd, cmdline_buf, sizeof(cmdline_buf));
+    if(ret < 0) {
+        LOGE("Error reading the file /proc/cmdline\n");
+        return -1;
+    }
+    cmdline_buf[ret - 1] = '\0';
+
+    if(strstr(cmdline_buf, EMMC_DEV)) {
+        SLOGD("RPMB partion exists on EMMC device\n");
+        if (access("/dev/icesdcc", F_OK) != -1)
+            storage_type = QCOM_ICE_STORAGE_SDCC;
+    }
+
+    if(strstr(cmdline_buf, UFS_DEV)) {
+        /* All UFS based devices has ICE in it. So we dont need
+         * to check if corresponding device exists or not
+         */
+        SLOGD("RPMB partion exists on UFS device\n");
+        storage_type = QCOM_ICE_STORAGE_UFS;
+    }
+
+    return storage_type;
 }
 
 int clear_hw_device_encryption_key()
@@ -266,24 +285,4 @@ static int get_keymaster_version()
     }
 
     return mod->module_api_version;
-}
-
-int should_use_keymaster()
-{
-    /* HW FDE key would be tied to keymaster only if:
-     * New Keymaster is available
-     * keymaster partition exists on the device
-     */
-    int rc = 0;
-    if (get_keymaster_version() != KEYMASTER_MODULE_API_VERSION_1_0) {
-        SLOGI("Keymaster version is not 1.0");
-        return rc;
-    }
-
-    if (access(KEYMASTER_PARTITION_NAME, F_OK) == -1) {
-        SLOGI("Keymaster partition does not exists");
-        return rc;
-    }
-
-    return 1;
 }
