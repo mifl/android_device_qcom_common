@@ -121,7 +121,7 @@ case "$usb_config" in
           ;;
           *)
 	  case "$baseband" in
-	      "apq" | "qcs")
+	      "apq" | "qcs" | "sxr")
 	          setprop persist.sys.usb.config diag,adb
 	      ;;
 	      *)
