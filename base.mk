@@ -201,9 +201,6 @@ CM :=CMFileManager
 #CM += Trebuchet
 endif
 
-#Default Launcher
-DELAUN := Launcher3
-
 #CONNECTIVITY
 CONNECTIVITY := libcnefeatureconfig
 CONNECTIVITY += services-ext
@@ -244,6 +241,7 @@ FM := qcom.fmradio
 FM += libqcomfm_jni
 FM += libfmjni
 FM += fm_helium
+FM += ftm_fm_lib
 FM += libfm-hci
 
 #GPS
@@ -620,6 +618,10 @@ MM_AUDIO += libstagefright_soft_flacdec
 MM_CORE := libmm-omxcore
 MM_CORE += libOmxCore
 
+#WFD
+MM_WFD := libwfdaac
+
+
 #MM_VIDEO
 MM_VIDEO := ast-mm-vdec-omx-test
 MM_VIDEO += beat
@@ -658,9 +660,8 @@ NQ_NFC += nqnfcse_access.xml
 NQ_NFC += Tag
 NQ_NFC += nqnfcinfo
 NQ_NFC += com.android.nfc_extras
-NQ_NFC += vendor.nxp.hardware.nfc@1.0-impl
-NQ_NFC += android.hardware.nfc@1.0-impl
-NQ_NFC += vendor.nxp.hardware.nfc@1.0-service
+NQ_NFC += vendor.nxp.hardware.nfc@1.1-service
+NQ_NFC += nfc_nci.nqx.default.hw
 PRODUCT_PROPERTY_OVERRIDES += ro.hardware.nfc_nci=nqx.default
 
 #OPENCORE
@@ -853,6 +854,18 @@ PRODUCT_PACKAGES := \
     Mms \
     QtiDialer
 
+ifeq ($(TARGET_HAS_LOW_RAM),true)
+    DELAUN := Launcher3Go
+else
+    # Live Wallpapers
+    PRODUCT_PACKAGES += \
+            LiveWallpapers \
+            LiveWallpapersPicker \
+            VisualizationWallpapers
+
+    DELAUN := Launcher3
+endif
+
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
 PRODUCT_PACKAGES += $(ANGLE)
@@ -916,6 +929,7 @@ PRODUCT_PACKAGES += $(LOC_API)
 PRODUCT_PACKAGES += $(MEDIA_PROFILES)
 PRODUCT_PACKAGES += $(MM_AUDIO)
 PRODUCT_PACKAGES += $(MM_CORE)
+PRODUCT_PACKAGES += $(MM_WFD)
 PRODUCT_PACKAGES += $(MM_VIDEO)
 ifeq ($(strip $(TARGET_USES_NQ_NFC)),true)
 PRODUCT_PACKAGES += $(NQ_NFC)
@@ -954,15 +968,13 @@ PRODUCT_PACKAGES += $(IMS_EXT)
 PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 
 PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
+ifneq ($(strip $(TARGET_HAS_LOW_RAM)),true)
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
-PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
-
-# Live Wallpapers
-PRODUCT_PACKAGES += \
-        LiveWallpapers \
-        LiveWallpapersPicker \
-        VisualizationWallpapers \
-        librs_jni
+endif
+PRODUCT_PACKAGES += android.hardware.drm@1.1-service.widevine
+PRODUCT_PACKAGES += android.hardware.drm@1.1-service.clearkey
+PRODUCT_PACKAGES += move_widevine_data.sh
+PRODUCT_PACKAGES += librs_jni
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
@@ -1115,9 +1127,12 @@ endif
 # Preloading QPerformance jar to ensure faster perflocks in Boost Framework
 PRODUCT_BOOT_JARS += QPerformance
 
+# Preloading UxPerformance jar to ensure faster UX invoke in Boost Framework
+PRODUCT_BOOT_JARS += UxPerformance
+
 # OEM Unlock reporting
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    ro.oem_unlock_supported=true
+    ro.oem_unlock_supported=1
 
 ifeq ($(TARGET_USES_QCOM_BSP_ATEL),true)
     PRODUCT_PROPERTY_OVERRIDES += persist.radio.multisim.config=dsds
@@ -1141,7 +1156,14 @@ else
   $(warning **********)
 endif
 
-#PRODUCT_PACKAGES_DEBUG += sl4a
+ifeq ($(TARGET_HAS_LOW_RAM),true)
+    PRODUCT_PROPERTY_OVERRIDES += \
+        persist.vendor.qcomsysd.enabled=0
+else
+    PRODUCT_PROPERTY_OVERRIDES += \
+        persist.vendor.qcomsysd.enabled=1
+endif
+
 PRODUCT_PACKAGES += liboemaids_system
 PRODUCT_PACKAGES += liboemaids_vendor
 PRODUCT_PACKAGES += android.hardware.health@2.0-service
