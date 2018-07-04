@@ -272,7 +272,6 @@ case "$target" in
                 setprop vendor.display.lcd_density 560
                 if [ ! -e /dev/kgsl-3d0 ]; then
                     setprop persist.sys.force_sw_gles 1
-                    setprop sdm.idle_time 0
                     setprop vendor.display.idle_time 0
                 else
                     setprop persist.sys.force_sw_gles 0
@@ -293,7 +292,6 @@ case "$target" in
 
                 if [ ! -e /dev/kgsl-3d0 ]; then
                     setprop persist.sys.force_sw_gles 1
-                    setprop sdm.idle_time 0
                     setprop vendor.display.idle_time 0
                 else
                     setprop persist.sys.force_sw_gles 0
@@ -313,33 +311,6 @@ case "$target" in
                 fi
                 ;;
         esac
-        ;;
-    "sdm660")
-        if [ -f /vendor/firmware_mnt/verinfo/ver_info.txt ]; then
-            Meta_Build_ID=`cat /vendor/firmware_mnt/verinfo/ver_info.txt |
-                    sed -n 's/^[^:]*Meta_Build_ID[^:]*:[[:blank:]]*//p' |
-                    sed 's/.*LA.\(.*\)/\1/g' | cut -d \- -f 1`
-            # In SDM660 if meta version is greater than 2.1, need
-            # to use the new vendor-ril which supports L+L feature
-            # otherwise use the existing old one.
-            product=`getprop ro.product.device`
-            case "$product" in
-            "sdm660_64")
-                if [ "$Meta_Build_ID" \< "2.1" ]; then
-                    setprop vendor.rild.libpath "/vendor/lib64/libril-qc-qmi-1.so"
-                else
-                    setprop vendor.rild.libpath "/vendor/lib64/libril-qc-hal-qmi.so"
-                fi
-                ;;
-            "sdm660_32")
-                if [ "$Meta_Build_ID" \< "2.1" ]; then
-                    setprop vendor.rild.libpath "/vendor/lib/libril-qc-qmi-1.so"
-                else
-                    setprop vendor.rild.libpath "/vendor/lib/libril-qc-hal-qmi.so"
-                fi
-                ;;
-            esac
-        fi
         ;;
     "sdm710" | "msmpeafowl")
         case "$soc_hwplatform" in
@@ -431,14 +402,11 @@ then
     file=/sys/class/graphics/fb0/mdp/caps
     if [ -f "$file" ]
     then
-        setprop debug.gralloc.gfx_ubwc_disable 1
         setprop vendor.gralloc.disable_ubwc 1
         cat $file | while read line; do
           case "$line" in
                     *"ubwc"*)
-                    setprop debug.gralloc.enable_fb_ubwc 1
                     setprop vendor.gralloc.enable_fb_ubwc 1
-                    setprop debug.gralloc.gfx_ubwc_disable 0
                     setprop vendor.gralloc.disable_ubwc 0
                 esac
         done

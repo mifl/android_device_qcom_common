@@ -142,7 +142,7 @@ on boot
     mkdir /persist/misc 0770 system system
     mkdir /persist/alarm 0770 system system
     mkdir /persist/time 0770 system system
-    mkdir /persist/secnvm 0770 system system
+    mkdir /mnt/vendor/persist/secnvm 0770 system system
 
     #Create NETMGR daemon socket area
     mkdir /dev/socket/netmgr 0750 radio radio
@@ -231,6 +231,9 @@ on boot
 
     # Create vpp directory
     mkdir /mnt/vendor/persist/vpp 0770 media media
+
+    # Create hvdcp_opti directory
+    mkdir /mnt/vendor/persist/hvdcp_opti 0770 root system
 
 # msm specific files that need to be created on /data
 on post-fs-data
@@ -422,8 +425,8 @@ on post-fs-data
     mkdir /data/vendor/qti-logkit/logdata/ 2750 system shell
 
     #Create SWAP related dirs
-    mkdir /data/system/swap 0770 root system
-    chmod 2770 /data/system/swap
+    mkdir /data/vendor/swap 0770 root system
+    chmod 2770 /data/vendor/swap
 
     # set aggressive read ahead for dm-0 and dm-1 during boot up
     write /sys/block/dm-0/queue/read_ahead_kb 2048
@@ -455,6 +458,13 @@ service qcomsysd /system/vendor/bin/qcom-system-daemon
     class main
     user root
     group root diag oem_2901
+    disabled
+
+on property:persist.vendor.qcomsysd.enabled=1
+    enable qcomsysd
+
+on property:persist.vendor.qcomsysd.enabled=0
+    stop qcomsysd
 
 service vendor.ssr_setup /system/vendor/bin/ssr_setup
     oneshot
@@ -558,7 +568,6 @@ service qcom-c_main-sh /vendor/bin/init.class_main.sh
 on property:vold.decrypt=trigger_restart_framework
     start qcom-c_main-sh
     start wcnss-service
-    start cnss_diag
 
 on property:persist.env.fastdorm.enabled=true
     setprop persist.radio.data_no_toggle 1
@@ -635,7 +644,7 @@ service ftmd /system/bin/logwrapper /system/bin/ftmdaemon
     disabled
     oneshot
 
-service port-bridge /system/vendor/bin/port-bridge
+service vendor.port-bridge /system/vendor/bin/port-bridge
     class main
     user radio
     group radio system inet
@@ -649,13 +658,13 @@ service qmiproxy /system/bin/qmiproxy
     disabled
 
 # QMUX must be in multiple groups to support external process connections
-service qmuxd /system/vendor/bin/qmuxd
+service vendor.qmuxd /system/vendor/bin/qmuxd
     class main
     user root
     group radio audio bluetooth gps nfc diag
     disabled
 
-service netmgrd /system/vendor/bin/netmgrd
+service vendor.netmgrd /system/vendor/bin/netmgrd
     class main
     disabled
 
@@ -698,7 +707,7 @@ service vendor.sensors.qti /vendor/bin/sensors.qti
 
 on property:ro.vendor.use_data_netmgrd=false
     # netmgr not supported on specific target
-    stop netmgrd
+    stop vendor.netmgrd
 
 # Adjust socket buffer to enlarge TCP receive window for high bandwidth
 # but only if ro.data.large_tcp_window_size property is set.
@@ -761,6 +770,7 @@ on property:netd.fstman.start=false
     stop fstman
 
 service wigighalsvc /vendor/bin/wigighalsvc
+    interface vendor.qti.hardware.wigig1.supptunnel@1.0::ISuppTunnelProvider default
     class hal
     user system
     group wifi
@@ -769,17 +779,12 @@ service wigighalsvc /vendor/bin/wigighalsvc
     disabled
 
 service wigignpt /vendor/bin/wigignpt
+    interface vendor.qti.hardware.wigig.netperftuner@1.0::INetPerfTuner default
     class hal
     socket wigignpt stream 660 system wifi
     user system
     group wifi net_admin
     disabled
-
-on property:persist.vendor.wigig.enable=1
-    start wigighalsvc
-
-on property:persist.vendor.wigig.npt.enable=1
-    start wigignpt
 
 service dhcpcd_wlan0 /system/bin/dhcpcd -ABKLG
     class late_start
@@ -840,14 +845,8 @@ service wifi_ftmd /system/vendor/bin/wifi_ftmd
     disabled
     oneshot
 
-on property:wifi.ftmd.load=true
+on property:vendor.wifi.ftmd.load=true
     insmod /system/lib/modules/pronto/pronto_wlan.ko con_mode=5
-
-service cnss_diag /system/vendor/bin/cnss_diag -q -f
-    class main
-    user system
-    group system wifi inet net_admin sdcard_rw media_rw diag
-    oneshot
 
 service cnss-daemon /system/vendor/bin/cnss-daemon -n -l
     class late_start
@@ -855,7 +854,7 @@ service cnss-daemon /system/vendor/bin/cnss-daemon -n -l
     group system inet net_admin wifi
     capabilities NET_ADMIN
 
-on property:sys.shutdown.requested=*
+on property:sys.powerctl=*
     stop cnss-daemon
 
 service dhcpcd_bt-pan /system/bin/dhcpcd -BKLG
@@ -953,7 +952,7 @@ on property:sys.boot_completed=1
     start qcom-post-boot
     start qti-testscripts
 
-on property:ro.runtime.mbn_copy_completed=1
+on property:ro.vendor.ril.mbn_copy_completed=1
     write /data/vendor/radio/copy_complete 1
 
 service qvop-daemon /vendor/bin/qvop-daemon
@@ -1152,10 +1151,10 @@ service time_daemon /system/vendor/bin/time_daemon
     user root
     group root
 
-service qdmastatsd /system/vendor/bin/qdmastatsd
+service vendor.qdmastatsd /system/vendor/bin/qdmastatsd
     class late_start
     user system
-    group readproc system net_bw_stats radio
+    group readproc system net_bw_stats radio rfs_shared
 
 service vendor.vppservice /vendor/bin/vppservice
     class main
