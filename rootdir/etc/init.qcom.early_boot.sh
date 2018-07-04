@@ -326,10 +326,10 @@ case "$target" in
                  vm_err_restore=1
             fi
             set +e
-            vm_system_partition="$(grep -o "vm_system=/dev/mmcblk[0-9a-z]*" /proc/cmdline)"
+            vm_system_partition="$(grep -o "vm_system=/dev/[0-9a-z]*" /proc/cmdline)"
             vm_system_partition="${vm_system_partition/vm_system=\/dev\//}"
             if [ -z "$vm_system_partition" ]; then
-                vm_system_partition=mmcblk0p14
+                vm_system_partition=sda7
                 log -t BOOT -p i "VM use default $vm_system_partition"
             fi
             echo $vm_system_partition > /sys/vservices/server-sessions/microvisor:server.linux_mlvm/core:0/create_service
@@ -339,7 +339,7 @@ case "$target" in
             vm_retry_count=0
             log -t BOOT -p i "VM ret '$vm_ret' '$-'"
             while [ $vm_ret != 0 ]; do
-                echo 1 > /sys/vservices/server-sessions/microvisor:server.mlvm/${vm_system_partition}:1/start
+                echo 1 > /sys/vservices/server-sessions/microvisor:server.linux_mlvm/${vm_system_partition}:1/start
                 vm_ret=$?
                 ((vm_retry_count++))
                 if [ $vm_retry_count == 20 ]; then
