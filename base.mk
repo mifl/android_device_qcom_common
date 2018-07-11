@@ -24,6 +24,7 @@ QCOM_BOARD_PLATFORMS += sdm660
 QCOM_BOARD_PLATFORMS += sdm845
 QCOM_BOARD_PLATFORMS += msmnile
 QCOM_BOARD_PLATFORMS += sdm710
+QCOM_BOARD_PLATFORMS += msmnile_au
 QCOM_BOARD_PLATFORMS += qcs605
 QCOM_BOARD_PLATFORMS += $(MSMSTEPPE)
 
@@ -194,12 +195,11 @@ CHROMIUM += libwebviewchromium_plat_support
 #CIMAX
 CIMAX := libcimax_spi
 
+ifneq ($(TARGET_HAS_LOW_RAM),true)
 #CM
 CM :=CMFileManager
 #CM += Trebuchet
-
-#Default Launcher
-DELAUN := Launcher3
+endif
 
 #CONNECTIVITY
 CONNECTIVITY := libcnefeatureconfig
@@ -241,6 +241,7 @@ FM := qcom.fmradio
 FM += libqcomfm_jni
 FM += libfmjni
 FM += fm_helium
+FM += ftm_fm_lib
 FM += libfm-hci
 
 #GPS
@@ -617,6 +618,10 @@ MM_AUDIO += libstagefright_soft_flacdec
 MM_CORE := libmm-omxcore
 MM_CORE += libOmxCore
 
+#WFD
+MM_WFD := libwfdaac
+
+
 #MM_VIDEO
 MM_VIDEO := ast-mm-vdec-omx-test
 MM_VIDEO += beat
@@ -635,6 +640,7 @@ MM_VIDEO += mm-venc-omx-test720p
 MM_VIDEO += mm-video-driver-test
 MM_VIDEO += mm-video-encdrv-test
 MM_VIDEO += ExoplayerDemo
+MM_VIDEO += libaacwrapper
 
 #NQ_NFC
 NQ_NFC := NQNfcNci
@@ -654,9 +660,8 @@ NQ_NFC += nqnfcse_access.xml
 NQ_NFC += Tag
 NQ_NFC += nqnfcinfo
 NQ_NFC += com.android.nfc_extras
-NQ_NFC += vendor.nxp.hardware.nfc@1.0-impl
-NQ_NFC += android.hardware.nfc@1.0-impl
-NQ_NFC += vendor.nxp.hardware.nfc@1.0-service
+NQ_NFC += vendor.nxp.hardware.nfc@1.1-service
+NQ_NFC += nfc_nci.nqx.default.hw
 PRODUCT_PROPERTY_OVERRIDES += ro.hardware.nfc_nci=nqx.default
 
 #OPENCORE
@@ -712,6 +717,10 @@ THERMAL_HAL := thermal.msm8998
 THERMAL_HAL += thermal.sdm845
 THERMAL_HAL += thermal.sdm710
 THERMAL_HAL += thermal.qcs605
+THERMAL_HAL += thermal.sdm660
+THERMAL_HAL += thermal.msm8996
+THERMAL_HAL += thermal.msm8953
+THERMAL_HAL += thermal.msm8937
 
 #TSLIB_EXTERNAL
 TSLIB_EXTERNAL := corgi
@@ -837,12 +846,25 @@ PRODUCT_PACKAGES := \
     FM2 \
     FMRecord \
     SnapdragonGallery \
+    SnapdragonMusic \
     VideoEditor \
     SnapdragonLauncher \
     a4wpservice \
     wipowerservice \
     Mms \
     QtiDialer
+
+ifeq ($(TARGET_HAS_LOW_RAM),true)
+    DELAUN := Launcher3Go
+else
+    # Live Wallpapers
+    PRODUCT_PACKAGES += \
+            LiveWallpapers \
+            LiveWallpapersPicker \
+            VisualizationWallpapers
+
+    DELAUN := Launcher3
+endif
 
 PRODUCT_PACKAGES += $(ALSA_HARDWARE)
 PRODUCT_PACKAGES += $(ALSA_UCM)
@@ -907,6 +929,7 @@ PRODUCT_PACKAGES += $(LOC_API)
 PRODUCT_PACKAGES += $(MEDIA_PROFILES)
 PRODUCT_PACKAGES += $(MM_AUDIO)
 PRODUCT_PACKAGES += $(MM_CORE)
+PRODUCT_PACKAGES += $(MM_WFD)
 PRODUCT_PACKAGES += $(MM_VIDEO)
 ifeq ($(strip $(TARGET_USES_NQ_NFC)),true)
 PRODUCT_PACKAGES += $(NQ_NFC)
@@ -945,15 +968,13 @@ PRODUCT_PACKAGES += $(IMS_EXT)
 PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 
 PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
+ifneq ($(strip $(TARGET_HAS_LOW_RAM)),true)
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
-PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
-
-# Live Wallpapers
-PRODUCT_PACKAGES += \
-        LiveWallpapers \
-        LiveWallpapersPicker \
-        VisualizationWallpapers \
-        librs_jni
+endif
+PRODUCT_PACKAGES += android.hardware.drm@1.1-service.widevine
+PRODUCT_PACKAGES += android.hardware.drm@1.1-service.clearkey
+PRODUCT_PACKAGES += move_widevine_data.sh
+PRODUCT_PACKAGES += librs_jni
 
 # Filesystem management tools
 PRODUCT_PACKAGES += \
@@ -1003,7 +1024,7 @@ PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.usb.host.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.usb.host.xml \
     frameworks/native/data/etc/android.hardware.bluetooth.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth.xml \
     frameworks/native/data/etc/android.hardware.bluetooth_le.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.bluetooth_le.xml \
-
+    frameworks/native/data/etc/android.hardware.wifi.aware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.aware.xml \
 
 # Bluetooth configuration files
 #PRODUCT_COPY_FILES += \
@@ -1013,9 +1034,6 @@ PRODUCT_COPY_FILES := \
     system/bluetooth/data/input.conf:system/etc/bluetooth/input.conf \
     system/bluetooth/data/network.conf:system/etc/bluetooth/network.conf \
 
-ifeq ($(TARGET_USE_QTI_BT_STACK), true)
-    PRODUCT_PROPERTY_OVERRIDES += ro.bluetooth.library_name=libbluetooth_qti.so
-endif
 
 #ifeq ($(BOARD_HAVE_BLUETOOTH_BLUEZ),true)
 #PRODUCT_COPY_FILES += \
@@ -1054,10 +1072,13 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.vulkan.version-1_1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version-1_1.xml \
     frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute-0.xml \
 
+ifneq ($(strip $(TARGET_USES_QSSI)),true)
 # enable overlays to use our version of
 # source/resources etc.
 DEVICE_PACKAGE_OVERLAYS += device/qcom/common/device/overlay
 PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
+endif
+
 # Set up flags to determine the kernel version
 ifeq ($(TARGET_KERNEL_VERSION),)
      TARGET_KERNEL_VERSION := 3.18
@@ -1106,9 +1127,12 @@ endif
 # Preloading QPerformance jar to ensure faster perflocks in Boost Framework
 PRODUCT_BOOT_JARS += QPerformance
 
+# Preloading UxPerformance jar to ensure faster UX invoke in Boost Framework
+PRODUCT_BOOT_JARS += UxPerformance
+
 # OEM Unlock reporting
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    ro.oem_unlock_supported=true
+    ro.oem_unlock_supported=1
 
 ifeq ($(TARGET_USES_QCOM_BSP_ATEL),true)
     PRODUCT_PROPERTY_OVERRIDES += persist.radio.multisim.config=dsds
@@ -1132,7 +1156,14 @@ else
   $(warning **********)
 endif
 
-#PRODUCT_PACKAGES_DEBUG += sl4a
+ifeq ($(TARGET_HAS_LOW_RAM),true)
+    PRODUCT_PROPERTY_OVERRIDES += \
+        persist.vendor.qcomsysd.enabled=0
+else
+    PRODUCT_PROPERTY_OVERRIDES += \
+        persist.vendor.qcomsysd.enabled=1
+endif
+
 PRODUCT_PACKAGES += liboemaids_system
 PRODUCT_PACKAGES += liboemaids_vendor
 PRODUCT_PACKAGES += android.hardware.health@2.0-service

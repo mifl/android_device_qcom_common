@@ -47,7 +47,7 @@ esac
 
 case "$baseband" in
     "msm" | "csfb" | "svlte2a" | "mdm" | "mdm2" | "sglte" | "sglte2" | "dsda2" | "unknown" | "dsda3")
-    start qmuxd
+    start vendor.qmuxd
 esac
 
 case "$baseband" in
@@ -132,15 +132,17 @@ case "$baseband" in
     case "$datamode" in
         "tethered")
             start vendor.dataqti
-            start port-bridge
+            start vendor.dataadpl
+            start vendor.port-bridge
             ;;
         "concurrent")
             start vendor.dataqti
-            start netmgrd
-            start port-bridge
+            start vendor.dataadpl
+            start vendor.netmgrd
+            start vendor.port-bridge
             ;;
         *)
-            start netmgrd
+            start vendor.netmgrd
             ;;
     esac
 esac
