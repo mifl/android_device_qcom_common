@@ -1501,3 +1501,14 @@ case "$target" in
         echo $oem_version > /sys/devices/soc0/image_crm_version
         ;;
 esac
+
+echo ' EMBMS :: CONF '
+if [ -d "/sdcard/msc_internal" ]; then
+  cp -f /system/b2g/distribution/bundles/msdc_app/msc_internal/*  /sdcard/msc_internal/
+  echo ' directory exists '
+else
+  mkdir /sdcard/msc_internal
+  cp -f /system/b2g/distribution/bundles/msdc_app/msc_internal/*  /sdcard/msc_internal/
+  echo ' directory does not exists  '
+fi
+
