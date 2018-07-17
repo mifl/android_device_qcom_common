@@ -1998,11 +1998,11 @@ case "$target" in
         fi
 
         case "$soc_id" in
-            "336" | "337" | "347" | "360" )
+            "336" | "337" | "347" | "360" | "370" | "371" )
 
             # Start Host based Touch processing
             case "$hw_platform" in
-              "MTP" | "Surf" | "RCM" | "QRD" )
+              "MTP" | "Surf" | "RCM" | "QRD" | "HDK" )
                   start_hbtp
                   ;;
             esac
@@ -2216,6 +2216,13 @@ case "$target" in
                 echo "mem_latency" > $memlat/governor
                 echo 10 > $memlat/polling_interval
                 echo 400 > $memlat/mem_latency/ratio_ceil
+            done
+
+            #Enable userspace governor for L3 cdsp nodes
+            for l3cdsp in /sys/class/devfreq/*qcom,l3-cdsp*
+            do
+                echo "userspace" > $l3cdsp/governor
+                chown -h system $l3cdsp/userspace/set_freq
             done
 
             echo "cpufreq" > /sys/class/devfreq/soc:qcom,mincpubw/governor
@@ -2641,37 +2648,39 @@ case "$target" in
         # to one of the CPU from the default IRQ affinity mask.
         echo f > /proc/irq/default_smp_affinity
 
-	if [ -f /sys/devices/soc0/soc_id ]; then
+        if [ -f /sys/devices/soc0/soc_id ]; then
                 soc_id=`cat /sys/devices/soc0/soc_id`
         else
                 soc_id=`cat /sys/devices/system/soc/soc0/id`
         fi
 
-	if [ -f /sys/devices/soc0/hw_platform ]; then
+        if [ -f /sys/devices/soc0/hw_platform ]; then
                 hw_platform=`cat /sys/devices/soc0/hw_platform`
-	fi
+        fi
 
-	if [ -f /sys/devices/soc0/platform_subtype_id ]; then
-		platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
-	fi
+        if [ -f /sys/devices/soc0/platform_subtype_id ]; then
+                platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
+        fi
 
-    case "$soc_id" in
-                "321")
+        case "$soc_id" in
+                "321" | "341")
                 # Start Host based Touch processing
                 case "$hw_platform" in
-                    "MTP" )
-                          start_hbtp
-                     ;;
                     "QRD" )
                             case "$platform_subtype_id" in
-                                   "1") #QRD845
+                                   "32") #QVR845 do nothing
+                                     ;;
+                                   *)
                                          start_hbtp
                                      ;;
                             esac
                      ;;
+                    *)
+                          start_hbtp
+                     ;;
                 esac
          ;;
-	esac
+        esac
 	# Core control parameters
 	echo 2 > /sys/devices/system/cpu/cpu4/core_ctl/min_cpus
 	echo 60 > /sys/devices/system/cpu/cpu4/core_ctl/busy_up_thres
@@ -3066,7 +3075,7 @@ case "$target" in
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
-    "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv" | "sdm845" | "sdm710")
+    "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv" | "sdm845" | "sdm710" | "qcs605")
         setprop sys.post_boot.parsed 1
     ;;
     "apq8084")

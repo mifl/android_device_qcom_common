@@ -189,6 +189,11 @@
 /dev/msm_preproc_ctl      0660   system     audio
 /dev/msm_rtac             0660   system     audio
 /dev/msm_voicememo        0660   system     audio
+/dev/msm_g711alaw         0660   system     audio
+/dev/msm_g711alaw_in      0660   system     audio
+/dev/msm_g711mlaw         0660   system     audio
+/dev/msm_g711mlaw_in      0660   system     audio
+
 /dev/ttyHSL1              0660   system     system
 /dev/ttyHS1               0660   system     system
 /dev/mdm                  0660   system     radio

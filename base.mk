@@ -687,8 +687,10 @@ SENSORS_HARDWARE += sensors.msm8996_auto
 SOFTAP := libQWiFiSoftApCfg
 SOFTAP += libqsap_sdk
 
+ifneq ($(strip $(TARGET_USES_IOTCC_HEADLESS)),true)
 #STK
 STK := Stk
+endif
 
 #STM LOG
 STMLOG := libstm-log
@@ -752,12 +754,14 @@ RCS += rcs_service_aidl_static
 RCS += rcs_service_api
 RCS += rcs_service_api.xml
 
+ifneq ($(strip $(TARGET_USES_IOTCC_HEADLESS)),true)
 #IMS SETTINGS
 IMS_SETTINGS := imssettings
 
 #IMS Extension module for Android Telephony
 IMS_EXT := ims-ext-common
 IMS_EXT += ConfURIDialer
+endif
 
 #CRDA
 CRDA := crda
@@ -962,6 +966,11 @@ PRODUCT_PACKAGES += tcmiface
 
 # healthd libaray expanded for mode charger
 PRODUCT_PACKAGES += libhealthd.msm
+
+#Android net
+PRODUCT_PACKAGES += \
+   libandroid_net \
+   libandroid_net_32
 
 #intialise PRODUCT_PACKAGES_DEBUG list for debug modules
 PRODUCT_PACKAGES_DEBUG := init.qcom.testscripts.sh
