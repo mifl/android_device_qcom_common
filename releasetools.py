@@ -18,24 +18,7 @@
 
 import common
 import re
-import os
-import sys
 
-diffGenPresent = False
-deltaUpdate = False
-deltaConfig = {}
-
-if os.path.exists("../../../../vendor/qcom/proprietary/qdma-dm-tools"):
-  print 'qdma-dm-tools found - using modem delta update'
-  sys.path.append("../../../../vendor/qcom/proprietary/qdma-dm-tools")
-  try:
-    import DiffGen
-    diffGenPresent = True
-    print 'imported DiffGen from qdma-dm-tools'
-  except:
-    print 'could not import DiffGen from qdma-dm-tools - defaulting to modem full update'
-else:
-  print 'qdma-dm-tools not found - defaulting to modem full update'
 
 bootImages = {}
 binImages = {}
@@ -68,7 +51,7 @@ def GetRadioFiles(z):
     f = info.filename
     if f.startswith("RADIO/") and (f.__len__() > len("RADIO/")):
       fn = f[6:]
-      if fn.startswith("filesmap") or fn.startswith("delta.conf"):
+      if fn.startswith("filesmap"):
         continue
       data = z.read(f)
       out[fn] = common.File(f, data)
@@ -264,27 +247,6 @@ def IncrementalOTA_Assertions(info):
 
 
 def IncrementalOTA_VerifyEnd(info):
-  global deltaConfig
-  global diffGenPresent
-  print "Loading delta configuration..."
-  if diffGenPresent:
-    deltaConfig = LoadFilesMap(info.target_zip, "RADIO/delta.conf")
-    if deltaConfig != {}:
-      print 'delta.conf found - continue with delta update'
-      global deltaUpdate
-      deltaUpdate = True
-      diff_files, err = DiffGen.GenerateDiff(common.OPTIONS, deltaConfig)
-      if err:
-        print err
-        sys.exit(-1)
-      print diff_files
-      for fname, f in diff_files.iteritems():
-        common.ZipWriteStr(info.output_zip, fname, f.read())
-        f.close()
-      return
-    else:
-      print 'delta.conf not found - continue with full update'
-
   OTA_VerifyEnd(info, info.target_version, info.target_zip, info.source_zip)
   return
 
@@ -417,21 +379,12 @@ def FullOTA_InstallEnd(info):
 
 
 def IncrementalOTA_InstallEnd_MMC(info):
-  global deltaUpdate
-  global deltaConfig
-  if deltaUpdate:
-    DiffGen.AddScriptCommands(info, deltaConfig)
-  else:
-    OTA_InstallEnd(info)
+  OTA_InstallEnd(info)
   return
 
+
 def IncrementalOTA_InstallEnd_MTD(info):
-  global deltaUpdate
-  global deltaConfig
-  if deltaUpdate:
-    DiffGen.AddScriptCommands(info, deltaConfig)
-  else:
-    OTA_InstallEnd(info)
+  OTA_InstallEnd(info)
   return
 
 
