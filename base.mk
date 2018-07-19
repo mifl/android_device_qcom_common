@@ -618,6 +618,10 @@ MM_AUDIO += libstagefright_soft_flacdec
 MM_CORE := libmm-omxcore
 MM_CORE += libOmxCore
 
+#WFD
+MM_WFD := libwfdaac
+
+
 #MM_VIDEO
 MM_VIDEO := ast-mm-vdec-omx-test
 MM_VIDEO += beat
@@ -656,9 +660,8 @@ NQ_NFC += nqnfcse_access.xml
 NQ_NFC += Tag
 NQ_NFC += nqnfcinfo
 NQ_NFC += com.android.nfc_extras
-NQ_NFC += vendor.nxp.hardware.nfc@1.0-impl
-NQ_NFC += android.hardware.nfc@1.0-impl
-NQ_NFC += vendor.nxp.hardware.nfc@1.0-service
+NQ_NFC += vendor.nxp.hardware.nfc@1.1-service
+NQ_NFC += nfc_nci.nqx.default.hw
 PRODUCT_PROPERTY_OVERRIDES += ro.hardware.nfc_nci=nqx.default
 
 #OPENCORE
@@ -779,6 +782,9 @@ IMS_SETTINGS := imssettings
 IMS_EXT := ims-ext-common
 IMS_EXT += ConfURIDialer
 
+#Android Telephony library
+PRODUCT_BOOT_JARS += qtiNetworkLib
+
 #CRDA
 CRDA := crda
 CRDA += regdbdump
@@ -849,7 +855,9 @@ PRODUCT_PACKAGES := \
     a4wpservice \
     wipowerservice \
     Mms \
-    QtiDialer
+    QtiDialer \
+    qtiNetworkLib \
+    TestApp5G
 
 ifeq ($(TARGET_HAS_LOW_RAM),true)
     DELAUN := Launcher3Go
@@ -926,6 +934,7 @@ PRODUCT_PACKAGES += $(LOC_API)
 PRODUCT_PACKAGES += $(MEDIA_PROFILES)
 PRODUCT_PACKAGES += $(MM_AUDIO)
 PRODUCT_PACKAGES += $(MM_CORE)
+PRODUCT_PACKAGES += $(MM_WFD)
 PRODUCT_PACKAGES += $(MM_VIDEO)
 ifeq ($(strip $(TARGET_USES_NQ_NFC)),true)
 PRODUCT_PACKAGES += $(NQ_NFC)
@@ -1123,9 +1132,12 @@ endif
 # Preloading QPerformance jar to ensure faster perflocks in Boost Framework
 PRODUCT_BOOT_JARS += QPerformance
 
+# Preloading UxPerformance jar to ensure faster UX invoke in Boost Framework
+PRODUCT_BOOT_JARS += UxPerformance
+
 # OEM Unlock reporting
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
-    ro.oem_unlock_supported=true
+    ro.oem_unlock_supported=1
 
 ifeq ($(TARGET_USES_QCOM_BSP_ATEL),true)
     PRODUCT_PROPERTY_OVERRIDES += persist.radio.multisim.config=dsds
