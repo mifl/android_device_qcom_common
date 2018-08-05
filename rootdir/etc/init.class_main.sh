@@ -38,6 +38,7 @@ case "$baseband" in
     "apq" | "sda" )
     setprop ro.radio.noril yes
     stop ril-daemon
+    start ipacm
 esac
 
 case "$baseband" in
@@ -46,7 +47,7 @@ case "$baseband" in
 esac
 
 case "$baseband" in
-    "msm" | "csfb" | "svlte2a" | "mdm" | "mdm2" | "sglte" | "sglte2" | "dsda2" | "unknown" | "dsda3" | "sdm" | "sdx" | "apq" | "qcs" | "sda")
+    "msm" | "csfb" | "svlte2a" | "mdm" | "mdm2" | "sglte" | "sglte2" | "dsda2" | "unknown" | "dsda3" | "sdm" | "sdx")
     start ipacm-diag
     start ipacm
     case "$baseband" in
