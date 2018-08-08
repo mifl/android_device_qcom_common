@@ -467,7 +467,6 @@ void healthd_board_init(struct healthd_config*)
 {
     // use defaults
     get_healthd_props();
-    power_off_alarm_init();
     healthd_batt_info_notify();
 }
 
