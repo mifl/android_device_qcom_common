@@ -128,7 +128,7 @@ if [ "$usb_config" == "" ]; then #USB persist config not set, select default con
 		          setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,adb
 		      ;;
 	              "msmnile" | "talos")
-			  setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,qdss,adb
+			  setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,adb
 		      ;;
 	              *)
 		          setprop persist.vendor.usb.config diag,adb
