@@ -126,6 +126,50 @@ ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_PERSISTIMAGE_TARGET)
 endif
 
 #----------------------------------------------------------------------
+# Generate vm kernel image (vmkernel.img)
+#----------------------------------------------------------------------
+ifeq ($(BOARD_VMKERNEL_ENABLED), true)
+ifneq ($(strip $(TARGET_NO_KERNEL)),true)
+
+$(TARGET_PREBUILT_KERNEL_VM): $(INSTALLED_BOOTIMAGE_TARGET)
+
+$(INSTALLED_KERNEL_VM_TARGET): $(TARGET_PREBUILT_KERNEL_VM) | $(ACP)
+	$(transform-prebuilt-to-target)
+
+INSTALLED_VMKERNEL_IMAGE_TARGET := $(PRODUCT_OUT)/vmkernel.img
+
+VMKERNEL_IMAGE_ARGS := \
+       --kernel $(INSTALLED_KERNEL_VM_TARGET) \
+       --cmdline "$(BOARD_VMKERNEL_CMDLINE)" \
+       --base $(BOARD_KERNEL_BASE) \
+       --pagesize $(BOARD_KERNEL_PAGESIZE)
+
+ifeq ($(BOARD_AVB_ENABLE),true)
+$(INSTALLED_VMKERNEL_IMAGE_TARGET): $(MKBOOTIMG) $(AVBTOOL) $(INSTALLED_KERNEL_VM_TARGET)
+	$(call pretty,"Target vmkernel image: $@")
+	$(hide) $(MKBOOTIMG) $(VMKERNEL_IMAGE_ARGS) --output $@
+	$(hide) $(call assert-max-image-size,$@,$(call get-hash-image-max-size,$(BOARD_VM_BOOTIMAGE_PARTITION_SIZE)))
+	$(hide) $(AVBTOOL) add_hash_footer \
+	  --image $@ \
+	  --partition_size $(BOARD_VM_BOOTIMAGE_PARTITION_SIZE) \
+	  --partition_name vm-linux
+$(INSTALLED_VBMETAIMAGE_TARGET): $(INSTALLED_VMKERNEL_IMAGE_TARGET)
+else
+$(INSTALLED_VMKERNEL_IMAGE_TARGET): $(MKBOOTIMG) $(INSTALLED_KERNEL_VM_TARGET)
+	$(call pretty,"Target vmkernel image: $@")
+	$(hide) $(MKBOOTIMG) $(VMKERNEL_IMAGE_ARGS) --output $@
+	$(hide) $(call assert-max-image-size,$@,$(BOARD_VM_BOOTIMAGE_PARTITION_SIZE))
+endif
+
+$(BUILT_TARGET_FILES_PACKAGE): $(INSTALLED_VMKERNEL_IMAGE_TARGET)
+
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_VMKERNEL_IMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_VMKERNEL_IMAGE_TARGET)
+
+endif
+endif
+
+#----------------------------------------------------------------------
 # Generate device tree overlay image (dtbo.img)
 #----------------------------------------------------------------------
 ifneq ($(strip $(TARGET_NO_KERNEL)),true)
@@ -485,6 +529,13 @@ endif
 
 .PHONY: kernel
 kernel: $(INSTALLED_BOOTIMAGE_TARGET) $(INSTALLED_SEC_BOOTIMAGE_TARGET) $(INSTALLED_4K_BOOTIMAGE_TARGET) $(INSTALLED_DTBOIMAGE_TARGET)
+
+ifeq ($(BOARD_VMKERNEL_ENABLED), true)
+ifneq ($(strip $(TARGET_NO_KERNEL)),true)
+.PHONY: vmkernelimage
+vmkernelimage: $(INSTALLED_VMKERNEL_IMAGE_TARGET)
+endif
+endif
 
 .PHONY: dtboimage
 dtboimage: $(INSTALLED_DTBOIMAGE_TARGET)
