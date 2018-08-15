@@ -1979,6 +1979,19 @@ esac
 case "$target" in
     "sdm710")
 
+        if [ -d /sys/vservices/server-sessions/microvisor:server.linux_mlvm ]; then
+            vm_system_partition="$(grep -o "vm_system=/dev/mmcblk[0-9a-z]*" /proc/cmdline)"
+            vm_system_partition="${vm_system_partition/vm_system=\/dev\//}"
+            if [ -z "$vm_system_partition" ]; then
+                vm_system_partition=mmcblk0p14
+            fi
+            if [ "$(cat /sys/vservices/server-sessions/microvisor:server.mlvm/${vm_system_partition}:1/start)" == 0 ]; then
+                echo 1 > /sys/vservices/server-sessions/microvisor:server.linux_mlvm/${vm_system_partition}:1/start
+                vm_ret=$?
+                log -t BOOT -p i "Post boot, VM ret: '$vm_ret'"
+            fi
+        fi
+
         #Apply settings for sdm710
         # Set the default IRQ affinity to the silver cluster. When a
         # CPU is isolated/hotplugged, the IRQ affinity is adjusted
