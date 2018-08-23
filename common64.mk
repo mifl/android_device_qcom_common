@@ -20,7 +20,7 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.vendor.radio.rat_on=combine \
     persist.radio.schd.cache=3500 \
     sys.vendor.shutdown.waittime=500 \
-    ro.build.shutdown_timeout=0
+    ro.build.shutdown_timeout=6
 
 ifneq ($(BOARD_FRP_PARTITION_NAME),)
     PRODUCT_PROPERTY_OVERRIDES += ro.frp.pst=/dev/block/bootdevice/by-name/$(BOARD_FRP_PARTITION_NAME)
