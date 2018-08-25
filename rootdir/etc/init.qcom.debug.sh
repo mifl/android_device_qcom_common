@@ -1539,6 +1539,9 @@ enable_msm8937_dcc_config()
     #echo 0x61C0008 > $DCC_PATH/config
     #echo 0x61C1038 > $DCC_PATH/config
 
+
+    echo 0x0a422c 1 > $DCC_PATH/config
+
     #APCS_ALIAS0_APSS_ACS
     echo 0xB188004 2 > $DCC_PATH/config
     echo 0xB189030 1 > $DCC_PATH/config
