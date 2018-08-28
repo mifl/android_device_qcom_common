@@ -121,7 +121,7 @@ define build-persistimage-target
     @mkdir -p $(TARGET_OUT_PERSIST)
     $(hide) $(MKEXTUSERIMG) $(TARGET_OUT_PERSIST) $@ ext4 persist $(BOARD_PERSISTIMAGE_PARTITION_SIZE)
     $(hide) chmod a+r $@
-    $(hide) $(call assert-max-image-size,$@,$(BOARD_PERSISTIMAGE_PARTITION_SIZE),yaffs)
+    $(hide) $(call assert-max-image-size,$@,$(BOARD_PERSISTIMAGE_PARTITION_SIZE))
 endef
 
 $(INSTALLED_PERSISTIMAGE_TARGET): $(MKEXTUSERIMG) $(MAKE_EXT4FS) $(INTERNAL_PERSISTIMAGE_FILES)
@@ -129,6 +129,38 @@ $(INSTALLED_PERSISTIMAGE_TARGET): $(MKEXTUSERIMG) $(MAKE_EXT4FS) $(INTERNAL_PERS
 
 ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_PERSISTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_PERSISTIMAGE_TARGET)
+
+.PHONY: persistimage
+persistimage: $(INSTALLED_PERSISTIMAGE_TARGET)
+
+endif
+
+#----------------------------------------------------------------------
+# Generate metadata image (metadata.img)
+# As of now this in empty at build and data is runtime generated only,
+# so create an empty fs
+#----------------------------------------------------------------------
+ifneq ($(strip $(BOARD_METADATAIMAGE_PARTITION_SIZE)),)
+
+TARGET_OUT_METADATA := $(PRODUCT_OUT)/metadata
+
+INSTALLED_METADATAIMAGE_TARGET := $(PRODUCT_OUT)/metadata.img
+
+define build-metadataimage-target
+    $(call pretty,"Target metadata fs image: $(INSTALLED_METADATAIMAGE_TARGET)")
+    @mkdir -p $(TARGET_OUT_METADATA)
+    $(hide) $(MKEXTUSERIMG) -s $(TARGET_OUT_METADATA) $@ ext4 metadata $(BOARD_METADATAIMAGE_PARTITION_SIZE)
+    $(hide) chmod a+r $@
+endef
+
+$(INSTALLED_METADATAIMAGE_TARGET): $(MKEXTUSERIMG) $(MAKE_EXT4FS)
+	$(build-metadataimage-target)
+
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_METADATAIMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_METADATAIMAGE_TARGET)
+
+.PHONY: metadataimage
+metadataimage: $(INSTALLED_METADATAIMAGE_TARGET)
 
 endif
 
@@ -448,7 +480,7 @@ define build-small-userdataimage
   $(hide) mkdir -p $(1)
   $(hide) $(MKEXTUSERIMG) -s $(TARGET_OUT_DATA) $(2) ext4 data $(BOARD_SMALL_USERDATAIMAGE_PARTITION_SIZE)
   $(hide) chmod a+r $@
-  $(hide) $(call assert-max-image-size,$@,$(BOARD_SMALL_USERDATAIMAGE_PARTITION_SIZE),yaffs)
+  $(hide) $(call assert-max-image-size,$@,$(BOARD_SMALL_USERDATAIMAGE_PARTITION_SIZE))
 endef
 
 
@@ -519,4 +551,25 @@ $(BOARD_VENDOR_KERNEL_MODULES): $(INSTALLED_BOOTIMAGE_TARGET)
 endif
 ifneq ($(BOARD_RECOVERY_KERNEL_MODULES),)
 $(BOARD_RECOVERY_KERNEL_MODULES): $(INSTALLED_BOOTIMAGE_TARGET)
+endif
+
+define board-vendorkernel-ota
+  $(call pretty,"Processing following kernel modules for vendor: $(BOARD_VENDOR_KERNEL_MODULES)")
+  $(if $(BOARD_VENDOR_KERNEL_MODULES), \
+    $(call build-image-kernel-modules,$(BOARD_VENDOR_KERNEL_MODULES),$(TARGET_OUT_VENDOR),vendor/,$(call intermediates-dir-for,PACKAGING,depmod_vendor)))
+endef
+
+# Adding support for vendor module for OTA
+ifeq ($(ENABLE_VENDOR_IMAGE), false)
+.PHONY: otavendormod
+otavendormod: $(BOARD_VENDOR_KERNEL_MODULES)
+	$(board-vendorkernel-ota)
+
+.PHONY: otavendormod-nodeps
+otavendormod-nodeps:
+	@echo "make board-vendorkernel-ota: ignoring dependencies"
+	$(board-vendorkernel-ota)
+
+$(BUILT_SYSTEMIMAGE): otavendormod
+
 endif
