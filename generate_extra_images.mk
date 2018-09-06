@@ -23,9 +23,9 @@ endif
 
 #A/B builds require us to create the mount points at compile time.
 #Just creating it for all cases since it does not hurt.
-FIRMWARE_MOUNT_POINT := $(TARGET_ROOT_OUT)/firmware
-BT_FIRMWARE_MOUNT_POINT := $(TARGET_ROOT_OUT)/bt_firmware
-DSP_MOUNT_POINT := $(TARGET_ROOT_OUT)/dsp
+FIRMWARE_MOUNT_POINT := $(TARGET_OUT_VENDOR)/firmware_mnt
+BT_FIRMWARE_MOUNT_POINT := $(TARGET_OUT_VENDOR)/bt_firmware
+DSP_MOUNT_POINT := $(TARGET_OUT_VENDOR)/dsp
 PERSIST_MOUNT_POINT := $(TARGET_ROOT_OUT)/persist
 ALL_DEFAULT_INSTALLED_MODULES += $(FIRMWARE_MOUNT_POINT) \
 				 $(BT_FIRMWARE_MOUNT_POINT) \
@@ -33,23 +33,30 @@ ALL_DEFAULT_INSTALLED_MODULES += $(FIRMWARE_MOUNT_POINT) \
 				 $(PERSIST_MOUNT_POINT)
 $(FIRMWARE_MOUNT_POINT):
 	@echo "Creating $(FIRMWARE_MOUNT_POINT)"
-	@mkdir -p $(TARGET_ROOT_OUT)/firmware
-	@mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/firmware
+	@mkdir -p $(TARGET_OUT_VENDOR)/firmware_mnt
+ifneq ($(TARGET_MOUNT_POINTS_SYMLINKS),false)
+	@ln -sf /vendor/firmware_mnt $(TARGET_ROOT_OUT)/firmware
+endif
 
 $(BT_FIRMWARE_MOUNT_POINT):
 	@echo "Creating $(BT_FIRMWARE_MOUNT_POINT)"
-	@mkdir -p $(TARGET_ROOT_OUT)/bt_firmware
-	@mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/bt_firmware
+	@mkdir -p $(TARGET_OUT_VENDOR)/bt_firmware
+ifneq ($(TARGET_MOUNT_POINTS_SYMLINKS),false)
+	@ln -sf /vendor/bt_firmware $(TARGET_ROOT_OUT)/bt_firmware
+endif
 
 $(DSP_MOUNT_POINT):
 	@echo "Creating $(DSP_MOUNT_POINT)"
-	@mkdir -p $(TARGET_ROOT_OUT)/dsp
-	@mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/dsp
+	@mkdir -p $(TARGET_OUT_VENDOR)/dsp
+ifneq ($(TARGET_MOUNT_POINTS_SYMLINKS),false)
+	@ln -sf /vendor/dsp $(TARGET_ROOT_OUT)/dsp
+endif
 
 $(PERSIST_MOUNT_POINT):
 	@echo "Creating $(PERSIST_MOUNT_POINT)"
-	@mkdir -p $(TARGET_ROOT_OUT)/persist
-	@mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/persist
+ifneq ($(TARGET_MOUNT_POINTS_SYMLINKS),false)
+	@ln -sf /mnt/vendor/persist $(TARGET_ROOT_OUT)/persist
+endif
 
 #----------------------------------------------------------------------
 # Generate secure boot image
@@ -112,7 +119,7 @@ INSTALLED_PERSISTIMAGE_TARGET := $(PRODUCT_OUT)/persist.img
 define build-persistimage-target
     $(call pretty,"Target persist fs image: $(INSTALLED_PERSISTIMAGE_TARGET)")
     @mkdir -p $(TARGET_OUT_PERSIST)
-    $(hide) $(MKEXTUSERIMG) -s $(TARGET_OUT_PERSIST) $@ ext4 persist $(BOARD_PERSISTIMAGE_PARTITION_SIZE)
+    $(hide) $(MKEXTUSERIMG) $(TARGET_OUT_PERSIST) $@ ext4 persist $(BOARD_PERSISTIMAGE_PARTITION_SIZE)
     $(hide) chmod a+r $@
     $(hide) $(call assert-max-image-size,$@,$(BOARD_PERSISTIMAGE_PARTITION_SIZE),yaffs)
 endef
@@ -133,7 +140,7 @@ ifeq ($(strip $(BOARD_KERNEL_SEPARATED_DTBO)),true)
 
 MKDTIMG := $(HOST_OUT_EXECUTABLES)/mkdtimg$(HOST_EXECUTABLE_SUFFIX)
 
-INSTALLED_DTBOIMAGE_TARGET := $(PRODUCT_OUT)/dtbo.img
+BOARD_PREBUILT_DTBOIMAGE := $(PRODUCT_OUT)/prebuilt_dtbo.img
 
 # Most specific paths must come first in possible_dtbo_dirs
 possible_dtbo_dirs = $(KERNEL_OUT)/arch/$(TARGET_KERNEL_ARCH)/boot/dts $(KERNEL_OUT)/arch/arm/boot/dts
@@ -142,22 +149,16 @@ dtbo_dir = $(firstword $(wildcard $(possible_dtbo_dirs)))
 dtbo_objs = $(shell find $(dtbo_dir) -name \*.dtbo)
 
 define build-dtboimage-target
-    $(call pretty,"Target dtbo image: $(INSTALLED_DTBOIMAGE_TARGET)")
+    $(call pretty,"Target dtbo image: $(BOARD_PREBUILT_DTBOIMAGE)")
     $(hide) $(MKDTIMG) create $@ --page_size=$(BOARD_KERNEL_PAGESIZE) $(dtbo_objs)
     $(hide) chmod a+r $@
-    $(hide) $(AVBTOOL) add_hash_footer \
-	    --image $@ \
-	    --partition_size $(BOARD_DTBOIMAGE_PARTITION_SIZE) \
-	    --partition_name dtbo $(INTERNAL_AVB_SIGNING_ARGS)
 endef
 
 ifeq ($(BOARD_AVB_ENABLE),true)
-$(INSTALLED_DTBOIMAGE_TARGET): $(MKDTIMG) $(INSTALLED_KERNEL_TARGET) $(AVBTOOL)
+$(BOARD_PREBUILT_DTBOIMAGE): $(MKDTIMG) $(INSTALLED_KERNEL_TARGET)
 	$(build-dtboimage-target)
 endif
 
-ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_DTBOIMAGE_TARGET)
-ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_DTBOIMAGE_TARGET)
 endif
 endif
 
@@ -518,4 +519,24 @@ $(BOARD_VENDOR_KERNEL_MODULES): $(INSTALLED_BOOTIMAGE_TARGET)
 endif
 ifneq ($(BOARD_RECOVERY_KERNEL_MODULES),)
 $(BOARD_RECOVERY_KERNEL_MODULES): $(INSTALLED_BOOTIMAGE_TARGET)
+endif
+
+define board-vendorkernel-ota
+  $(call pretty,"Processing following kernel modules for vendor: $(BOARD_VENDOR_KERNEL_MODULES)")
+  $(if $(BOARD_VENDOR_KERNEL_MODULES), \
+    $(call build-image-kernel-modules,$(BOARD_VENDOR_KERNEL_MODULES),$(TARGET_OUT_VENDOR),vendor/,$(call intermediates-dir-for,PACKAGING,depmod_vendor)))
+endef
+
+# Adding support for vendor module for OTA
+ifeq ($(ENABLE_VENDOR_IMAGE), false)
+.PHONY: otavendormod
+otavendormod: $(BOARD_VENDOR_KERNEL_MODULES)
+	$(board-vendorkernel-ota)
+
+.PHONY: otavendormod-nodeps
+otavendormod-nodeps:
+	@echo "make board-vendorkernel-ota: ignoring dependencies"
+	$(board-vendorkernel-ota)
+
+$(BUILT_SYSTEMIMAGE): otavendormod
 endif
