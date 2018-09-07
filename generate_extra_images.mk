@@ -126,7 +126,7 @@ ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_PERSISTIMAGE_TARGET)
 endif
 
 #----------------------------------------------------------------------
-# Generate vm kernel image (vmkernel.img)
+# Generate vm kernel image (vm-linux.img)
 #----------------------------------------------------------------------
 ifeq ($(BOARD_VMKERNEL_ENABLED), true)
 ifneq ($(strip $(TARGET_NO_KERNEL)),true)
@@ -136,7 +136,7 @@ $(TARGET_PREBUILT_KERNEL_VM): $(INSTALLED_BOOTIMAGE_TARGET)
 $(INSTALLED_KERNEL_VM_TARGET): $(TARGET_PREBUILT_KERNEL_VM) | $(ACP)
 	$(transform-prebuilt-to-target)
 
-INSTALLED_VMKERNEL_IMAGE_TARGET := $(PRODUCT_OUT)/vmkernel.img
+INSTALLED_VMKERNEL_IMAGE_TARGET := $(PRODUCT_OUT)/vm-linux.img
 
 VMKERNEL_IMAGE_ARGS := \
        --kernel $(INSTALLED_KERNEL_VM_TARGET) \
