@@ -130,7 +130,7 @@ if [ "$(getprop persist.vendor.usb.config)" == "" -a \
 		          setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,adb
 		      ;;
 	              "msmnile" | "talos")
-			  setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,adb
+			  setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,qdss,adb
 		      ;;
 	              *)
 		          setprop persist.vendor.usb.config diag,adb
