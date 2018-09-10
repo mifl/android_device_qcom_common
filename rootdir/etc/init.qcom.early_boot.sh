@@ -229,14 +229,14 @@ case "$target" in
         esac
         ;;
     "msm8937" | "msm8940")
-        # Set ro.opengles.version based on chip id.
+        # Set vendor.opengles.version based on chip id.
         # MSM8937 and MSM8940  variants supports OpenGLES 3.1
         # 196608 is decimal for 0x30000 to report version 3.0
         # 196609 is decimal for 0x30001 to report version 3.1
         # 196610 is decimal for 0x30002 to report version 3.2
         case "$soc_hwid" in
             294|295|296|297|298|313|353|354|363|364)
-                setprop ro.opengles.version 196610
+                setprop vendor.opengles.version 196610
                 ;;
             303|307|308|309|320)
                 # Vulkan is not supported for 8917 variants
@@ -454,9 +454,9 @@ fi
 boot_reason=`cat /proc/sys/kernel/boot_reason`
 reboot_reason=`getprop ro.boot.alarmboot`
 if [ "$boot_reason" = "3" ] || [ "$reboot_reason" = "true" ]; then
-    setprop ro.alarm_boot true
+    setprop ro.vendor.alarm_boot true
 else
-    setprop ro.alarm_boot false
+    setprop ro.vendor.alarm_boot false
 fi
 
 # copy GPU frequencies to vendor property
