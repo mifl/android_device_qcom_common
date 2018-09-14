@@ -170,6 +170,40 @@ endif
 endif
 
 #----------------------------------------------------------------------
+# Generate vm-system  image (vm-system.img)
+#----------------------------------------------------------------------
+ifeq ($(BOARD_VMSYSTEM_ENABLED), true)
+
+INSTALLED_VMSYSTEM_IMAGE_TARGET := $(PRODUCT_OUT)/vm-system.img
+PREBUILT_VMSYSTEM_IMAGE := mlvm-system.img
+
+define copy-prebuilt-vmsystem-image
+    $(call pretty,"Target vmsystem image: $@")
+    $(shell rm -f $@)
+    $(shell cp $(PRODUCT_OUT)/$(PREBUILT_VMSYSTEM_IMAGE) $@)
+endef
+
+ifeq ($(BOARD_AVB_ENABLE),true)
+$(INSTALLED_VMSYSTEM_IMAGE_TARGET): $(AVBTOOL) $(PREBUILT_VMSYSTEM_IMAGE)
+	$(copy-prebuilt-vmsystem-image)
+	$(hide) $(AVBTOOL) add_hashtree_footer \
+          --image $@ \
+          --partition_size $(BOARD_VM_SYSTEMIMAGE_PARTITION_SIZE) \
+          --partition_name vm-system \
+          --do_not_generate_fec
+
+$(INSTALLED_VBMETAIMAGE_TARGET): $(INSTALLED_VMSYSTEM_IMAGE_TARGET)
+else
+$(INSTALLED_VMSYSTEM_IMAGE_TARGET): $(PREBUILT_VMSYSTEM_IMAGE)
+	$(copy-prebuilt-vmsystem-image)
+endif
+
+$(BUILT_TARGET_FILES_PACKAGE): $(INSTALLED_VMSYSTEM_IMAGE_TARGET)
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_VMSYSTEM_IMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_VMSYSTEM_IMAGE_TARGET)
+endif
+
+#----------------------------------------------------------------------
 # Generate device tree overlay image (dtbo.img)
 #----------------------------------------------------------------------
 ifneq ($(strip $(TARGET_NO_KERNEL)),true)
@@ -535,6 +569,11 @@ ifneq ($(strip $(TARGET_NO_KERNEL)),true)
 .PHONY: vmkernelimage
 vmkernelimage: $(INSTALLED_VMKERNEL_IMAGE_TARGET)
 endif
+endif
+
+ifeq ($(BOARD_VMSYSTEM_ENABLED), true)
+.PHONY: vmsystemimage
+vmsystemimage: $(INSTALLED_VMSYSTEM_IMAGE_TARGET)
 endif
 
 .PHONY: dtboimage
