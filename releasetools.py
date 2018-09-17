@@ -56,9 +56,9 @@ def GetRadioFiles(z):
       data = z.read(f)
       out[fn] = common.File(f, data)
 
-    # This is to include vbmeta,dtbo,vm-linux images from IMAGES/ folder.
+    # This is to include vbmeta,dtbo,vm-linux,vm-system images from IMAGES/ folder.
     if f.startswith("IMAGES/") and (f.__len__() > len("IMAGES/")):
-      if ("vbmeta" in f or "dtbo" in f or "vm-linux" in f):
+      if ("vbmeta" in f or "dtbo" in f or "vm-linux" in f or "vm-system" in f):
         fn = f[7:]
         data = z.read(f)
         out[fn] = common.File(f, data)
@@ -82,8 +82,8 @@ def GetFileDestination(fn, filesmap):
   if fn not in filesmap:
     fn = fn.split(".")[0] + ".*"
     if fn not in filesmap:
-      if ("vbmeta" in fn or "dtbo" in fn or "vm-linux" in fn):
-        raise common.ExternalError("Filesmap entry for vbmeta or dtbo or vm-linux missing !!")
+      if ("vbmeta" in fn or "dtbo" in fn or "vm-linux" in fn or "vm-system" in fn):
+        raise common.ExternalError("Filesmap entry for vbmeta or dtbo or vm-linux or vm-system  missing !!")
       print "warning radio-update: '%s' not found in filesmap" % (fn)
       return None, backup
   return filesmap[fn], backup
