@@ -34,6 +34,9 @@ TARGET_USE_VENDOR_CAMERA_EXT := true
 TARGET_USE_QTI_BT_STACK := true
 BOARD_HAVE_QCOM_FM := true
 
+#Enable suspend during charger mode
+BOARD_CHARGER_ENABLE_SUSPEND := true
+
 #List of targets that use video hw
 MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845 sdm710 qcs605 msmnile $(MSMSTEPPE)
 
@@ -985,6 +988,7 @@ PRODUCT_PACKAGES += android.hardware.drm@1.1-service.clearkey
 ifeq ($(strip $(OTA_FLAG_FOR_DRM)),true)
 PRODUCT_PACKAGES += move_widevine_data.sh
 endif
+PRODUCT_PACKAGES += move_wifi_data.sh
 PRODUCT_PACKAGES += librs_jni
 
 # Filesystem management tools
@@ -1038,6 +1042,12 @@ PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.software.device_id_attestation.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.device_id_attestation.xml \
     frameworks/native/data/etc/android.software.verified_boot.xml:system/etc/permissions/android.software.verified_boot.xml
 
+# Enable TDES support when KM4 is enabled
+ifeq ($(ENABLE_KM_4_0), true)
+    PRODUCT_PROPERTY_OVERRIDES += \
+        ro.hardware.keystore_desede=true
+endif
+
 # Bluetooth configuration files
 #PRODUCT_COPY_FILES += \
     system/bluetooth/data/audio.conf:system/etc/bluetooth/audio.conf \
@@ -1081,7 +1091,7 @@ endif
 
 ifneq ($(TARGET_NOT_SUPPORT_VULKAN),true)
 PRODUCT_COPY_FILES += \
-    frameworks/native/data/etc/android.hardware.vulkan.level-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.level-0.xml \
+    frameworks/native/data/etc/android.hardware.vulkan.level-1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.level-1.xml \
     frameworks/native/data/etc/android.hardware.vulkan.version-1_1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version-1_1.xml \
     frameworks/native/data/etc/android.hardware.vulkan.compute-0.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.compute-0.xml
 endif

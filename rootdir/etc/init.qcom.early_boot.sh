@@ -264,12 +264,6 @@ case "$target" in
         case "$soc_hwplatform" in
             *)
                 setprop vendor.display.lcd_density 560
-                if [ ! -e /dev/kgsl-3d0 ]; then
-                    setprop persist.sys.force_sw_gles 1
-                    setprop vendor.display.idle_time 0
-                else
-                    setprop persist.sys.force_sw_gles 0
-                fi
                 ;;
         esac
         ;;
@@ -278,17 +272,8 @@ case "$target" in
             *)
                 if [ $fb_width -le 1600 ]; then
                     setprop vendor.display.lcd_density 560
-                    setprop dalvik.vm.heapgrowthlimit 256m
                 else
                     setprop vendor.display.lcd_density 640
-                    setprop dalvik.vm.heapgrowthlimit 512m
-                fi
-
-                if [ ! -e /dev/kgsl-3d0 ]; then
-                    setprop persist.sys.force_sw_gles 1
-                    setprop vendor.display.idle_time 0
-                else
-                    setprop persist.sys.force_sw_gles 0
                 fi
                 ;;
         esac
@@ -298,10 +283,8 @@ case "$target" in
             *)
                 if [ $fb_width -le 1600 ]; then
                     setprop vendor.display.lcd_density 560
-                    setprop dalvik.vm.heapgrowthlimit 256m
                 else
                     setprop vendor.display.lcd_density 640
-                    setprop dalvik.vm.heapgrowthlimit 512m
                 fi
                 ;;
         esac
@@ -328,6 +311,14 @@ case "$target" in
                     setprop vendor.media.msm8953.version 1
                 fi
                 ;;
+    #Set property to differentiate SDM660 & SDM455
+    #SOC ID for SDM455 is 385
+    "sdm660")
+        case "$soc_hwid" in
+           385)
+               setprop vendor.media.sdm660.version 1
+        esac
+        ;;
 esac
 
 baseband=`getprop ro.baseband`

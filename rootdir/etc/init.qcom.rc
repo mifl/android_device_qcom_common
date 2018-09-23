@@ -86,6 +86,8 @@ on early-boot
     chmod 0664 /persist/sensors/sensors_settings
 
     chown system system /mnt/vendor/persist/sensors
+    chown system system /mnt/vendor/persist/sensors/sns.reg
+    chown system system /mnt/vendor/persist/sensors/sensors_list.txt
     chown system system /mnt/vendor/persist/sensors/registry
     chown system system /mnt/vendor/persist/sensors/registry/registry
     chown system system /mnt/vendor/persist/sensors/registry/registry/sensors_registry
@@ -141,7 +143,7 @@ on boot
     mkdir /persist/bluetooth 0770 bluetooth bluetooth
     mkdir /persist/misc 0770 system system
     mkdir /persist/alarm 0770 system system
-    mkdir /persist/time 0770 system system
+    mkdir /mnt/vendor/persist/time 0770 system system
     mkdir /mnt/vendor/persist/secnvm 0770 system system
 
     #Create NETMGR daemon socket area
@@ -232,6 +234,7 @@ on boot
     # Create vpp directory
     mkdir /mnt/vendor/persist/vpp 0770 media media
 
+
     # Create hvdcp_opti directory
     mkdir /mnt/vendor/persist/hvdcp_opti 0770 root system
 
@@ -266,8 +269,6 @@ on post-fs-data
     #Create folder of camera
     mkdir /data/vendor/camera 0770 camera camera
 
-    mkdir /data/media 0770 media_rw media_rw
-    chown media_rw media_rw /data/media
 
     #Create directory for tftp
     mkdir /data/vendor/tombstones 0771 system system
@@ -413,9 +414,6 @@ on post-fs-data
 
     # Create vpp directory
     mkdir /data/vendor/vpp 0770 media media
-
-    #Create FTM_AP dir for factory test
-    mkdir /data/FTM_AP 0775 system system
 
     #Create dir for TUI
     mkdir /data/vendor/tui 0600 system drmrpc
@@ -564,11 +562,11 @@ service dpmQmiMgr /system/vendor/bin/dpmQmiMgr
     user system
     group system
 
-service vendor.qrtr-ns /vendor/bin/qrtr-ns -f -i 1
+service vendor.qrtr-ns /vendor/bin/qrtr-ns -f
     class core
-    user system
-    group system net_admin
-    capabilities NET_BIND_SERVICE NET_ADMIN
+    user vendor_qrtr
+    group vendor_qrtr
+    capabilities NET_BIND_SERVICE
 
 service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
     class core
@@ -725,6 +723,14 @@ service vendor.wigig_supplicant /vendor/bin/hw/wpa_supplicant \
     #   group wifi inet keystore
     class main
     socket wpa_wigig0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+# Data Migration
+service vendor.move_wifi_data /system/bin/move_wifi_data.sh
+    class main
+    user  wifi
+    group wifi
     disabled
     oneshot
 
@@ -1082,6 +1088,12 @@ service vendor.msm_irqbalance /vendor/bin/msm_irqbalance -f /system/vendor/etc/m
     disabled
 
 service vendor.msm_irqbal_lb /vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance_little_big.conf
+    class core
+    user root
+    group root
+    disabled
+
+service vendor.msm_irqbl_sdm630 /vendor/bin/msm_irqbalance -f /system/vendor/etc/msm_irqbalance_sdm630.conf
     class core
     user root
     group root
