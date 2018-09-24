@@ -507,6 +507,7 @@ then
     then
             set_perms $file/idle_time system.graphics 0664
             set_perms $file/dynamic_fps system.graphics 0664
+            set_perms $file/dynamic_bitclk system.graphics 0664
             set_perms $file/dyn_pu system.graphics 0664
             set_perms $file/modes system.graphics 0664
             set_perms $file/mode system.graphics 0664
