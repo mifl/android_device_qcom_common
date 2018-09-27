@@ -59,6 +59,7 @@ enable_tracing_events()
     echo 1 > /sys/kernel/debug/tracing/events/power/clock_set_rate/enable
     echo 1 > /sys/kernel/debug/tracing/events/power/clock_enable/enable
     echo 1 > /sys/kernel/debug/tracing/events/power/clock_disable/enable
+    echo 1 > /sys/kernel/debug/tracing/events/power/cpu_frequency/enable
     # regulator
     echo 1 > /sys/kernel/debug/tracing/events/regulator/enable
     # power
@@ -321,14 +322,14 @@ enable_msmnile_dcc_config()
     echo 0x18296098 1 > $DCC_PATH/config
 
     # core hang
-    echo 0x18000058 1 > $DCC_PATH/config
-    echo 0x18010058 1 > $DCC_PATH/config
-    echo 0x18020058 1 > $DCC_PATH/config
-    echo 0x18030058 1 > $DCC_PATH/config
-    echo 0x18040058 1 > $DCC_PATH/config
-    echo 0x18050058 1 > $DCC_PATH/config
-    echo 0x18060058 1 > $DCC_PATH/config
-    echo 0x18070058 1 > $DCC_PATH/config
+    echo 0x1800005C 1 > $DCC_PATH/config
+    echo 0x1801005C 1 > $DCC_PATH/config
+    echo 0x1802005C 1 > $DCC_PATH/config
+    echo 0x1803005C 1 > $DCC_PATH/config
+    echo 0x1804005C 1 > $DCC_PATH/config
+    echo 0x1805005C 1 > $DCC_PATH/config
+    echo 0x1806005C 1 > $DCC_PATH/config
+    echo 0x1807005C 1 > $DCC_PATH/config
 
     #DDRSS
     #GEMNOC
