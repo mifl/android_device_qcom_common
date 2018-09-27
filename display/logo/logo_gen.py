@@ -70,14 +70,14 @@ from os import walk
 
 SUPPORT_RLE24_COMPRESSIONT = 1
 ANIMATED_SPLASH = False
+SECTOR_SIZE_IN_BYTES = 512     #default header size
 
 ## get header
 def GetImgHeader(size, compressed=0, real_bytes=0):
-    SECTOR_SIZE_IN_BYTES = 512   # Header size
     header = [0 for i in range(SECTOR_SIZE_IN_BYTES)]
 
     width, height = size
-    real_size = (real_bytes  + 511) / 512
+    real_size = (real_bytes  + SECTOR_SIZE_IN_BYTES - 1) / SECTOR_SIZE_IN_BYTES
 
     # magic
     header[:8] = [ord('S'),ord('P'), ord('L'), ord('A'),
@@ -247,8 +247,10 @@ def MakeLogoImage(logo, out):
 def ShowUsage():
     print("For one display static splash")
     print(" usage: python logo_gen.py [logo.png]")
+    print("      : python --ALIGN 4096 [logo.png]")
     print("For multiple display animated splash")
     print(" usage: python logo_gen.py -a primary_directory [secondary_direcotry] [tertiary_directory]")
+    print(" usage: python logo_get.py -a --ALIGN 4096 primary_directory [secondary_direcotry] [tertiary_directory]")
     print("For multiple display static splash")
     print("Only have one frame in all folders")
     print(" usage: python logo_gen.py -a primary_directory [secondary_direcotry] [tertiary_directory]")
@@ -273,11 +275,16 @@ def GetAnimatedPNGFiles():
     infileLists = []
     paths = []
     num = len(sys.argv)
-    if num < 3 or num > 5:
+    if num < 3 or num > 7:
         ShowUsage()
         sys.exit(); # error arg
 
-    for i in range(2, num):
+    arg_index = 2
+    for i in range(1, num):
+        if sys.argv[i] == "--ALIGN":
+            arg_index = 4
+
+    for i in range(arg_index, num):
         paths.append(sys.argv[i])
 
     for path in paths:
@@ -295,11 +302,10 @@ def GetAnimatedPNGFiles():
     return infileLists
 
 def GetASImgHeader(size, compressed=0, real_bytes=0, num_frames=1, one_size = 2768000):
-    SECTOR_SIZE_IN_BYTES = 512   # Header size
     header = [0 for i in range(SECTOR_SIZE_IN_BYTES)]
 
     width, height = size
-    real_size = (real_bytes  + 511) / 512
+    real_size = (real_bytes  + SECTOR_SIZE_IN_BYTES - 1) / SECTOR_SIZE_IN_BYTES
     fps = 30
 
     # magic
@@ -413,9 +419,9 @@ def MakeAnimatedImage(files, out):
         file.write(img)
         file.write(GetPad(int(pad_size)))
 
-    file_size = total_size + 512
-    pad = 512 - (file_size % 512)
-    if pad == 512:
+    file_size = total_size + SECTOR_SIZE_IN_BYTES
+    pad = SECTOR_SIZE_IN_BYTES - (file_size % SECTOR_SIZE_IN_BYTES)
+    if pad == SECTOR_SIZE_IN_BYTES:
         pad = 0
     file.write(GetPad(pad))
     file.close()
@@ -427,6 +433,8 @@ if __name__ == "__main__":
     for i in range(1, num):
         if sys.argv[i] == "-a":
             ANIMATED_SPLASH = True
+        elif sys.argv[i] == "--ALIGN":
+            SECTOR_SIZE_IN_BYTES = int(sys.argv[i+1])
 
     if ANIMATED_SPLASH == False:
         #one image static splash
