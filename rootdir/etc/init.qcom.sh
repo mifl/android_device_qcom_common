@@ -84,7 +84,7 @@ start_msm_irqbalance_8939()
 {
 	if [ -f /vendor/bin/msm_irqbalance ]; then
 		case "$platformid" in
-		    "239" | "293" | "294" | "295" | "304" | "313" |"353")
+		    "239" | "293" | "294" | "295" | "304" | "338" | "313" |"353")
 			start vendor.msm_irqbalance;;
 		    "349" | "350" )
 			start vendor.msm_irqbal_lb;;
@@ -190,7 +190,7 @@ case "$target" in
         fi
 
         case "$soc_id" in
-             "317" | "324" | "325" | "326" | "318" | "327" )
+             "317" | "324" | "325" | "326" | "318" | "327" | "385" )
                   case "$hw_platform" in
                        "Surf")
                                     setprop qemu.hw.mainkeys 0
@@ -369,7 +369,7 @@ case "$target" in
              hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
         fi
         case "$soc_id" in
-             "336" | "337" | "347" | "360" )
+             "336" | "337" | "347" | "360" | "393" )
                   case "$hw_platform" in
                        "Surf")
                                     setprop qemu.hw.mainkeys 0
