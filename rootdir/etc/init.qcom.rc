@@ -898,6 +898,7 @@ service qcom-sh /vendor/bin/init.qcom.sh
 service sensor-sh /vendor/bin/init.qcom.sensors.sh
     class core
     user root
+    disabled
     oneshot
 
 service crashdata-sh /vendor/bin/init.qcom.crashdata.sh
