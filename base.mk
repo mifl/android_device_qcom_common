@@ -654,7 +654,8 @@ RF4CE += rf4ce
 #SENSORS_HARDWARE
 SENSORS_HARDWARE := sensors.msm7630_surf
 SENSORS_HARDWARE += sensors.msm7630_fusion
-SENSORS_HARDWARE += sensors.msm8996_auto
+SENSORS_HARDWARE += sensors.msm8996.iam_auto
+SENSORS_HARDWARE += sensors.msm8996.bmi_auto
 
 #SOFTAP
 SOFTAP := libQWiFiSoftApCfg
