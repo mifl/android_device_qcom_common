@@ -383,6 +383,32 @@ if [ -f /firmware/verinfo/ver_info.txt ]; then
                     ;;
             esac
         fi
+    # In mpss JO version is greater than 3.2, need
+    # to use the new vendor-ril which supports L+L feature
+    # otherwise use the existing old one.
+    elif [ "$modem" = "JO" ]; then
+        version=`cat /firmware/verinfo/ver_info.txt |
+                sed -n 's/^[^:]*modem[^:]*:[[:blank:]]*//p' |
+                sed 's/.*JO.\(.*\)/\1/g' | cut -d \- -f 1`
+        if [ ! -z $version ]; then
+            zygote=`getprop ro.zygote`
+            case "$zygote" in
+                "zygote64_32")
+                    if [ "$version" \< "3.2" ]; then
+                        setprop vendor.rild.libpath "/vendor/lib64/libril-qc-qmi-1.so"
+                    else
+                        setprop vendor.rild.libpath "/vendor/lib64/libril-qc-hal-qmi.so"
+                    fi
+                    ;;
+                "zygote32")
+                    if [ "$version" \< "3.2" ]; then
+                        setprop vendor.rild.libpath "/vendor/lib/libril-qc-qmi-1.so"
+                    else
+                        setprop vendor.rild.libpath "/vendor/lib/libril-qc-hal-qmi.so"
+                    fi
+                    ;;
+            esac
+        fi
     fi;
 fi
 
@@ -481,6 +507,7 @@ then
     then
             set_perms $file/idle_time system.graphics 0664
             set_perms $file/dynamic_fps system.graphics 0664
+            set_perms $file/dynamic_bitclk system.graphics 0664
             set_perms $file/dyn_pu system.graphics 0664
             set_perms $file/modes system.graphics 0664
             set_perms $file/mode system.graphics 0664
