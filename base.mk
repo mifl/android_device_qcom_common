@@ -729,6 +729,8 @@ THERMAL_HAL += thermal.sdm660
 THERMAL_HAL += thermal.msm8996
 THERMAL_HAL += thermal.msm8953
 THERMAL_HAL += thermal.msm8937
+THERMAL_HAL += thermal.msmnile
+THERMAL_HAL += thermal.$(MSMSTEPPE)
 
 #TSLIB_EXTERNAL
 TSLIB_EXTERNAL := corgi
@@ -790,9 +792,6 @@ IMS_SETTINGS := imssettings
 IMS_EXT := ims-ext-common
 IMS_EXT += ConfURIDialer
 
-#Android Telephony library
-PRODUCT_BOOT_JARS += qtiNetworkLib
-
 #CRDA
 CRDA := crda
 CRDA += regdbdump
@@ -828,8 +827,6 @@ PRODUCT_PACKAGES := \
     AlarmProvider \
     Bluetooth \
     BluetoothExt \
-    BATestApp \
-    HidTestApp \
     Calculator \
     Calendar \
     Camera \
@@ -864,6 +861,7 @@ PRODUCT_PACKAGES := \
     wipowerservice \
     Mms \
     QtiDialer \
+    NrNetworkSettingApp \
     qtiNetworkLib \
     TestApp5G
 
@@ -1098,7 +1096,7 @@ PRODUCT_COPY_FILES += \
 endif
 
 ifneq ($(TARGET_NOT_SUPPORT_VULKAN),true)
-ifneq ($(TARGET_SUPPORT_VULKAN_VERSION_1_1),true)
+ifeq ($(TARGET_SUPPORT_VULKAN_VERSION_1_1),false)
 PRODUCT_COPY_FILES += frameworks/native/data/etc/android.hardware.vulkan.version-1_0_3.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version-1_0_3.xml
 else
 PRODUCT_COPY_FILES += frameworks/native/data/etc/android.hardware.vulkan.version-1_1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version-1_1.xml
