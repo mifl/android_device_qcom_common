@@ -33,4 +33,7 @@
 
 /* Increasing SEPs to 12 from 6 to support SHO/MCast i.e. two streams per codec */
 #define AVDT_NUM_SEPS 12
+
+/* Enable 128bit-UUID in EIR when a service based on RFCOMM is created. */
+#define BTA_EIR_SUPPORT_128BIT_UUID TRUE
 #endif
