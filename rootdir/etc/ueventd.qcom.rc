@@ -287,6 +287,9 @@ firmware_directories /vendor/firmware_mnt/image/
 /sys/devices/soc/*.i2c/i2c-*/*-*/iio:device*    scan_elements/in_timestamp_en        0660    system  system
 /sys/devices/soc/*.i2c/i2c-*/*-*/iio:device*    scan_elements/in_timestamp_index     0440    system  system
 /sys/devices/soc/*.i2c/i2c-*/*-*/iio:device*    scan_elements/in_timestamp_type      0440    system  system
+/sys/devices/soc/*.i2c/i2c-*/*-*/iio:device*    misc_batchmode_timeout               0660    system  system
+/sys/devices/soc/*.i2c/i2c-*/*-*/iio:device*    misc_flush_batch                     0660    system  system
+/sys/devices/soc/*.i2c/i2c-*/*-*/iio:device*    misc_self_test                       0660    system  system
 # standard iio accel attributes
 /sys/devices/soc/*.i2c/i2c-*/*-*/iio:device*    in_accel_offset                      0660    system  system
 /sys/devices/soc/*.i2c/i2c-*/*-*/iio:device*    in_accel_scale                       0660    system  system
