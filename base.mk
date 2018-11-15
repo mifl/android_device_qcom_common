@@ -1072,7 +1072,11 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.oem_unlock_supported=true
 
 ifeq ($(TARGET_USES_QCOM_BSP_ATEL),true)
+    ifeq ($(TARGET_BOARD_AUTO),true)
+    PRODUCT_PROPERTY_OVERRIDES += persist.radio.multisim.config=none
+    else
     PRODUCT_PROPERTY_OVERRIDES += persist.radio.multisim.config=dsds
+    endif
 endif
 
 # VNDK-SP:
