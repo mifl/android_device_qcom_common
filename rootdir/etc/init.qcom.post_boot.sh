@@ -265,6 +265,7 @@ function configure_read_ahead_kb_values() {
         echo 128 > /sys/block/mmcblk0rpmb/queue/read_ahead_kb
         echo 128 > /sys/block/dm-0/queue/read_ahead_kb
         echo 128 > /sys/block/dm-1/queue/read_ahead_kb
+        echo 128 > /sys/block/dm-2/queue/read_ahead_kb
     else
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
         echo 512 > /sys/block/mmcblk0/queue/read_ahead_kb
@@ -272,6 +273,7 @@ function configure_read_ahead_kb_values() {
         echo 512 > /sys/block/mmcblk0rpmb/queue/read_ahead_kb
         echo 512 > /sys/block/dm-0/queue/read_ahead_kb
         echo 512 > /sys/block/dm-1/queue/read_ahead_kb
+        echo 512 > /sys/block/dm-2/queue/read_ahead_kb
     fi
 }
 
@@ -332,6 +334,8 @@ if [ "$ProductName" == "msmnile" ]; then
       # Enable ZRAM
       configure_zram_parameters
       configure_read_ahead_kb_values
+      echo 0 > /proc/sys/vm/page-cluster
+      echo 100 > /proc/sys/vm/swappiness
 else
     arch_type=`uname -m`
     MemTotalStr=`cat /proc/meminfo | grep MemTotal`
@@ -2698,7 +2702,7 @@ case "$target" in
 
             # Start Host based Touch processing
             case "$hw_platform" in
-              "MTP" | "Surf" | "RCM" | "QRD" )
+              "MTP" | "Surf" | "RCM" | "QRD" | "HDK" )
                   start_hbtp
                   ;;
             esac
@@ -3846,11 +3850,11 @@ case "$target" in
 		echo 4 > $npubw/bw_hwmon/sample_ms
 		echo 80 > $npubw/bw_hwmon/io_percent
 		echo 20 > $npubw/bw_hwmon/hist_memory
-		echo 10 > $npubw/bw_hwmon/hyst_length
+		echo 6  > $npubw/bw_hwmon/hyst_length
 		echo 30 > $npubw/bw_hwmon/down_thres
 		echo 0 > $npubw/bw_hwmon/guard_band_mbps
 		echo 250 > $npubw/bw_hwmon/up_scale
-		echo 1600 > $npubw/bw_hwmon/idle_mbps
+		echo 0 > $npubw/bw_hwmon/idle_mbps
 		echo 0 > /sys/devices/virtual/npu/msm_npu/pwr
 	    done
 
@@ -4334,18 +4338,6 @@ if [ -f /sys/devices/soc0/select_image ]; then
     echo $image_variant > /sys/devices/soc0/image_variant
     echo $oem_version > /sys/devices/soc0/image_crm_version
 fi
-
-# Change console log level as per console config property
-console_config=`getprop persist.vendor.console.silent.config`
-case "$console_config" in
-    "1")
-        echo "Enable console config to $console_config"
-        echo 0 > /proc/sys/kernel/printk
-        ;;
-    *)
-        echo "Enable console config to $console_config"
-        ;;
-esac
 
 # Parse misc partition path and set property
 misc_link=$(ls -l /dev/block/bootdevice/by-name/misc)
