@@ -75,16 +75,6 @@ enable_tracing_events()
     #rmph_send_msg
     echo 1 > /sys/kernel/debug/tracing/events/rpmh/rpmh_send_msg/enable
 
-    #enable aop with timestamps
-    echo 33 0x680000 > /sys/bus/coresight/devices/coresight-tpdm-swao-0/cmb_msr
-    echo 48 0xC0 > /sys/bus/coresight/devices/coresight-tpdm-swao-0/cmb_msr
-    echo 0x4 > /sys/bus/coresight/devices/coresight-tpdm-swao-0/mcmb_lanes_select
-    echo 1 0 > /sys/bus/coresight/devices/coresight-tpdm-swao-0/cmb_mode
-    echo 1 > /sys/bus/coresight/devices/coresight-tpdm-swao-0/cmb_trig_ts
-    echo 1 >  /sys/bus/coresight/devices/coresight-tpdm-swao-0/enable_source
-    echo 4 2 > /sys/bus/coresight/devices/coresight-cti-swao_cti0/map_trigin
-    echo 4 2 > /sys/bus/coresight/devices/coresight-cti-swao_cti0/map_trigout
-
     echo 1 > /sys/kernel/debug/tracing/tracing_on
 }
 
@@ -322,14 +312,14 @@ enable_msmnile_dcc_config()
     echo 0x18296098 1 > $DCC_PATH/config
 
     # core hang
-    echo 0x18000058 1 > $DCC_PATH/config
-    echo 0x18010058 1 > $DCC_PATH/config
-    echo 0x18020058 1 > $DCC_PATH/config
-    echo 0x18030058 1 > $DCC_PATH/config
-    echo 0x18040058 1 > $DCC_PATH/config
-    echo 0x18050058 1 > $DCC_PATH/config
-    echo 0x18060058 1 > $DCC_PATH/config
-    echo 0x18070058 1 > $DCC_PATH/config
+    echo 0x1800005C 1 > $DCC_PATH/config
+    echo 0x1801005C 1 > $DCC_PATH/config
+    echo 0x1802005C 1 > $DCC_PATH/config
+    echo 0x1803005C 1 > $DCC_PATH/config
+    echo 0x1804005C 1 > $DCC_PATH/config
+    echo 0x1805005C 1 > $DCC_PATH/config
+    echo 0x1806005C 1 > $DCC_PATH/config
+    echo 0x1807005C 1 > $DCC_PATH/config
 
     #DDRSS
     #GEMNOC
@@ -616,6 +606,14 @@ enable_msmnile_dcc_config()
     echo 0x01700900 5 > $DCC_PATH/config
     echo 0x01700b00 2 > $DCC_PATH/config
     echo 0x01700d00 1 > $DCC_PATH/config
+
+#APM
+    echo 0x0C267000 9 > $DCC_PATH/config
+    echo 0x0C26705C 2 > $DCC_PATH/config
+    echo 0x0C267024 3 > $DCC_PATH/config
+    echo 0x0C267054 2 > $DCC_PATH/config
+    echo 0x0C267030 1 > $DCC_PATH/config
+    echo 0x0C267040 5 > $DCC_PATH/config
 
     echo  1 > $DCC_PATH/enable
 }
