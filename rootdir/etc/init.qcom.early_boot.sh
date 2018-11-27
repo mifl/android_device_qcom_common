@@ -28,6 +28,8 @@
 #
 
 export PATH=/vendor/bin
+# setting the lcd density for hypervisor platforms.
+setprop ro.sf.lcd_density 160
 
 # Set platform variables
 if [ -f /sys/devices/soc0/hw_platform ]; then
