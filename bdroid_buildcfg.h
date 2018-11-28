@@ -36,4 +36,7 @@
 
 /* Enable 128bit-UUID in EIR when a service based on RFCOMM is created. */
 #define BTA_EIR_SUPPORT_128BIT_UUID TRUE
+
+/* Enable delay reporting for A2DP Sink device */
+#define A2DP_SINK_DELAY_REPORT TRUE
 #endif
