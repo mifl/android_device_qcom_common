@@ -4,6 +4,7 @@ endif
 ifneq ($(filter librecovery_updater_msm,$(TARGET_RECOVERY_UPDATER_LIBS)),)
 BUILD_OEM_UPDATER := true
 endif
+BUILD_OEM_UPDATER := false
 ifeq ($(BUILD_OEM_UPDATER), true)
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
