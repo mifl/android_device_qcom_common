@@ -1,4 +1,4 @@
-/* Copyright (c) 2014, The Linux Foundation. All rights reserved.
+/* Copyright (c) 2018, The Linux Foundation. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are
@@ -26,28 +26,43 @@
  * IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef __CRYPTFS_HW_H_
-#define __CRYPTFS_HW_H_
+#ifndef FDE_GVM_FE_H
+#define FDE_GVM_FE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdint.h>
+
+typedef enum {
+    FDE_ICE_BYPASS = 0,
+    FDE_ICE_WRITE = 1,
+    FDE_ICE_READ = 2,
+    FDE_ICE_FULL = 3
+} fde_ice_state_t;
+
+//FDE errors
+typedef enum {
+  FDE_SUCCESS_NEEDS_FORMAT   = 1,
+  FDE_SUCCESS                = 0,
+  FDE_GENERAL_ERROR          = -1,
+  FDE_NOT_SUPPORTED          = -2,
+  FDE_INVALID_INPUT          = -3,
+  FDE_BLOCK_DEVICE_ERROR     = -4,
+  FDE_PARTITION_NOT_FOUND    = -5,
+  FDE_KEY_ERROR              = -6,
+  FDE_SOCKET_ERROR           = -7
+} fde_err_t;
+
+//create FDE key (QSEOS_GENERATE_KEY)
+fde_err_t fde_fe_set_key(const char* partition_name, uint8_t* hash, size_t hash_size);
+//update key info (QSEOS_UPDATE_KEY_USERINFO)
+fde_err_t fde_fe_update_user_info(const char* partition_name,
+                                const uint8_t* curr_hash, size_t curr_hash_size,
+                                const uint8_t* new_hash, size_t new_hash_size);
+//wipe key
+fde_err_t fde_fe_wipe_key(const char* partition_name);
+//clear key
+fde_err_t fde_fe_clear_key(const char* partition_name);
+//set ICE state
+fde_err_t fde_fe_set_ice_state(const char* partition_name, fde_ice_state_t state);
 
 
-/*This is equivalent of MAX_CRYPTO_TYPE_NAME_LEN*/
-#define CRYPTO_ALGO_LENGTH 64
-#define START_ENC 0x1
-#define START_ENCDEC 0x3
-
-int set_hw_device_encryption_key(const char*, const char*);
-int update_hw_device_encryption_key(const char*, const char*, const char*);
-int clear_hw_device_encryption_key();
-unsigned int is_hw_disk_encryption(const char*);
-int is_ice_enabled(void);
-int should_use_keymaster();
-int set_ice_param(int flag);
-
-#ifdef __cplusplus
-}
-#endif
-#endif
+#endif //FDE_GVM_FE_H

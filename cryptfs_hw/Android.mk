@@ -2,8 +2,15 @@ ifeq ($(TARGET_HW_DISK_ENCRYPTION),true)
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
+ifeq ($(ENABLE_HYP),true)
+sourceFiles := \
+               cryptfs_hw_gvm.c \
+               uhab.c \
+               fde_fe.c
+else
 sourceFiles := \
                cryptfs_hw.c
+endif
 
 commonSharedLibraries := \
                         libcutils \
