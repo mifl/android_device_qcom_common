@@ -223,19 +223,6 @@ if [ -d /config/usb_gadget ]; then
 	# ADB requires valid iSerialNumber; if ro.serialno is missing, use dummy
 	serialnumber=`cat /config/usb_gadget/g1/strings/0x409/serialnumber` 2> /dev/null
 	if [ "$serialnumber" == "" ]; then
-		echo "trying to set the serialno for adb in guest"
-		#second level of setting unique serialno for adb, useful for guest android by default.
-		if [ -d /sys/class/net/dummy0 ]; then
-			f3=`cat /sys/class/net/dummy0/address  |  cut -f3 -d :`
-			f4=`cat /sys/class/net/dummy0/address  |  cut -f4 -d :`
-			f5=`cat /sys/class/net/dummy0/address  |  cut -f5 -d :`
-			f6=`cat /sys/class/net/dummy0/address  |  cut -f6 -d :`
-			serialnumber=$f3$f4$f5$f6
-			echo $serialnumber > /config/usb_gadget/g1/strings/0x409/serialnumber
-		fi
-	fi
-
-	if [ "$serialnumber" == "" ]; then
 		serialno=1234567
 		echo $serialno > /config/usb_gadget/g1/strings/0x409/serialnumber
 	fi
