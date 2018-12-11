@@ -223,8 +223,11 @@ if [ -d /config/usb_gadget ]; then
 	# ADB requires valid iSerialNumber; if ro.serialno is missing, use dummy
 	serialnumber=`cat /config/usb_gadget/g1/strings/0x409/serialnumber` 2> /dev/null
 	if [ "$serialnumber" == "" ]; then
-		serialno=1234567
-		echo $serialno > /config/usb_gadget/g1/strings/0x409/serialnumber
+		varient = `getprop ro.product.name`
+		if [ "${varient}" -ne "msm8996_gvmq" ]; then
+			serialno=1234567
+			echo $serialno > /config/usb_gadget/g1/strings/0x409/serialnumber
+		fi
 	fi
 
 	persist_comp=`getprop persist.sys.usb.config`
