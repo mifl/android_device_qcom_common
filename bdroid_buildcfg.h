@@ -39,4 +39,18 @@
 
 /* Enable delay reporting for A2DP Sink device */
 #define A2DP_SINK_DELAY_REPORT TRUE
+
+/*
+* Change CoD for Auto car-kit
+* {SERVICE_CLASS, MAJOR_CLASS, MINOR_CLASS}
+*
+* SERVICE_CLASS:0x26 (Bit17 - Networking, Bit18 - Rendering, Bit21 - Audio)
+* MAJOR_CLASS:0x04 - Audio/Video
+* MINOR_CLASS:0X08 - Hands-free Device
+*
+* Detailed information can be found in below link
+* https://www.bluetooth.com/specifications/assigned-numbers/baseband
+*/
+#define BTA_DM_COD \
+  { 0x26, 0x04, 0x08 }
 #endif
