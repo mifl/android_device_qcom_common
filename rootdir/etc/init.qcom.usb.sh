@@ -129,7 +129,7 @@ if [ "$(getprop persist.vendor.usb.config)" == "" -a \
 	              "sdm845" | "sdm710")
 		          setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,adb
 		      ;;
-	              "msmnile" | "talos")
+	              "msmnile" | "sm6150")
 			  setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,qdss,adb
 		      ;;
 	              *)
@@ -151,6 +151,17 @@ if [ "$target" == "msm8937" ]; then
 	   case "$soc_id" in
 		"313" | "320")
 		   echo BAM2BAM_IPA > /sys/class/android_usb/android0/f_rndis_qc/rndis_transports
+		;;
+		*)
+		;;
+	   esac
+	else
+	   case "$soc_id" in
+		"313" | "320")
+		   setprop vendor.usb.rndis.func.name "rndis_bam"
+		   setprop vendor.usb.rmnet.func.name "rmnet_bam"
+		   setprop vendor.usb.rmnet.inst.name "rmnet"
+		   setprop vendor.usb.dpl.inst.name "dpl"
 		;;
 		*)
 		;;
