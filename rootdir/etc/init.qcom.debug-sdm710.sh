@@ -135,6 +135,32 @@ enable_sdm710_stm()
     enable_sdm710_tracing_events
 }
 
+config_sdm710_dcc_gpu()
+{
+    #GCC
+    echo 0x105050 > $DCC_PATH/config
+    echo 0x171004 > $DCC_PATH/config
+    echo 0x17100C > $DCC_PATH/config
+    echo 0x171018 > $DCC_PATH/config
+    echo 0x144038 > $DCC_PATH/config
+    echo 0x144020 > $DCC_PATH/config
+
+    #GPUCC
+    echo 0x5091004 > $DCC_PATH/config
+    echo 0x509100c > $DCC_PATH/config
+    echo 0x5091010 > $DCC_PATH/config
+    echo 0x5091054 > $DCC_PATH/config
+    echo 0x5091060 > $DCC_PATH/config
+    echo 0x509106c > $DCC_PATH/config
+    echo 0x5091070 > $DCC_PATH/config
+    echo 0x5091078 > $DCC_PATH/config
+    echo 0x509107c > $DCC_PATH/config
+    echo 0x509108c > $DCC_PATH/config
+    echo 0x5091098 > $DCC_PATH/config
+    echo 0x509109c > $DCC_PATH/config
+    echo 0x5091540 > $DCC_PATH/config
+}
+
 config_sdm710_dcc_gcc_regs()
 {
     echo 0x100000   1 > $DCC_PATH/config
@@ -1948,6 +1974,7 @@ enable_sdm710_dcc_config()
     #config_sdm710_axi_pc
     #config_sdm710_apb_pc
     config_sdm710_memnoc_mccc
+    config_sdm710_dcc_gpu
     #config_sdm710_dcc_pdc_display
     #config_sdm710_dcc_aop_rpmh
     #config_sdm710_dcc_lmh
