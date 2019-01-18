@@ -1501,13 +1501,6 @@ config_talos_dcc_cx_mx()
     #CPRH
     echo 0x183A3A84 2 > $DCC_PATH/config
     echo 0x18393A84 1 > $DCC_PATH/config
-    #OSM Registers
-    echo 0x18300010 1 > $DCC_PATH/config
-    echo 0x18393AAC 1 > $DCC_PATH/config
-    echo 0x183258B0 1 > $DCC_PATH/config
-    echo 0x17E00178 1 > $DCC_PATH/config
-    echo 0x17E0017C 1 > $DCC_PATH/config
-    echo 0x183270D8 1 > $DCC_PATH/config
 }
 
 config_talos_dcc_gcc_regs()
