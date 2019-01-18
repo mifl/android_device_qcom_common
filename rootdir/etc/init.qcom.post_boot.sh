@@ -237,7 +237,7 @@ function configure_zram_parameters() {
     if [ -f /sys/block/zram0/disksize ]; then
         if [ $MemTotal -le 524288 ] && [ "$low_ram" == "true" ]; then
             echo lz4 > /sys/block/zram0/comp_algorithm
-            echo 402653184 > /sys/block/zram0/disksize
+            echo 268435456 > /sys/block/zram0/disksize
         elif [ $MemTotal -le 1048576 ] && [ "$low_ram" == "true" ]; then
             echo lz4 > /sys/block/zram0/comp_algorithm
             echo 805306368 > /sys/block/zram0/disksize
@@ -359,13 +359,17 @@ else
         fi
 
         if [ $MemTotal -le 1048576 ] && [ "$low_ram" == "true" ]; then
-            # Disable KLMK, ALMK, PPR & Core Control for Go devices
-            echo 0 > /sys/module/lowmemorykiller/parameters/enable_lmk
-            echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
-            echo 0 > /sys/module/process_reclaim/parameters/enable_process_reclaim
+            # Replace MEMCG with ALMK and PPR for 51MB go devices
+            echo 70 > /sys/module/process_reclaim/parameters/pressure_max
+            # Replace the default score with 100, to reclaim more apps' memory
+            echo 100 > /sys/module/process_reclaim/parameters/min_score_adj
+            echo 512 > /sys/module/process_reclaim/parameters/per_swap_size
+            echo 1 > /sys/module/process_reclaim/parameters/enable_process_reclaim
+
             echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/disable
-            echo "4871,6767,8663,11915,13811,16246" > /sys/module/lowmemorykiller/parameters/minfree
-            echo 18432 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+            echo "8192,11264,14336,17408,20480,26624" > /sys/module/lowmemorykiller/parameters/minfree
+            echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
+            echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
         else
             # Disable Core Control, enable KLMK for non-go 8909
             if [ "$ProductName" == "msm8909" ]; then
