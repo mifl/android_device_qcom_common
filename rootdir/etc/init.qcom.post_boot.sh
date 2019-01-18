@@ -2185,11 +2185,27 @@ case "$target" in
       echo 1209600 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/hispeed_freq
       echo 576000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
-      # configure governor settings for big cluster
-      echo "schedutil" > /sys/devices/system/cpu/cpu6/cpufreq/scaling_governor
-      echo 0 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/rate_limit_us
-      echo 1344000 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/hispeed_freq
-      echo 825600 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
+      if [ -f /sys/devices/system/cpu/possible ]; then
+         NO_OF_CORES=`cat /sys/devices/system/cpu/possible | cut -c 3`
+         NO_OF_CORES=$((NO_OF_CORES+1))
+      fi
+
+      case "$NO_OF_CORES" in
+      4 )
+        # settings for LC
+        echo "schedutil" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+        echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/rate_limit_us
+        echo 1344000 > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/hispeed_freq
+        echo 825600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+        ;;
+
+      8 )
+        # configure governor settings for big cluster
+        echo "schedutil" > /sys/devices/system/cpu/cpu6/cpufreq/scaling_governor
+        echo 0 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/rate_limit_us
+        echo 1344000 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/hispeed_freq
+        echo 825600 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
+      esac
 
       echo "0:1209600" > /sys/module/cpu_boost/parameters/input_boost_freq
       echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
