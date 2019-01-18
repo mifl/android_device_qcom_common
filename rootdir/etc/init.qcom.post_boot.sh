@@ -364,6 +364,8 @@ else
             echo 0 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
             echo 0 > /sys/module/process_reclaim/parameters/enable_process_reclaim
             echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/disable
+            echo "4871,6767,8663,11915,13811,16246" > /sys/module/lowmemorykiller/parameters/minfree
+            echo 18432 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
         else
             # Disable Core Control, enable KLMK for non-go 8909
             if [ "$ProductName" == "msm8909" ]; then
