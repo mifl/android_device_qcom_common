@@ -791,13 +791,12 @@ PRODUCT_PACKAGES := \
     FMRecord \
     VideoEditor \
     SnapdragonGallery \
-    SnapdragonLauncher \
     SnapdragonMusic \
     a4wpservice \
     wipowerservice
 
 ifeq ($(TARGET_HAS_LOW_RAM),true)
-    DELAUN := Launcher3Go
+#    DELAUN := Launcher3Go
 else
     # Live Wallpapers
     PRODUCT_PACKAGES += \
