@@ -1782,17 +1782,7 @@ enable_talos_dcc_config()
     #Enable below function with relaxed AC
     #config_talos_regs_no_ac
     #Apply configuration and enable DCC
-	if [ -f /sys/devices/soc0/soc_id ]
-	then
-		soc_id=`cat /sys/devices/soc0/soc_id`
-	else
-		soc_id=`cat /sys/devices/system/soc/soc0/id`
-	fi
-	if [ "$soc_id" = 365 ] || [ "$soc_id" = 366 ]
-	then
-		echo 0x18326120 > $DCC_PATH/config
-		echo 0x18321920 > $DCC_PATH/config
-	fi
+
     echo  1 > $DCC_PATH/enable
 }
 
