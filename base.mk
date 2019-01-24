@@ -1,3 +1,24 @@
+# define flag to determine the kernel
+TARGET_KERNEL_VERSION := $(shell ls kernel | grep "msm-*" | sed 's/msm-//')
+
+# Set TARGET_USES_NEW_ION for 4.14 and higher kernels
+ifeq ($(TARGET_KERNEL_VERSION),$(filter $(TARGET_KERNEL_VERSION),3.18 4.4 4.9))
+TARGET_USES_NEW_ION := false
+else
+TARGET_USES_NEW_ION := true
+endif
+
+# Pure AOSP framework vs vendor modified framework detection
+# - using BUILD_ID xKQ* as mechanism
+
+ifeq ($(filter $(shell echo $(BUILD_ID) | sed 's/.KQ.*/KQ/g'),KQ),KQ)
+  TARGET_FWK_SUPPORTS_FULL_VALUEADDS := true
+  $(warning "Compile using modified AOSP tree supporting full vendor value-adds")
+else
+  TARGET_FWK_SUPPORTS_FULL_VALUEADDS := false
+  $(warning "Compile using pure AOSP tree")
+endif
+
 # Board platforms lists to be used for
 # TARGET_BOARD_PLATFORM specific featurization
 QCOM_BOARD_PLATFORMS += msm8974
@@ -27,12 +48,39 @@ QCOM_BOARD_PLATFORMS += sdm710
 QCOM_BOARD_PLATFORMS += msmnile_au
 QCOM_BOARD_PLATFORMS += qcs605
 QCOM_BOARD_PLATFORMS += $(MSMSTEPPE)
+QCOM_BOARD_PLATFORMS += kona
 
 QSD8K_BOARD_PLATFORMS := qsd8k
 
 TARGET_USE_VENDOR_CAMERA_EXT := true
 TARGET_USE_QTI_BT_STACK := true
-BOARD_HAVE_QCOM_FM := true
+
+BOARD_HAVE_QCOM_FM ?= true
+
+
+# Boot additions
+#Android Telephony library
+PRODUCT_BOOT_JARS += qtiNetworkLib
+ifeq ($(strip $(TARGET_USES_NQ_NFC)),true)
+PRODUCT_BOOT_JARS += com.nxp.nfc.nq
+endif
+ifeq ($(strip $(BOARD_HAVE_QCOM_FM)),true)
+PRODUCT_BOOT_JARS += qcom.fmradio
+endif #BOARD_HAVE_QCOM_FM
+#Camera QC extends API
+#ifeq ($(strip $(TARGET_USES_QTIC_EXTENSION)),true)
+#PRODUCT_BOOT_JARS += com.qualcomm.qti.camera
+#endif
+ifneq ($(strip $(TARGET_DISABLE_PERF_OPTIMIATIONS)),true)
+# Preloading QPerformance jar to ensure faster perflocks in Boost Framework
+PRODUCT_BOOT_JARS += QPerformance
+# Preloading UxPerformance jar to ensure faster UX invoke in Boost Framework
+PRODUCT_BOOT_JARS += UxPerformance
+endif
+
+#skip boot jars check
+SKIP_BOOT_JARS_CHECK := true
+
 
 #Enable suspend during charger mode
 BOARD_CHARGER_ENABLE_SUSPEND := true
@@ -120,6 +168,7 @@ AUDIO_HARDWARE += audio.primary.sdm710
 AUDIO_HARDWARE += audio.primary.qcs605
 AUDIO_HARDWARE += audio.primary.msmnile
 AUDIO_HARDWARE += audio.primary.$(MSMSTEPPE)
+AUDIO_HARDWARE += audio.primary.kona
 #
 AUDIO_POLICY := audio_policy.mpq8064
 AUDIO_POLICY += audio_policy.apq8084
@@ -261,6 +310,12 @@ GPS_HARDWARE += android.hardware.gnss@1.0-service-qti
 GPS_HARDWARE += android.hardware.gnss@1.1-impl-qti
 GPS_HARDWARE += android.hardware.gnss@1.1-service-qti
 
+HIDL_WRAPPER := qti-telephony-hidl-wrapper
+HIDL_WRAPPER += qti_telephony_hidl_wrapper.xml
+
+QTI_TELEPHONY_UTILS := qti-telephony-utils
+QTI_TELEPHONY_UTILS += qti_telephony_utils.xml
+
 #HDMID
 HDMID := hdmid
 
@@ -311,6 +366,7 @@ INIT += ssr_setup
 INIT += enable_swap.sh
 INIT += init.mdm.sh
 INIT += fstab.qcom
+INIT += fstab.qti
 INIT += init.qcom.sensors.sh
 INIT += init.qcom.crashdata.sh
 INIT += init.qcom.vendor.rc
@@ -469,6 +525,7 @@ LIBGRALLOC += gralloc.msm8937
 LIBGRALLOC += gralloc.msm8953
 LIBGRALLOC += gralloc.msm8998
 LIBGRALLOC += gralloc.msmnile
+LIBGRALLOC += gralloc.kona
 LIBGRALLOC += gralloc.sdm845
 LIBGRALLOC += gralloc.apq8098_latv
 LIBGRALLOC += libmemalloc
@@ -494,6 +551,7 @@ LIBMEMTRACK += memtrack.msm8937
 LIBMEMTRACK += memtrack.msm8953
 LIBMEMTRACK += memtrack.msm8998
 LIBMEMTRACK += memtrack.msmnile
+LIBMEMTRACK += memtrack.kona
 LIBMEMTRACK += memtrack.sdm660
 LIBMEMTRACK += memtrack.sdm845
 LIBMEMTRACK += memtrack.apq8098_latv
@@ -524,6 +582,7 @@ LIBLIGHTS += lights.msm8937
 LIBLIGHTS += lights.msm8953
 LIBLIGHTS += lights.msm8998
 LIBLIGHTS += lights.msmnile
+LIBLIGHTS += lights.kona
 LIBLIGHTS += lights.sdm660
 LIBLIGHTS += lights.sdm845
 LIBLIGHTS += lights.apq8098_latv
@@ -555,6 +614,7 @@ LIBHWCOMPOSER += hwcomposer.msm8937
 LIBHWCOMPOSER += hwcomposer.msm8953
 LIBHWCOMPOSER += hwcomposer.msm8998
 LIBHWCOMPOSER += hwcomposer.msmnile
+LIBHWCOMPOSER += hwcomposer.kona
 LIBHWCOMPOSER += hwcomposer.sdm660
 LIBHWCOMPOSER += hwcomposer.sdm845
 LIBHWCOMPOSER += hwcomposer.apq8098_latv
@@ -623,6 +683,7 @@ MM_CORE += libOmxCore
 
 #WFD
 MM_WFD := libwfdaac
+MM_WFD := libwfdaac_proprietary
 
 
 #MM_VIDEO
@@ -790,9 +851,6 @@ IMS_SETTINGS := imssettings
 IMS_EXT := ims-ext-common
 IMS_EXT += ConfURIDialer
 
-#Android Telephony library
-PRODUCT_BOOT_JARS += qtiNetworkLib
-
 #CRDA
 CRDA := crda
 CRDA += regdbdump
@@ -826,9 +884,6 @@ PRODUCT_PACKAGES := \
     AccountAndSyncSettings \
     DeskClock \
     AlarmProvider \
-    Bluetooth \
-    BluetoothExt \
-    BATestApp \
     HidTestApp \
     Calculator \
     Calendar \
@@ -867,6 +922,13 @@ PRODUCT_PACKAGES := \
     qtiNetworkLib \
     TestApp5G
 
+ifneq ($(BOARD_HAVE_BLUETOOTH),false)
+PRODUCT_PACKAGES += \
+    Bluetooth \
+    BluetoothExt \
+    BATestApp
+endif
+
 ifeq ($(TARGET_HAS_LOW_RAM),true)
     DELAUN := Launcher3Go
 else
@@ -892,7 +954,9 @@ PRODUCT_PACKAGES += $(AMPLOADER)
 PRODUCT_PACKAGES += $(APPS)
 PRODUCT_PACKAGES += $(BRCTL)
 PRODUCT_PACKAGES += $(BSON)
+ifneq ($(BOARD_HAVE_BLUETOOTH),false)
 PRODUCT_PACKAGES += $(BT)
+endif
 PRODUCT_PACKAGES += $(C2DCC)
 PRODUCT_PACKAGES += $(CHROMIUM)
 PRODUCT_PACKAGES += $(CIMAX)
@@ -912,6 +976,7 @@ PRODUCT_PACKAGES += $(FM)
 PRODUCT_PACKAGES += $(GPS_HARDWARE)
 PRODUCT_PACKAGES += $(HDMID)
 PRODUCT_PACKAGES += $(HOSTAPD)
+PRODUCT_PACKAGES += $(HIDL_WRAPPER)
 PRODUCT_PACKAGES += $(I420CC)
 PRODUCT_PACKAGES += $(INIT)
 PRODUCT_PACKAGES += $(IPROUTE2)
@@ -946,10 +1011,8 @@ PRODUCT_PACKAGES += $(MM_WFD)
 PRODUCT_PACKAGES += $(MM_VIDEO)
 ifeq ($(strip $(TARGET_USES_NQ_NFC)),true)
 PRODUCT_PACKAGES += $(NQ_NFC)
-PRODUCT_BOOT_JARS += com.nxp.nfc.nq
 endif
 ifeq ($(strip $(BOARD_HAVE_QCOM_FM)),true)
-PRODUCT_BOOT_JARS += qcom.fmradio
 # system prop for fm
 PRODUCT_PROPERTY_OVERRIDES += \
     vendor.hw.fm.init=0
@@ -958,6 +1021,7 @@ PRODUCT_PACKAGES += $(OPENCORE)
 PRODUCT_PACKAGES += $(PPP)
 PRODUCT_PACKAGES += $(PROTOBUF)
 PRODUCT_PACKAGES += $(PVOMX)
+PRODUCT_PACKAGES += $(QTI_TELEPHONY_UTILS)
 PRODUCT_PACKAGES += $(RF4CE)
 PRODUCT_PACKAGES += $(SENSORS_HARDWARE)
 #PRODUCT_PACKAGES += $(SOFTAP)
@@ -1137,24 +1201,10 @@ ifneq ($(BOARD_AVB_ENABLE), true)
    $(call inherit-product, build/target/product/verity.mk)
 endif
 
-#skip boot jars check
-SKIP_BOOT_JARS_CHECK := true
-
 ifeq ($(TARGET_BUILD_VARIANT),user)
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES+= \
     ro.adb.secure=1
 endif
-
-#Camera QC extends API
-ifeq ($(strip $(TARGET_USES_QTIC_EXTENSION)),true)
-PRODUCT_BOOT_JARS += com.qualcomm.qti.camera
-endif
-
-# Preloading QPerformance jar to ensure faster perflocks in Boost Framework
-PRODUCT_BOOT_JARS += QPerformance
-
-# Preloading UxPerformance jar to ensure faster UX invoke in Boost Framework
-PRODUCT_BOOT_JARS += UxPerformance
 
 # OEM Unlock reporting
 PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
@@ -1193,3 +1243,9 @@ endif
 PRODUCT_PACKAGES += liboemaids_system
 PRODUCT_PACKAGES += liboemaids_vendor
 PRODUCT_PACKAGES += android.hardware.health@2.0-service
+
+# framework detect libs
+PRODUCT_PACKAGES += libvndfwk_detect_jni.qti
+PRODUCT_PACKAGES += libqti_vndfwk_detect
+PRODUCT_PACKAGES += libvndfwk_detect_jni.qti.vendor
+PRODUCT_PACKAGES += libqti_vndfwk_detect.vendor

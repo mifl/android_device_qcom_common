@@ -1,4 +1,4 @@
-# Copyright (c) 2009-2012, 2014-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2009-2012, 2014-2019, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -416,7 +416,7 @@ on post-fs-data
     mkdir /data/vendor/vpp 0770 media media
 
     #Create dir for TUI
-    mkdir /data/vendor/tui 0600 system drmrpc
+    mkdir /data/vendor/tui 0700 system drmrpc
 
     #Start move time data to /data/vendor once post-fs-data done
     start vendor.move_time_data
@@ -813,8 +813,9 @@ service iprenew_wigig0 /system/bin/dhcpcd -n
 
 service ptt_socket_app /system/vendor/bin/ptt_socket_app -d
     class main
-    user root
-    group root
+    user wifi
+    group wifi system inet net_admin
+    capabilities NET_ADMIN
     oneshot
 
 service ptt_ffbm /system/vendor/bin/ptt_socket_app -f -d
