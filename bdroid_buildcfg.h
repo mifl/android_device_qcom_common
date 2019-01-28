@@ -36,4 +36,7 @@
 
 /* Enable HFP WBS feature */
 #define BTIF_HF_CLIENT_WBS_INCLUDED TRUE
+
+/* Increase SDP DB size from 8000 (default) into 16000 */
+#define BTA_DM_SDP_DB_SIZE 16000
 #endif
