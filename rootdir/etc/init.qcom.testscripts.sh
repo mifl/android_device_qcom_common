@@ -40,3 +40,5 @@ case "$target" in
 	echo 1 > /sys/kernel/debug/scm_errata/kryo_e76
 	;;
 esac
+
+echo abc > /sys/power/wake_lock
