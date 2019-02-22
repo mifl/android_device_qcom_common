@@ -2752,7 +2752,7 @@ case "$target" in
                     echo "bw_hwmon" > $cpubw/governor
                     echo 50 > $cpubw/polling_interval
                     echo 762 > $cpubw/min_freq
-                    echo "1144 1721 2086 2597 2929 3879 5161 5931 6881" > $cpubw/bw_hwmon/mbps_zones
+                    echo "2288 3440 4173 5195 5859 7759 10322 11863 13763" > $cpubw/bw_hwmon/mbps_zones
                     echo 4 > $cpubw/bw_hwmon/sample_ms
                     echo 85 > $cpubw/bw_hwmon/io_percent
                     echo 90 > $cpubw/bw_hwmon/decay_rate
@@ -3099,6 +3099,9 @@ case "$target" in
             echo 85 > /proc/sys/kernel/sched_group_downmigrate
             echo 100 > /proc/sys/kernel/sched_group_upmigrate
             echo 1 > /proc/sys/kernel/sched_walt_rotate_big_tasks
+
+            #colocation v3 settings
+            echo 740000 > /proc/sys/kernel/sched_little_cluster_coloc_fmin_khz
 
             # configure governor settings for little cluster
             echo "schedutil" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
