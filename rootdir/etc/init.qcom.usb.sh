@@ -29,17 +29,9 @@
 #
 
 # Set platform variables
-if [ -f /sys/devices/soc0/hw_platform ]; then
-    soc_hwplatform=`cat /sys/devices/soc0/hw_platform` 2> /dev/null
-else
-    soc_hwplatform=`cat /sys/devices/system/soc/soc0/hw_platform` 2> /dev/null
-fi
-
-if [ -f /sys/devices/soc0/machine ]; then
-    soc_machine=`cat /sys/devices/soc0/machine` 2> /dev/null
-else
-    soc_machine=`cat /sys/devices/system/soc/soc0/machine` 2> /dev/null
-fi
+soc_hwplatform=`cat /sys/devices/soc0/hw_platform 2> /dev/null`
+soc_machine=`cat /sys/devices/soc0/machine 2> /dev/null`
+soc_id=`cat /sys/devices/soc0/soc_id 2> /dev/null`
 
 #
 # Check ESOC for external modem
@@ -49,13 +41,6 @@ fi
 esoc_name=`cat /sys/bus/esoc/devices/esoc0/esoc_name 2> /dev/null`
 
 target=`getprop ro.board.platform`
-
-# soc_ids for 8937
-if [ -f /sys/devices/soc0/soc_id ]; then
-	soc_id=`cat /sys/devices/soc0/soc_id`
-else
-	soc_id=`cat /sys/devices/system/soc/soc0/id`
-fi
 
 if [ -f /sys/class/android_usb/f_mass_storage/lun/nofua ]; then
 	echo 1  > /sys/class/android_usb/f_mass_storage/lun/nofua
@@ -87,9 +72,6 @@ if [ "$(getprop persist.vendor.usb.config)" == "" -a \
 		    ;;
 		    *)
 	            case "$target" in
-	              "msm8996")
-	                  setprop persist.vendor.usb.config diag,serial_cdev,serial_tty,rmnet_ipa,mass_storage,adb
-		      ;;
 	              "msm8909")
 		          setprop persist.vendor.usb.config diag,serial_smd,rmnet_qti_bam,adb
 		      ;;
@@ -112,6 +94,13 @@ if [ "$(getprop persist.vendor.usb.config)" == "" -a \
 				      setprop persist.vendor.usb.config diag,serial_cdev,rmnet,dpl,adb
 			      else
 				      setprop persist.vendor.usb.config diag,serial_smd,rmnet_ipa,adb
+			      fi
+		      ;;
+	              "msm8996")
+			      if [ -d /config/usb_gadget ]; then
+				      setprop persist.vendor.usb.config diag,serial_cdev,rmnet,adb
+			      else
+				      setprop persist.vendor.usb.config diag,serial_cdev,serial_tty,rmnet_ipa,mass_storage,adb
 			      fi
 		      ;;
 	              "msm8998" | "sdm660" | "apq8098_latv")
@@ -160,6 +149,15 @@ if [ "$target" == "msm8937" ]; then
 	fi
 fi
 
+if [ "$target" == "msm8996" ]; then
+       if [ -d /config/usb_gadget ]; then
+                  setprop vendor.usb.rndis.func.name "rndis_bam"
+                  setprop vendor.usb.rmnet.func.name "rmnet_bam"
+                  setprop vendor.usb.rmnet.inst.name "rmnet"
+                  setprop vendor.usb.dpl.inst.name "dpl"
+       fi
+fi
+
 # check configfs is mounted or not
 if [ -d /config/usb_gadget ]; then
 	# Chip-serial is used for unique MSM identification in Product string
@@ -170,7 +168,7 @@ if [ -d /config/usb_gadget ]; then
 	echo "$product_string" > /config/usb_gadget/g1/strings/0x409/product
 
 	# ADB requires valid iSerialNumber; if ro.serialno is missing, use dummy
-	serialnumber=`cat /config/usb_gadget/g1/strings/0x409/serialnumber` 2> /dev/null
+	serialnumber=`cat /config/usb_gadget/g1/strings/0x409/serialnumber 2> /dev/null`
 	if [ "$serialnumber" == "" ]; then
 		serialno=1234567
 		echo $serialno > /config/usb_gadget/g1/strings/0x409/serialnumber
