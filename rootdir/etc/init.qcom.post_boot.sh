@@ -239,6 +239,7 @@ function configure_zram_parameters() {
     fi
 
     if [ -f /sys/block/zram0/disksize ]; then
+        echo 1 > /sys/block/zram0/use_dedup
         if [ $MemTotal -le 524288 ]; then
             echo 402653184 > /sys/block/zram0/disksize
         elif [ $MemTotal -le 1048576 ]; then
@@ -2789,12 +2790,10 @@ case "$target" in
             echo 0 > /proc/sys/kernel/sched_boost
 
             # Turn on sleep modes.
-	    echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-pc/idle_enabled
-	    echo N > /sys/module/lpm_levels/system/perf/perf-l2-pc/idle_enabled
 	    echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-gdhs/idle_enabled
 	    echo N > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/idle_enabled
-	    echo N > /sys/module/lpm_levels/system/system-wfi/idle_enabled
-	    echo N > /sys/module/lpm_levels/system/system-pc/idle_enabled
+            echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-gdhs/suspend_enabled
+	    echo N > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/suspend_enabled
             echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
             ;;
