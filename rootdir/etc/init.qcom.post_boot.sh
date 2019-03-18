@@ -368,6 +368,7 @@ else
 
             echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/disable
             echo "8192,11264,14336,17408,20480,26624" > /sys/module/lowmemorykiller/parameters/minfree
+            echo "0,100,200,300,900,906" > /sys/module/lowmemorykiller/parameters/adj
             echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
             echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
         else
