@@ -91,7 +91,7 @@ fde_err_t hab_send_to_fde_be(const fde_request_t* fde_req)
             break;
         }
         FDE_LOGD("habmm_socket_send(%u) returned successfully", HAB_CHANNEL);
-        fde_err_t status;
+        fde_err_t status = FDE_GENERAL_ERROR;
         uint32_t status_size = 0;
         do {
             status_size = sizeof(status);
