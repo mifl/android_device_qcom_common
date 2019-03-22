@@ -1132,11 +1132,6 @@ service qseeproxydaemon /system/vendor/bin/qseeproxydaemon
 #on property:ro.logdumpd.enabled=1
 #    start logdumpd
 
-service time_daemon /system/vendor/bin/time_daemon
-    class main
-    user root
-    group root
-
 #service qdmastatsd /system/vendor/bin/qdmastatsd
 #    class late_start
 #    user system
