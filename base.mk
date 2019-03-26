@@ -50,12 +50,13 @@ BOARD_HAVE_QCOM_FM ?= true
 # Boot additions
 #Android Telephony library
 PRODUCT_BOOT_JARS += qtiNetworkLib
-PRODUCT_BOOT_JARS += ims-ext-common
 ifeq ($(strip $(TARGET_USES_NQ_NFC)),true)
 PRODUCT_BOOT_JARS += com.nxp.nfc.nq
 endif
 ifeq ($(strip $(BOARD_HAVE_QCOM_FM)),true)
+ifeq ($(TARGET_FWK_SUPPORTS_FULL_VALUEADDS),true)
 PRODUCT_BOOT_JARS += qcom.fmradio
+endif
 endif #BOARD_HAVE_QCOM_FM
 #Camera QC extends API
 #ifeq ($(strip $(TARGET_USES_QTIC_EXTENSION)),true)
@@ -299,6 +300,8 @@ GPS_HARDWARE += android.hardware.gnss@1.0-impl-qti
 GPS_HARDWARE += android.hardware.gnss@1.0-service-qti
 GPS_HARDWARE += android.hardware.gnss@1.1-impl-qti
 GPS_HARDWARE += android.hardware.gnss@1.1-service-qti
+GPS_HARDWARE += android.hardware.gnss@2.0-impl-qti
+GPS_HARDWARE += android.hardware.gnss@2.0-service-qti
 
 HIDL_WRAPPER := qti-telephony-hidl-wrapper
 HIDL_WRAPPER += qti_telephony_hidl_wrapper.xml
@@ -805,6 +808,7 @@ QRGND += qrngtest
 
 #WPA
 WPA := wpa_supplicant.conf
+WPA += wpa_cli
 WPA += wpa_supplicant_wcn.conf
 WPA += wpa_supplicant_ath6kl.conf
 WPA += wpa_supplicant
@@ -1041,6 +1045,16 @@ PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
 PRODUCT_PACKAGES += android.hardware.drm@1.1-service.widevine
 PRODUCT_PACKAGES += android.hardware.drm@1.1-service.clearkey
+
+# Don't use dynamic DRM HAL for non-go SPs
+ifneq ($(TARGET_HAS_LOW_RAM),true)
+PRODUCT_PACKAGES += android.hardware.drm@1.2-service.widevine
+PRODUCT_PACKAGES += android.hardware.drm@1.2-service.clearkey
+else
+PRODUCT_PACKAGES += android.hardware.drm@1.2-service-lazy.widevine
+PRODUCT_PACKAGES += android.hardware.drm@1.2-service-lazy.clearkey
+endif
+
 ifeq ($(strip $(OTA_FLAG_FOR_DRM)),true)
 PRODUCT_PACKAGES += move_widevine_data.sh
 endif
@@ -1240,3 +1254,5 @@ PRODUCT_PACKAGES += libvndfwk_detect_jni.qti
 PRODUCT_PACKAGES += libqti_vndfwk_detect
 PRODUCT_PACKAGES += libvndfwk_detect_jni.qti.vendor
 PRODUCT_PACKAGES += libqti_vndfwk_detect.vendor
+# Temporarily allow eng and debug LOCAL_MODULE_TAGS
+BUILD_BROKEN_ENG_DEBUG_TAGS := true
