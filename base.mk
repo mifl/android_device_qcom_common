@@ -1102,13 +1102,5 @@ else
   $(warning **********)
 endif
 
-ifeq ($(TARGET_HAS_LOW_RAM),true)
-    PRODUCT_PROPERTY_OVERRIDES += \
-        persist.vendor.qcomsysd.enabled=0
-else
-    PRODUCT_PROPERTY_OVERRIDES += \
-        persist.vendor.qcomsysd.enabled=1
-endif
-
 PRODUCT_PACKAGES += liboemaids_system
 PRODUCT_PACKAGES += liboemaids_vendor
