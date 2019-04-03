@@ -30,12 +30,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <vector>
 #include "edify/expr.h"
 #include "dec.h"
 #include "gpt-utils.h"
+#include "otautil/error_code.h"
 
-Value* DecryptFn(const char* name, State* state, const std::vector<std::unique_ptr<Expr>>& argv) {
+Value* DecryptFn(const char* name, State* state,  const std::vector<std::unique_ptr<Expr>>& argv) {
     int rc = -1;
 
     if (argv.size() != 2)
