@@ -2185,16 +2185,31 @@ case "$target" in
       echo 1209600 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/hispeed_freq
       echo 576000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
-      # configure governor settings for big cluster
-      echo "schedutil" > /sys/devices/system/cpu/cpu6/cpufreq/scaling_governor
-      echo 0 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/rate_limit_us
-      echo 1344000 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/hispeed_freq
-      echo 825600 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
+      if [ -f /sys/devices/soc0/platform_subtype_id ]; then
+         platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
+      fi
+
+      case "$platform_subtype_id" in
+      "4" )
+        # configure governor settings for big cluster of LC target
+        echo "schedutil" > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor
+        echo 0 > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/rate_limit_us
+        echo 1344000 > /sys/devices/system/cpu/cpu2/cpufreq/schedutil/hispeed_freq
+        echo 825600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+        ;;
+
+      "0" )
+        # configure governor settings for big cluster of HP target
+        echo "schedutil" > /sys/devices/system/cpu/cpu6/cpufreq/scaling_governor
+        echo 0 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/rate_limit_us
+        echo 1344000 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/hispeed_freq
+        echo 825600 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
+      esac
 
       echo "0:1209600" > /sys/module/cpu_boost/parameters/input_boost_freq
       echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
 
-      configure_zram_parameters
+      #configure_zram_parameters
 
       # Enable bus-dcvs
       for cpubw in /sys/class/devfreq/*qcom,cpubw*
