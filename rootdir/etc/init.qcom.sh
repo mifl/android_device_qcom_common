@@ -106,11 +106,18 @@ start_msm_irqbalance_kona()
          fi
 }
 
+start_msm_irqbalance_lito()
+{
+         if [ -f /vendor/bin/msm_irqbalance ]; then
+                start vendor.msm_irqbalance
+         fi
+}
+
 start_msm_irqbalance()
 {
 	if [ -f /vendor/bin/msm_irqbalance ]; then
 		case "$platformid" in
-		    "317" | "324" | "325" | "326" | "345" | "346")
+		    "317" | "324" | "325" | "326" | "336" | "345" | "346")
 			start vendor.msm_irqbalance;;
 		    "318" | "327" | "385")
 			start vendor.msm_irqbl_sdm630;;
@@ -299,6 +306,9 @@ case "$target" in
         ;;
     "kona")
         start_msm_irqbalance_kona
+        ;;
+    "lito")
+        start_msm_irqbalance_lito
         ;;
     "msm8937")
         start_msm_irqbalance_8939
