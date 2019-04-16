@@ -2206,6 +2206,11 @@ case "$target" in
                  ;;
                 esac
 
+                #enable core control
+                echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/enable
+                echo 73 73 60 50 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
+                echo 30 > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
+
                 # Set Memory parameters
                 configure_memory_parameters
 
