@@ -432,6 +432,10 @@ else
     echo 0 > /sys/module/vmpressure/parameters/allocstall_threshold
     echo 100 > /proc/sys/vm/swappiness
 
+    # Disable wsf for all targets beacause we are using efk.
+    # wsf Range : 1..1000 So set to bare minimum value 1.
+    echo 1 > /proc/sys/vm/watermark_scale_factor
+
     configure_zram_parameters
 
     configure_read_ahead_kb_values
@@ -3929,7 +3933,10 @@ case "$target" in
 	echo 95 95 > /proc/sys/kernel/sched_upmigrate
 	echo 85 85 > /proc/sys/kernel/sched_downmigrate
 	echo 100 > /proc/sys/kernel/sched_group_upmigrate
-	echo 95 > /proc/sys/kernel/sched_group_downmigrate
+	echo 10 > /proc/sys/kernel/sched_group_downmigrate
+	echo 0 > /proc/sys/kernel/sched_min_task_util_for_boost
+	echo 0 > /proc/sys/kernel/sched_min_task_util_for_colocation
+	echo 0 > /proc/sys/kernel/sched_little_cluster_coloc_fmin_khz
 	echo 1 > /proc/sys/kernel/sched_walt_rotate_big_tasks
 
 	# cpuset parameters
