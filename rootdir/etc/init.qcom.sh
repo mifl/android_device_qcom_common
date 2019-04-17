@@ -106,6 +106,13 @@ start_msm_irqbalance_kona()
          fi
 }
 
+start_msm_irqbalance_lito()
+{
+         if [ -f /vendor/bin/msm_irqbalance ]; then
+                start vendor.msm_irqbalance
+         fi
+}
+
 start_msm_irqbalance()
 {
 	if [ -f /vendor/bin/msm_irqbalance ]; then
@@ -267,7 +274,7 @@ case "$target" in
                   ;;
         esac
         ;;
-    "msm8994" | "msm8992" | "msm8998" | "apq8098_latv" | "sdm845" | "sdm710" | "qcs605" | "talos")
+    "msm8994" | "msm8992" | "msm8998" | "apq8098_latv" | "sdm845" | "sdm710" | "qcs605" | "sm6150")
         start_msm_irqbalance
         ;;
     "msm8996")
@@ -299,6 +306,9 @@ case "$target" in
         ;;
     "kona")
         start_msm_irqbalance_kona
+        ;;
+    "lito")
+        start_msm_irqbalance_lito
         ;;
     "msm8937")
         start_msm_irqbalance_8939
