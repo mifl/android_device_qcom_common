@@ -551,6 +551,9 @@ on property:vold.decrypt=trigger_restart_framework
     start wcnss-service
     start cnss_diag
 
+on property:persist.cnss_diag.enable=1
+    start cnss_diag
+
 on property:persist.env.fastdorm.enabled=true
     setprop persist.radio.data_no_toggle 1
 
@@ -845,7 +848,6 @@ on property:wifi.ftmd.load=true
     insmod /system/lib/modules/pronto/pronto_wlan.ko con_mode=5
 
 service cnss_diag /system/vendor/bin/cnss_diag -q -f
-    class main
     user system
     group system wifi inet net_admin sdcard_rw media_rw diag
     oneshot
