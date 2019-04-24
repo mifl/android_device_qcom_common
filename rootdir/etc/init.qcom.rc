@@ -346,6 +346,10 @@ on post-fs-data
     mkdir /dev/socket/location/mq 0770 gps gps
     mkdir /dev/socket/location/xtra 0770 gps gps
 
+    #Create directories for wifihal services
+    mkdir /dev/socket/wifihal 0770 wifi wifi
+    chmod 2770 /dev/socket/wifihal
+
     #Create directory from IMS services
     mkdir /data/shared 0755
     chown system system /data/shared
@@ -534,6 +538,9 @@ on property:vendor.bluetooth.startbtlogger=true
 on property:vendor.bluetooth.startbtlogger=false
     stop vendor.bt_logger
 
+on property:vendor.media.target.version=*
+    setprop vendor.sys.media.target.version ${vendor.media.target.version}
+
 service qcom-c_core-sh  /vendor/bin/init.qcom.class_core.sh
     class core
     user root
@@ -544,13 +551,9 @@ service qcom-c_main-sh /vendor/bin/init.class_main.sh
     user root
     oneshot
 
-on property:vold.decrypt=trigger_restart_min_framework
-    stop perf-hal-1-0
-
 on property:vold.decrypt=trigger_restart_framework
     start qcom-c_main-sh
     start wcnss-service
-    start perf-hal-1-0
 
 on property:persist.env.fastdorm.enabled=true
     setprop persist.radio.data_no_toggle 1
@@ -1164,7 +1167,7 @@ service seemp_healthd /vendor/bin/seemp_healthd
     user system
     group system
 
-service power_off_alarm /vendor/bin/power_off_alarm
+service vendor.power_off_alarm /vendor/bin/power_off_alarm
     class core
     group system
     disabled
