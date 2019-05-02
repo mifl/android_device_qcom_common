@@ -334,6 +334,7 @@ INIT += init.qcom.vendor.rc
 INIT += init.target.vendor.rc
 INIT += init.qti.fm.sh
 INIT += init.qti.can.sh
+INIT += init.qti.charger.sh
 
 #IPROUTE2
 IPROUTE2 := ip
@@ -415,6 +416,7 @@ LIBCAMERA += camera.msm8996
 LIBCAMERA += camera.msm8998
 LIBCAMERA += camera.apq8098_latv
 LIBCAMERA += camera.sdm660
+LIBCAMERA += camera.trinket
 LIBCAMERA += camera.msm8952
 LIBCAMERA += camera.msm8937
 LIBCAMERA += camera.msm8953
@@ -614,10 +616,12 @@ LIBQDMETADATA := libqdMetaData
 LIBQDMETADATA += libqdMetaData.system
 
 #LIBPOWER
+ifneq ($(TARGET_USES_NON_LEGACY_POWERHAL), true)
 LIBPOWER := power.qcom
 #LIBPOWER -- Add HIDL Packages
 LIBPOWER += android.hardware.power@1.0-impl
 LIBPOWER += android.hardware.power@1.0-service
+endif
 
 #LLVM for RenderScript
 #use qcom LLVM
@@ -755,6 +759,7 @@ THERMAL_HAL += thermal.msm8953
 THERMAL_HAL += thermal.msm8937
 THERMAL_HAL += thermal.msmnile
 THERMAL_HAL += thermal.$(MSMSTEPPE)
+THERMAL_HAL += thermal.$(TRINKET)
 
 #TSLIB_EXTERNAL
 TSLIB_EXTERNAL := corgi
@@ -1150,8 +1155,13 @@ endif
 ifneq ($(strip $(TARGET_USES_RRO)),true)
 # enable overlays to use our version of
 # source/resources etc.
+ifneq ($(strip $(TARGET_BOARD_AUTO)),true)
 DEVICE_PACKAGE_OVERLAYS += device/qcom/common/device/overlay
 PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
+else
+DEVICE_PACKAGE_OVERLAYS += device/qcom/common/automotive/device/overlay
+PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/automotive/product/overlay
+endif
 endif
 
 # Set up flags to determine the kernel version
