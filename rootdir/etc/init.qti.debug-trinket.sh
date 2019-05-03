@@ -244,6 +244,62 @@ config_trinket_dcc_bimc()
 
 }
 
+config_trinket_dcc_osm()
+{
+    echo 0x0F522C14 > $DCC_PATH/config
+    echo 0x0F522C1C > $DCC_PATH/config
+    echo 0x0F522C10 > $DCC_PATH/config
+    echo 0x0F524C10 > $DCC_PATH/config
+    echo 0x0F524C14 > $DCC_PATH/config
+    echo 0x0F524C18 > $DCC_PATH/config
+    echo 0x0F524C1C > $DCC_PATH/config
+    echo 0x0F521920 > $DCC_PATH/config
+    echo 0x0F52102C > $DCC_PATH/config
+    echo 0x0F521044 > $DCC_PATH/config
+    echo 0x0F521710 > $DCC_PATH/config
+    echo 0x0F52176C > $DCC_PATH/config
+    echo 0x0F523920 > $DCC_PATH/config
+    echo 0x0F52302C > $DCC_PATH/config
+    echo 0x0F523044 > $DCC_PATH/config
+    echo 0x0F523710 > $DCC_PATH/config
+    echo 0x0F52376C > $DCC_PATH/config
+    echo 0x0F116000 > $DCC_PATH/config
+    echo 0x0F116004 > $DCC_PATH/config
+    echo 0x0F11602C > $DCC_PATH/config
+    echo 0x0F016000 > $DCC_PATH/config
+    echo 0x0F016004 > $DCC_PATH/config
+    echo 0x0F01602C > $DCC_PATH/config
+    echo 0x0F111250 > $DCC_PATH/config
+    echo 0x0F111254 > $DCC_PATH/config
+    echo 0x0F111258 > $DCC_PATH/config
+    echo 0x0F11125C > $DCC_PATH/config
+    echo 0x0F111260 > $DCC_PATH/config
+    echo 0x0F188078 > $DCC_PATH/config
+    echo 0x0F188084 > $DCC_PATH/config
+    echo 0x0F198078 > $DCC_PATH/config
+    echo 0x0F198084 > $DCC_PATH/config
+    echo 0x0F1A8078 > $DCC_PATH/config
+    echo 0x0F1A8084 > $DCC_PATH/config
+    echo 0x0F1B8078 > $DCC_PATH/config
+    echo 0x0F1B8084 > $DCC_PATH/config
+    echo 0x0F521818 > $DCC_PATH/config
+    echo 0x0F52181C > $DCC_PATH/config
+    echo 0x0F521828 > $DCC_PATH/config
+    echo 0x0F523818 > $DCC_PATH/config
+    echo 0x0F52381C > $DCC_PATH/config
+    echo 0x0F523828 > $DCC_PATH/config
+    echo 0x0F522C18 > $DCC_PATH/config
+    echo 0x0F111310 > $DCC_PATH/config
+    echo 0x0F111314 > $DCC_PATH/config
+    echo 0x0F111318 > $DCC_PATH/config
+    echo 0x0F01125C > $DCC_PATH/config
+    echo 0x0F011258 > $DCC_PATH/config
+    echo 0x0F011310 > $DCC_PATH/config
+    echo 0x0F011314 > $DCC_PATH/config
+    echo 0x0F011318 > $DCC_PATH/config
+}
+
+
 config_trinket_dcc_gpu()
 {
     #GCC
@@ -451,31 +507,8 @@ config_trinket_dcc_noc()
 
 config_trinket_dcc_qdsp()
 {
-    echo 0xB3B0208 > $DCC_PATH/config
-    echo 0xB3B0228 > $DCC_PATH/config
-    echo 0xB3B0248 > $DCC_PATH/config
-    echo 0xB3B0268 > $DCC_PATH/config
-    echo 0xB3B0288 > $DCC_PATH/config
-    echo 0xB3B02A8 > $DCC_PATH/config
-    echo 0xB3B020C > $DCC_PATH/config
-    echo 0xB3B022C > $DCC_PATH/config
-    echo 0xB3B024C > $DCC_PATH/config
-    echo 0xB3B026C > $DCC_PATH/config
-    echo 0xB3B028C > $DCC_PATH/config
-    echo 0xB3B02AC > $DCC_PATH/config
-    echo 0xB3B0210 > $DCC_PATH/config
-    echo 0xB3B0230 > $DCC_PATH/config
-    echo 0xB3B0250 > $DCC_PATH/config
-    echo 0xB3B0270 > $DCC_PATH/config
-    echo 0xB3B0290 > $DCC_PATH/config
-    echo 0xB3B02B0 > $DCC_PATH/config
-    echo 0xB3B0400 > $DCC_PATH/config
-    echo 0xB3B0404 > $DCC_PATH/config
-    echo 0xB3B0408 > $DCC_PATH/config
-    echo 0xB3B0010 > $DCC_PATH/config
-    echo 0xB302028 > $DCC_PATH/config
-
     #LPASS Register
+    echo 0xAB00000 > $DCC_PATH/config
     echo 0xABB0208 > $DCC_PATH/config
     echo 0xABB0228 > $DCC_PATH/config
     echo 0xABB0248 > $DCC_PATH/config
@@ -499,6 +532,31 @@ config_trinket_dcc_qdsp()
     echo 0xABB0408 > $DCC_PATH/config
     echo 0xABB0010 > $DCC_PATH/config
     echo 0xAB02028 > $DCC_PATH/config
+
+    #QDSP6 Register
+    echo 0xB3B0208 > $DCC_PATH/config
+    echo 0xB3B0228 > $DCC_PATH/config
+    echo 0xB3B0248 > $DCC_PATH/config
+    echo 0xB3B0268 > $DCC_PATH/config
+    echo 0xB3B0288 > $DCC_PATH/config
+    echo 0xB3B02A8 > $DCC_PATH/config
+    echo 0xB3B020C > $DCC_PATH/config
+    echo 0xB3B022C > $DCC_PATH/config
+    echo 0xB3B024C > $DCC_PATH/config
+    echo 0xB3B026C > $DCC_PATH/config
+    echo 0xB3B028C > $DCC_PATH/config
+    echo 0xB3B02AC > $DCC_PATH/config
+    echo 0xB3B0210 > $DCC_PATH/config
+    echo 0xB3B0230 > $DCC_PATH/config
+    echo 0xB3B0250 > $DCC_PATH/config
+    echo 0xB3B0270 > $DCC_PATH/config
+    echo 0xB3B0290 > $DCC_PATH/config
+    echo 0xB3B02B0 > $DCC_PATH/config
+    echo 0xB3B0400 > $DCC_PATH/config
+    echo 0xB3B0404 > $DCC_PATH/config
+    echo 0xB3B0408 > $DCC_PATH/config
+    echo 0xB3B0010 > $DCC_PATH/config
+    echo 0xB302028 > $DCC_PATH/config
 
     #Modem
     echo 0x6130208 > $DCC_PATH/config
@@ -561,12 +619,13 @@ enable_trinket_dcc_config()
     echo cap > $DCC_PATH/func_type
     echo sram > $DCC_PATH/data_sink
     echo 1 > $DCC_PATH/config_reset
+    config_trinket_dcc_qdsp
     config_trinket_dcc_bimc
     config_trinket_dcc_gpu
     config_trinket_dcc_lpm
     config_trinket_dcc_noc
-    config_trinket_dcc_qdsp
     config_trinket_dcc_misc
+    config_trinket_dcc_osm
 
     #configure sink for LL3 as atb
     echo 1 > /sys/bus/coresight/devices/coresight-tpdm-dcc/enable_source
