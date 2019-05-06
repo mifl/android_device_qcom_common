@@ -2840,6 +2840,10 @@ case "$target" in
       echo 100 > /proc/sys/kernel/sched_group_upmigrate
       echo 1 > /proc/sys/kernel/sched_walt_rotate_big_tasks
 
+      # colocation v3 settings
+      echo 740000 > /proc/sys/kernel/sched_little_cluster_coloc_fmin_khz
+
+
       # configure governor settings for little cluster
       echo "schedutil" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
       echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us
@@ -2850,7 +2854,7 @@ case "$target" in
       # configure governor settings for big cluster
       echo "schedutil" > /sys/devices/system/cpu/cpu6/cpufreq/scaling_governor
       echo 0 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/up_rate_limit_us
-      echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us
+      echo 0 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/down_rate_limit_us
       echo 1209600 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/hispeed_freq
       echo 768000 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
 
@@ -2908,6 +2912,12 @@ case "$target" in
 
           #Gold L3 ratio ceil
           echo 4000 > /sys/class/devfreq/soc:qcom,cpu6-cpu-l3-lat/mem_latency/ratio_ceil
+
+          #Enable cdspl3 governor for L3 cdsp nodes
+          for l3cdsp in $device/*cdsp-cdsp-l3-lat/devfreq/*cdsp-cdsp-l3-lat
+          do
+              echo "cdspl3" > $l3cdsp/governor
+          done
 
 	  #Enable compute governor for gold latfloor
 	  for latfloor in $device/*cpu*-ddr-latfloor*/devfreq/*cpu-ddr-latfloor*
@@ -3779,9 +3789,6 @@ case "$target" in
 	echo 85 85 > /proc/sys/kernel/sched_downmigrate
 	echo 100 > /proc/sys/kernel/sched_group_upmigrate
 	echo 10 > /proc/sys/kernel/sched_group_downmigrate
-	echo 0 > /proc/sys/kernel/sched_min_task_util_for_boost
-	echo 0 > /proc/sys/kernel/sched_min_task_util_for_colocation
-	echo 0 > /proc/sys/kernel/sched_little_cluster_coloc_fmin_khz
 	echo 1 > /proc/sys/kernel/sched_walt_rotate_big_tasks
 
 	# cpuset parameters
@@ -3988,7 +3995,7 @@ case "$target" in
 	echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us
-	echo 1132800 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq
+	echo 1228800 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq
 	echo 518400 > /sys/devices/system/cpu/cpufreq/policy0/scaling_min_freq
 	echo 1 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/pl
 
@@ -4000,14 +4007,14 @@ case "$target" in
 	echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/down_rate_limit_us
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/up_rate_limit_us
-	echo 1344000 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/hispeed_freq
+	echo 1574400 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/hispeed_freq
 	echo 1 > /sys/devices/system/cpu/cpufreq/policy4/schedutil/pl
 
 	# configure governor settings for gold+ cluster
 	echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy7/scaling_governor
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/down_rate_limit_us
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/up_rate_limit_us
-	echo 1382400 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/hispeed_freq
+	echo 1612800 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/hispeed_freq
 	echo 1 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/pl
 
 	# Enable bus-dcvs
@@ -4068,10 +4075,10 @@ case "$target" in
 		echo 400 > $memlat/mem_latency/ratio_ceil
 	    done
 
-	    #Enable powersave governor for L3 cdsp nodes
+	    #Enable cdspl3 governor for L3 cdsp nodes
 	    for l3cdsp in $device/*qcom,devfreq-l3/*cdsp-l3-lat/devfreq/*cdsp-l3-lat
 	    do
-                echo "powersave" > $l3cdsp/governor
+                echo "cdspl3" > $l3cdsp/governor
 	    done
 
 	    #Enable mem_latency governor for LLCC and DDR scaling
