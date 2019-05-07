@@ -2206,6 +2206,11 @@ case "$target" in
                  ;;
                 esac
 
+                #enable core control
+                echo 1 > /sys/devices/system/cpu/cpu0/core_ctl/enable
+                echo 73 73 60 50 > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
+                echo 30 > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
+
                 # Set Memory parameters
                 configure_memory_parameters
 
@@ -2213,8 +2218,6 @@ case "$target" in
                 echo 0 > /proc/sys/kernel/sched_boost
 
                 # Disable L2-GDHS low power modes
-                echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-gdhs/idle_enabled
-                echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-gdhs/suspend_enabled
                 echo N > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/idle_enabled
                 echo N > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/suspend_enabled
 
