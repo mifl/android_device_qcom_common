@@ -816,8 +816,8 @@ WPA += hs20-osu-client
 
 #ZLIB
 ZLIB := gzip
-ZLIB += minigzip
 ZLIB += libunz
+ZLIB_HOST += minigzip
 
 #Charger
 CHARGER := charger
@@ -1027,6 +1027,7 @@ PRODUCT_PACKAGES += $(QRGND)
 PRODUCT_PACKAGES += $(UPDATER)
 PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
+PRODUCT_HOST_PACKAGES += $(ZLIB_HOST)
 PRODUCT_PACKAGES += $(VT_JNI)
 PRODUCT_PACKAGES += $(VT_QTI_PERMISSIONS)
 PRODUCT_PACKAGES += $(IMS_SETTINGS)
@@ -1252,6 +1253,17 @@ else
     PRODUCT_PROPERTY_OVERRIDES += \
         persist.vendor.qcomsysd.enabled=1
 endif
+
+PRODUCT_PACKAGES_DEBUG += \
+    init.qcom.debug.sh \
+    init.qcom.debug-sdm660.sh \
+    init.qcom.debug-sdm710.sh \
+    init.qti.debug-msmnile-apps.sh \
+    init.qti.debug-msmnile-modem.sh \
+    init.qti.debug-msmnile-slpi.sh \
+    init.qti.debug-talos.sh \
+    init.qti.debug-msmnile.sh \
+    init.qti.debug-kona.sh
 
 PRODUCT_PACKAGES += liboemaids_system
 PRODUCT_PACKAGES += liboemaids_vendor
