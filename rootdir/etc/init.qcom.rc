@@ -266,7 +266,8 @@ on post-fs-data
     #Create folder of camera
     mkdir /data/vendor/camera 0770 camera camera
 
-
+    #Change ownership to system
+    chown system system /data/vendor/tombstones
 
     mkdir /data/vendor/ramdump 0771 root system
     mkdir /data/vendor/bluetooth 0770 bluetooth bluetooth
@@ -1150,20 +1151,9 @@ service poweroffhandler /system/vendor/bin/poweroffhandler
     disabled
     oneshot
 
-#Mixed HWC versions among targets
-on property:init.svc.surfaceflinger=restarting
-    stop  vendor.hwcomposer-2-1
-    stop  vendor.hwcomposer-2-2
-    start vendor.hwcomposer-2-1
-    start vendor.hwcomposer-2-2
 
 on property:vendor.display.lcd_density=*
     setprop ro.sf.lcd_density ${vendor.display.lcd_density}
-
-service time_daemon /system/vendor/bin/time_daemon
-    class main
-    user root
-    group root
 
 service vendor.vppservice /vendor/bin/vppservice
     class main
