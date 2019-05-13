@@ -239,6 +239,7 @@ function configure_zram_parameters() {
     fi
 
     if [ -f /sys/block/zram0/disksize ]; then
+        echo 1 > /sys/block/zram0/use_dedup
         if [ $MemTotal -le 524288 ]; then
             echo 402653184 > /sys/block/zram0/disksize
         elif [ $MemTotal -le 1048576 ]; then
@@ -430,6 +431,10 @@ else
     # Set swappiness to 100 for all targets
     echo 0 > /sys/module/vmpressure/parameters/allocstall_threshold
     echo 100 > /proc/sys/vm/swappiness
+
+    # Disable wsf for all targets beacause we are using efk.
+    # wsf Range : 1..1000 So set to bare minimum value 1.
+    echo 1 > /proc/sys/vm/watermark_scale_factor
 
     configure_zram_parameters
 
@@ -2725,7 +2730,7 @@ case "$target" in
             echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/up_rate_limit_us
             echo 0 > /sys/devices/system/cpu/cpu0/cpufreq/schedutil/down_rate_limit_us
             echo 1401600 > /sys/devices/system/cpu/cpu4/cpufreq/schedutil/hispeed_freq
-            echo 652800 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+            echo 1056000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 
 	    echo 1 > /proc/sys/kernel/sched_walt_rotate_big_tasks
 
@@ -2745,6 +2750,10 @@ case "$target" in
             configure_memory_parameters
 
             # Enable bus-dcvs
+            ddr_type=`od -An -tx /proc/device-tree/memory/ddr_device_type`
+            ddr_type4="07"
+            ddr_type3="05"
+
             for device in /sys/devices/platform/soc
             do
                 for cpubw in $device/*cpu-cpu-ddr-bw/devfreq/*cpu-cpu-ddr-bw
@@ -2752,7 +2761,14 @@ case "$target" in
                     echo "bw_hwmon" > $cpubw/governor
                     echo 50 > $cpubw/polling_interval
                     echo 762 > $cpubw/min_freq
-                    echo "2288 3440 4173 5195 5859 7759 10322 11863 13763" > $cpubw/bw_hwmon/mbps_zones
+                    if [ ${ddr_type:4:2} == $ddr_type4 ]; then
+                        # LPDDR4
+                        echo "2288 3440 4173 5195 5859 7759 10322 11863 13763" > $cpubw/bw_hwmon/mbps_zones
+                    fi
+                    if [ ${ddr_type:4:2} == $ddr_type3 ]; then
+                        # LPDDR3
+                        echo "1525 2288 3440 4173 5195 5859 7102" > $cpubw/bw_hwmon/mbps_zones
+                    fi
                     echo 4 > $cpubw/bw_hwmon/sample_ms
                     echo 85 > $cpubw/bw_hwmon/io_percent
                     echo 90 > $cpubw/bw_hwmon/decay_rate
@@ -2789,12 +2805,6 @@ case "$target" in
             echo 0 > /proc/sys/kernel/sched_boost
 
             # Turn on sleep modes.
-	    echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-pc/idle_enabled
-	    echo N > /sys/module/lpm_levels/system/perf/perf-l2-pc/idle_enabled
-	    echo N > /sys/module/lpm_levels/system/pwr/pwr-l2-gdhs/idle_enabled
-	    echo N > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/idle_enabled
-	    echo N > /sys/module/lpm_levels/system/system-wfi/idle_enabled
-	    echo N > /sys/module/lpm_levels/system/system-pc/idle_enabled
             echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
             ;;
@@ -3930,7 +3940,7 @@ case "$target" in
 	echo 95 95 > /proc/sys/kernel/sched_upmigrate
 	echo 85 85 > /proc/sys/kernel/sched_downmigrate
 	echo 100 > /proc/sys/kernel/sched_group_upmigrate
-	echo 95 > /proc/sys/kernel/sched_group_downmigrate
+	echo 10 > /proc/sys/kernel/sched_group_downmigrate
 	echo 1 > /proc/sys/kernel/sched_walt_rotate_big_tasks
 
 	# cpuset parameters
@@ -3966,7 +3976,9 @@ case "$target" in
 	echo "0:1324800" > /sys/module/cpu_boost/parameters/input_boost_freq
 	echo 120 > /sys/module/cpu_boost/parameters/input_boost_ms
 
-        echo 120 > /proc/sys/vm/watermark_scale_factor
+	# Disable wsf, beacause we are using efk.
+	# wsf Range : 1..1000 So set to bare minimum value 1.
+        echo 1 > /proc/sys/vm/watermark_scale_factor
 
         echo 0-3 > /dev/cpuset/background/cpus
         echo 0-3 > /dev/cpuset/system-background/cpus
