@@ -591,7 +591,6 @@ service vendor.sensors /vendor/bin/sscrpcd sensorspd
     class core
     user system
     group system
-    disabled
 
 service vendor.sensors.qti /vendor/bin/sensors.qti
     class core
