@@ -107,6 +107,7 @@ endif
 #----------------------------------------------------------------------
 # Generate persist image (persist.img)
 #----------------------------------------------------------------------
+ifneq ($(strip $(BOARD_PERSISTIMAGE_PARTITION_SIZE)),)
 ifneq ($(strip $(TARGET_NO_KERNEL)),true)
 
 TARGET_OUT_PERSIST := $(PRODUCT_OUT)/persist
@@ -130,10 +131,12 @@ $(INSTALLED_PERSISTIMAGE_TARGET): $(MKEXTUSERIMG) $(MAKE_EXT4FS) $(INTERNAL_PERS
 ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_PERSISTIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_PERSISTIMAGE_TARGET)
 droidcore_non_system: $(INSTALLED_PERSISTIMAGE_TARGET)
+droidcore: $(INSTALLED_PERSISTIMAGE_TARGET)
 
 .PHONY: persistimage
 persistimage: $(INSTALLED_PERSISTIMAGE_TARGET)
 
+endif
 endif
 
 #----------------------------------------------------------------------
@@ -159,6 +162,7 @@ $(INSTALLED_METADATAIMAGE_TARGET): $(MKEXTUSERIMG) $(MAKE_EXT4FS)
 
 ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_METADATAIMAGE_TARGET)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_METADATAIMAGE_TARGET)
+droidcore: $(INSTALLED_METADATAIMAGE_TARGET)
 
 .PHONY: metadataimage
 metadataimage: $(INSTALLED_METADATAIMAGE_TARGET)
@@ -240,6 +244,7 @@ $(OUT_IMAGE_PATH): $(MKEXTUSERIMG) $(MAKE_EXT4FS)
 	$(create-commonvendor-config)
 ALL_DEFAULT_INSTALLED_MODULES += $(OUT_IMAGE_PATH)
 ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(OUT_IMAGE_PATH)
+droidcore: $(OUT_IMAGE_PATH)
 .PHONY: commonvendor
 commonvendor: $(OUT_IMAGE_PATH)
 endif
@@ -573,3 +578,6 @@ otavendormod-nodeps:
 $(BUILT_SYSTEMIMAGE): otavendormod
 
 endif
+
+#Print PRODUCT_PACKAGES & PRODUCT_PACKAGES_DEBUG to output log
+$(call dump-products)
