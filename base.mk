@@ -781,6 +781,7 @@ FSTMAN += fstman.ini
 
 # WIGIG
 WIGIG := host_manager_11ad
+WIGIG += shell_11ad
 WIGIG += wigig_remoteserver
 WIGIG += wigig_wiburn
 WIGIG += wigig_logcollector
