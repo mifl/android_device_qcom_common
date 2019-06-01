@@ -58,7 +58,6 @@ ifneq ($(TARGET_MOUNT_POINTS_SYMLINKS),false)
 	@ln -sf /mnt/vendor/persist $(TARGET_ROOT_OUT)/persist
 endif
 
-
 #---------------------------------------------------------------------
 # Generate dummy mlvm image
 # Non MLVM configuration does not need a real MLVM image , hence generate
@@ -593,5 +592,42 @@ otavendormod-nodeps:
 	$(board-vendorkernel-ota)
 
 $(BUILT_SYSTEMIMAGE): otavendormod
+
+endif
+
+
+ifeq ($(BOARD_SUPPORTS_EARLY_INIT), true)
+EARLYFS__MOUNT_POINT := $(TARGET_ROOT_OUT)/earlyrootfs
+$(EARLYFS_MOUNT_POINT):
+	@echo "Creating $(EARLYFS_MOUNT_POINT)"
+	@mkdir -p $(TARGET_ROOT_OUT)/earlyrootfs
+	@mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/earlyrootfs
+#----------------------------------------------------------------------
+# Generate earlyrootfs image (earlyrootfs.img)
+#----------------------------------------------------------------------
+
+TARGET_OUT_EARLY_FS := $(PRODUCT_OUT)/earlyrootfs
+
+INTERNAL_EARLY_IMAGE_FILES := \
+	$(filter $(TARGET_OUT_EARLY_FS)/%,$(ALL_DEFAULT_INSTALLED_MODULES))
+
+INSTALLED_EARLY_IMAGE_TARGET := $(PRODUCT_OUT)/earlyrootfs.img
+
+define build-earlyrootfsimage-target
+    $(call pretty,"Target earlyrootfs fs image: $(INSTALLED_EARLY_IMAGE_TARGET)")
+    @mkdir -p $(TARGET_OUT_EARLY_FS)
+endef
+
+#   $(hide) $(MKEXTUSERIMG) $(TARGET_OUT_EARLY_FS) $@ ext4 earlyrootfs $(BOARD_EARLY_IMAGE_PARTITION_SIZE)
+#    $(hide) chmod a+r $@
+#    $(hide) $(call assert-max-image-size,$@,$(BOARD_EARLY_IMAGE_PARTITION_SIZE))
+$(INSTALLED_EARLY_IMAGE_TARGET): $(MKEXTUSERIMG) $(MAKE_EXT4FS) $(INTERNAL_EARLY_IMAGE_FILES)
+	$(build-earlyrootfsimage-target)
+
+ALL_DEFAULT_INSTALLED_MODULES += $(INSTALLED_EARLY_IMAGE_TARGET)
+ALL_MODULES.$(LOCAL_MODULE).INSTALLED += $(INSTALLED_EARLY_IMAGE_TARGET)
+
+.PHONY: earlyfsimage
+earlyrootfsimage: $(INSTALLED_EARLY_IMAGE_TARGET)
 
 endif
