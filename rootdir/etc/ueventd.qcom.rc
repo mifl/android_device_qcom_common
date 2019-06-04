@@ -129,6 +129,7 @@
 /dev/sp_keymaster         0660   system     system
 /dev/sec_nvm_*            0660   system     system
 /dev/cryptoapp            0660   system     system
+/dev/cam-hyp-intf*        0660   system     camera
 /dev/gemini0              0660   system     camera
 /dev/jpeg0                0660   system     camera
 /dev/jpeg1                0660   system     camera
@@ -267,9 +268,12 @@
 # wigig
 /sys/bus/pci/drivers/wil6210* 0000:01:00.0/wil6210/fst_link_loss 0660 wifi wifi
 /sys/bus/pci/drivers/wil6210* 0000:01:00.0/wil6210/thermal_throttling 0660 system system
+/sys/bus/pci/drivers/wil6210* 0000:01:00.0/wil6210/vr_profile 0660 system system
 /sys/bus/pci/drivers/wil6210* 0000:01:00.0/wil6210/snr_thresh 0660 wifi wifi
 /sys/bus/pci/drivers/wil6210* 0000:01:00.0/net/wigig0/queues/rx-0/rps_cpus 0660 system system
 /sys/bus/pci/drivers/wil6210* 0000:01:00.0/net/wigig0/gro_flush_timeout 0660 system system
+/sys/bus/pci/drivers/wil6210* 0000:01:00.0/net/wigig0/tx_queue_len 0660 system system
+/sys/bus/pci/drivers/wil6210* 0000:01:00.0/net/wigig0/mtu 0660 system system
 /sys/devices/virtual/net/bond0 queues/rx-0/rps_cpus 0660 system system
 
 #nfc permissions
