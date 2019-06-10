@@ -3187,22 +3187,51 @@ case "$target" in
             echo 1600 > $llccbw/bw_hwmon/idle_mbps
         done
 
+        for npubw in $device/*npu*-npu-ddr-bw/devfreq/*npu*-npu-ddr-bw
+        do
+            echo "bw_hwmon" > $npubw/governor
+            echo 40 > $npubw/polling_interval
+            echo "1144 1720 2086 2929 3879 5931 6881 7980" > $npubw/bw_hwmon/mbps_zones
+            echo 4 > $npubw/bw_hwmon/sample_ms
+            echo 80 > $npubw/bw_hwmon/io_percent
+            echo 20 > $npubw/bw_hwmon/hist_memory
+            echo 10 > $npubw/bw_hwmon/hyst_length
+            echo 30 > $npubw/bw_hwmon/down_thres
+            echo 0 > $npubw/bw_hwmon/guard_band_mbps
+            echo 250 > $npubw/bw_hwmon/up_scale
+            echo 0 > $npubw/bw_hwmon/idle_mbps
+        done
+
         #Enable mem_latency governor for L3, LLCC, and DDR scaling
-        for memlat in $device/*cpu*-lat/devfreq/*cpu*-lat
+	for memlat in $device/*qcom,devfreq-l3/*cpu*-lat/devfreq/*cpu*-lat
         do
             echo "mem_latency" > $memlat/governor
             echo 10 > $memlat/polling_interval
             echo 400 > $memlat/mem_latency/ratio_ceil
         done
 
+	#Enable cdspl3 governor for L3 cdsp nodes
+	for l3cdsp in $device/*qcom,devfreq-l3/*cdsp-l3-lat/devfreq/*cdsp-l3-lat
+	do
+            echo "powersave" > $l3cdsp/governor
+	done
+
+	#Enable mem_latency governor for LLCC and DDR scaling
+	for memlat in $device/*cpu*-lat/devfreq/*cpu*-lat
+	do
+	    echo "mem_latency" > $memlat/governor
+	    echo 10 > $memlat/polling_interval
+	    echo 400 > $memlat/mem_latency/ratio_ceil
+        done
+
         #Gold L3 ratio ceil
-        for l3gold in $device/*cpu6-cpu-l3-lat/devfreq/*cpu6-cpu-l3-lat
+	for l3gold in $device/*qcom,devfreq-l3/*cpu6-cpu-l3-lat/devfreq/*cpu6-cpu-l3-lat
         do
             echo 4000 > $l3gold/mem_latency/ratio_ceil
         done
 
         #Prime L3 ratio ceil
-        for l3prime in $device/*cpu7-cpu-l3-lat/devfreq/*cpu7-cpu-l3-lat
+	for l3prime in $device/*qcom,devfreq-l3/*cpu7-cpu-l3-lat/devfreq/*cpu7-cpu-l3-lat
         do
             echo 4000 > $l3prime/mem_latency/ratio_ceil
         done
@@ -3222,10 +3251,8 @@ case "$target" in
     # Turn off scheduler boost at the end
     echo 0 > /proc/sys/kernel/sched_boost
 
-    # Turn off sleep modes & core-isolation
-    # Need to enable them back after bringup stability w.r.t deep-sleep
-    echo 1 > /sys/module/lpm_levels/parameters/sleep_disabled
-    echo 6 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
+    # Turn on sleep modes
+    echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
     ;;
 esac
 
@@ -4136,8 +4163,9 @@ case "$target" in
 	echo 95 95 > /proc/sys/kernel/sched_upmigrate
 	echo 85 85 > /proc/sys/kernel/sched_downmigrate
 	echo 100 > /proc/sys/kernel/sched_group_upmigrate
-	echo 95 > /proc/sys/kernel/sched_group_downmigrate
+	echo 85 > /proc/sys/kernel/sched_group_downmigrate
 	echo 1 > /proc/sys/kernel/sched_walt_rotate_big_tasks
+	echo 400000000 > /proc/sys/kernel/sched_coloc_downmigrate_ns
 
 	# cpuset parameters
 	echo 0-3 > /dev/cpuset/background/cpus
