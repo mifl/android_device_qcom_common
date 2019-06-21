@@ -65,6 +65,17 @@ on early-boot
     exec u:r:qti_init_shell:s0 -- /vendor/bin/init.qcom.early_boot.sh
     chown root audio /sys/kernel/boot_adsp/boot
 
+    chown system system /persist/sensors
+    chown system system /persist/sensors/sensors_list.txt
+    chown system system /persist/sensors/registry
+    chown system system /persist/sensors/registry/registry
+    chown system system /persist/sensors/registry/registry/sensors_registry
+    chown system system /persist/sensors/sensors_settings
+    chown system system /persist/sensors/registry/sns_reg_config
+    chown system system /persist/sensors/registry/sns_reg_version
+    chown system system /persist/sensors/registry/config
+    chmod 0664 /persist/sensors/sensors_settings
+
 on boot
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth net_bt /sys/class/rfkill/rfkill0/type
@@ -677,6 +688,18 @@ service sensors /vendor/bin/sensors.qcom
     class core
     user root
     group root
+    disabled
+
+service vendor.sensors /vendor/bin/sscrpcd
+    class core
+    user system
+    group system
+    disabled
+
+service vendor.sensors.qti /vendor/bin/sensors.qti
+    class core
+    user system
+    group system
     disabled
 
 on property:ro.use_data_netmgrd=false
