@@ -71,7 +71,8 @@ static bool is_target_SDM439() /* Returns value=1 if target is Hathi else value 
             is_target_SDM439 = false;
         } else {
             int soc_id = atoi(buf);
-            if (soc_id == 353 || soc_id== 363 || soc_id == 354 || soc_id== 364) {
+            if (soc_id == 353 || soc_id== 363 || soc_id == 354
+                || soc_id== 364 || soc_id== 416) {
             is_target_SDM439 = true; /* Above SOCID for SDM439/429 */
             }
         }

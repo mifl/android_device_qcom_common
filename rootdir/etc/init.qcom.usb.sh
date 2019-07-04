@@ -383,7 +383,7 @@ fi
 # enable rps cpus on msm8937 target
 setprop sys.usb.rps_mask 0
 case "$soc_id" in
-	"294" | "295" | "353" | "354")
+	"294" | "295" | "353" | "354" | "416")
 		setprop sys.usb.rps_mask 40
 	;;
 esac

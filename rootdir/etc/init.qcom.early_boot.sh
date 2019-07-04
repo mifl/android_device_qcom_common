@@ -226,7 +226,7 @@ case "$target" in
         # 196609 is decimal for 0x30001 to report version 3.1
         # 196610 is decimal for 0x30002 to report version 3.2
         case "$soc_hwid" in
-            294|295|296|297|298|313|353|354|363|364)
+            294|295|296|297|298|313|353|354|363|364|416)
                 setprop ro.opengles.version 196610
                 ;;
             303|307|308|309|320)

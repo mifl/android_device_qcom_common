@@ -2089,7 +2089,7 @@ case "$target" in
         esac
 
         case "$soc_id" in
-             "354" | "364" | "353" | "363" )
+             "354" | "364" | "353" | "363" | "416" )
 
                 # Start Host based Touch processing
                 case "$hw_platform" in
