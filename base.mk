@@ -279,7 +279,6 @@ INIT += init.qcom.factory.rc
 INIT += init.qcom.sdio.sh
 INIT += init.qcom.sh
 INIT += init.qcom.class_core.sh
-INIT += init.class_main.sh
 INIT += init.qcom.wifi.sh
 INIT += vold.fstab
 INIT += init.qcom.ril.path.sh
