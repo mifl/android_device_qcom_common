@@ -299,6 +299,24 @@ case "$target" in
         esac
         ;;
     "msm8909")
+        if [ -f /sys/devices/soc0/hw_platform ]; then
+             hw_platform=`cat /sys/devices/soc0/hw_platform`
+             platform_subtype_id=`cat /sys/devices/soc0/platform_subtype_id`
+        else
+             hw_platform=`cat /sys/devices/system/soc/soc0/hw_platform`
+             platform_subtype_id=`cat /sys/devices/system/soc/soc0/platform_subtype_id`
+        fi
+        case "$hw_platform" in
+                "MTP")
+                echo $hw_platform
+                case "$platform_subtype_id" in
+                        "6")
+                        echo $platform_subtype_id
+                        setprop sys.qcom.feature_phone "true"
+                ;;
+                esac
+        ;;
+        esac
         start_vm_bms
         ;;
     "msm8952")
