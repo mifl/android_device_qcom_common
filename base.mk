@@ -368,6 +368,7 @@ INIT += init.qcom.crashdata.sh
 INIT += init.qcom.vendor.rc
 INIT += init.target.vendor.rc
 INIT += init.qti.fm.sh
+INIT += init.qti.can.sh
 
 #IPROUTE2
 IPROUTE2 := ip
@@ -871,16 +872,6 @@ WLAN += qca_cld_wlan.ko
 FSTMAN := fstman
 FSTMAN += fstman.ini
 
-# WIGIG
-WIGIG := host_manager_11ad
-WIGIG += wigig_remoteserver
-WIGIG += wigig_wiburn
-WIGIG += wigig_logcollector
-WIGIG += wigig_logcollector.ini
-WIGIG += libwigig_utils
-WIGIG += libwigig_flashaccess
-WIGIG += libwigig_pciaccess
-
 #FD_LEAK
 FD_LEAK := libc_leak_detector
 
@@ -1046,7 +1037,6 @@ PRODUCT_PACKAGES += $(CRDA)
 PRODUCT_PACKAGES += $(WLAN)
 PRODUCT_PACKAGES += $(IPACM)
 PRODUCT_PACKAGES += $(FSTMAN)
-PRODUCT_PACKAGES += $(WIGIG)
 PRODUCT_PACKAGES += $(FD_LEAK)
 PRODUCT_PACKAGES += $(IMS_EXT)
 # Temp workarround for b/36603742
@@ -1194,7 +1184,7 @@ endif
 endif
 
 ifneq ($(TARGET_NOT_SUPPORT_VULKAN),true)
-ifneq ($(TARGET_SUPPORT_VULKAN_VERSION_1_1),true)
+ifeq ($(TARGET_SUPPORT_VULKAN_VERSION_1_1),false)
 PRODUCT_COPY_FILES += frameworks/native/data/etc/android.hardware.vulkan.version-1_0_3.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version-1_0_3.xml
 else
 PRODUCT_COPY_FILES += frameworks/native/data/etc/android.hardware.vulkan.version-1_1.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.vulkan.version-1_1.xml
@@ -1204,8 +1194,13 @@ endif
 ifneq ($(strip $(TARGET_USES_RRO)),true)
 # enable overlays to use our version of
 # source/resources etc.
+ifneq ($(strip $(TARGET_BOARD_AUTO)),true)
 DEVICE_PACKAGE_OVERLAYS += device/qcom/common/device/overlay
 PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/product/overlay
+else
+DEVICE_PACKAGE_OVERLAYS += device/qcom/common/automotive/device/overlay
+PRODUCT_PACKAGE_OVERLAYS += device/qcom/common/automotive/product/overlay
+endif
 endif
 
 # Set up flags to determine the kernel version
@@ -1286,7 +1281,8 @@ PRODUCT_PACKAGES_DEBUG += \
     init.qti.debug-msmnile-slpi.sh \
     init.qti.debug-talos.sh \
     init.qti.debug-msmnile.sh \
-    init.qti.debug-kona.sh
+    init.qti.debug-kona.sh \
+    init.qti.debug-lito.sh
 
 PRODUCT_PACKAGES += liboemaids_system
 PRODUCT_PACKAGES += liboemaids_vendor
