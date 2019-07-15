@@ -2091,13 +2091,6 @@ case "$target" in
         case "$soc_id" in
              "354" | "364" | "353" | "363" | "416" )
 
-                # Start Host based Touch processing
-                case "$hw_platform" in
-                    "MTP" | "Surf" | "RCM" | "QRD" )
-                    start_hbtp
-                ;;
-                esac
-
                 # Apply settings for sdm429/sda429/sdm439/sda439
 
                 for cpubw in /sys/class/devfreq/*qcom,mincpubw*
