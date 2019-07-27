@@ -761,31 +761,22 @@ WIGIG += libwigig_flashaccess
 WIGIG += libwigig_pciaccess
 
 PRODUCT_PACKAGES := \
-    AccountAndSyncSettings \
     DeskClock \
     AlarmProvider \
     Bluetooth \
     BluetoothExt \
     Calculator \
     Calendar \
-    Camera \
     CellBroadcastReceiver \
     CertInstaller \
     DrmProvider \
-    Gallery2 \
     Mms \
     Music \
     netutils-wrapper-1.0 \
     Phone \
-    Provision \
-    Protips \
-    QuickSearchBox \
     Settings \
-    Sync \
     SystemUI \
-    Updater \
     CalendarProvider \
-    SyncProvider \
     SoundRecorder \
     IM \
     VoiceDialer \
@@ -799,6 +790,15 @@ ifneq ($(TARGET_SUPPORTS_WEARABLES),true)
 PRODUCT_PACKAGES += \
     FM2 \
     FMRecord \
+    Provision \
+    Protips \
+    Sync \
+    Updater \
+    Gallery2 \
+    AccountAndSyncSettings \
+    Camera \
+    SyncProvider \
+    QuickSearchBox \
     VideoEditor
 endif
 
@@ -822,7 +822,9 @@ PRODUCT_PACKAGES += $(ANGLE)
 PRODUCT_PACKAGES += $(APPOPS_POLICY)
 PRODUCT_PACKAGES += $(AUDIO_HARDWARE)
 PRODUCT_PACKAGES += $(AUDIO_POLICY)
+ifneq ($(TARGET_SUPPORTS_WEARABLES),true)
 PRODUCT_PACKAGES += $(TINY_ALSA_TEST_APPS)
+endif
 PRODUCT_PACKAGES += $(AMPLOADER)
 PRODUCT_PACKAGES += $(APPS)
 PRODUCT_PACKAGES += $(BRCTL)
@@ -889,8 +891,10 @@ PRODUCT_PACKAGES += $(PVOMX)
 PRODUCT_PACKAGES += $(RF4CE)
 PRODUCT_PACKAGES += $(SENSORS_HARDWARE)
 #PRODUCT_PACKAGES += $(SOFTAP)
+ifneq ($(TARGET_SUPPORTS_WEARABLES),true)
 PRODUCT_PACKAGES += $(STK)
 PRODUCT_PACKAGES += $(STMLOG)
+endif
 PRODUCT_PACKAGES += $(THERMAL_HAL)
 PRODUCT_PACKAGES += $(TSLIB_EXTERNAL)
 PRODUCT_PACKAGES += $(VR_HAL)
@@ -898,7 +902,9 @@ PRODUCT_PACKAGES += $(QRGND)
 PRODUCT_PACKAGES += $(UPDATER)
 PRODUCT_PACKAGES += $(WPA)
 PRODUCT_PACKAGES += $(ZLIB)
+ifneq ($(TARGET_SUPPORTS_WEARABLES),true)
 PRODUCT_PACKAGES += $(VT_JNI)
+endif
 PRODUCT_PACKAGES += $(VT_QTI_PERMISSIONS)
 PRODUCT_PACKAGES += $(IMS_SETTINGS)
 PRODUCT_PACKAGES += $(CRDA)
@@ -928,8 +934,10 @@ PRODUCT_PACKAGES += qcril.db
 # MSM updater library
 PRODUCT_PACKAGES += librecovery_updater_msm
 
+ifneq ($(TARGET_SUPPORTS_WEARABLES),true)
 # vcard jar
 PRODUCT_PACKAGES += vcard
+endif
 
 # tcmiface for tcm support
 PRODUCT_PACKAGES += tcmiface
@@ -957,7 +965,6 @@ PRODUCT_COPY_FILES := \
     frameworks/native/data/etc/android.hardware.location.gps.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.location.gps.xml \
     frameworks/native/data/etc/android.hardware.touchscreen.multitouch.jazzhand.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.touchscreen.multitouch.jazzhand.xml \
     frameworks/native/data/etc/android.hardware.wifi.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.xml \
-    frameworks/native/data/etc/android.hardware.wifi.direct.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.direct.xml \
     frameworks/native/data/etc/android.software.sip.voip.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.sip.voip.xml \
     frameworks/native/data/etc/android.hardware.sensor.proximity.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.proximity.xml \
     frameworks/native/data/etc/android.hardware.sensor.light.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.sensor.light.xml \
@@ -976,6 +983,7 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/handheld_core_hardware.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/handheld_core_hardware.xml \
     frameworks/native/data/etc/android.hardware.camera.flash-autofocus.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.flash-autofocus.xml \
     frameworks/native/data/etc/android.hardware.camera.front.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.camera.front.xml \
+    frameworks/native/data/etc/android.hardware.wifi.direct.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.hardware.wifi.direct.xml \
 
 endif
 
