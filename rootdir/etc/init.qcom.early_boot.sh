@@ -389,6 +389,7 @@ esac
 case "$product" in
         "sm6150_au")
          setprop vendor.display.lcd_density 160
+	 setprop persist.graphics.vulkan.disable true
          ;;
         *)
         ;;
