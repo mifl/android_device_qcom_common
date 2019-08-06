@@ -920,7 +920,9 @@ PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
 ifneq ($(strip $(TARGET_HAS_LOW_RAM)),true)
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
 endif
-PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
+ifneq ($(TARGET_SUPPORTS_FEATURE_PHONE), true)
+  PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
+endif
 PRODUCT_PACKAGES += librs_jni
 
 # Filesystem management tools
