@@ -60,6 +60,7 @@ enable_trinket_tracing_events()
     echo 1 > /sys/kernel/debug/tracing/events/msm_low_power/enable
     #SCM Tracing enabling
     echo 1 > /sys/kernel/debug/tracing/events/scm/enable
+    echo 1 > /sys/kernel/debug/tracing/events/msm_cam/enable
 
     echo 1 > /sys/kernel/debug/tracing/tracing_on
 }
