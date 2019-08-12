@@ -41,7 +41,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="config_dozeComponent">com.qualcomm.qti.contextualmode/com.qualcomm.qti.contextualmode.ContextualModeDozeService</string>
     <bool name="config_dozeAfterScreenOff">false</bool>
     <!-- Screen brightness when dozing. -->
-    <integer name="config_screenBrightnessDoze">1</integer>
+    <integer name="config_screenBrightnessDoze">10</integer>
     <bool name="config_powerDecoupleInteractiveModeFromDisplay">true</bool>
     <bool name="config_powerDecoupleAutoSuspendModeFromDisplay">true</bool>
     <bool name="config_setColorTransformAccelerated">true</bool>
