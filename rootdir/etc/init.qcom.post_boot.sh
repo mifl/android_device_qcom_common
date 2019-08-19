@@ -2209,6 +2209,9 @@ case "$target" in
       echo "0:1209600" > /sys/module/cpu_boost/parameters/input_boost_freq
       echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
 
+      echo C0 > /proc/irq/460/smp_affinity
+      echo C0 > /proc/irq/462/smp_affinity
+
       #configure_zram_parameters
 
       # Enable bus-dcvs
