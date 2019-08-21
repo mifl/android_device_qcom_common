@@ -75,7 +75,7 @@ BOARD_CHARGER_ENABLE_SUSPEND := true
 MSM_VIDC_TARGET_LIST := msm8974 msm8610 msm8226 apq8084 msm8916 msm8994 msm8909 msm8992 msm8996 msm8952 msm8937 msm8953 msm8998 apq8098_latv sdm660 sdm845 sdm710 qcs605 msmnile $(MSMSTEPPE) kona $(TRINKET)
 
 #List of targets that use master side content protection
-MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845 apq8098_latv sdm710 qcs605 msmnile $(MSMSTEPPE) $(TRINKET)
+MASTER_SIDE_CP_TARGET_LIST := msm8996 msm8998 sdm660 sdm845 apq8098_latv sdm710 qcs605 msmnile $(MSMSTEPPE) $(TRINKET) lito kona atoll
 
 #List of targets where Vulkan feature level is restricted to 0
 VULKAN_FEATURE_LEVEL_0_TARGETS_LIST := msm8937_32 msm8937_64 sdm660_32 sdm660_64 msm8998 msm8998_32 msm8996 msm8953_64 msm8953_32
@@ -285,7 +285,6 @@ FASTPOWERON := FastBoot
 #FM
 FM := qcom.fmradio
 FM += libqcomfm_jni
-FM += libfmjni
 FM += fm_helium
 FM += ftm_fm_lib
 FM += libfm-hci
@@ -653,10 +652,12 @@ LIBQDUTILS := libqdutils
 LIBQDMETADATA := libqdMetaData
 
 #LIBPOWER
+ifneq ($(TARGET_USES_NON_LEGACY_POWERHAL), true)
 LIBPOWER := power.qcom
 #LIBPOWER -- Add HIDL Packages
 LIBPOWER += android.hardware.power@1.0-impl
 LIBPOWER += android.hardware.power@1.0-service
+endif
 
 #LLVM for RenderScript
 #use qcom LLVM
@@ -906,7 +907,6 @@ PRODUCT_PACKAGES := \
     IM \
     VoiceDialer \
     FM2 \
-    FMRecord \
     SnapdragonGallery \
     SnapdragonMusic \
     VideoEditor \
@@ -1282,7 +1282,8 @@ PRODUCT_PACKAGES_DEBUG += \
     init.qti.debug-talos.sh \
     init.qti.debug-msmnile.sh \
     init.qti.debug-kona.sh \
-    init.qti.debug-lito.sh
+    init.qti.debug-lito.sh \
+    init.qti.debug-trinket.sh
 
 PRODUCT_PACKAGES += liboemaids_system
 PRODUCT_PACKAGES += liboemaids_vendor
