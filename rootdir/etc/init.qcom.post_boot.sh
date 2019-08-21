@@ -2944,7 +2944,7 @@ case "$target" in
         fi
 
         case "$soc_id" in
-            "336" | "337" | "347" | "360" | "393" )
+            "336" | "337" | "347" | "360" | "393" | "370" | "371" )
 
             # Start Host based Touch processing
             case "$hw_platform" in
@@ -3074,10 +3074,14 @@ case "$target" in
 
         case "$soc_id" in
             "355" | "369" | "377" | "380" | "384" )
-
-      # update frequencies
-      configure_sku_parameters
-      sku_identified=`getprop vendor.sku_identified`
+      target_type=`getprop ro.hardware.type`
+      if [ "$target_type" == "automotive" ]; then
+	# update frequencies
+	configure_sku_parameters
+	sku_identified=`getprop vendor.sku_identified`
+      else
+	sku_identified=0
+      fi
 
       # Core control parameters on silver
       echo 0 0 0 0 1 1 > /sys/devices/system/cpu/cpu0/core_ctl/not_preferred
