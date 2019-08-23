@@ -2158,7 +2158,7 @@ case "$target" in
                   start_hbtp
                   ;;
               "MTP" )
-                  if [ $platform_subtype_id != 5 ]; then
+                  if [ $platform_subtype_id != 5 ] && [ $platform_subtype_id != 4 ]; then
                       start_hbtp
                   fi
                   ;;
