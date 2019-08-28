@@ -371,6 +371,10 @@ else
             echo "8192,11264,14336,17408,20480,26624" > /sys/module/lowmemorykiller/parameters/minfree
             echo 32768 > /sys/module/lowmemorykiller/parameters/vmpressure_file_min
             echo 1 > /sys/module/lowmemorykiller/parameters/enable_adaptive_lmk
+            # For 512M target, swap more memory
+            if [ $MemTotal -le 524288 ]; then
+                echo 10240 > /proc/sys/vm/extra_free_kbytes
+            fi
         else
             # Disable Core Control, enable KLMK for non-go 8909
             if [ "$ProductName" == "msm8909" ]; then
