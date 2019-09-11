@@ -822,9 +822,7 @@ PRODUCT_PACKAGES += $(ANGLE)
 PRODUCT_PACKAGES += $(APPOPS_POLICY)
 PRODUCT_PACKAGES += $(AUDIO_HARDWARE)
 PRODUCT_PACKAGES += $(AUDIO_POLICY)
-ifneq ($(TARGET_SUPPORTS_WEARABLES),true)
 PRODUCT_PACKAGES += $(TINY_ALSA_TEST_APPS)
-endif
 PRODUCT_PACKAGES += $(AMPLOADER)
 PRODUCT_PACKAGES += $(APPS)
 PRODUCT_PACKAGES += $(BRCTL)
@@ -920,7 +918,9 @@ PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
 ifneq ($(strip $(TARGET_HAS_LOW_RAM)),true)
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
 endif
-PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
+ifneq ($(TARGET_SUPPORTS_FEATURE_PHONE), true)
+  PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
+endif
 PRODUCT_PACKAGES += librs_jni
 
 # Filesystem management tools
