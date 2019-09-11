@@ -2089,7 +2089,7 @@ case "$target" in
         esac
 
         case "$soc_id" in
-             "354" | "364" | "353" | "363" | "416" )
+             "354" | "364" | "353" | "363" | "416" | "437" )
 
                 # Apply settings for sdm429/sda429/sdm439/sda439
 
