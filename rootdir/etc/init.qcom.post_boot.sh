@@ -1709,24 +1709,6 @@ case "$target" in
 
                 # disable thermal & BCL core_control to update interactive gov settings
                 echo 0 > /sys/module/msm_thermal/core_control/enabled
-                for mode in /sys/devices/soc.0/qcom,bcl.*/mode
-                do
-                    echo -n disable > $mode
-                done
-                for hotplug_mask in /sys/devices/soc.0/qcom,bcl.*/hotplug_mask
-                do
-                    bcl_hotplug_mask=`cat $hotplug_mask`
-                    echo 0 > $hotplug_mask
-                done
-                for hotplug_soc_mask in /sys/devices/soc.0/qcom,bcl.*/hotplug_soc_mask
-                do
-                    bcl_soc_hotplug_mask=`cat $hotplug_soc_mask`
-                    echo 0 > $hotplug_soc_mask
-                done
-                for mode in /sys/devices/soc.0/qcom,bcl.*/mode
-                do
-                    echo -n enable > $mode
-                done
 
                 #if the kernel version >=4.9,use the schedutil governor
                 KernelVersionStr=`cat /proc/sys/kernel/osrelease`
@@ -1754,22 +1736,6 @@ case "$target" in
 
                 # re-enable thermal & BCL core_control now
                 echo 1 > /sys/module/msm_thermal/core_control/enabled
-                for mode in /sys/devices/soc.0/qcom,bcl.*/mode
-                do
-                    echo -n disable > $mode
-                done
-                for hotplug_mask in /sys/devices/soc.0/qcom,bcl.*/hotplug_mask
-                do
-                    echo $bcl_hotplug_mask > $hotplug_mask
-                done
-                for hotplug_soc_mask in /sys/devices/soc.0/qcom,bcl.*/hotplug_soc_mask
-                do
-                    echo $bcl_soc_hotplug_mask > $hotplug_soc_mask
-                done
-                for mode in /sys/devices/soc.0/qcom,bcl.*/mode
-                do
-                    echo -n enable > $mode
-                done
 
                 # SMP scheduler
                 echo 85 > /proc/sys/kernel/sched_upmigrate
@@ -1831,27 +1797,6 @@ case "$target" in
                 echo  1 > $DCC_PATH/enable
             done
 
-            # disable thermal & BCL core_control to update interactive gov settings
-            echo 0 > /sys/module/msm_thermal/core_control/enabled
-            for mode in /sys/devices/soc.0/qcom,bcl.*/mode
-            do
-                echo -n disable > $mode
-            done
-            for hotplug_mask in /sys/devices/soc.0/qcom,bcl.*/hotplug_mask
-            do
-                bcl_hotplug_mask=`cat $hotplug_mask`
-                echo 0 > $hotplug_mask
-            done
-            for hotplug_soc_mask in /sys/devices/soc.0/qcom,bcl.*/hotplug_soc_mask
-            do
-                bcl_soc_hotplug_mask=`cat $hotplug_soc_mask`
-                echo 0 > $hotplug_soc_mask
-            done
-            for mode in /sys/devices/soc.0/qcom,bcl.*/mode
-            do
-                echo -n enable > $mode
-            done
-
             # configure governor settings for little cluster
             echo 1 > /sys/devices/system/cpu/cpu0/online
             echo "schedutil" > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
@@ -1886,25 +1831,6 @@ case "$target" in
             echo 0-3 > /dev/cpuset/system-background/cpus
             # choose idle CPU for top app tasks
             echo 1 > /dev/stune/top-app/schedtune.prefer_idle
-
-            # re-enable thermal & BCL core_control now
-            echo 1 > /sys/module/msm_thermal/core_control/enabled
-            for mode in /sys/devices/soc.0/qcom,bcl.*/mode
-            do
-                echo -n disable > $mode
-            done
-            for hotplug_mask in /sys/devices/soc.0/qcom,bcl.*/hotplug_mask
-            do
-                echo $bcl_hotplug_mask > $hotplug_mask
-            done
-            for hotplug_soc_mask in /sys/devices/soc.0/qcom,bcl.*/hotplug_soc_mask
-            do
-                echo $bcl_soc_hotplug_mask > $hotplug_soc_mask
-            done
-            for mode in /sys/devices/soc.0/qcom,bcl.*/mode
-            do
-                echo -n enable > $mode
-            done
 
             # Disable Core control
             echo 0 > /sys/devices/system/cpu/cpu0/core_ctl/enable
@@ -3373,15 +3299,6 @@ case "$target" in
         echo 1 > /sys/devices/system/cpu/cpu2/online
         echo 1 > /sys/devices/system/cpu/cpu3/online
         echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
-
-	# Tune core control
-	echo 2 > /sys/devices/system/cpu/cpu0/core_ctl/min_cpus
-	max_freq=`cat /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_max_freq`
-	min_freq=800000
-	echo $((min_freq*100 / max_freq)) $((min_freq*100 / max_freq)) $((66*1000000 / max_freq)) \
-		$((55*1000000 / max_freq)) > /sys/devices/system/cpu/cpu0/core_ctl/busy_up_thres
-	echo $((33*1000000 / max_freq)) > /sys/devices/system/cpu/cpu0/core_ctl/busy_down_thres
-	echo 100 > /sys/devices/system/cpu/cpu0/core_ctl/offline_delay_ms
 
         for devfreq_gov in /sys/class/devfreq/*qcom,cpubw*/governor
         do

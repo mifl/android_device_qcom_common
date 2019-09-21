@@ -269,6 +269,7 @@ INIT += init.qcom.sdio.sh
 INIT += init.qcom.sh
 INIT += init.qcom.class_core.sh
 INIT += init.class_main.sh
+INIT += init.class_late.sh
 INIT += init.qcom.wifi.sh
 INIT += vold.fstab
 INIT += init.qcom.ril.path.sh
@@ -908,7 +909,9 @@ PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
 ifneq ($(strip $(TARGET_HAS_LOW_RAM)),true)
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
 endif
-PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
+ifneq ($(TARGET_SUPPORTS_FEATURE_PHONE), true)
+  PRODUCT_PACKAGES += android.hardware.drm@1.0-service.widevine
+endif
 PRODUCT_PACKAGES += librs_jni
 
 # Filesystem management tools
@@ -1073,7 +1076,11 @@ PRODUCT_DEFAULT_PROPERTY_OVERRIDES += \
     ro.oem_unlock_supported=true
 
 ifeq ($(TARGET_USES_QCOM_BSP_ATEL),true)
+  ifneq ($(TARGET_SUPPORTS_FEATURE_PHONE), true)
     PRODUCT_PROPERTY_OVERRIDES += persist.radio.multisim.config=dsds
+  else
+    PRODUCT_PROPERTY_OVERRIDES += persist.radio.multisim.config=ssss
+  endif
 endif
 
 # VNDK-SP:
