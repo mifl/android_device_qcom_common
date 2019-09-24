@@ -20,6 +20,11 @@ endif
 $(call inherit-product, $(SRC_TARGET_DIR)/product/telephony.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/generic.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/locales_full.mk)
+# Get some sounds
+$(call inherit-product-if-exists, frameworks/base/data/sounds/AllAudio.mk)
+# Get the TTS language packs
+$(call inherit-product-if-exists, external/svox/pico/lang/all_pico_languages.mk)
+
 else
     $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
     $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
@@ -42,6 +47,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     persist.radio.schd.cache=3500 \
     sys.vendor.shutdown.waittime=500 \
     ro.build.shutdown_timeout=0
+
+# Additional settings used in all AOSP builds
+PRODUCT_PROPERTY_OVERRIDES := \
+	ro.config.ringtone=Ring_Synth_04.ogg \
+	ro.config.notification_sound=pixiedust.ogg
 
 ifneq ($(BOARD_FRP_PARTITION_NAME),)
     PRODUCT_PROPERTY_OVERRIDES += ro.frp.pst=/dev/block/bootdevice/by-name/$(BOARD_FRP_PARTITION_NAME)
