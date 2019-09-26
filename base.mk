@@ -777,7 +777,6 @@ PRODUCT_PACKAGES := \
     AlarmProvider \
     Calculator \
     Calendar \
-    Camera \
     CellBroadcastReceiver \
     CertInstaller \
     DrmProvider \
@@ -803,9 +802,6 @@ PRODUCT_PACKAGES := \
     FM2 \
     FMRecord \
     VideoEditor \
-    SnapdragonGallery \
-    SnapdragonLauncher \
-    SnapdragonMusic \
     a4wpservice \
     wipowerservice
 
