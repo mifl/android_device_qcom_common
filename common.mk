@@ -8,6 +8,7 @@ $(call inherit-product-if-exists, $(QCPATH)/common/config/device-vendor.mk)
 ifeq ($(TARGET_HAS_LOW_RAM),true)
     PRODUCT_PROPERTY_OVERRIDES += \
         keyguard.no_require_sim=true \
+        ro.config.notification_sound=pixiedust.ogg \
         ro.com.android.dataroaming=true
 
     $(call inherit-product, $(SRC_TARGET_DIR)/product/telephony_system.mk)
