@@ -29,6 +29,48 @@
 
 target=`getprop ro.board.platform`
 
+function configure_sku_parameters() {
+    hwtype=`getprop ro.hardware.type`
+    ProductName=`getprop ro.product.name`
+    if [ "$ProductName" == "msm8996" ] && [ "$hwtype" == "automotive" ]; then
+        reg_val=`cat /sys/devices/soc/70130.qcom,qfprom/qfprom0/nvmem | od -An -t d4`
+        feature_id=$(((reg_val >> 20) & 0xFF))
+        echo "feature_id = $feature_id"
+
+        if [ $feature_id == 15 ]; then
+            echo "SKU Configured : AA"
+            echo 768000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+            echo 1286400 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+            echo 768000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+            echo 1286400 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+            echo 825600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+            echo 1516800 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+            echo 825600 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+            echo 1516800 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+        elif [ $feature_id == 4 ]; then
+            echo "SKU Configured : AC"
+            echo 768000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+            echo 1593600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+            echo 768000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+            echo 1593600 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+            echo 825600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+            echo 2054400 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+            echo 825600 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+            echo 2054400 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+        else
+            echo "Unknown SKU"
+            echo 768000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+            echo 1286400 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+            echo 768000 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+            echo 1286400 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
+            echo 825600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+            echo 1516800 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
+            echo 825600 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+            echo 1516800 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
+        fi
+    fi
+}
+
 function configure_zram_parameters() {
     # Zram disk - 512MB size
     zram_enable=`getprop ro.vendor.qti.config.zram`
@@ -2254,6 +2296,7 @@ esac
 
 case "$target" in
     "msm8996")
+        configure_sku_parameters
         # disable thermal bcl hotplug to switch governor
         echo 0 > /sys/module/msm_thermal/core_control/enabled
         echo -n disable > /sys/devices/soc/soc:qcom,bcl/mode
