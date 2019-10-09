@@ -470,6 +470,8 @@ on property:sys.boot_completed=1
     #WDSP FW boot sysfs node used by STHAL
     chown media audio /sys/kernel/wdsp0/boot
     chown media audio /sys/kernel/wcd_cpe0/fw_name
+    write /dev/kmsg "starting eAVB "
+    start eavb
 on property:persist.radio.atfwd.start=false
     stop atfwd
 
@@ -1002,6 +1004,12 @@ service profiler_daemon /system/bin/profiler_daemon
     disabled
 
 service can /vendor/bin/init.qti.can.sh
+   class late_start
+   user root
+   disabled
+   oneshot
+
+service eavb /vendor/bin/init.qti.eavb.sh
    class late_start
    user root
    disabled
