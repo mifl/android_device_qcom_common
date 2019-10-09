@@ -881,7 +881,11 @@ service ssgtzd /vendor/bin/ssgtzd
     class late_start
     user system
     group system
+    disabled
     socket ssgtzd stream 0660 system inet
+
+on property:sys.boot_completed=1
+    start ssgtzd
 
 service mlid /vendor/bin/mlid
     class late_start
