@@ -2204,7 +2204,7 @@ enable_dcc_config()
             echo "Enabling DCC config for 8937."
             enable_msm8937_dcc_config
             case "$soc_id" in
-                "353" | "354" | "363" | "364" | "416")
+                "353" | "354" | "363" | "364" | "416" | "437")
                      echo "Enabling DCC config for 439"
                      srcenable="enable_source"
                      sinkenable="enable_sink"
