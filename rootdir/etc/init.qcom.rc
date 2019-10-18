@@ -434,11 +434,10 @@ service iop /system/vendor/bin/iop
     disabled
     socket iop seqpacket 0666 root system
 
-service qcomsysd /system/vendor/bin/qcom-system-daemon
+service qcomsysd /vendor/bin/qcom-system-daemon
     class main
     user root
     group root diag oem_2901
-    disabled
 
 on property:persist.vendor.qcomsysd.enabled=1
     enable qcomsysd
@@ -882,7 +881,11 @@ service ssgtzd /vendor/bin/ssgtzd
     class late_start
     user system
     group system
+    disabled
     socket ssgtzd stream 0660 system inet
+
+on property:sys.boot_completed=1
+    start ssgtzd
 
 service mlid /vendor/bin/mlid
     class late_start
