@@ -2212,7 +2212,7 @@ case "$target" in
       echo C0 > /proc/irq/460/smp_affinity
       echo C0 > /proc/irq/462/smp_affinity
 
-      #configure_zram_parameters
+      configure_zram_parameters
 
       # Enable bus-dcvs
       for cpubw in /sys/class/devfreq/*qcom,cpubw*
