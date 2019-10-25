@@ -340,10 +340,14 @@ function configure_zram_parameters() {
     # Zram disk - 75% for Go devices.
     # For 512MB Go device, size = 384MB, set same for Non-Go.
     # For 1GB Go device, size = 768MB, set same for Non-Go.
-    # For >1GB and <=3GB Non-Go device, size = 1GB
-    # For >3GB and <=4GB Non-Go device, size = 2GB
-    # For >4GB Non-Go device, size = 4GB
+    # For >=2GB Non-Go devices, size = 50% of RAM size. Limit the size to 4GB.
     # And enable lz4 zram compression for Go targets.
+
+    RamSizeGB=`echo "($MemTotal / 1048576 ) + 1" | bc`
+    zRamSizeBytes=`echo "$RamSizeGB * 1024 * 1024 * 1024 / 2" | bc`
+    if [ $zRamSizeBytes -gt 4294967296 ]; then
+        zRamSizeBytes=4294967296
+    fi
 
     if [ "$low_ram" == "true" ]; then
         echo lz4 > /sys/block/zram0/comp_algorithm
@@ -357,12 +361,8 @@ function configure_zram_parameters() {
             echo 402653184 > /sys/block/zram0/disksize
         elif [ $MemTotal -le 1048576 ]; then
             echo 805306368 > /sys/block/zram0/disksize
-        elif [ $MemTotal -le 3145728 ]; then
-            echo 1073741824 > /sys/block/zram0/disksize
-        elif [ $MemTotal -le 4194304 ]; then
-            echo 2147483648 > /sys/block/zram0/disksize
         else
-            echo 4294967296 > /sys/block/zram0/disksize
+            echo $zRamSizeBytes > /sys/block/zram0/disksize
         fi
         mkswap /dev/block/zram0
         swapon /dev/block/zram0 -p 32758
@@ -3666,6 +3666,12 @@ case "$target" in
             echo 400 > $memlat/mem_latency/ratio_ceil
         done
 
+        #Enable cdspl3 governor for L3 cdsp nodes
+        for l3cdsp in $device/*cdsp-cdsp-l3-lat/devfreq/*cdsp-cdsp-l3-lat
+        do
+            echo "cdspl3" > $l3cdsp/governor
+        done
+
         #Gold L3 ratio ceil
         echo 4000 > /sys/class/devfreq/soc:qcom,cpu6-cpu-l3-lat/mem_latency/ratio_ceil
 
@@ -4763,6 +4769,14 @@ case "$target" in
 	    do
 		echo 20000 > $l3prime/mem_latency/ratio_ceil
 	    done
+
+	    #Enable mem_latency governor for qoslat
+	    for qoslat in $device/*qoslat/devfreq/*qoslat
+	    do
+		echo "mem_latency" > $qoslat/governor
+		echo 10 > $qoslat/polling_interval
+		echo 50 > $qoslat/mem_latency/ratio_ceil
+	    done
 	done
     echo N > /sys/module/lpm_levels/parameters/sleep_disabled
     configure_memory_parameters
@@ -5195,6 +5209,25 @@ case "$product" in
 	*)
        ;;
 esac
+
+case "$product" in
+	"sdmshrike_au")
+	#Setting the min supported frequencies
+		echo 1113600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+		echo 1113600 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+		echo 1113600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+		echo 1113600 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+		echo 1171200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+		echo 1171200 > /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq
+		echo 1171200 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
+		echo 1171200 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq
+                echo 4 > /sys/class/kgsl/kgsl-3d0/min_pwrlevel
+                echo 0 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
+	;;
+	*)
+	;;
+esac
+
 # Let kernel know our image version/variant/crm_version
 if [ -f /sys/devices/soc0/select_image ]; then
     image_version="10:"
