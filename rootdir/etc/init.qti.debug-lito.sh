@@ -31,11 +31,11 @@ enable_tracing_events_lito()
     # timer
     echo 1 > /sys/kernel/debug/tracing/events/timer/timer_expire_entry/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/timer_expire_exit/enable
-    echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_cancel/enable
+    #echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_cancel/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_expire_entry/enable
     echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_expire_exit/enable
-    echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_init/enable
-    echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_start/enable
+    #echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_init/enable
+    #echo 1 > /sys/kernel/debug/tracing/events/timer/hrtimer_start/enable
     #enble FTRACE for softirq events
     echo 1 > /sys/kernel/debug/tracing/events/irq/enable
     #enble FTRACE for Workqueue events
@@ -58,7 +58,9 @@ enable_tracing_events_lito()
     # regulator
     echo 1 > /sys/kernel/debug/tracing/events/regulator/enable
     # power
-    echo 1 > /sys/kernel/debug/tracing/events/msm_low_power/enable
+    #echo 1 > /sys/kernel/debug/tracing/events/msm_low_power/enable
+    echo 1 > /sys/kernel/debug/tracing/events/msm_low_power/cpu_idle_enter/enable
+    echo 1 > /sys/kernel/debug/tracing/events/msm_low_power/cpu_idle_exit/enable
     #thermal
     echo 1 > /sys/kernel/debug/tracing/events/thermal/enable
     #scm
@@ -79,6 +81,11 @@ enable_tracing_events_lito()
     #memory pressure events/oom
     echo 1 > /sys/kernel/debug/tracing/events/psi/psi_event/enable
     echo 1 > /sys/kernel/debug/tracing/events/psi/psi_window_vmstat/enable
+
+    #iommu events
+    echo 1 > /sys/kernel/debug/tracing/events/iommu/map/enable
+    echo 1 > /sys/kernel/debug/tracing/events/iommu/map_sg/enable
+    echo 1 > /sys/kernel/debug/tracing/events/iommu/unmap/enable
 
     echo 1 > /sys/kernel/debug/tracing/tracing_on
 }
@@ -272,7 +279,11 @@ config_lito_dcc_ddr()
 config_lito_dcc_cam()
 {
     #Cam CC
-    echo 0x0AD0C1C4 > $DCC_PATH/config
+    echo 0x10B008 > $DCC_PATH/config
+    echo 0xAD0C1C4 > $DCC_PATH/config
+    echo 0xAD0C12C > $DCC_PATH/config
+    echo 0xAD0C130 > $DCC_PATH/config
+    echo 0xAD0C144 > $DCC_PATH/config
     echo 0xAD0C148 > $DCC_PATH/config
 }
 
@@ -719,30 +730,6 @@ config_lito_dcc_rsc_tcs()
     echo 0x182220b0 > $DCC_PATH/config
     echo 0x182220c0 > $DCC_PATH/config
     echo 0x182220c4 > $DCC_PATH/config
-
-    #APPS RSC
-    echo 0x18200010 > $DCC_PATH/config
-    echo 0x18200030 > $DCC_PATH/config
-    echo 0x18200038 > $DCC_PATH/config
-    echo 0x18200040 > $DCC_PATH/config
-    echo 0x18200048 > $DCC_PATH/config
-    echo 0x18200400 > $DCC_PATH/config
-    echo 0x18200404 > $DCC_PATH/config
-    echo 0x18200408 > $DCC_PATH/config
-    echo 0x18220038 > $DCC_PATH/config
-    echo 0x18220040 > $DCC_PATH/config
-    echo 0x182200d0 > $DCC_PATH/config
-    echo 0x18230408 > $DCC_PATH/config
-
-    #RPMH PDC
-    echo 0xb201020 > $DCC_PATH/config
-    echo 0xb201024 > $DCC_PATH/config
-    echo 0xb20103c > $DCC_PATH/config
-    echo 0xb204510 > $DCC_PATH/config
-    echo 0xb204514 > $DCC_PATH/config
-    echo 0xb204520 > $DCC_PATH/config
-    echo 0xb231020 > $DCC_PATH/config
-    echo 0xb231024 > $DCC_PATH/config
 
     #NPU RSC
     # echo 0x98b0010 > $DCC_PATH/config
@@ -2278,6 +2265,7 @@ config_lito_dcc_gcc(){
     echo 0x19c100 > $DCC_PATH/config
     echo 0x3D91078 > $DCC_PATH/config
     echo 0x3D95000 > $DCC_PATH/config
+    echo 0x10B008 0x1 > $DCC_PATH/config_write
 }
 
 config_lito_dcc_l3_rsc(){
@@ -2454,6 +2442,43 @@ config_lito_dcc_pimem()
     echo 0x610100 11 > $DCC_PATH/config
 }
 
+config_lito_dcc_misc()
+{
+    echo 0xC2A2040 > $DCC_PATH/config
+}
+
+config_lito_dcc_gic()
+{
+    echo 0x17A00104 29 > $DCC_PATH/config
+    echo 0x17A00204 29 > $DCC_PATH/config
+}
+
+config_lito_dcc_apps_rsc_pdc()
+{
+    #APPS RSC
+    echo 0x18200010 > $DCC_PATH/config
+    echo 0x18200030 > $DCC_PATH/config
+    echo 0x18200038 > $DCC_PATH/config
+    echo 0x18200040 > $DCC_PATH/config
+    echo 0x18200048 > $DCC_PATH/config
+    echo 0x18200400 > $DCC_PATH/config
+    echo 0x18200404 > $DCC_PATH/config
+    echo 0x18200408 > $DCC_PATH/config
+    echo 0x18220038 > $DCC_PATH/config
+    echo 0x18220040 > $DCC_PATH/config
+    echo 0x182200d0 > $DCC_PATH/config
+    echo 0x18230408 > $DCC_PATH/config
+
+    #RPMH PDC
+    echo 0xb201020 > $DCC_PATH/config
+    echo 0xb201024 > $DCC_PATH/config
+    echo 0xb20103c > $DCC_PATH/config
+    echo 0xb204510 > $DCC_PATH/config
+    echo 0xb204514 > $DCC_PATH/config
+    echo 0xb204520 > $DCC_PATH/config
+    echo 0xb231020 > $DCC_PATH/config
+    echo 0xb231024 > $DCC_PATH/config
+}
 config_lito_dcc_gcc_other()
 {
     echo 0x100034 3 > $DCC_PATH/config
@@ -2494,7 +2519,8 @@ config_lito_dcc_gcc_other()
     echo 0x109298 4 > $DCC_PATH/config
     echo 0x109474  > $DCC_PATH/config
     echo 0x10a000 3 > $DCC_PATH/config
-    echo 0x10b000 22 > $DCC_PATH/config
+    echo 0x10b000 2 > $DCC_PATH/config
+    echo 0x10b00c 19 > $DCC_PATH/config
     echo 0x10b068 9 > $DCC_PATH/config
     echo 0x10c000 20 > $DCC_PATH/config
     echo 0x10c064 16 > $DCC_PATH/config
@@ -2819,21 +2845,24 @@ enable_lito_dcc_config()
     echo cap > $DCC_PATH/func_type
     echo sram > $DCC_PATH/data_sink
     config_lito_dcc_lpm
+    config_lito_dcc_apps_rsc_pdc
     config_lito_dcc_core
     config_lito_dcc_osm
     config_lito_dcc_gemnoc
     config_lito_dcc_noc
     config_lito_dcc_gcc
     config_lito_dcc_pimem
+    config_lito_dcc_misc
+    config_lito_dcc_gic
     config_lito_dcc_ddr
     config_lito_dcc_ddr
-    config_lito_dcc_cam
 
     echo 4 > $DCC_PATH/curr_list
     echo cap > $DCC_PATH/func_type
     echo sram > $DCC_PATH/data_sink
     config_lito_dcc_gemnoc
     config_lito_dcc_noc
+    config_lito_dcc_cam
 
 
     # echo 6 > $DCC_PATH/curr_list
