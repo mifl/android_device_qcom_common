@@ -38,6 +38,7 @@
 #include <linux/qseecom.h>
 #include <linux/msm_ion.h>
 
+#if TARGET_ION_ABI_VERSION < 2
 /* Service IDs */
 #define SCM_SVC_SSD                 0x07
 
@@ -400,3 +401,4 @@ exit:
 
     return ret;
 }
+#endif
