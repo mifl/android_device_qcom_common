@@ -13,6 +13,9 @@ ifeq ($(TARGET_HAS_LOW_RAM),true)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/telephony.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/generic.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/locales_full.mk)
+# Get the TTS language packs
+$(call inherit-product-if-exists, external/svox/pico/lang/all_pico_languages.mk)
+
 else
     $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
     $(call inherit-product, frameworks/native/build/phone-xhdpi-1024-dalvik-heap.mk)
