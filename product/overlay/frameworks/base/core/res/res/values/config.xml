@@ -34,9 +34,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     <!-- Enable overlay for all location components. -->
     <bool name="config_enableNetworkLocationOverlay" translatable="false">false</bool>
-    <bool name="config_enableFusedLocationOverlay" translatable="false">false</bool>
     <string name="config_networkLocationProviderPackageName" translatable="false">com.qualcomm.location</string>
-    <string name="config_fusedLocationProviderPackageName" translatable="false">com.qualcomm.location</string>
     <!-- Enable doze mode -->
     <string name="config_dozeComponent">com.qualcomm.qti.contextualmode/com.qualcomm.qti.contextualmode.ContextualModeDozeService</string>
     <bool name="config_dozeAfterScreenOff">false</bool>
