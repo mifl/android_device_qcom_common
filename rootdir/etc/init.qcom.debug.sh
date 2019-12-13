@@ -1678,6 +1678,88 @@ enable_msm8937_dcc_config()
     #echo 0x448128 2 > $DCC_PATH/config
     #echo 0x448130 1 > $DCC_PATH/config
 
+    #APCS_ALIAS0_APSS_ACS
+    echo 0xB188004 1 > $DCC_PATH/config
+    echo 0xB188008 1 > $DCC_PATH/config
+    echo 0xB188064 1 > $DCC_PATH/config
+    echo 0xB189000 1 > $DCC_PATH/config
+    echo 0xB189C0C 1 > $DCC_PATH/config
+    echo 0xB189C18 1 > $DCC_PATH/config
+
+    #APCS_ALIAS1_APSS_ACS
+    echo 0xB198004 1 > $DCC_PATH/config
+    echo 0xB198008 1 > $DCC_PATH/config
+    echo 0xB198064 1 > $DCC_PATH/config
+    echo 0xB199000 1 > $DCC_PATH/config
+    echo 0xB199C0C 1 > $DCC_PATH/config
+    echo 0xB199C18 1 > $DCC_PATH/config
+
+    #APCS_ALIAS2_APSS_ACS
+    echo 0xB1A8004 1 > $DCC_PATH/config
+    echo 0xB1A8008 1 > $DCC_PATH/config
+    echo 0xB1A8064 1 > $DCC_PATH/config
+    echo 0xB1A9000 1 > $DCC_PATH/config
+    echo 0xB1A9C0C 1 > $DCC_PATH/config
+    echo 0xB1A9C18 1 > $DCC_PATH/config
+
+    #APCS_ALIAS3_APSS_ACS
+    echo 0xB1B8004 1 > $DCC_PATH/config
+    echo 0xB1B8008 1 > $DCC_PATH/config
+    echo 0xB1B8064 1 > $DCC_PATH/config
+    echo 0xB1B9000 1 > $DCC_PATH/config
+    echo 0xB1B9C0C 1 > $DCC_PATH/config
+    echo 0xB1B9C18 1 > $DCC_PATH/config
+
+    #APCLUS0_L2_SAW4_1_1_SPM
+    echo 0xB111014 2 > $DCC_PATH/config
+    echo 0xB111210 1 > $DCC_PATH/config
+    echo 0xB111218 1 > $DCC_PATH/config
+    echo 0xB111234 1 > $DCC_PATH/config
+    echo 0xB1112B4 1 > $DCC_PATH/config
+    echo 0xB112000 2 > $DCC_PATH/config
+    echo 0xB11200C 1 > $DCC_PATH/config
+    echo 0xB112C0C 1 > $DCC_PATH/config
+    echo 0xB112C18 1 > $DCC_PATH/config
+
+    #APCS_ALIAS4_APSS_ACS
+    echo 0xB088004 2 > $DCC_PATH/config
+    echo 0xB088064 1 > $DCC_PATH/config
+    echo 0xB089000 1 > $DCC_PATH/config
+    echo 0xB089C0C 1 > $DCC_PATH/config
+    echo 0xB089C18 1 > $DCC_PATH/config
+
+    #APCS_ALIAS5_APSS_ACS
+    echo 0xB098004 1 > $DCC_PATH/config
+    echo 0xB098064 1 > $DCC_PATH/config
+    echo 0xB099000 1 > $DCC_PATH/config
+    echo 0xB099C0C 2 > $DCC_PATH/config
+    echo 0xB099C18 1 > $DCC_PATH/config
+
+    #APCS_ALIAS6_APSS_ACS
+    echo 0xB0A8004 2 > $DCC_PATH/config
+    echo 0xB0A8064 1 > $DCC_PATH/config
+    echo 0xB0A9000 1 > $DCC_PATH/config
+    echo 0xB0A9C0C 1 > $DCC_PATH/config
+    echo 0xB0A9C18 1 > $DCC_PATH/config
+
+    #APCS_ALIAS7_APSS_ACS
+    echo 0xB0B8004 2 > $DCC_PATH/config
+    echo 0xB0B8064 1 > $DCC_PATH/config
+    echo 0xB0B9000 1 > $DCC_PATH/config
+    echo 0xB0B9C0C 1 > $DCC_PATH/config
+    echo 0xB0B9C18 1 > $DCC_PATH/config
+
+    #APCS_ALIAS1_APSS_GLB
+    echo 0xB011014 1 > $DCC_PATH/config
+    echo 0xB011018 1 > $DCC_PATH/config
+    echo 0xB011210 1 > $DCC_PATH/config
+    echo 0xB011218 1 > $DCC_PATH/config
+    echo 0xB011234 1 > $DCC_PATH/config
+    echo 0xB0112B4 1 > $DCC_PATH/config
+    echo 0xB199000 1 > $DCC_PATH/config
+    echo 0xB19900C 1 > $DCC_PATH/config
+    echo 0xB199C0C 1 > $DCC_PATH/config
+    echo 0xB199C18 1 > $DCC_PATH/config
     echo  1 > $DCC_PATH/enable
 }
 
