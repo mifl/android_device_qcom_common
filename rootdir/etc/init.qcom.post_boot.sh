@@ -72,6 +72,32 @@ function 8937_sched_dcvs_eas()
 
 }
 
+function configure_automotive_sku_parameters() {
+
+    echo 1036800 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+    echo 1056000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+    echo 1171200 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq
+    echo 1785600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+
+#read feature id from nvram
+reg_val=`cat /sys/devices/platform/soc/780130.qfprom/qfprom0/nvmem | od -An -t d4`
+feature_id=$(((reg_val >> 20) & 0xFF))
+log -t BOOT -p i "feature id '$feature_id'"
+if [ $feature_id == 0 ]; then
+       echo " SKU Configured : SA8155P"
+       echo 2131200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+       echo 2419200 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq
+       echo 0 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
+elif [ $feature_id == 1 ]; then
+        echo "SKU Configured : SA8150P"
+        echo 1920000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
+        echo 2227200 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq
+        echo 3 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
+else
+        echo "unknown feature_id value" $feature_id
+fi
+}
+
 function configure_sku_parameters() {
 
 #read feature id from nvram
@@ -3379,6 +3405,7 @@ case "$target" in
     echo 0 > /proc/sys/kernel/sched_coloc_busy_hyst_max_ms
 
     # disable unfiltering
+    echo 20000000 > /proc/sys/kernel/sched_task_unfilter_period
     echo 1 > /proc/sys/kernel/sched_task_unfilter_nr_windows
 
     # configure governor settings for silver cluster
@@ -3601,6 +3628,9 @@ case "$target" in
     echo -6 >  /sys/devices/system/cpu/cpu6/sched_load_boost
     echo -6 >  /sys/devices/system/cpu/cpu7/sched_load_boost
     echo 85 > /sys/devices/system/cpu/cpu6/cpufreq/schedutil/hispeed_load
+
+    # Enable conservative pl
+    echo 1 > /proc/sys/kernel/sched_conservative_pl
 
     echo "0:1248000" > /sys/module/cpu_boost/parameters/input_boost_freq
     echo 40 > /sys/module/cpu_boost/parameters/input_boost_ms
@@ -4698,6 +4728,12 @@ case "$target" in
 
     echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
     configure_memory_parameters
+    target_type=`getprop ro.hardware.type`
+	if [ "$target_type" == "automotive" ]; then
+           # update frequencies
+           configure_automotive_sku_parameters
+	fi
+
     ;;
 esac
 
@@ -4894,6 +4930,37 @@ case "$target" in
             fi
         ;;
     esac
+
+	#Setting the min and max supported frequencies
+	reg_val=`cat /sys/devices/platform/soc/780130.qfprom/qfprom0/nvmem | od -An -t d4`
+	feature_id=$(((reg_val >> 20) & 0xFF))
+
+	#Setting the min supported frequencies
+	echo 1113600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+	echo 1113600 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
+	echo 1113600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
+        echo 1113600 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
+        echo 1171200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+        echo 1171200 > /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq
+        echo 1171200 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
+        echo 1171200 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq
+        #setting min gpu freq to 392  MHz
+        echo 4 > /sys/class/kgsl/kgsl-3d0/min_pwrlevel
+        if [ $feature_id == 0 ]; then
+                echo "feature_id is 0 for SA8185P"
+
+                #setting max gpu freq to 530 MHz
+                echo 3 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
+                echo {class:ddr, res:fixed, val: 1804} > /sys/kernel/debug/aop_send_message
+        elif [ $feature_id == 1 ]; then
+                echo "feature_id is 1 for SA8195P"
+
+                #setting max gpu freq to 670 MHz
+                echo 0 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
+                echo {class:ddr, res:fixed, val: 2092} > /sys/kernel/debug/aop_send_message
+        else
+                echo "unknown feature_id value" $feature_id
+        fi
 
     echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
     configure_memory_parameters
@@ -5407,7 +5474,7 @@ case "$target" in
         start mpdecision
         echo 512 > /sys/block/mmcblk0/bdi/read_ahead_kb
     ;;
-    "msm8909" | "msm8916" | "msm8937" | "msm8952" | "msm8953" | "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv" | "sdm845" | "sdm710" | "msmnile" | | "sdmshrike" |"msmsteppe" | "sm6150" | "kona" | "lito" | "trinket" | "atoll" )
+    "msm8909" | "msm8916" | "msm8937" | "msm8952" | "msm8953" | "msm8994" | "msm8992" | "msm8996" | "msm8998" | "sdm660" | "apq8098_latv" | "sdm845" | "sdm710" | "msmnile" | "sdmshrike" |"msmsteppe" | "sm6150" | "kona" | "lito" | "trinket" | "atoll" | "bengal" )
         setprop vendor.post_boot.parsed 1
     ;;
     "apq8084")
@@ -5482,79 +5549,6 @@ case "$target" in
         echo 0,1,2,4,9,12 > /sys/module/lowmemorykiller/parameters/adj
         echo 5120 > /proc/sys/vm/min_free_kbytes
      ;;
-esac
-
-product=`getprop ro.build.product`
-case "$product" in
-	"msmnile_au")
-	#Setting the min and max supported frequencies
-	reg_val=`cat /sys/devices/platform/soc/780130.qfprom/qfprom0/nvmem | od -An -t d4`
-	feature_id=$(((reg_val >> 20) & 0xFF))
-
-	if [ $feature_id == 0 ]; then
-		echo "feature_id is 0 for SA8155"
-		echo 1036800 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-		echo 1036800 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-		echo 1036800 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-		echo 1036800 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-		echo 1056000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-		echo 1056000 > /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq
-		echo 1056000 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
-		echo 1171200 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq
-		echo 1785600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-		echo 1785600 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-		echo 1785600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-		echo 1785600 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
-		echo 2131200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-		echo 2131200 > /sys/devices/system/cpu/cpu5/cpufreq/scaling_max_freq
-		echo 2131200 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_max_freq
-		echo 2419200 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq
-                echo 4 > /sys/class/kgsl/kgsl-3d0/min_pwrlevel
-                echo 0 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
-	elif [ $feature_id == 1 ]; then
-		echo "feature_id is 1 for SA8150"
-		echo 1036800 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-		echo 1036800 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-		echo 1036800 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-		echo 1036800 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-		echo 1056000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-		echo 1056000 > /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq
-		echo 1056000 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
-		echo 1171200 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq
-		echo 1785600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
-		echo 1785600 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_max_freq
-		echo 1785600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_max_freq
-		echo 1785600 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_max_freq
-		echo 1920000 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
-		echo 1920000 > /sys/devices/system/cpu/cpu5/cpufreq/scaling_max_freq
-		echo 1920000 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_max_freq
-		echo 2227200 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_max_freq
-                echo 4 > /sys/class/kgsl/kgsl-3d0/min_pwrlevel
-                echo 3 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
-	else
-		echo "unknown feature_id value" $feature_id
-	fi
-	;;
-	*)
-       ;;
-esac
-
-case "$product" in
-	"sdmshrike_au")
-	#Setting the min supported frequencies
-		echo 1113600 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
-		echo 1113600 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
-		echo 1113600 > /sys/devices/system/cpu/cpu2/cpufreq/scaling_min_freq
-		echo 1113600 > /sys/devices/system/cpu/cpu3/cpufreq/scaling_min_freq
-		echo 1171200 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
-		echo 1171200 > /sys/devices/system/cpu/cpu5/cpufreq/scaling_min_freq
-		echo 1171200 > /sys/devices/system/cpu/cpu6/cpufreq/scaling_min_freq
-		echo 1171200 > /sys/devices/system/cpu/cpu7/cpufreq/scaling_min_freq
-                echo 4 > /sys/class/kgsl/kgsl-3d0/min_pwrlevel
-                echo 0 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
-	;;
-	*)
-	;;
 esac
 
 # Let kernel know our image version/variant/crm_version
