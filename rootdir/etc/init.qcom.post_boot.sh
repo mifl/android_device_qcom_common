@@ -2219,9 +2219,6 @@ case "$target" in
                 echo N > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/idle_enabled
                 echo N > /sys/module/lpm_levels/system/perf/perf-l2-gdhs/suspend_enabled
 
-                # Disable E3 idle
-                echo N > /sys/module/lpm_levels/system/system-pc/idle_enabled
-
                 # Enable low power modes
                 echo 0 > /sys/module/lpm_levels/parameters/sleep_disabled
 
