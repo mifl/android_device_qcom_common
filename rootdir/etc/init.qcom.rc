@@ -75,6 +75,7 @@ on early-boot
     # set RLIMIT_MEMLOCK to 64MB
     setrlimit 8 67108864 67108864
     # Allow subsystem (modem etc) debugging
+    write /sys/kernel/debug/bootkpi/kpi_values "M - Start adsp"
     write /sys/kernel/boot_adsp/boot 1
     write /sys/kernel/boot_cdsp/boot 1
     write /sys/devices/virtual/npu/msm_npu/boot 1
@@ -479,9 +480,10 @@ on property:persist.vendor.sys.rawdump_copy=0
 
 on property:sys.boot_completed=1
     write /dev/kmsg "Boot completed "
-    #Reset read ahead for dm-0 and dm-1 to 512kb
+    #Reset read ahead for dm-0, dm-1 and dm-2 to 512kb
     write /sys/block/dm-0/queue/read_ahead_kb 512
     write /sys/block/dm-1/queue/read_ahead_kb 512
+    write /sys/block/dm-2/queue/read_ahead_kb 512
     #WDSP FW boot sysfs node used by STHAL
     chown media audio /sys/kernel/wdsp0/boot
     chown media audio /sys/kernel/wcd_cpe0/fw_name
@@ -546,16 +548,6 @@ service irsc_util /vendor/bin/irsc_util "/vendor/etc/sec_config"
     class core
     user root
     oneshot
-
-service vendor.rmt_storage /vendor/bin/rmt_storage
-    class core
-    user root
-    shutdown critical
-    ioprio rt 0
-
-service vendor.tftp_server /vendor/bin/tftp_server
-   class core
-   user root
 
 service vendor.bt-dun /system/bin/dun-server /dev/smd7 /dev/rfcomm0
     class late_start
@@ -638,25 +630,6 @@ service vendor.move_wifi_data /system/bin/move_wifi_data.sh
     class main
     user  wifi
     group wifi
-    disabled
-    oneshot
-
-# FST Manager with hostapd (softap) - all settings inside ini file
-service fstman /vendor/bin/fstman -B -ddd -c /data/vendor/wifi/fstman.ini -a 1
-    user wifi
-    group wifi
-    capabilities NET_ADMIN NET_RAW
-    class main
-    disabled
-    oneshot
-
-# FST Manager with supplicant - connect to supplicant socket
-service fstman_wlan0 /vendor/bin/fstman -B -ddd -c /data/vendor/wifi/fstman.ini \
-    -a 0 @android:vendor_wpa_wlan0
-    user wifi
-    group wifi
-    capabilities NET_ADMIN NET_RAW
-    class main
     disabled
     oneshot
 
@@ -861,7 +834,6 @@ service vendor.atfwd /vendor/bin/ATFWD-daemon
     group system radio
 
 service hostapd_fst /vendor/bin/hw/hostapd -dd -g /data/vendor/wifi/hostapd/global
-    interface android.hardware.wifi.hostapd@1.0::IHostapd default
     class main
     capabilities NET_ADMIN NET_RAW
     user wifi
