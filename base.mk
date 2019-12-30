@@ -1020,14 +1020,7 @@ PRODUCT_PACKAGES += android.hidl.manager@1.0-java
 PRODUCT_PACKAGES += android.hardware.drm@1.0-impl
 PRODUCT_PACKAGES += android.hardware.drm@1.0-service
 PRODUCT_PACKAGES += android.hardware.drm@1.1-service.clearkey
-
-
-#Disabling the widevine service in Automotive guest vms.
-#ENABLE_HYP get set in device/qcom/msmnile_gvmq/msmnile_gvmq.mk
-#ENABLE_HYP get set in device/qcom/sm6150_au_gvmq/sm6150_au_gvmq.mk
-ifneq ($(strip $(ENABLE_HYP)),true)
 PRODUCT_PACKAGES += android.hardware.drm@1.1-service.widevine
-endif
 
 ifeq ($(strip $(OTA_FLAG_FOR_DRM)),true)
 PRODUCT_PACKAGES += move_widevine_data.sh
