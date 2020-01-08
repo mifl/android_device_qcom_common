@@ -154,7 +154,7 @@ elif [ $feature_id == 5 ]; then
 	echo 2 > /sys/class/kgsl/kgsl-3d0/max_pwrlevel
 	echo {class:ddr, res:fixed, val: 1333} > /sys/kernel/debug/aop_send_message
 	setprop vendor.sku_identified 1
-elif [ $feature_id == 4 || $feature_id == 3 ]; then
+elif [ $feature_id == 4 ] || [ $feature_id == 3 ]; then
 	echo "SKU Configured : SA6155"
 	echo 748800 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 	echo 748800 > /sys/devices/system/cpu/cpu1/cpufreq/scaling_min_freq
@@ -3447,7 +3447,7 @@ case "$target" in
     echo 1 > /proc/sys/kernel/sched_conservative_pl
 
     echo "0:1228800" > /sys/devices/system/cpu/cpu_boost/input_boost_freq
-    echo 40 > /sys/devices/system/cpu/cpu_boost/input_boost_ms
+    echo 120 > /sys/devices/system/cpu/cpu_boost/input_boost_ms
 
     # Set Memory parameters
     configure_memory_parameters
@@ -4968,7 +4968,7 @@ esac
 
 case "$target" in
 	"kona")
-
+	rev=`cat /sys/devices/soc0/revision`
 	ddr_type=`od -An -tx /proc/device-tree/memory/ddr_device_type`
 	ddr_type4="07"
 	ddr_type5="08"
@@ -5018,7 +5018,7 @@ case "$target" in
 	echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/down_rate_limit_us
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/up_rate_limit_us
-        if [ `cat /sys/devices/soc0/revision` == "2.0" ]; then
+        if [ $rev == "2.0" ] || [ $rev == "2.1"]; then
 		echo 1248000 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq
 	else
 		echo 1228800 > /sys/devices/system/cpu/cpufreq/policy0/schedutil/hispeed_freq
@@ -5041,7 +5041,7 @@ case "$target" in
 	echo "schedutil" > /sys/devices/system/cpu/cpufreq/policy7/scaling_governor
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/down_rate_limit_us
 	echo 0 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/up_rate_limit_us
-        if [ `cat /sys/devices/soc0/revision` == "2.0" ]; then
+        if [ $rev == "2.0" ] || [ $rev == "2.1"]; then
 		echo 1632000 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/hispeed_freq
 	else
 		echo 1612800 > /sys/devices/system/cpu/cpufreq/policy7/schedutil/hispeed_freq
