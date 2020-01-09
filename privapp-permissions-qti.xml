@@ -48,6 +48,7 @@ It allows additional grants on top of privapp-permissions-platform.xml
     <privapp-permissions package="com.qualcomm.qti.settings.watchdatetime">
         <permission name="android.permission.SET_TIME"/>
         <permission name="android.permission.SET_TIME_ZONE"/>
+        <permission name="android.permission.WRITE_SECURE_SETTINGS"/>
     </privapp-permissions>
 
     <privapp-permissions package="com.qualcomm.qti.watchdialer">
