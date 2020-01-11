@@ -64,3 +64,13 @@ service DiagDaemon /system/vendor/bin/diag_socket_log -f /sdcard/ipaddress.txt
     disabled
     user root
     group root system log diag net_raw
+
+service qti-testscripts /system/bin/sh /system/etc/init.qcom.testscripts.sh
+    class late_start
+    user root
+    disabled
+    oneshot
+    seclabel u:r:qti-testscripts:s0
+
+on property:sys.boot_completed=1
+    start qti-testscripts
