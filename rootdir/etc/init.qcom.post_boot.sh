@@ -371,7 +371,9 @@ function configure_zram_parameters() {
 
     RamSizeGB=`echo "($MemTotal / 1048576 ) + 1" | bc`
     zRamSizeBytes=`echo "$RamSizeGB * 1024 * 1024 * 1024 / 2" | bc`
-    if [ $zRamSizeBytes -gt 4294967296 ]; then
+    zRamSizeMB=`echo "$RamSizeGB * 1024 / 2" | bc`
+    # use MB avoid 32 bit overflow
+    if [ $zRamSizeMB -gt 4096 ]; then
         zRamSizeBytes=4294967296
     fi
 
@@ -3737,7 +3739,7 @@ case "$target" in
         fi
 
         case "$soc_id" in
-                 "417" )
+                 "417" | "420" | "444" | "445" )
 
             # Core control is temporarily disabled till bring up
             echo 0 > /sys/devices/system/cpu/cpu0/core_ctl/enable
