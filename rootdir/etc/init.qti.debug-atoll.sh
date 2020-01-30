@@ -60,8 +60,7 @@ enable_atoll_tracing_events()
     echo 1 > /sys/kernel/debug/tracing/events/power/clock_enable/enable
     echo 1 > /sys/kernel/debug/tracing/events/power/clock_disable/enable
     echo 1 > /sys/kernel/debug/tracing/events/power/cpu_frequency/enable
-    # regulator
-    echo 1 > /sys/kernel/debug/tracing/events/regulator/enable
+
     # power
     echo 1 > /sys/kernel/debug/tracing/events/msm_low_power/cpu_idle_enter/enable
     echo 1 > /sys/kernel/debug/tracing/events/msm_low_power/cpu_idle_exit/enable
@@ -74,9 +73,17 @@ enable_atoll_tracing_events()
 
     #rmph_send_msg
     echo 1 > /sys/kernel/debug/tracing/events/rpmh/rpmh_send_msg/enable
-
     #SCM Tracing enabling
     echo 1 > /sys/kernel/debug/tracing/events/scm/enable
+
+    #Preempt trace events
+    echo 'nsec' > /proc/sys/kernel/preemptoff_tracing_threshold_ns
+    echo 400000000 > /proc/sys/kernel/preemptoff_tracing_threshold_ns
+    echo 1 > /sys/kernel/debug/tracing/events/sched/sched_preempt_disable/enable
+    #irqsoff trace events
+    echo 'nsec' > /proc/sys/kernel/irqsoff_tracing_threshold_ns
+    echo 100000000 > /proc/sys/kernel/irqsoff_tracing_threshold_ns
+    echo 1 > /sys/kernel/debug/tracing/events/preemptirq/irqs_disable/enable
 
     echo 1 > /sys/kernel/debug/tracing/tracing_on
 }
@@ -1463,6 +1470,86 @@ config_atoll_dcc_gic(){
     echo 0x17A00204 29 > $DCC_PATH/config
 }
 
+config_atoll_dcc_rscc_npu(){
+    echo 0x98B0010 3 > $DCC_PATH/config
+    echo 0x98B0210 > $DCC_PATH/config
+    echo 0x98B0230 > $DCC_PATH/config
+    echo 0x98B0250 > $DCC_PATH/config
+    echo 0x98B0270 > $DCC_PATH/config
+    echo 0x98B0290 > $DCC_PATH/config
+    echo 0x98B02B0 > $DCC_PATH/config
+    echo 0x98B0208 > $DCC_PATH/config
+    echo 0x98B0228 > $DCC_PATH/config
+    echo 0x98B0248 > $DCC_PATH/config
+    echo 0x98B0268 > $DCC_PATH/config
+    echo 0x98B0288 > $DCC_PATH/config
+    echo 0x98B02A8 > $DCC_PATH/config
+    echo 0x98B020C > $DCC_PATH/config
+    echo 0x98B022C > $DCC_PATH/config
+    echo 0x98B024C > $DCC_PATH/config
+    echo 0x98B026C > $DCC_PATH/config
+    echo 0x98B028C > $DCC_PATH/config
+    echo 0x98B02AC > $DCC_PATH/config
+    echo 0x98B0400 3 > $DCC_PATH/config
+    echo 0x9802028 > $DCC_PATH/config
+    echo 0x9800304 > $DCC_PATH/config
+}
+
+config_atoll_lpass_debug(){
+    #LPASS_Q6_MISC
+    echo 0x62780054 > $DCC_PATH/config
+    #LPASS_CBC_MISC
+    echo 0x62780058 > $DCC_PATH/config
+    #LPASS_LPASS_AON_CC_MISC
+    echo 0x62780064 > $DCC_PATH/config
+    #LPASS_MAIN_RCG_CFG_RCGR
+    echo 0x62781004 > $DCC_PATH/config
+    #LPASS_Q6_XO_CFG_RCGR
+    echo 0x62788008 > $DCC_PATH/config
+    #LPASS_QDSP6SS_CORE_CFG_RCGR
+    echo 0x6240002C > $DCC_PATH/config
+    #LPASS_QDSP6SS_CLK_STATUS
+    echo 0x62400468 > $DCC_PATH/config
+    #LPASS_QDSP6SS_CLK_CFG
+    echo 0x62400460 > $DCC_PATH/config
+    #LPASS_QDSP6SS_INTFCLAMP_STATUS
+    echo 0x62400098 > $DCC_PATH/config
+    #LPASS_QDSP6SS_CORE_CBCR
+    echo 0x62400020 > $DCC_PATH/config
+    #LPASS_QDSP6SS_SLEEP_CBCR
+    echo 0x6240003C > $DCC_PATH/config
+    #LPASS_QDSP6SS_XO_CBCR
+    echo 0x62400038 > $DCC_PATH/config
+    #LPASS_Q6_AHBM_CBCR
+    echo 0x6278901C > $DCC_PATH/config
+    #LPASS_Q6_AHBS_CBCR
+    echo 0x62789020 > $DCC_PATH/config
+    #LPASS_Q6_XO_CBCR
+    echo 0x6278801C > $DCC_PATH/config
+    #LPASS_RO_CBCR
+    echo 0x6279000C > $DCC_PATH/config
+
+    #LPASS_PLL_MODE
+    echo 0x62780000 > $DCC_PATH/config
+    #LPASS_PLL_L_VAL
+    echo 0x62780004 > $DCC_PATH/config
+    #LPASS_PLL_USER_CTL
+    echo 0x6278000C > $DCC_PATH/config
+    #LPASS_PLL_CONFIG_CTL
+    echo 0x62780014 > $DCC_PATH/config
+
+    #LPASS_PLL_STATUS
+    echo 0x62780024 > $DCC_PATH/config
+    #LPASS_PLL_OPMODE
+    echo 0x6278002C > $DCC_PATH/config
+    #LPASS_PLL_STATE
+    echo 0x62780030 > $DCC_PATH/config
+    #LPASS_USER_CTL_U
+    echo 0x62780010 > $DCC_PATH/config
+    #LPASS_CONFIG_CTL_U
+    echo 0x62780018 > $DCC_PATH/config
+}
+
 config_atoll_dcc_async_package(){
     echo 0x06004FB0 0xc5acce55 > $DCC_PATH/config_write
     echo 0x0600408c 0xff > $DCC_PATH/config_write
@@ -1483,7 +1570,7 @@ enable_atoll_dcc_config()
 
     echo 0 > $DCC_PATH/enable
     echo 1 > $DCC_PATH/config_reset
-    echo 3 > $DCC_PATH/curr_list
+    echo 4 > $DCC_PATH/curr_list
     echo cap > $DCC_PATH/func_type
     echo sram > $DCC_PATH/data_sink
     config_atoll_dcc_lpm
@@ -1503,14 +1590,16 @@ enable_atoll_dcc_config()
     config_atoll_dcc_tsens_regs
     config_atoll_dcc_rscc_apps
     config_atoll_dcc_gpu
-    # echo 1 > /sys/bus/coresight/devices/coresight-tpdm-dcc/enable_source
-    # echo 2 > $DCC_PATH/curr_list
-    # echo cap > $DCC_PATH/func_type
-    # echo atb > $DCC_PATH/data_sink
-    # config_atoll_dcc_async_package
+    config_atoll_dcc_rscc_npu
     config_atoll_dcc_rscc_lpass
     config_atoll_dcc_rscc_modem
     config_atoll_dcc_rscc_cdsp
+    config_atoll_lpass_debug
+    echo 1 > /sys/bus/coresight/devices/coresight-tpdm-dcc/enable_source
+    echo 3 > $DCC_PATH/curr_list
+    echo cap > $DCC_PATH/func_type
+    echo atb > $DCC_PATH/data_sink
+    config_atoll_dcc_async_package
     config_atoll_dcc_gic
     #config_atoll_dcc_axi_pc
     #config_atoll_dcc_apb_pc
