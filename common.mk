@@ -49,8 +49,10 @@ PRODUCT_COPY_FILES += \
     device/qcom/common/privapp-permissions-qti.xml:system/etc/permissions/privapp-permissions-qti.xml
 
 # Ipsec_tunnels feature
+ifneq ($(TARGET_KERNEL_VERSION), 3.18)
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.ipsec_tunnels.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnels.xml
+endif
 
 #copy telephony app's permissions
 PRODUCT_COPY_FILES += $(QCPATH)/commonsys-intf/telephony/build/telephony_product_privapp-permissions-qti.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/telephony_product_privapp-permissions-qti.xml
