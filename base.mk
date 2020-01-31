@@ -243,6 +243,7 @@ INIT += vold.fstab
 INIT += volume.cfg
 INIT += init.qcom.ril.path.sh
 INIT += init.qcom.usb.rc
+INIT += init.msm.usb.configfs.rc
 INIT += init.qcom.usb.sh
 INIT += usf_post_boot.sh
 INIT += init.qcom.efs.sync.sh

@@ -129,9 +129,13 @@ case "$usb_config" in
                             setprop persist.sys.usb.config diag,serial_smd,serial_tty,rmnet_ipa,mass_storage,adb
                         ;;
                         "msm8909")
-                            setprop persist.sys.usb.config diag,serial_smd,rmnet_qti_bam,adb
-                        ;;
-                        *)
+				if [ -d /config/usb_gadget ]; then
+					setprop persist.sys.usb.config diag,adb
+				else
+					setprop persist.sys.usb.config diag,serial_smd,rmnet_qti_bam,adb
+				fi
+			;;
+			*)
                             setprop persist.sys.usb.config diag,serial_smd,serial_tty,rmnet_bam,mass_storage,adb
                         ;;
                     esac
@@ -143,6 +147,48 @@ case "$usb_config" in
     * ) ;; #USB persist config exists, do nothing
 esac
 
+# check configfs is mounted or not
+if [ -d /config/usb_gadget ]; then
+	# set USB controller's device node
+	case "$target" in
+	"msm8909")
+		setprop sys.usb.controller "msm_hsusb"
+	;;
+	esac
+
+	# Chip-serial is used for unique MSM identification in Product string
+	msm_serial=`cat /sys/devices/soc0/serial_number`;
+	msm_serial_hex=`printf %08X $msm_serial`
+	machine_type=`cat /sys/devices/soc0/machine`
+	product_string="$machine_type-$soc_hwplatform _SN:$msm_serial_hex"
+	echo "$product_string" > /config/usb_gadget/g1/strings/0x409/product
+
+	 # ADB requires valid iSerialNumber; if ro.serialno is missing, use dummy
+	serialnumber=`cat /config/usb_gadget/g1/strings/0x409/serialnumber` 2> /dev/null
+	if [ "$serialnumber" == "" ]; then
+		serialno=1234567
+		echo $serialno > /config/usb_gadget/g1/strings/0x409/serialnumber
+	fi
+
+	persist_comp=`getprop persist.sys.usb.config`
+	comp=`getprop sys.usb.config`
+	echo $persist_comp
+	echo $comp
+	if [ "$comp" != "$persist_comp" ]; then
+		echo "setting sys.usb.config"
+		setprop sys.usb.config $persist_comp
+	fi
+
+	setprop sys.usb.configfs 1
+else
+	persist_comp=`getprop persist.sys.usb.config`
+	comp=`getprop sys.usb.config`
+	echo $persist_comp
+	echo $comp
+	if [ "$comp" != "$persist_comp" ]; then
+		echo "setting sys.usb.config"
+		setprop sys.usb.config $persist_comp
+	fi
 #
 # Do target specific things
 #
@@ -168,6 +214,7 @@ case "$target" in
         echo 1 > /sys/class/android_usb/android0/f_rndis_qc/max_pkt_per_xfer # Disable RNDIS UL aggregation
     ;;
 esac
+fi
 
 #
 # set module params for embedded rmnet devices
