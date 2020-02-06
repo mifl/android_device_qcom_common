@@ -870,6 +870,8 @@ config_kona_dcc_lpm_pcu()
     echo 0x18080104 1 > $DCC_PATH/config
     echo 0x1808011C 1 > $DCC_PATH/config
     echo 0x18080128 1 > $DCC_PATH/config
+    echo 0x18080168 1 > $DCC_PATH/config
+    echo 0x18080198 1 > $DCC_PATH/config
 }
 config_kona_dcc_lpm()
 {
