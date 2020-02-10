@@ -1619,6 +1619,81 @@ enable_msm8937_dcc_config()
     echo 0xB01200C > $DCC_PATH/config
     echo 0xB012014 > $DCC_PATH/config
 
+    #PCNOC_OBS_ID_COREID
+    echo 0x500000 > $DCC_PATH/config
+    #PCNOC_OBS_ERRVLD
+    echo 0x50000C > $DCC_PATH/config
+    #PCNOC_OBS_ERRCLR
+    echo 0x500010 > $DCC_PATH/config
+    #PCNOC_OBS_ERRLOG0
+    echo 0x500014 > $DCC_PATH/config
+    #PCNOC_OBS_ERRLOG1
+    echo 0x500018 > $DCC_PATH/config
+    #PCNOC_OBS_ERRLOG3
+    echo 0x500020 > $DCC_PATH/config
+    #PCNOC_OBS_ERRLOG4
+    echo 0x500024 > $DCC_PATH/config
+    #PCNOC_OBS_ERRLOG5
+    echo 0x500028 > $DCC_PATH/config
+
+    #SNOC_OBS_ID_COREID
+    echo 0x580000 > $DCC_PATH/config
+    #SNOC_OBS_ERRVLD
+    echo 0x58000C > $DCC_PATH/config
+    #SNOC_OBS_ERRCLR
+    echo 0x580010 > $DCC_PATH/config
+    #SNOC_OBS_ERRLOG0
+    echo 0x580014 > $DCC_PATH/config
+    #SNOC_OBS_ERRLOG1
+    echo 0x580018 > $DCC_PATH/config
+    #SNOC_OBS_ERRLOG3
+    echo 0x580020 > $DCC_PATH/config
+    #SNOC_OBS_ERRLOG4
+    echo 0x580024 > $DCC_PATH/config
+    #SNOC_OBS_ERRLOG5
+    echo 0x580028 > $DCC_PATH/config
+    #CCI_SAW_CCI_SPM_WAKE
+    echo 0xB1D4058 > $DCC_PATH/config
+    #APCS_ALIAS1_L2_PWR_STATUS
+    echo 0xB011018 > $DCC_PATH/config
+    #APCS_ALIAS1_A53_CFG_STS
+    echo 0x0B01106C > $DCC_PATH/config
+    #APCS_ALIAS1_APC_ITM_ARB_STATE_CSR
+    echo 0x0B011090 > $DCC_PATH/config
+    #APCS_ALIAS1_L2_SPM_WAKE
+    echo 0xB011210 > $DCC_PATH/config
+    #CCI_SAW2_SPM_STS
+    echo 0xB1D200C > $DCC_PATH/config
+    #CCI_SAW2_AVS_STS
+    echo 0xB1D2010 > $DCC_PATH/config
+    #CCI_SAW2_PMIC_STS
+    echo 0xB1D2014 > $DCC_PATH/config
+    #CCI_SAW2_SPM_CTL
+    echo 0xB1D2030 > $DCC_PATH/config
+    #APCS_ALIAS4_APC_SPM_WAKE
+    echo 0xB088048 > $DCC_PATH/config
+    #APCS_ALIAS4_APC_PWR_STATUS
+    echo 0xB088008 > $DCC_PATH/config
+    #APCS_ALIAS5_APC_SPM_WAKE
+    echo 0xB098048 > $DCC_PATH/config
+    #APCS_ALIAS5_APC_PWR_STATUS
+    echo 0xB098008 > $DCC_PATH/config
+    #APCS_ALIAS6_APC_SPM_WAKE
+    echo 0xB0A8048 > $DCC_PATH/config
+    #APCS_ALIAS6_APC_PWR_STATUS
+    echo 0xB0A8008 > $DCC_PATH/config
+    #APCS_ALIAS7_APC_SPM_WAKE
+    echo 0xB0B8048 > $DCC_PATH/config
+    #APCS_ALIAS7_APC_PWR_STATUS
+    echo 0xB0B8008 > $DCC_PATH/config
+    #APCS_ALIAS4_SAW2_CFG
+    echo 0xB089008 > $DCC_PATH/config
+    #APCS_ALIAS5_SAW2_CFG
+    echo 0xB099008 > $DCC_PATH/config
+    #APCS_ALIAS6_SAW2_CFG
+    echo 0xB0A9008 > $DCC_PATH/config
+    #APCS_ALIAS5_SAW2_CFG
+    echo 0xB0B9008 > $DCC_PATH/config
     #DDR
     echo 0x448560 1 > $DCC_PATH/config
     echo 0x4485A0 1 > $DCC_PATH/config
