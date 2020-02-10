@@ -1,5 +1,5 @@
 #!/vendor/bin/sh
-# Copyright (c) 2012-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2020, The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are
@@ -31,7 +31,6 @@
 # Set platform variables
 soc_hwplatform=`cat /sys/devices/soc0/hw_platform 2> /dev/null`
 soc_machine=`cat /sys/devices/soc0/machine 2> /dev/null`
-soc_machine=${soc_machine:0:2}
 soc_id=`cat /sys/devices/soc0/soc_id 2> /dev/null`
 
 #
@@ -42,6 +41,8 @@ soc_id=`cat /sys/devices/soc0/soc_id 2> /dev/null`
 esoc_name=`cat /sys/bus/esoc/devices/esoc0/esoc_name 2> /dev/null`
 
 target=`getprop ro.board.platform`
+product=`getprop ro.product.name`
+product=${product:(-4)}
 
 if [ -f /sys/class/android_usb/f_mass_storage/lun/nofua ]; then
 	echo 1  > /sys/class/android_usb/f_mass_storage/lun/nofua
@@ -67,8 +68,15 @@ if [ "$(getprop persist.vendor.usb.config)" == "" -a \
 	          ;;
                   *)
 		  case "$soc_machine" in
-		    "SA")
-	              setprop persist.vendor.usb.config diag,adb
+		    SA*)
+			if [ "$product" == "gvmq" ]; then
+				setprop persist.vendor.usb.config adb
+			else
+				setprop persist.vendor.usb.config diag,adb
+			fi
+		    ;;
+		    SXR*)
+	              setprop persist.vendor.usb.config diag,adb,serial_cdev
 		    ;;
 		    *)
 	            case "$target" in
@@ -127,7 +135,7 @@ fi
 
 # Start peripheral mode on primary USB controllers for Automotive platforms
 case "$soc_machine" in
-    "SA")
+    SA*)
 	if [ -f /sys/bus/platform/devices/a600000.ssusb/mode ]; then
 	    default_mode=`cat /sys/bus/platform/devices/a600000.ssusb/mode`
 	    case "$default_mode" in
