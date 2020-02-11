@@ -1842,6 +1842,18 @@ enable_moorea_specific_register()
     echo 0x624B0400 > $DCC_PATH/config
     echo 0x624B0404 > $DCC_PATH/config
     echo 0x624B0408 > $DCC_PATH/config
+    #AGGNOC2 sensein Registers
+    echo 0x16E0300 4 > $DCC_PATH/config
+    echo 0x16E0700 2 > $DCC_PATH/config
+    echo 0x1700900 3 > $DCC_PATH/config
+    echo 0x1700B00 2 > $DCC_PATH/config
+
+    #AGGRE_NOC_a1noc_errlog_ErrVld_Low
+    echo 0x16E0410 > $DCC_PATH/config
+    #AGGRE_NOC_a1noc_errlog_ErrLog (Low/high)
+    echo 0x16E0420 8 > $DCC_PATH/config
+    #AGGRE_NOC_a1noc_sbm_FaultInStatus0_Low
+    echo 0x16E0248 > $DCC_PATH/config
 }
 
 # Function talos DCC configuration
