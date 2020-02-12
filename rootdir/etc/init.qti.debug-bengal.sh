@@ -173,11 +173,11 @@ config_bengal_dcc_bimc()
     echo 0x4498430 2 > $DCC_PATH/config
 
     #BIMC_M_MDSP_MPORT
-    echo 0x449c100 1 > $DCC_PATH/config
-    echo 0x449c400 2 > $DCC_PATH/config
-    echo 0x449c410 1 > $DCC_PATH/config
-    echo 0x449c420 2 > $DCC_PATH/config
-    echo 0x449c430 2 > $DCC_PATH/config
+    #echo 0x449c100 1 > $DCC_PATH/config
+    #echo 0x449c400 2 > $DCC_PATH/config
+    #echo 0x449c410 1 > $DCC_PATH/config
+    #echo 0x449c420 2 > $DCC_PATH/config
+    #echo 0x449c430 2 > $DCC_PATH/config
 
     #BIMC_M_SYS_MPORT
     echo 0x44a0100 1 > $DCC_PATH/config
@@ -359,6 +359,16 @@ config_bengal_dcc_gpu()
     echo 0x5991540 > $DCC_PATH/config
     echo 0x5995000 > $DCC_PATH/config
     echo 0x5995004 > $DCC_PATH/config
+
+    echo 0x599101C > $DCC_PATH/config
+    echo 0x5991020 > $DCC_PATH/config
+    echo 0x5990000 > $DCC_PATH/config
+    echo 0x5990100 > $DCC_PATH/config
+    echo 0x5991508 > $DCC_PATH/config
+    echo 0x59910A4 > $DCC_PATH/config
+    echo 0x5991578 > $DCC_PATH/config
+    echo 0x5990010 > $DCC_PATH/config
+    echo 0x5990110 > $DCC_PATH/config
 }
 
 config_bengal_dcc_gcc_mm()
@@ -923,7 +933,7 @@ config_bengal_dcc_noc()
     echo 0x1880314 > $DCC_PATH/config
     echo 0x1880318 > $DCC_PATH/config
     echo 0x188031C > $DCC_PATH/config
-    echo 0x1880500 > $DCC_PATH/config
+    #echo 0x1880500 > $DCC_PATH/config
     echo 0x1880700 > $DCC_PATH/config
     echo 0x1880704 > $DCC_PATH/config
     echo 0x1880708 > $DCC_PATH/config
@@ -932,9 +942,9 @@ config_bengal_dcc_noc()
     echo 0x1880714 > $DCC_PATH/config
     echo 0x1880718 > $DCC_PATH/config
     echo 0x188071C > $DCC_PATH/config
-    echo 0x1880B00 > $DCC_PATH/config
-    echo 0x1880B04 > $DCC_PATH/config
-    echo 0x1880D00 > $DCC_PATH/config
+    #echo 0x1880B00 > $DCC_PATH/config
+    #echo 0x1880B04 > $DCC_PATH/config
+    #echo 0x1880D00 > $DCC_PATH/config
     echo 0x1881100 > $DCC_PATH/config
     echo 0x1900010 > $DCC_PATH/config
     echo 0x1900020 > $DCC_PATH/config
@@ -986,6 +996,12 @@ config_bengal_dcc_noc()
     echo 0x190024C > $DCC_PATH/config
     echo 0x1900250 > $DCC_PATH/config
     echo 0x1900258 > $DCC_PATH/config
+
+    echo 0x1411004 > $DCC_PATH/config
+    echo 0x1411028 > $DCC_PATH/config
+    echo 0x141102C > $DCC_PATH/config
+
+    echo 0x1458004 > $DCC_PATH/config
 
 }
 
@@ -1231,6 +1247,14 @@ config_bengal_dcc_core()
     echo 0x0F1D1228 1 > $DCC_PATH/config
 }
 
+config_bengal_dcc_cam()
+{
+    echo 0x5C6F000 > $DCC_PATH/config
+    echo 0x5C42000 > $DCC_PATH/config
+    echo 0x5C42400 > $DCC_PATH/config
+    echo 0x5C23000 > $DCC_PATH/config
+}
+
 # Function to send ASYNC package in TPDA
 dcc_async_package()
 {
@@ -1267,6 +1291,7 @@ enable_bengal_dcc_config()
     config_acp_status
     config_modem_rscc
     config_cdsp_rscc
+    config_bengal_dcc_cam
 
     #configure sink for LL3 as atb
     echo 1 > /sys/bus/coresight/devices/coresight-tpdm-dcc/enable_source

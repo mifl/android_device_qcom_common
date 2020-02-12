@@ -22,10 +22,12 @@ PRODUCT_PROPERTY_OVERRIDES += \
     sys.vendor.shutdown.waittime=500 \
     persist.vendor.radio.procedure_bytes=SKIP
 
+ifneq ($(ENABLE_HYP),true)
 ifneq ($(BOARD_FRP_PARTITION_NAME),)
     PRODUCT_PROPERTY_OVERRIDES += ro.frp.pst=/dev/block/bootdevice/by-name/$(BOARD_FRP_PARTITION_NAME)
 else
     PRODUCT_PROPERTY_OVERRIDES += ro.frp.pst=/dev/block/bootdevice/by-name/config
+endif
 endif
 
 # whitelisted app
@@ -36,8 +38,10 @@ PRODUCT_COPY_FILES += \
     device/qcom/common/privapp-permissions-qti.xml:system/etc/permissions/privapp-permissions-qti.xml
 
 # Ipsec_tunnels feature
+ifneq ($(TARGET_KERNEL_VERSION), 3.18)
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.software.ipsec_tunnels.xml:$(TARGET_COPY_OUT_VENDOR)/etc/permissions/android.software.ipsec_tunnels.xml
+endif
 
 #copy telephony app's permissions
 PRODUCT_COPY_FILES += $(QCPATH)/commonsys-intf/telephony/build/telephony_product_privapp-permissions-qti.xml:$(TARGET_COPY_OUT_PRODUCT)/etc/permissions/telephony_product_privapp-permissions-qti.xml
