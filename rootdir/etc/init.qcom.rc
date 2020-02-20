@@ -217,6 +217,10 @@ on boot
     chown system system /sys/class/sensors/apds9930-proximity/enable
     chown system system /sys/class/sensors/apds9930-proximity/poll_delay
 
+    # Allow access to UFS device attributes on sysfs
+    chown system system /sys/devices/platform/soc/1d84000.ufshc/auto_hibern8
+    chmod 0660 /sys/devices/platform/soc/1d84000.ufshc/auto_hibern8
+
     # Create directory used for display
     # for backward compatibility
     mkdir /persist/display 0770 system graphics
@@ -740,12 +744,6 @@ service ssgqmigd /vendor/bin/ssgqmigd
     user radio
     group radio gps system
     socket ssgqmig seqpacket 0660 radio inet
-
-service ssgtzd /vendor/bin/ssgtzd
-    class late_start
-    user system
-    group system
-    socket ssgtzd stream 0660 system inet
 
 service mlid /vendor/bin/mlid
     class late_start
