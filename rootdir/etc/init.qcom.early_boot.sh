@@ -1,6 +1,6 @@
 #! /vendor/bin/sh
 
-# Copyright (c) 2012-2013,2016,2018,2019 The Linux Foundation. All rights reserved.
+# Copyright (c) 2012-2013,2016,2018-2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -53,6 +53,14 @@ if [ -f /sys/class/drm/card0-DSI-1/modes ]; then
         fb_width=${line%%x*};
         break;
     done < $mode_file
+elif [ -f /sys/class/drm/card0-DP-1/modes ]; then
+    echo "detect" > /sys/class/drm/card0-DP-1/status
+    is_dp_mode=1
+    mode_file=/sys/class/drm/card0-DP-1/modes
+    while read line; do
+        fb_width=${line%%x*};
+        break;
+    done < $mode_file
 elif [ -f /sys/class/graphics/fb0/virtual_size ]; then
     res=`cat /sys/class/graphics/fb0/virtual_size` 2> /dev/null
     fb_width=${res%,*}
@@ -71,6 +79,9 @@ fi
 function set_density_by_fb() {
     #put default density based on width
     if [ -z $fb_width ]; then
+        if [ $is_dp_mode -eq 1 ]; then
+            return;
+        fi
         setprop vendor.display.lcd_density 320
     else
         if [ $fb_width -ge 1600 ]; then
@@ -286,6 +297,13 @@ case "$target" in
                 ;;
         esac
         ;;
+    "qcs605")
+        case "$soc_hwplatform" in
+            *)
+                setprop vendor.display.lcd_density 640
+                ;;
+        esac
+        ;;
     "sdm845")
         case "$soc_hwplatform" in
             *)
@@ -320,11 +338,18 @@ case "$target" in
         esac
         ;;
     "lito")
-        case "$soc_hwplatform" in
-            *)
+        case "$soc_hwid" in
+            400|440)
                 sku_ver=`cat /sys/devices/platform/soc/aa00000.qcom,vidc1/sku_version` 2> /dev/null
                 if [ $sku_ver -eq 1 ]; then
                     setprop vendor.media.target.version 1
+                fi
+                ;;
+            434)
+                sku_ver=`cat /sys/devices/platform/soc/aa00000.qcom,vidc1/sku_version` 2> /dev/null
+                setprop vendor.media.target.version 2
+                if [ $sku_ver -eq 1 ]; then
+                    setprop vendor.media.target.version 3
                 fi
                 ;;
         esac
@@ -332,7 +357,7 @@ case "$target" in
     "bengal")
         case "$soc_hwplatform" in
             *)
-                sku_ver=`cat /sys/devices/platform/soc/aa00000.qcom,vidc/sku_version` 2> /dev/null
+                sku_ver=`cat /sys/devices/platform/soc/5a00000.qcom,vidc/sku_version` 2> /dev/null
                 if [ $sku_ver -eq 1 ]; then
                     setprop vendor.media.target.version 1
                 fi
